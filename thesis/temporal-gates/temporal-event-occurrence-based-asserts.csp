@@ -1,0 +1,135 @@
+
+include "temporal-event-occurrence-based.csp"
+
+channel f_x, f_y, f_o
+
+PATH(a, b, o) =
+  let
+    pairs = { (f_x, a, 0), (f_y, b, 0), (f_o, o, 1) }
+    INIT = tick -> MAIN(1, 0, { (ev, s, p) | (ev, s, p)<-pairs, s > 0 })
+    select(n, pri, rem) = { ev | (ev, s, p)<-rem, s == n, p == pri }
+    MAIN(_, _, {}) = SKIP
+    MAIN(n, 1, rem) = 
+      if empty(select(n, 1, rem)) then tick -> MAIN(n+1, 0, rem)
+      else [] ev: select(n, 1, rem) @ ev -> MAIN(n, 1, diff(rem, {(ev, n, 1)}))
+    MAIN(n, 0, rem) =
+      if empty(select(n, 0, rem)) then MAIN(n, 1, rem)
+      else [] ev: select(n, 0, rem) @ ev -> MAIN(n, 0, diff(rem, {(ev, n, 0)}))
+  within INIT
+  
+  
+  
+assert B_OR(f_x, f_y, f_o) [T= PATH(0,0,0)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(0,0,1)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(0,0,2)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(0,1,0)
+assert B_OR(f_x, f_y, f_o) [T= PATH(0,1,1)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(0,1,2)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(1,0,0)
+assert B_OR(f_x, f_y, f_o) [T= PATH(1,0,1)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(1,0,2)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(1,1,0)
+assert B_OR(f_x, f_y, f_o) [T= PATH(1,1,1)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(1,1,2)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(1,2,0)
+assert B_OR(f_x, f_y, f_o) [T= PATH(1,2,1)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(1,2,2)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(2,1,0)
+assert B_OR(f_x, f_y, f_o) [T= PATH(2,1,1)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(2,1,2)
+assert not B_OR(f_x, f_y, f_o) [T= PATH(2,2,2)
+
+
+
+
+--X|Y + X&Y + Y<X
+
+channel out: {1..9}
+channel in: {1..9}
+channel rcl1
+channel output
+
+B_BUFFER(a,b) = (a -> b -> B_BUFFER(a,b)) [] (terminate -> SKIP)
+BUFFER(a,b) = (B_BUFFER(a,b), {a,b,terminate})
+
+TEST_OR =
+  let
+    tuples = {
+      OR(f_x, f_y, out.1),
+      BUFFER(out.1, output),
+      (output -> terminate -> SKIP, {output, terminate})
+    }
+  within EVALUATOR(tuples)
+
+RCL_1 = 
+  let
+    tuples = {
+      POR(f_x, f_y, out.1),
+      SAND(f_x, f_y, out.2),
+      PAND(f_y, f_x, out.3),
+      OR(in.1, in.2, out.4), 
+      OR(in.3, in.4, out.5),
+      BUFFER(out.1, in.1),
+      BUFFER(out.2, in.2),
+      BUFFER(out.3, in.3),
+      BUFFER(out.4, in.4),
+      BUFFER(out.5, rcl1),
+      (rcl1 -> terminate -> SKIP, {rcl1, terminate})
+    }
+  within EVALUATOR(tuples)
+  
+  
+assert RCL_1 \ {|in,out|} [T= tick -> f_x -> rcl1 -> STOP
+assert not RCL_1 :[deadlock free]
+
+assert TEST_OR \ {|in,out,terminate|} [T= B_OR(f_x, f_y, output)
+assert B_OR(f_x, f_y, output) [T= TEST_OR \ {|in,out,terminate|}
+
+
+--------------------------------------------------------------------------------
+-- (PFail + NoInput) [1] .[9] 
+-- (((PFail + NoInput)[1] | SensFail)[2] . SFail)[3] 
+-- +[7] (SensFail < (PFail + NoInput)[1])[4] 
+-- +[8] ((SensFail & (PFail + NoInput)[1])[5] + NoInput)[6]
+channel pfail, noinput, sensfail, sfail
+channel wp2013
+
+WP2013 =
+  let
+    tuples = {
+      OR(pfail, noinput, out.1),
+      POR(in.1, sensfail, out.2),
+      AND(in.2, sfail, out.3),
+      PAND(sensfail, in.1, out.4),
+      SAND(sensfail, in.1, out.5),
+      OR(in.5, noinput, out.6),
+      AND(in.1, in.3, out.9),
+      OR(in.9, in.4, out.7),
+      OR(in.7, in.6, out.8),
+      BUFFER(out.1, in.1),
+      BUFFER(out.2, in.2),
+      BUFFER(out.3, in.3),
+      BUFFER(out.4, in.4),
+      BUFFER(out.5, in.5),
+      BUFFER(out.6, in.6),
+      BUFFER(out.7, in.7),
+      BUFFER(out.8, wp2013),
+      BUFFER(out.9, in.9),
+      (wp2013 -> terminate -> SKIP, {wp2013, terminate})
+    }
+  within EVALUATOR(tuples) \ {|in,out|}
+  
+assert WP2013 [T= tick -> pfail -> sfail -> wp2013 -> SKIP
+assert WP2013 [T= tick -> pfail -> tick -> sfail -> wp2013 -> SKIP
+assert WP2013 [T= tick -> pfail -> tick -> sensfail -> sfail -> wp2013 -> SKIP
+assert WP2013 [T= tick -> pfail -> tick -> sfail -> sensfail -> wp2013 -> SKIP
+assert WP2013 [T= tick -> sfail -> tick -> pfail -> tick -> sensfail -> wp2013 -> SKIP
+assert not WP2013 [T= tick -> sfail -> tick -> sensfail -> pfail -> wp2013 -> SKIP
+assert not WP2013 [T= tick -> pfail -> sensfail -> sfail -> wp2013 -> SKIP
+assert not WP2013 [T= tick -> sensfail -> tick -> pfail -> sfail -> wp2013 -> SKIP
+
+assert WP2013 [T= tick -> sensfail -> tick -> pfail -> wp2013 -> SKIP
+
+assert WP2013 [T= tick -> sensfail -> pfail -> wp2013 -> SKIP
+
+assert WP2013 [T= tick -> noinput -> wp2013 -> SKIP

@@ -1,0 +1,72 @@
+channel tock
+
+channel pick_radio
+channel press_button
+channel send_message
+channel receive_message
+channel detect_loss
+
+channel pick_phone
+channel dial
+channel connect
+channel answer
+
+channel consume: {0..300}.{0..300}
+channel take: {0..300}
+channel time_taken: {0..3000}
+
+RS_intervals = {(1,8), (1,3), (0,2), (10, 100)}
+MBS_intervals = {(1,8), (10,20), (5,30), (10,100), (0,2)}
+
+RS = 
+  pick_radio -> consume!1!8 -> 
+  press_button -> consume!1!3 ->
+  send_message -> consume!0!2 ->
+  receive_message -> consume!10!100 -> SKIP
+
+MBS =
+  pick_phone -> consume!1!8 ->
+  dial -> consume!10!20 -> 
+  connect -> consume!5!30 -> 
+  answer -> consume!10!100 -> 
+  send_message -> consume!0!2 ->
+  receive_message -> consume!0!2 -> SKIP
+
+min(a,b) = if a < b then a else b
+
+TIME_TRACKER_F(f) =
+  let
+    TRACKER(total) = \ intervals @ CONSUME(total)(intervals) [] INFORM(total)
+    INFORM(total) = time_taken!total -> SKIP
+    CONSUME(total) = \ intervals @
+      [] (a,b): intervals @ consume!a!b ->
+      |~| x: (if a < b then f(a,b) else f(b,a)) @ 
+        take!x -> TRACKER(min(total+x,3000))(intervals)
+  within TRACKER(0) 
+
+BETWEEN_TIME_TRACKER = TIME_TRACKER_F(\ a, b @ {a..b})
+MIN_TIME_TRACKER = TIME_TRACKER_F(\ a, b @ {a})
+MAX_TIME_TRACKER = TIME_TRACKER_F(\ a, b @ {b})
+   
+TRACK_PROCESS(P, intervals) = 
+  let
+    ConsumeEvents = {| consume.a.b | (a,b)<-intervals |}
+  within
+    (BETWEEN_TIME_TRACKER(intervals) 
+    [| union(ConsumeEvents, {|time_taken|}) |] 
+    (P; time_taken?x -> SKIP)) \ union(ConsumeEvents, {|take|})
+    
+LIMIT = \ a,b @ time_taken?x:{a..b} -> SKIP
+
+LIMIT_TRACK_PROCESS(P, intervals) = 
+  \ a,b @ 
+  (
+  LIMIT(a,b)
+  [| {|time_taken|} |]
+  TRACK_PROCESS(P, intervals)
+  )
+
+assert not TRACK_PROCESS(RS, RS_intervals) \ {|pick_radio,press_button|} [T= TRACK_PROCESS(MBS, MBS_intervals) \ {| pick_phone, dial, connect, answer |}
+assert LIMIT_TRACK_PROCESS(RS, RS_intervals)(26,113) \ {|pick_radio,press_button|} [T= LIMIT_TRACK_PROCESS(MBS, MBS_intervals)(26,113) \ {| pick_phone, dial, connect, answer |}
+assert LIMIT_TRACK_PROCESS(RS, RS_intervals)(25,113) \ {|pick_radio,press_button|} [T= LIMIT_TRACK_PROCESS(MBS, MBS_intervals)(25,113) \ {| pick_phone, dial, connect, answer |}
+assert not LIMIT_TRACK_PROCESS(RS, RS_intervals)(26,114) \ {|pick_radio,press_button|} [T= LIMIT_TRACK_PROCESS(MBS, MBS_intervals)(26,114) \ {| pick_phone, dial, connect, answer |}

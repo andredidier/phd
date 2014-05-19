@@ -1,0 +1,226 @@
+-- Verification based on occurrence of events
+-- deadlock => contradiction
+-- an output is only performed when minimum input occur
+
+max(xa, xb) = if xa > xb then xa else xb
+max3(xa, xb, xo) = max(max(xa, xb), xo)
+
+channel tick, end
+
+B_GATE(a, b, o, combinations) =
+  let
+    get_triple(xa, xb) = 
+      { (xa1, xb1, xo) 
+        | (xa1, xb1, xo)<-combinations, xa1 == xa, xb1 == xb }
+        
+    build_zero_triple(xa, xb) = 
+      let
+        t = get_triple(xa, xb)
+      within
+        if empty(t) then { (xa, xb, 0) } else t
+    
+   
+    all_triples = 
+      Union({
+        build_zero_triple(0, 0),
+        build_zero_triple(0, 1),
+        build_zero_triple(1, 0),
+        build_zero_triple(1, 1),
+        build_zero_triple(1, 2),
+        build_zero_triple(2, 1)
+      })
+    IF_COMB(f, ts, P) = 
+      let
+        filtered = { (xa,xb,xo) | (xa,xb,xo)<-ts, f(xa,xb,xo) }
+      within not empty(filtered) & P(filtered)
+    f_eq(xa,xb,xo) = \ xa1,xb1,xo1 @ (xa,xb,xo) == (xa1,xb1,xo1)
+    
+    TICKER(P) = tick -> TICKER(P) [] P
+    
+    ZZ = \ ts @
+      IF_COMB(f_eq(0,0,0), ts, \ _ @ SKIP)
+      []
+      IF_COMB(f_eq(0,0,1), ts, \ _ @ o -> SKIP) 
+    
+    TICK1_A_B = \ ts @
+      IF_COMB(f_eq(1,1,0), ts, \ _ @ SKIP)
+      []
+      IF_COMB(f_eq(1,1,1), ts, \ _ @ o -> SKIP)
+    
+    TICK1_A_TICK2_B = \ ts @
+      IF_COMB(f_eq(1,2,1), ts, \ _ @ o -> tick -> b -> SKIP)
+      []
+      IF_COMB(\ xa, xb, xo @ not (xo == 1), ts, \ nts @ 
+        tick -> b -> (
+          IF_COMB(f_eq(1,2,0), nts, \ _ @ SKIP)
+          []
+          IF_COMB(f_eq(1,2,2), nts, \ _ @ o -> SKIP)
+        ) 
+      )
+    
+    TICK1_A = \ ts @
+      IF_COMB(f_eq(1,0,0), ts, \ _ @ SKIP)
+      []
+      IF_COMB(f_eq(1,0,1), ts, \ _ @ o -> SKIP)
+      []
+      IF_COMB(\ xa, xb, xo @ xb == 1, ts, \ nts @ b -> TICK1_A_B(nts))
+      []
+      IF_COMB(\ xa, xb, xo @ xb == 2, ts, TICK1_A_TICK2_B)
+      
+    TICK1_B_A = \ ts @
+      IF_COMB(f_eq(1,1,0), ts, \ _ @ SKIP)
+      []
+      IF_COMB(f_eq(1,1,1), ts, \ _ @ o -> SKIP)
+      
+    TICK1_B_TICK2_A = \ ts @
+      IF_COMB(f_eq(2,1,1), ts, \ _ @ o -> tick -> a -> SKIP)
+      []
+      IF_COMB(\ xa, xb, xo @ not xo == 1, ts, \ nts @ 
+        tick -> a -> (
+          IF_COMB(f_eq(2,1,0), nts, \ _ @ SKIP)
+          []
+          IF_COMB(f_eq(2,1,2), nts, \ _ @ o -> SKIP)
+        )
+      )
+      
+    TICK1_B = \ ts @
+      IF_COMB(f_eq(0,1,0), ts, \ _ @ SKIP)
+      []
+      IF_COMB(f_eq(0,1,1), ts, \ _ @ o -> SKIP)
+      []
+      IF_COMB(\ xa, xb, xo @ xa == 1, ts, \ nts @ a -> TICK1_B_A(nts))
+      []
+      IF_COMB(\ xa, xb, xo @ xa == 2, ts, TICK1_B_TICK2_A)
+
+    TICK1 = \ ts @
+      IF_COMB(\ xa,xb,xo @ xa == 1, ts, \ nts @ a -> TICK1_A(nts))
+      []
+      IF_COMB(\ xa,xb,xo @ xb == 1, ts, \ nts @ b -> TICK1_B(nts))
+      
+    EVAL(ts) =
+      IF_COMB(\ xa,xb,xo @ xa == xb and xa == 0, ts, ZZ)
+      []
+      IF_COMB(\ xa,xb,xo @ xa > 0 or xb > 0, ts, \ nts @ tick -> TICK1(nts))
+  within EVAL(all_triples)
+
+B_GATE_OLD(a, b, o, combinations) = 
+  let
+    get_triple(xa, xb) = 
+      { (xa1, xb1, xo) 
+        | (xa1, xb1, xo)<-combinations, xa1 == xa, xb1 == xb }
+        
+    build_zero_triple(xa, xb) = 
+      let
+        t = get_triple(xa, xb)
+      within
+        if empty(t) then { (xa, xb, 0) } else t
+    
+   
+    all_triples = 
+      Union({
+        build_zero_triple(0, 0),
+        build_zero_triple(0, 1),
+        build_zero_triple(1, 0),
+        build_zero_triple(1, 1),
+        build_zero_triple(1, 2),
+        build_zero_triple(2, 1)
+      }) 
+    
+    
+    ev_x(x, ev, s) = if x == s then {ev} else {}
+    
+    initials_t(s, (xa, xb, xo)) = 
+      Union({ ev_x(xa, a, s), ev_x(xb, b, s), ev_x(xo, o, s) })
+    
+    initials_ts(s, ts) = { initials(t) | t<-ts }
+    
+    TICK_EVAL(s, (xa, xb, xo), ts) = 
+      tick -> TICK_EVAL(s, ts)
+      []
+      EVAL(s, ts)
+    
+    remove_a(xa, ts) = { (xa1, xb, xo) | (xa1, xb, xo)<-ts, xa1 == xa }
+    
+    remove_b(xb, ts) = { (xa, xb1, xo) | (xa, xb1, xo)<-ts, xb1 == xb }
+    
+    remove_o(false, s, ts) = ts
+    remove_o(true, s, ts) = { (xa, xb, xo) | (xa, xb, xo)<-ts, xo >= s }
+    
+    pick({x}) = x
+    pick_xo(xa, xb, ts) = pick({ xo | (xa1, xb1, xo)<-ts, xa1 == xa, xb1 == xb })
+    
+    max_xo(ts) = max_xo_c(ts, 2)
+    max_xo_c(_, 0) = 0
+    max_xo_c(ts, c) = 
+      if empty({ xo | (_,_,xo)<-ts, xo == c }) 
+      then max_xo_c(ts,c-1) 
+      else c
+    
+    OUTPUT(xo) = if xo == 0 then SKIP else o -> SKIP
+    
+    contains_ab(xa, xb, ts) = 
+      not empty({ xo | (xa1, xb1, xo)<-ts, xa1 == xa, xb1 == xb})
+    
+    newS(x, incTick) = if incTick then x+2 else x+1
+    
+    EVAL(incTick, s, (xa, xb, xo), ots) =
+      let
+        ts = remove_o(incTick, s, ots)
+        OUT = 
+          if (member((xa,xb,s), ts) and (xo == 0))
+          then o -> 
+            if ((xa == 0) or (xb == 0)) then EVAL(true, s, (xa,xb,s), ts) else SKIP 
+          else SKIP
+      within
+        xo > 0 & SKIP
+        []
+        ((xo == 0) and member((xa, xb, s), ts)) & o -> EVAL(true, s, (xa,xb,s), ts)
+        []
+        xa == 0 & a -> EVAL(true, s, (s,xb,xo), remove_a(s, ts))
+        []
+        xb == 0 & b -> EVAL(true, s, (xa,s,xo), remove_b(s, ts))
+        []
+        card(ts) > 1 & tick -> EVAL(false, if incTick then s+1 else s, (xa,xb,xo), ts)
+    
+    START(ts) =
+      member((0,0,0), ts) & SKIP
+      []
+      tick -> EVAL(false, 1, (0,0,0), ts)
+  within START(all_triples)
+  
+channel ca, cb, co
+BGT = B_GATE(ca, cb, co, {(0,1,1), (1,0,1), (1,1,1), (1,2,1), (2,1,1)})
+
+B_OR(a, b, o) = B_GATE(a, b, o, 
+  {(0,0,0), (0,1,1), (1,0,1), (1,1,1), (1,2,1), (2,1,1)})
+  
+B_AND(a, b, o) = B_GATE(a, b, o, 
+  {(0,0,0), (0,1,0), (1,0,0), (1,1,1), (1,2,2), (2,1,2)})
+
+B_POR(a, b, o) = B_GATE(a, b, o, 
+  {(0,0,0), (0,1,0), (1,0,1), (1,1,0), (1,2,1), (2,1,0)})
+  
+B_PAND(a, b, o) = B_GATE(a, b, o, 
+  {(0,0,0), (0,1,0), (1,0,0), (1,1,0), (1,2,2), (2,1,0)})
+
+B_SAND(a, b, o) = B_GATE(a, b, o, 
+  {(0,0,0), (0,1,0), (1,0,0), (1,1,1), (1,2,0), (2,1,0)})
+
+GATE_TUPLE(B) = \ a, b, o @ (B(a, b, o), {tick, a, b, o})
+OR = GATE_TUPLE(B_OR)
+AND = GATE_TUPLE(B_AND)
+POR = GATE_TUPLE(B_POR)
+PAND = GATE_TUPLE(B_PAND)
+SAND = GATE_TUPLE(B_SAND)
+
+channel terminate
+EVALUATOR(tuples) =
+  let
+    alphaTuples = Union({ c | (P, c)<-tuples })
+    TUPLES = || (P, c): tuples @ [c] P
+    TICKER = terminate -> SKIP 
+      [] tick -> [] ev: diff(alphaTuples, {tick,terminate}) @ ev -> TICKER
+    sync =  union(alphaTuples, {terminate})
+  within TUPLES --TICKER [| sync |] TUPLES
+  
+  

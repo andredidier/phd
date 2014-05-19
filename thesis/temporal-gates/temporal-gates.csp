@@ -1,0 +1,236 @@
+{- 
+Truth tables
+OR   +
+AND  *
+XOR  ^
+POR  |
+PAND <
+SAND &
+NOT ! or ¬ or ~
+X  Y  X+Y  X*Y  X|Y  X<Y  X&Y TEST
+0  0  0    0    0    0    0
+0  1  1    0    0    0    0   1
+1  0  1    0    1    0    0   2
+1  1  1    1    0    0    1   3,4
+1  2  1    2    1    2    0   5,7,8
+2  1  1    2    0    0    0   6,7,8
+-}
+
+datatype SequenceValue = SV.{0..10}
+
+min(a,b) = if a > b then b else a
+max(a,b) = if a > b then a else b
+fsts(S) = { x | (x,_)<-S }
+min_S({x}) = x
+min_S(S) = min_S({ x | x<-S, x2<-S, x < x2 })
+setToSeq(SetWithIndexes) = 
+  let
+    pick({x}) = x
+    get(i, S) = { s | (x,s)<-S, i == x }
+    toSeq(S) = < pick(get(i,S)) | i<-<0..card(S)-1> >
+  within toSeq(SetWithIndexes)
+  
+seqToIndex(ss) =
+  let
+    toIndex(<>, _) = {}
+    toIndex(<s>^ss, i) = union({(i,s)}, toIndex(ss, i+1))
+  within toIndex(ss, 0)
+
+createSeqs(values, 0) = { <> }
+createSeqs(values, n) = 
+  { <v>^vs | v<-values, vs<-createSeqs(values, n-1) }
+
+pick({x}) = x
+sort(f,a) =
+  let
+    below(x) = card( { y | y<-a, f(y,x) } )
+    pairs = { (x, below(x)) | x <- a }
+    select(i) = pick({ x | (x,n)<-pairs, i==n })
+  within < select(i) | i <-<1..card(a)> >
+  
+pairsToSet(sync_ev, pairs, SV.0) =
+  let
+    all0 = empty({ i | (i,SV.s,_)<-pairs, s > 0 })
+  within 
+    if all0 then { <> }
+    else { <sync_ev, pairsToSet(sync_ev, pairs, SV.1)> }
+pairsToSet(_, {}, _) = {}
+pairsToSet(sync_ev, pairs, SV.s) =
+  { <ev, 
+      let
+        removeThisPair = 
+          diff({ (i2,SV.s2,ev2) 
+            | (i2,SV.s2,ev2)<-pairs, s2 >= s }, {(i,SV.s1,ev)})
+        hasMore = not empty({ i2 | (i2,SV.s2,_)<-removeThisPair, s2 == s })
+        hasNext = not empty({ i2 | (i2,SV.s2,_)<-pairs, s2 > s })
+      within
+        if hasMore
+          then pairsToSet(sync_ev, removeThisPair, SV.s) 
+          else if hasNext 
+            then { <sync_ev, pairsToSet(sync_ev, pairs, SV.(s+1))> }
+            else { <> }
+    >
+    | (i,SV.s1,ev)<-pairs, s1 == s }
+
+getSet(<_, setX>) = setX
+getEv(<ev, _>) = ev
+
+performMerge(ev,A,B) = 
+  let
+    getSeqEv(X) = { seqX | seqX<-X, not seqX == <>, getEv(seqX) == ev }
+    setSeqA = getSeqEv(A)
+    setSeqB = getSeqEv(B)
+  within
+    if (not empty(setSeqA) and not empty(setSeqB)) 
+      then
+          { < ev, 
+              mergePairsSets(getSet(pick(setSeqA)), getSet(pick(setSeqB)))
+            > }
+      else union(setSeqA, setSeqB)
+
+mergePairsSets(X, {<>}) = union({<>}, X)
+mergePairsSets({<>}, X) = union({<>}, X)
+mergePairsSets(A,B) =
+  let
+    evsSetX(X) = { evX | <evX>^evsX<-notEmptySeqEv(X) }
+    notEmptySeqEv(X) = { seqX | seqX<-X, not seqX == <> }
+    evsSet = union(evsSetX(A), evsSetX(B))
+  within
+    Union({ performMerge(ev,A,B) | ev<-evsSet })
+    
+RUN(evs)= [] ev: evs @ ev -> RUN(evs)
+
+RUN_COUNT(_, 0) = SKIP
+RUN_COUNT(evs, n) = [] ev: evs @ ev -> RUN_COUNT(evs, n-1)
+    
+--------------------------------------------------------------------------------
+OR(SV.a, SV.b) =
+  if (a > 0) and (b > 0) then SV.min(a,b)
+  else SV.max(a,b) 
+
+AND(SV.a, SV.b) =
+  if (a > 0) and (b > 0) then SV.max(a,b)
+  else SV.0
+
+POR(SV.a, SV.b) =
+  if (a > 0) and ((b == 0) or (a < b)) then SV.a
+  else SV.0
+  
+PAND(SV.a, SV.b) =
+  if (0 < a) and (a < b) then SV.b
+  else SV.0
+  
+SAND(SV.a, SV.b) = 
+  if (a == b) then SV.a
+  else SV.0
+  
+EVAL_EXP(inputs, output, expression, N) =
+  let
+    INIT = INPUT(seqToIndex(inputs), {}, 1, 1)
+    incCurSeq(SV.s, c, n) = if s == n then n else c
+    incNextSeq(SV.s, c, n) = if s == n then n+1 else n
+    INPUT({}, sequenceValues, _, _) = OUTPUT(sequenceValues)
+    INPUT(rem, sequenceValues, c, n) = 
+      [] (i,ev): rem @ ev?s:{SV.0, SV.c, SV.n} ->
+        INPUT(diff(rem, {(i,ev)}), union(sequenceValues, {(i,s)}), 
+          incCurSeq(s, c, n), 
+          incNextSeq(s, c, n)) 
+    OUTPUT(sequenceValues) =
+      output!expression(setToSeq(sequenceValues)) -> N
+  within INIT
+--------------------------------------------------------------------------------
+-- TODO: create a meta process that receives a function as filter
+-- current filter is empty and use a filter to allow only those traces that
+-- have an output.
+
+-- Full Expression Process
+F_EXP_PROC(expData) = EXPRESSION_PROCESS(expData, \ _ @ true)
+
+-- Expression Process with Output Higher than Zero
+EXP_PROC_OUT(expData) =
+  let
+    outputOnly(svs^<SV.x>) = x > 0
+  within EXPRESSION_PROCESS(expData, outputOnly)
+
+EXPRESSION_PROCESS((sync_ev, inputs, output, expression), filter) = 
+  let
+    nVars = #inputs
+    
+    indexes = { SV.s | s<-{0..nVars} }
+    
+    allSeqs = createSeqs(indexes, nVars)
+    
+    compareSeqs(<>, <>) = true
+    compareSeqs(<SV.s1>^svs1, <SV.s2>^svs2) = 
+      if s1 == s2 then compareSeqs(svs1, svs2)
+      else s1 <= s2
+      
+    sortedAllSeqs = sort(compareSeqs, allSeqs)
+    
+    maxSeq(<SV.a>) = a
+    maxSeq(<SV.a>^vs) = max(a,maxSeq(vs))
+    
+    tttSeq = < vs^<expression(vs)> | vs<-sortedAllSeqs,
+      maxSeq(vs) == card(diff(set(vs),{SV.0})), filter(vs^<expression(vs)>) >
+    
+    makePairSet(<>,_,_) = {}
+    makePairSet(<v>^vs, <ev>^evs, s) =
+      union({(s,v,ev)}, makePairSet(vs, evs, s+1)) 
+    
+    tttPairsSets = < makePairSet(vs, inputs^<output>, 1) | vs<-tttSeq >
+    
+    tttSets = < pairsToSet(sync_ev, ps, SV.0) | ps<-tttPairsSets >
+    
+    merge(<ps>) = ps
+    merge(<ps>^pss) = mergePairsSets(ps, merge(pss))
+    
+    mergedSets = merge(tttSets)
+    
+    EXEC_SEQ(<>) = SKIP
+    EXEC_SEQ(<ev, set>) = ev -> EXEC(set)
+    
+    EXEC(seqsSet) = [] seq: seqsSet @ EXEC_SEQ(seq)
+    
+  within EXEC(mergedSets)
+--------------------------------------------------------------------------------
+channel failure_event, end
+
+MCSQ(nEvs, s, (sync_ev, inputs, output, expression)) = 
+  let
+    sMax = #inputs
+    
+    is = set(inputs)
+    ios = union(is, {output})
+    
+    sync = Union({ ios, {|sync_ev, end|} })
+    hidden = {| end |}
+    
+    GIVEUP(evs, canEnd) = 
+      canEnd & end -> SKIP 
+      [] 
+      ([] ev: evs @ ev -> GIVEUP(evs, true))
+    
+    OBSERVER(0, 0, gotOut) =
+      if gotOut 
+        then 
+          (end -> failure_event -> SKIP)
+          []
+          GIVEUP(diff(sync, {|end|}), false) 
+        else 
+          (output -> end -> failure_event -> SKIP)
+          []
+          (end -> SKIP)
+    OBSERVER(oNEvs, oNS, gotOut) =
+      not gotOut & output -> OBSERVER(oNEvs, oNS, true)
+      []
+        [] ev: is @
+          oNEvs > 0 & (ev -> OBSERVER(oNEvs-1, oNS, gotOut) 
+          [] 
+          (oNEvs > 0 and oNS > 0) & sync_ev -> ev -> OBSERVER(oNEvs-1, oNS-1, gotOut))
+  within
+    (
+      (F_EXP_PROC((sync_ev, inputs, output, expression)); end -> SKIP) 
+      [|sync|]
+      OBSERVER(min(nEvs, sMax), min(s, sMax), false)
+    ) \ hidden
+

@@ -1,0 +1,221 @@
+include "temporal-gates.csp"
+
+channel exp: {1..7}.SequenceValue
+
+MaxSequence = 10
+channel sq_end
+
+SEQUENCER(expressions) =
+  let
+    INIT = INC_SEQ(0)
+    INC_SEQ(s) =
+      if s == MaxSequence then sq_end -> STOP
+      else HANDLE_EXP(s)
+    HANDLE_EXP(s) =
+      exp?i:{1..expressions}?s2:{ SV.x | x<-{0..s} } ->  
+        HANDLE_EXP(s)
+      []
+      exp?i:{1..expressions}!SV.(s+1) -> INC_SEQ(s+1)
+  within INIT
+  
+TEST_O(s1, s2, s3) = 
+  let
+    A = exp.1!SV.s1 -> exp.2!SV.s2 -> exp.3!SV.s3 -> STOP
+    B = exp.2!SV.s2 -> exp.1!SV.s1 -> exp.3!SV.s3 -> STOP
+  within (A [] B) [| {| exp.i | i<-{1..3} |} |] SEQUENCER(3)
+  
+TEST(1) = TEST_O(0,0,0)
+TEST(2) = TEST_O(0,1,0)
+TEST(3) = TEST_O(0,1,1)
+TEST(4) = TEST_O(1,0,0)
+TEST(5) = TEST_O(1,0,1)
+TEST(6) = TEST_O(1,1,0)
+TEST(7) = TEST_O(1,1,1)
+TEST(8) = TEST_O(1,2,0)
+TEST(9) = TEST_O(1,2,1)
+TEST(10) = TEST_O(1,2,2)
+TEST(11) = TEST_O(2,1,0)
+TEST(12) = TEST_O(2,1,1)
+TEST(13) = TEST_O(2,1,2)
+
+CONTRADICTION_DEF =
+  let
+    A = exp.1?s1 -> exp.2?s2 -> exp.3!SV.0 -> STOP
+    B = exp.2?s1 -> exp.1?s2 -> exp.3!SV.0 -> STOP
+    MAIN = (A [] B) [| {| exp.i | i<-{1..3} |} |] SEQUENCER(3)
+  within MAIN
+
+CONTRADICTION(1) = 
+  let
+    expression = \ <a, b> @ AND(PAND(a,b), PAND(b,a))
+  within EVAL_EXP(<exp.1,exp.2>, exp.3, expression, STOP)
+
+CONJUNCTIVE = 
+  let 
+    expression = \ <a, b> @ OR(OR(PAND(a,b), SAND(a,b)), PAND(b,a))
+  within EVAL_EXP(<exp.1,exp.2>, exp.3, expression, STOP)
+  
+DISJUNCTIVE =
+  let
+    expression = \ <a, b> @ OR(OR(POR(a,b), SAND(a,b)), POR(b,a))
+  within EVAL_EXP(<exp.1,exp.2>, exp.3, expression, STOP) 
+
+T_DEFAULT_GATE(gate) = 
+  EVAL_EXP(<exp.1,exp.2>, exp.3, (\ <a, b> @ gate(a,b)), STOP)
+
+T_OR = T_DEFAULT_GATE(OR)
+
+assert T_OR [T= TEST(1)
+assert not T_OR [T= TEST(2)
+assert T_OR [T= TEST(3)
+assert not T_OR [T= TEST(4)
+assert T_OR [T= TEST(5)
+assert not T_OR [T= TEST(6)
+assert T_OR [T= TEST(7)
+assert not T_OR [T= TEST(8)
+assert T_OR [T= TEST(9)
+assert not T_OR [T= TEST(10)
+assert not T_OR [T= TEST(11)
+assert T_OR [T= TEST(12)
+assert not T_OR [T= TEST(13)
+
+T_AND = T_DEFAULT_GATE(AND)
+
+assert T_AND [T= TEST(1)
+assert T_AND [T= TEST(2)
+assert not T_AND [T= TEST(3)
+assert T_AND [T= TEST(4)
+assert not T_AND [T= TEST(5)
+assert not T_AND [T= TEST(6)
+assert T_AND [T= TEST(7)
+assert not T_AND [T= TEST(8)
+assert not T_AND [T= TEST(9)
+assert T_AND [T= TEST(10)
+assert not T_AND [T= TEST(11)
+assert not T_AND [T= TEST(12)
+assert T_AND [T= TEST(13)
+
+T_POR = T_DEFAULT_GATE(POR)
+
+assert T_POR [T= TEST(1)
+assert T_POR [T= TEST(2)
+assert not T_POR [T= TEST(3)
+assert not T_POR [T= TEST(4)
+assert T_POR [T= TEST(5)
+assert T_POR [T= TEST(6)
+assert not T_POR [T= TEST(7)
+assert not T_POR [T= TEST(8)
+assert T_POR [T= TEST(9)
+assert not T_POR [T= TEST(10)
+assert T_POR [T= TEST(11)
+assert not T_POR [T= TEST(12)
+assert not T_POR [T= TEST(13)
+
+T_PAND = T_DEFAULT_GATE(PAND)
+
+assert T_PAND [T= TEST(1)
+assert T_PAND [T= TEST(2)
+assert not T_PAND [T= TEST(3)
+assert T_PAND [T= TEST(4)
+assert not T_PAND [T= TEST(5)
+assert T_PAND [T= TEST(6)
+assert not T_PAND [T= TEST(7)
+assert not T_PAND [T= TEST(8)
+assert not T_PAND [T= TEST(9)
+assert T_PAND [T= TEST(10)
+assert T_PAND [T= TEST(11)
+assert not T_PAND [T= TEST(12)
+assert not T_PAND [T= TEST(13)
+
+T_SAND = T_DEFAULT_GATE(SAND)
+
+assert T_SAND [T= TEST(1)
+assert T_SAND [T= TEST(2)
+assert not T_SAND [T= TEST(3)
+assert T_SAND [T= TEST(4)
+assert not T_SAND [T= TEST(5)
+assert not T_SAND [T= TEST(6)
+assert T_SAND [T= TEST(7)
+assert T_SAND [T= TEST(8)
+assert not T_SAND [T= TEST(9)
+assert not T_SAND [T= TEST(10)
+assert T_SAND [T= TEST(11)
+assert not T_SAND [T= TEST(12)
+assert not T_SAND [T= TEST(13)
+
+assert CONJUNCTIVE [FD= T_AND
+assert T_AND [FD= CONJUNCTIVE
+
+assert DISJUNCTIVE [FD= T_OR
+assert T_OR [FD= DISJUNCTIVE
+
+assert CONTRADICTION(1) [FD= CONTRADICTION_DEF
+assert CONTRADICTION_DEF [FD= CONTRADICTION(1)
+
+--------------------------------------------------------------------------------
+
+channel vis_c: {1..4}
+
+AND_OR_TICKER = F_EXP_PROC((tick, <vis_c.1,vis_c.2,vis_c.3>, vis_c.4, \ <a,b,c> @ OR(AND(a,b), c)))
+
+channel tick
+
+OrExpression = (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ OR(a,b))
+PorExpression = (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ POR(a,b))
+AndExpression = (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ AND(a,b))
+PandExpression = (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ PAND(a,b))
+SandExpression = (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ SAND(a,b))
+
+OR_TICKER = F_EXP_PROC(OrExpression)
+
+AND_TICKER = F_EXP_PROC(AndExpression)
+
+AND_TICKER_OUT_ONLY = EXP_PROC_OUT(AndExpression)
+
+assert OR_TICKER :[deterministic]
+assert OR_TICKER :[livelock free]
+assert OR_TICKER [T= SKIP
+assert not OR_TICKER [T= tick -> vis_c?x -> SKIP
+assert OR_TICKER [T= tick -> vis_c?x:{1,2} -> vis_c.3 -> SKIP
+assert OR_TICKER [T= tick -> vis_c?x:{1,2} -> vis_c.3 -> tick -> vis_c?x2:diff({1,2},{x}) -> SKIP
+assert not OR_TICKER [T= tick -> vis_c?x:{1,2} -> tick -> vis_c.3 -> SKIP
+assert not OR_TICKER [T= tick -> vis_c?x:{1,2} -> tick -> vis_c.3 -> vis_c?x2:diff({1,2},{x}) -> SKIP
+
+assert AND_OR_TICKER :[deterministic]
+assert AND_OR_TICKER :[livelock free]
+assert AND_OR_TICKER [T= SKIP
+assert not AND_OR_TICKER [T= tick -> vis_c?x -> SKIP
+assert AND_OR_TICKER [T= tick -> vis_c!3 -> vis_c!4 -> SKIP
+
+assert AND_TICKER :[deterministic]
+assert AND_TICKER :[livelock free]
+assert AND_TICKER [T= SKIP
+assert not AND_TICKER [T= tick -> vis_c?x -> SKIP
+assert AND_TICKER [T= tick -> vis_c?x:{1,2} -> vis_c?x2:diff({1,2},{x}) -> vis_c.3 -> SKIP
+assert AND_TICKER [T= tick -> vis_c?x:{1,2} -> tick -> vis_c.3 -> vis_c?x2:diff({1,2},{x}) -> SKIP
+assert not AND_TICKER [T= tick -> vis_c?x:{1,2} -> tick -> vis_c.3 -> SKIP
+assert not AND_TICKER [T= tick -> vis_c?x:{1,2} -> tick -> vis_c?x2:diff({1,2},{x}) -> SKIP
+
+assert not F_EXP_PROC((tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ OR(a,b))) [T= MCSQ(1, 1, (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ OR(a,b)))
+assert not F_EXP_PROC((tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ OR(a,b))) [T= MCSQ(2, 1, (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ OR(a,b)))
+assert not F_EXP_PROC((tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ OR(a,b))) [T= MCSQ(2, 2, (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ OR(a,b)))
+
+
+assert F_EXP_PROC((tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ AND(a,b))) [T= MCSQ(1, 1, (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ AND(a,b)))
+assert not F_EXP_PROC((tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ AND(a,b))) [T= MCSQ(2, 1, (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ AND(a,b)))
+assert not F_EXP_PROC((tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ AND(a,b))) [T= MCSQ(2, 2, (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ AND(a,b)))
+
+assert F_EXP_PROC((tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ PAND(a,b))) [T= MCSQ(1, 1, (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ PAND(a,b)))
+assert F_EXP_PROC((tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ PAND(a,b))) [T= MCSQ(2, 1, (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ PAND(a,b)))
+assert not F_EXP_PROC((tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ PAND(a,b))) [T= MCSQ(2, 2, (tick, <vis_c.1,vis_c.2>, vis_c.3, \ <a,b> @ PAND(a,b)))
+
+assert EXP_PROC_OUT(AndExpression) [T= EXP_PROC_OUT(PandExpression)
+assert EXP_PROC_OUT(AndExpression) [T= EXP_PROC_OUT(SandExpression)
+assert not EXP_PROC_OUT(PandExpression) [T= EXP_PROC_OUT(AndExpression)
+assert not EXP_PROC_OUT(SandExpression) [T= EXP_PROC_OUT(AndExpression)
+assert EXP_PROC_OUT(OrExpression) [T= EXP_PROC_OUT(PorExpression)
+assert not EXP_PROC_OUT(PorExpression) [T= EXP_PROC_OUT(OrExpression)
+
+assert EXP_PROC_OUT(OrExpression) [T= EXP_PROC_OUT(SandExpression)
+assert not EXP_PROC_OUT(AndExpression) [T= EXP_PROC_OUT(OrExpression)
+assert not EXP_PROC_OUT(OrExpression) [T= EXP_PROC_OUT(AndExpression)

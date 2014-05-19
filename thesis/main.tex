@@ -1,0 +1,78 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass[uk,twoside,onehalfspacing,phd]{risethesis}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{cspsymb}
+
+
+\DeclareGraphicsExtensions{.png,.jpg,.eps}
+\graphicspath{{./figures},{./}}
+
+\usepackage[linkcolor=blue,citecolor=blue,urlcolor=blue,colorlinks,pdfpagelabels,pdftitle={rise-template-msc},pdfauthor={RiSE Latex Template}]{hyperref}
+\usepackage{cleveref}
+\usepackage{etoolbox}
+
+\address{Recife}
+
+\universitypt{Universidade Federal de Pernambuco}
+\universityen{Federal University of Pernambuco}
+
+\departmentpt{Centro de Informática}
+\departmenten{Center for Informatics}
+
+\programpt{Pós-graduação em Ciência da Computação}
+\programen{Graduate in Computer Science}
+
+\majorfieldpt{Ciência da Computação}
+\majorfielden{Computer Science}
+
+\title{[to be defined]}
+\date{April 2014}
+
+\author{André Luís Ribeiro Didier}
+\adviser{Alexandre Cabral Mota}
+\coadviser{Alexander Romanovsky\footnote{Newcastle University, UK}}
+
+\input{shortcuts}
+\begin{document}
+
+\frontmatter
+\frontpage
+\presentationpage
+
+\input{acknowledgements}
+
+\input{abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+% Acronyms manual: http://linorg.usp.br/CTAN/macros/latex/contrib/acronym/acronym.pdf
+\listofacronyms
+%\input{acronyms}
+\lstlistoflistings
+\mainmatter
+
+\input{introduction}
+
+\input{dependability}
+
+\input{temporal-fault-trees}
+
+\input{related-work}
+
+\bibliographystyle{natbib}
+%\addcontentsline{toc}{chapter}{\bibliographytocname}
+%\bibliography{references}
+
+% Appendix
+\clearpage
+\addappheadtotoc
+\appendix
+\appendixpage
+%\include{appendix/experiment-instruments}
+
+\end{document}

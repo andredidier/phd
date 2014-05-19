@@ -1,0 +1,78 @@
+nametype DiscreteTime = { 0..30000 }
+
+channel pick_radio: DiscreteTime
+channel press_button: DiscreteTime
+channel send_message: DiscreteTime
+channel receive_message: DiscreteTime
+channel message_drop: DiscreteTime
+channel detect_loss: DiscreteTime
+
+channel pick_phone: DiscreteTime
+channel dial: DiscreteTime
+channel connect: DiscreteTime
+channel answer: DiscreteTime
+
+channel total, add: {0..30000}
+
+DURATION(ev.x) = x
+
+REQUIREMENT1 = total?x:{0..170} -> SKIP
+REQUIREMENT2 = total?x:{0..120} -> SKIP
+  
+RS = pick_radio?pr:{1..8} -> press_button?pb:{1..3} -> send_message?sm:{0..2} -> 
+  receive_message?rm:{10..100} ->  SKIP
+  
+MPS = pick_phone?pp:{1..8} -> dial?di:{10..20} -> connect?co:{5..30} -> 
+  answer?an:{10..100} -> send_message?sm:{0..2} -> 
+  receive_message?rm:{0..2} -> SKIP
+  
+RS_MPS =
+  let
+    RS_FAULT = 
+      send_message?sm:{0..2} ->
+      ( 
+      (detect_loss?dl:{0..50} -> receive_message!100 -> SKIP)
+      []
+      (receive_message?rm:{10..100} -> SKIP)
+      )
+    RS_COMPLETE = 
+      RS 
+      [| 
+        {| send_message.sm, detect_loss.dl, receive_message.rm 
+           | sm<-{0..2}, dl<-{0..50}, rm<-{10..100} |} 
+      |]
+      RS_FAULT
+    MPS_DETECT = detect_loss?dl:{100..150} -> MPS
+    MAIN = 
+      RS_COMPLETE 
+      [| {| detect_loss.dl | dl<-{100..150} |} |] 
+      MPS_DETECT
+  within MAIN
+  
+
+TOTAL(P, S) = 
+  let
+    ADD = P [[ x <- add | x<-S ]]
+    ADD_TOTAL = ADD ; total?x -> SKIP
+    CALC(t) = 
+      (t < 30000 & add?x -> CALC(if t+x > 30000 then 30000 else t+x))
+      []
+      (total!t -> SKIP)
+  within (ADD_TOTAL [| {|add,total|} |] CALC(0)) \ {| add |}
+
+TOTAL_RS = TOTAL(RS, { pick_radio, press_button, send_message, 
+  receive_message })
+
+TOTAL_MPS = TOTAL(MPS, { pick_phone, dial, connect, answer, send_message,
+  send_message })
+  
+TOTAL_RS_MPS = TOTAL(RS_MPS, { pick_radio, press_button, pick_phone, dial, 
+  connect, answer, send_message, send_message })
+
+assert REQUIREMENT1 [T= TOTAL_RS
+assert REQUIREMENT1 [T= TOTAL_MPS
+assert not REQUIREMENT1 [T= TOTAL_RS_MPS
+
+assert REQUIREMENT2 [T= TOTAL_RS
+assert not REQUIREMENT2 [T= TOTAL_MPS
+assert not REQUIREMENT2 [T= TOTAL_RS_MPS

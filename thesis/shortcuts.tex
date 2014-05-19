@@ -1,0 +1,42 @@
+%%%%% Temporal gates
+\newcount\pgateexp
+\newcommand{\gateexp}[1]{\ifnum\the\pgateexp > 1 (#1) \else #1 \fi}
+
+\newcommand{\OR}[2]{\advance\pgateexp 1\ensuremath{\gateexp{#1+#2}}\advance\pgateexp -1}
+\newcommand{\AND}[2]{\advance\pgateexp 1\ensuremath{\gateexp{#1.#2}}\advance\pgateexp -1}
+\newcommand{\POR}[2]{\advance\pgateexp 1\ensuremath{\gateexp{#1|#2}}\advance\pgateexp -1}
+\newcommand{\PAND}[2]{\advance\pgateexp 1\ensuremath{\gateexp{#1<#2}}\advance\pgateexp -1}
+\newcommand{\SAND}[2]{\advance\pgateexp 1\ensuremath{\gateexp{#1\&#2}}\advance\pgateexp -1}
+\newcommand{\SV}{\ensuremath{\mathrm{SV}}}
+\newcommand{\SVtuple}[1][n]{\ensuremath{\underbrace{\SV \cross \ldots \cross \SV}_{#1}}}
+
+\newcommand{\powerset}{\ensuremath{\mathcal P}}
+
+%%%%% Boolean gates
+\newcommand{\BOR}[2]{#1\mathrm{+^B}#2}
+
+
+
+%%%% Abbreviations
+
+%CSP
+\newif\ifcsp
+\newcommand{\CSP}{\ifcsp CSP\xspace\else Communicating Sequential Processes (CSP)\csptrue\xspace\fi}
+
+\newif\ifcspm
+\renewcommand{\CSPM}{\ifcspm \CSP{$_M$}\xspace\else \CSP{$_M$}\footnote{Machine-readable version of \CSP}\cspmtrue\xspace\fi}
+
+%TTT
+\newif\ifttt
+\newcommand{\TTT}{\ifttt TTT\xspace\else Temporal Truth Table (TTT)\ttttrue\xspace\fi}
+\newcommand{\TTTs}{\ifttt TTTs\xspace\else Temporal Truth Tables (TTTs)\ttttrue\xspace\fi}
+
+%TFT
+\newif\iftft
+\newcommand{\TFT}{\iftft TFT\xspace\else Temporal Fault Tree (TFT)\tfttrue\xspace\fi}
+\newcommand{\TFTs}{\iftft TFTs\xspace\else Temporal Fault Trees (TFTs)\tfttrue\xspace\fi}
+
+%FT
+\newif\ifft
+\newcommand{\FT}{\ifft FT\xspace\else Fault Tree (FT)\fttrue\xspace\fi}
+\newcommand{\FTs}{\ifft FTs\xspace\else Fault Trees (FTs)\fttrue\xspace\fi}

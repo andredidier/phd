@@ -1,0 +1,100 @@
+include "temporal-gates.csp"
+
+wp2010Exp = 
+  \ <pFail, sFail, noInput, sensFail> @
+    OR( -- G1
+      OR( -- G2
+        AND( -- G4
+          OR(pFail, noInput), -- G8 
+          AND( -- G7
+            POR( -- G9
+              OR(pFail, noInput), -- G8 
+              sensFail 
+            ),
+            sFail
+          )
+        ),
+        PAND( -- G5
+          sensFail,
+          OR(pFail, noInput) -- G8
+        )
+      ),
+      OR( -- G3
+        SAND( -- G6
+          sensFail, 
+          OR(pFail, noInput) -- G8
+        ),
+        noInput
+      )
+    )
+
+print wp2010Exp(<SV.0, SV.0, SV.0, SV.1>)
+
+channel pf,sf,ni,sef,out
+channel synchronous
+
+wp2010 = (synchronous, <pf,sf,ni,sef>, out, wp2010Exp)
+csq1 = (synchronous, <pf,sf,sef>, out, \ <pFail, sFail, sensFail> @ AND(POR(pFail, sensFail), sFail))
+csq2 = (synchronous, <pf,sef>, out, \ <pFail, sensFail> @ PAND(sensFail, pFail))
+csq3 = (synchronous, <pf,sef>, out, \ <pFail, sensFail> @ SAND(sensFail, pFail))
+csq4 = (synchronous, <ni>, out, \ <noInput> @ noInput)
+csq5 = (synchronous, <sef,sf,ni,pf>, out, \ <ev1, ev2, ev3, ev4> @ AND(AND(ev2,ev4),POR(ev3,ev1)))
+csq6 = (synchronous, <sef,sf,ni,pf>, out, \ <ev1, ev2, ev3, ev4> @ AND(AND(ev2,ev3),POR(ev4,ev1)))
+csq7 = (synchronous, <sef,sf,ni>, out, \ <ev1, ev2, ev3> @ AND(AND(ev2,ev3),POR(ev3,ev1)))
+csq8 = (synchronous, <sef,ni>, out, \ <ev1, ev3> @ PAND(ev1, ev3))
+csq9 = (synchronous, <sef,ni>, out, \ <ev1, ev3> @ SAND(ev1, ev3))
+
+ncsq1 = (synchronous, <sef,ni>, out, \ <ev1, ev3> @ POR(ev1, ev3))
+ncsq2 = (synchronous, <sef,ni>, out, \ <ev1, ev3> @ OR(ev1, ev3))
+
+mcsq1 = csq1
+mcsq2 = csq2
+mcsq3 = csq3
+mcsq4 = csq4
+
+t1 = (synchronous, <sef,sf,ni>, out, \ <ev1, ev2, ev3> @ AND(ev1, OR(ev2, ev3)))
+t2 = (synchronous, <sef,sf>, out, \ <ev1, ev2> @ AND(ev1, ev2))
+t3 = (synchronous, <sef,sf>, out, \ <ev1, ev2> @ PAND(ev1, ev2))
+t4 = (synchronous, <sef,sf>, out, \ <ev1, ev2> @ SAND(ev1, ev2))
+
+assert F_EXP_PROC(wp2010) :[deterministic]
+assert F_EXP_PROC(wp2010) :[divergence free]
+
+{-
+assert not F_EXP_PROC(wp2010) [T= MCSQ(1, 1, wp2010)
+assert not F_EXP_PROC(wp2010) [T= MCSQ(2, 1, wp2010)
+assert not F_EXP_PROC(wp2010) [T= MCSQ(2, 2, wp2010)
+assert not F_EXP_PROC(wp2010) [T= MCSQ(3, 1, wp2010)
+assert not F_EXP_PROC(wp2010) [T= MCSQ(3, 2, wp2010)
+assert not F_EXP_PROC(wp2010) [T= MCSQ(3, 3, wp2010)
+assert not F_EXP_PROC(wp2010) [T= MCSQ(4, 1, wp2010)
+assert not F_EXP_PROC(wp2010) [T= MCSQ(4, 2, wp2010)
+assert not F_EXP_PROC(wp2010) [T= MCSQ(4, 3, wp2010)
+assert not F_EXP_PROC(wp2010) [T= MCSQ(4, 4, wp2010)
+
+assert not F_EXP_PROC(wp2010) [T= F_EXP_PROC(mcsq1)
+assert not F_EXP_PROC(wp2010) [T= F_EXP_PROC(mcsq2)
+assert not F_EXP_PROC(wp2010) [T= F_EXP_PROC(mcsq3)
+assert F_EXP_PROC(wp2010) [T= F_EXP_PROC(mcsq4)
+
+-}
+
+REC(exp) = (EXP_PROC_OUT(wp2010) [|{| synchronous,pf,sf,ni,sef,out |}|] EXP_PROC_OUT(exp)); REC(exp)
+
+assert REC(csq1) :[deadlock free]
+assert REC(csq2) :[deadlock free]
+assert REC(csq3) :[deadlock free]
+assert REC(csq4) :[deadlock free]
+assert REC(csq5) :[deadlock free]
+assert REC(csq6) :[deadlock free]
+assert REC(csq7) :[deadlock free]
+assert REC(csq8) :[deadlock free]
+assert REC(csq9) :[deadlock free]
+assert not REC(ncsq1) :[deadlock free]
+assert not REC(ncsq2) :[deadlock free]
+
+CSQ5 = EXP_PROC_OUT(csq5)
+CSQ6 = EXP_PROC_OUT(csq6)
+
+
+

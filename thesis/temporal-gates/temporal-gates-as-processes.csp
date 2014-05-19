@@ -1,0 +1,128 @@
+
+min(a,b) = if a > b then b else a
+max(a,b) = if a > b then a else b
+
+--------------------------------------------------------------------------------
+datatype FTEventType = 
+  Basic.{1..10} 
+  | G_AND.{1..20}
+  | G_OR.{1..20}
+subtype FTBasicType = Basic.{1..10}
+
+datatype SequenceValue = SV.{0..10}
+
+channel ftevent: FTEventType.SequenceValue
+
+channel keep, inc
+
+GATE(fta, ftb, out, calc) =
+  let
+    AB = (ftevent!fta?sva -> B(sva)) [] (ftevent!ftb?svb -> A(svb))
+    A(svb) = ftevent!fta?sva -> OUTPUT(sva, svb)
+    B(sva) = ftevent!ftb?svb -> OUTPUT(sva, svb)
+    OUTPUT(sva, svb) = ftevent!out!calc(sva,svb) -> SKIP
+  within AB
+
+calc(G_OR._) = 
+  \ SV.a, SV.b @
+      if (a > 0) and (b > 0) then SV.min(a,b)
+      else SV.max(a,b)
+calc(G_AND._) = 
+  \ SV.a, SV.b @
+    if (a > 0) and (b > 0) then SV.max(a,b)
+    else SV.0
+
+GATES_SYNC(GatesData) = 
+  let
+    toEvents((ina,inb,out)) = {| ftevent.x | x<-{ina,inb,out} |}
+    isBasic(Basic._) = true
+    isBasic(_) = false
+    allBasic = 
+      { ftevent.x
+        | (ina,inb,o)<-GatesData, 
+          x<-{ina,inb,o},
+          isBasic(x) }
+    SYNC_CONTROL(x) = SYNC_CONTROL_REM(x, 0, allBasic, true) \ {| keep, inc |}
+    SYNC_CONTROL_REM(_, _, {}, _) = SKIP
+    SYNC_CONTROL_REM(x, sv, rem, allow) = 
+      (keep -> [] ev: rem @ ev!SV.sv ->
+        SYNC_CONTROL_REM(x, sv, diff(rem,{ev}), true))
+      []
+      (allow and member(SV.(sv+1), SequenceValue)) & 
+        (inc -> x -> SYNC_CONTROL_REM(x, sv + 1, rem, false))
+    G((ina, inb, out)) = GATE(ina, inb, out, calc(out))
+  within 
+    \ x @
+      (|| (FTEs): GatesData @ [toEvents(FTEs)] G(FTEs))
+      [| {| ev | ev<-allBasic |} |]
+      SYNC_CONTROL(x)
+        
+RUN_OUT(Gates, out) = 
+  let
+    isBasic(Basic._) = true
+    isBasic(_) = false
+    allEventsSVs = 
+      { ftevent.ev.SV.sv 
+        | ev<-diff(allEvents, {out}), 
+          sv<-{0..cBasic} }
+    cBasic = card({ ev | ev<-allEvents, isBasic(ev)})
+    allEvents = 
+      { x 
+        | (ina,inb,o)<-Gates, 
+          x<-{ina,inb,o} }
+    BASICS = [] ev: allEventsSVs @ ev -> CHOOSE
+    CHOOSE = BASICS
+      [] ftevent!out!SV.0 -> SKIP
+      [] ftevent!out.SV?sv:{1..cBasic} -> STOP
+  within CHOOSE
+
+CHECK_DD(Gates, out) =
+  let
+    isBasic(Basic._) = true
+    isBasic(_) = false
+    allBasic = 
+      { ftevent.x
+        | (ina,inb,o)<-Gates, 
+          x<-{ina,inb,o},
+          isBasic(x) }
+    GS = GATES_SYNC(Gates)
+    RO = RUN_OUT(Gates, out)
+    MAIN(x) = GS(x) [| {| ev | ev<-union(allBasic, {ftevent.out}) |} |] RO
+    REC(x) = MAIN(x); REC(x)
+  within REC
+  
+BLOCK_NONZERO(Gates, out) =
+  let
+    isBasic(Basic._) = true
+    isBasic(_) = false
+    allEventsSVs = 
+      { ftevent.ev.SV.sv 
+        | ev<-diff(allEvents, {out}), 
+          sv<-{0..cBasic} }
+    cBasic = card({ ev | ev<-allEvents, isBasic(ev)})
+    allEvents = 
+      { x 
+        | (ina,inb,o)<-Gates, 
+          x<-{ina,inb,o} }
+    RUN_ALL = [] ev: allEventsSVs @ ev -> CHOOSE
+    CHOOSE = RUN_ALL [] (ftevent!out.SV.0 -> SKIP)
+  within CHOOSE
+-------------------------------------------------------------------------------
+
+
+channel ttt
+ 
+Gates1 = {
+  (Basic.1, Basic.2, G_OR.1),
+  (G_OR.1, Basic.3, G_AND.1)
+}
+
+T1 = BLOCK_NONZERO(Gates1, G_AND.1)
+
+assert not BLOCK_NONZERO(Gates1, G_AND.1) [T= GATES_SYNC(Gates1)(ttt) \ {ttt}
+
+assert not CHECK_DD(Gates1, G_AND.1)(ttt) \ {ttt}:[deadlock free]
+
+
+
+
