@@ -3,3 +3,9 @@
 /phd-thesis-alrd.synctex.gz
 /tmp
 *.lol
+/main.aux
+/main.lof
+/main.log
+/main.lot
+/main.out
+/main.toc
