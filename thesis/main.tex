@@ -1,19 +1,56 @@
 %%This is a very basic article template.
 %%There is just one section and two subsections.
-\documentclass[uk,twoside,onehalfspacing,phd]{risethesis}
+\documentclass[en,twoside,onehalfspacing,phd]{risethesis}
+\usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{colortbl}
+\usepackage{color}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{cspsymb}
-
+\usepackage[table]{xcolor}
+\usepackage{microtype}
+\usepackage{bibentry}
+\usepackage{subfigure}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{booktabs}
+\usepackage{pdfpages}
+\usepackage{caption}
+\usepackage{lipsum}
 
 \DeclareGraphicsExtensions{.png,.jpg,.eps}
 \graphicspath{{./figures},{./}}
 
-\usepackage[linkcolor=blue,citecolor=blue,urlcolor=blue,colorlinks,pdfpagelabels,pdftitle={rise-template-msc},pdfauthor={RiSE Latex Template}]{hyperref}
+\def\mytitle{[TBD]}
+\def\me{Andr\'{e} Lu\'{i}s Ribeiro Didier}
+
+\usepackage[linkcolor=black,
+            citecolor=blue,
+            urlcolor=black,
+            colorlinks,
+            pdfpagelabels,
+            pdftitle={\mytitle},
+            pdfauthor={\me}]{hyperref}
 \usepackage{cleveref}
 \usepackage{etoolbox}
+
+\captionsetup[table]{position=top,justification=centering,width=.85\textwidth,labelfont=bf,font=small}
+\captionsetup[lstlisting]{position=top,justification=centering,width=.85\textwidth,labelfont=bf,font=small}
+\captionsetup[figure]{position=bottom,justification=centering,width=.85\textwidth,labelfont=bf,font=small}
+
+%% Remove colors from hyperlinks
+\makeatletter
+\AtBeginDocument{%
+  \renewcommand*{\AC@hyperlink}[2]{%
+    \begingroup
+      \hypersetup{hidelinks}%
+      \hyperlink{#1}{#2}%
+    \endgroup
+  }%
+}
+\makeatother
 
 \address{Recife}
 
@@ -29,34 +66,46 @@
 \majorfieldpt{Ciência da Computação}
 \majorfielden{Computer Science}
 
-\title{[to be defined]}
+\title{\mytitle}
 \date{April 2014}
 
-\author{André Luís Ribeiro Didier}
+\author{\me}
 \adviser{Alexandre Cabral Mota}
-\coadviser{Alexander Romanovsky\footnote{Newcastle University, UK}}
+\coadviser{Alexander Romanovsky}
 
 \input{shortcuts}
 \begin{document}
 
 \frontmatter
+
 \frontpage
+
 \presentationpage
+
+\begin{fichacatalografica}
+  \FakeFichaCatalografica % Comment this line when you have the correct file
+%     \includepdf{fig_ficha_catalografica.pdf} % Uncomment this
+\end{fichacatalografica}
+
+\banca
 
 \input{acknowledgements}
 
 \input{abstract}
 
-\tableofcontents
 \listoffigures
 \listoftables
 % Acronyms manual: http://linorg.usp.br/CTAN/macros/latex/contrib/acronym/acronym.pdf
 \listofacronyms
 %\input{acronyms}
-\lstlistoflistings
+%\lstlistoflistings
+\tableofcontents
+
 \mainmatter
 
 \input{introduction}
+
+\input{hazard-management}
 
 \input{dependability}
 
@@ -64,15 +113,18 @@
 
 \input{related-work}
 
-\bibliographystyle{natbib}
+%\bibliographystyle{natbib}
 %\addcontentsline{toc}{chapter}{\bibliographytocname}
-%\bibliography{references}
+\begin{references}
+\bibliography{references}
+\end{references}
 
 % Appendix
-\clearpage
-\addappheadtotoc
-\appendix
-\appendixpage
+%\clearpage
+%\addappheadtotoc
+%\appendix
+%\appendixpage
+\theappendix
 %\include{appendix/experiment-instruments}
 
 \end{document}
