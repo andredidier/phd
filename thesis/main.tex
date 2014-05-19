@@ -19,13 +19,10 @@
 \usepackage{pdfpages}
 \usepackage{caption}
 \usepackage{lipsum}
-
 \DeclareGraphicsExtensions{.png,.jpg,.eps}
 \graphicspath{{./figures},{./}}
-
 \def\mytitle{[TBD]}
 \def\me{Andr\'{e} Lu\'{i}s Ribeiro Didier}
-
 \usepackage[linkcolor=black,
             citecolor=blue,
             urlcolor=black,
@@ -35,6 +32,8 @@
             pdfauthor={\me}]{hyperref}
 \usepackage{cleveref}
 \usepackage{etoolbox}
+\usepackage{hazard-management}
+\usepackage{amsthm}
 
 \captionsetup[table]{position=top,justification=centering,width=.85\textwidth,labelfont=bf,font=small}
 \captionsetup[lstlisting]{position=top,justification=centering,width=.85\textwidth,labelfont=bf,font=small}
@@ -73,6 +72,9 @@
 \adviser{Alexandre Cabral Mota}
 \coadviser{Alexander Romanovsky}
 
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+
 \input{shortcuts}
 \begin{document}
 
@@ -110,6 +112,8 @@
 \input{dependability}
 
 \input{temporal-fault-trees}
+
+\input{formalisation}
 
 \input{related-work}
 

@@ -1,0 +1,104 @@
+\chapter{Formalisation of Hazard Management}
+
+Hazard properties, extracted from~\cite{ericsonII2005}:
+%
+\begin{enumerate}
+  \item Hazardous element (HE);
+  \item Initiating mechanisms (IM): sequence of events to activate the hazard;
+  \item Target and Threat (T/T): the person or system and its corresponding threat;
+  \item Status: open or closed. A hazard can only be closed if it has been verified through analysis, inspection or testing that the safety requirements are implemented in the design and successfully tested for effectiveness.
+  \item Mitigation: lists the recommended actions obtained by all analysis
+  \begin{itemize}
+    \item Eliminate through design selection;
+    \item Incorporate safety devices;
+    \item Provide warning devices;
+    \item Develop procedures and training;
+    \item Control hazard through design methods.
+  \end{itemize}
+  \item Mishap Risk Index (initial, current, final) -- qualitative measurement:
+  \begin{itemize}
+    \item Severity
+    \begin{enumerate}
+      \item Catastrophic;
+      \item Critical;
+      \item Marginal;
+      \item Negligible.
+    \end{enumerate}
+    \item Probability
+    \begin{enumerate}
+      \item Frequent;
+      \item Probable;
+      \item Occasional;
+      \item Remote;
+      \item Improbable.
+    \end{enumerate}
+  \end{itemize} 
+\end{enumerate}
+
+Scope of system to which Hazard Analysis make sense: those that have signal, material and energy.
+%
+All system functional elements~\cite[p. 47]{KSS+2011} are:
+\begin{itemize}
+  \item Signal---generate, transmit, distribute, and receive signals used in passive or active sensing and in communications;
+  \item Data---analyse, interpret, organize, query, and/or convert data and information into forms desired by the user or other systems;
+  \item Material---provide system structural support or enclosure, or transform the shape, composition, or location of material substances;
+  \item Energy---provide and convert energy or propulsive power to the system.
+\end{itemize}
+
+\begin{definition}[Identifier]
+It can be modelled as any user-defined data type. It can be a sequence of alphanumeric symbols (a descriptive text of the element) or a natural number (for example: an identification of a system element). It is a basic data type $Id$ used in other definitions.
+\end{definition}
+
+\begin{definition}[Component]
+A component is any functional or physical block within a system that may contain 
+\end{definition}
+
+\begin{definition}[Hazardous element]
+A hazardous element represents an element that can potentially harm someone or something.
+$\hmdatatypeHE: Id$.
+\end{definition}
+
+\begin{definition}[Initiating mechanism]
+An initiating mechanism is an event on the system.
+%
+$\hmdatatypeIM: Id$
+%it can be a CSP process. 
+\end{definition}
+
+\begin{definition}[Target/Threat]
+A target and threat pair represents the person or system that is harmed if a hazardous element is activated by the initiating mechanisms and the nature of the harm. 
+%
+$\hmdatatypeTT: \hmcartesian{Id}{Id}$.
+\end{definition}
+
+\begin{definition}[Hazard]
+Given a hazardous element $HE$, a sequence of $n$ initiating mechanisms $\hmseqenum{IM_1, \ldots, IM_n}$ and a target-threat pair $T/T$, a hazard $H$ is defined as: 
+%
+$H: \hmcartesian{\hmcartesian{\hmdatatypeHE}{\hmdatatypeTT}}{\hmseq \hmdatatypeIM}$,
+%
+which can be written as:
+%
+\\$H \hmdefs \hmhazard{HE}{\hmseqenum{IM_1, \ldots, IM_n}}{T/T}$.
+\end{definition}
+
+\begin{definition}[Hazard activation probability]
+Given a probability function $\hmprobabilitysymbol$, such that $P: \hmpartialfunction {Id}{\hmdatatypereal}$, a hazardous element $HE$, a sequence of $n$ initiating mechanisms $\hmseqenum{HM_1,\ldots,HM_n}$ and a target-threat pair $T/T$, the probability of the activation of the hazard $H = \hmhazard{HE}{\hmseqenum{HM_1,\ldots,HM_n}}{T/T}$ is:
+%
+\\$\hmprobability{H} = \hmtimes{\hmprobability{HE}}{\hmtimes{\hmtimes{\hmprobability{IM_1}}{\ldots}}{\hmprobability{IM_n}}}$
+\end{definition}
+
+\begin{definition}[Mishap]
+A mishap is defined as a pair of the probability of a hazard and the severity in case it happens: $M: \hmcartesian{\hmdatatypereal}{\hmdatatypeseverity}$.
+\end{definition}
+%
+\noindent Where $\hmdatatypeseverity \subset \hmdatatypenatural$ has the following values:
+\begin{description}
+  \item[1] Catastrophic;
+  \item[2] Critical;
+  \item[3] Marginal and
+  \item[4] Negligible.
+\end{description}
+
+{\huge
+URGENTE: vai refinar o quê?
+}

@@ -2,19 +2,6 @@
 % Encoding: UTF8
 
 
-@Book{EricsonII2005,
-  Title                    = {{H}azard {A}nalysis {T}echniques for {S}ystem {S}afety},
-  Author                   = {Clifton A. {Ericson II}},
-  Publisher                = {Wiley-Interscience},
-  Year                     = {2005},
-  Month                    = {August},
-
-  ISBN                     = {978-0-471-72019-5},
-  Owner                    = {alrd},
-  Timestamp                = {2014.04.07},
-  Url                      = {http://www.amazon.com/Hazard-Analysis-Techniques-System-Safety/dp/0471720194%3FSubscriptionId%3D0JYN1NVW651KCA56C102%26tag%3Dtechkie-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0471720194}
-}
-
 @Book{KSS+2011,
   Title                    = {{S}ystems {E}ngineering {P}rinciples and {P}ractice},
   Author                   = {Alexander Kossiakoff and William N. Sweet and Sam Seymour and Steven M. Biemer},
