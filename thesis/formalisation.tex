@@ -46,59 +46,121 @@ All system functional elements~\cite[p. 47]{KSS+2011} are:
 \end{itemize}
 
 \begin{definition}[Identifier]
-It can be modelled as any user-defined data type. It can be a sequence of alphanumeric symbols (a descriptive text of the element) or a natural number (for example: an identification of a system element). It is a basic data type $Id$ used in other definitions.
+It can be modelled as any user-defined data type. It can be a sequence of alphanumeric symbols (a descriptive text of the element) or a natural number (for example: an identification of a system element). It is a basic data type $\hmdatatypeId$ used in other definitions.
 \end{definition}
 
 \begin{definition}[Component]
-A component is any functional or physical block within a system that may contain 
+A component is any functional or physical block within a system that may contain a hazard. $\hmdatatypecomponent: \hmdatatypeId$
 \end{definition}
 
 \begin{definition}[Hazardous element]
 A hazardous element represents an element that can potentially harm someone or something.
-$\hmdatatypeHE: Id$.
+$\hmdatatypeHE: \hmdatatypeId$.
 \end{definition}
 
 \begin{definition}[Initiating mechanism]
 An initiating mechanism is an event on the system.
 %
-$\hmdatatypeIM: Id$
+$\hmdatatypeIM: \hmdatatypeId$
 %it can be a CSP process. 
 \end{definition}
 
 \begin{definition}[Target/Threat]
 A target and threat pair represents the person or system that is harmed if a hazardous element is activated by the initiating mechanisms and the nature of the harm. 
 %
-$\hmdatatypeTT: \hmcartesian{Id}{Id}$.
+$\hmdatatypeTT: \hmcartesian{\hmdatatypeId}{\hmdatatypeId}$.
 \end{definition}
 
 \begin{definition}[Hazard]
-Given a hazardous element $HE$, a sequence of $n$ initiating mechanisms $\hmseqenum{IM_1, \ldots, IM_n}$ and a target-threat pair $T/T$, a hazard $H$ is defined as: 
+Given a hazardous element $HE$, a sequence of $n$ initiating mechanisms $\hmseqenum{IM_1, \ldots, IM_n}$ and a target-threat pair $T/T$, a hazard $H$ is defined as: $H: \hmdatatypeId$ and is obtained by a total, bijective function $\hmhazardsymbol$: 
 %
-$H: \hmcartesian{\hmcartesian{\hmdatatypeHE}{\hmdatatypeTT}}{\hmseq \hmdatatypeIM}$,
+\\$\hmhazardsymbol: \hmtotalbijectivefunction{\hmcartesian{\hmcartesian{\hmdatatypeHE}{\hmdatatypeTT}}{\hmseq{\hmdatatypeIM}}}{\hmdatatypeId}$
 %
-which can be written as:
+\\which is written as:
 %
-\\$H \hmdefs \hmhazard{HE}{\hmseqenum{IM_1, \ldots, IM_n}}{T/T}$.
+\\$H = \hmhazard{HE}{\hmseqenum{IM_1, \ldots, IM_n}}{T/T}$.
 \end{definition}
 
+\begin{definition}[Probability function]
+A probability function $\hmprobabilitysymbol$ is used to associate values to elements in the system.
+%
+It is defined through analysis. 
+%
+$\hmprobabilitysymbol: \hmpartialfunction{\hmdatatypeId}{\hmdatatypeR}$
+\end{definition}
+
+\begin{definition}[Analysis method]
+An analysis method $\hmdatatypeAM$, such that $\hmdatatypeAM: \hmdatatypeId$, describes a method used to analyse an element. 
+%
+It is defined as an enumerated set with the following value correspondence:
+%
+\begin{description}
+  \item[PHL] \PHL;
+  \item[PHA] \PHA;
+  \item[\ldots] \TODO{Add others.}
+\end{description}
+\end{definition}
+
+\begin{definition}[Time]
+Time $\hmdatatypetime$ is abstracted with equal and before relations. 
+%
+It is defined as a sequence of time tags.
+%
+$\hmdatatypetime: \hmseq{\hmdatatypetimetag}$.
+\end{definition}
+
+\begin{definition}[Time tag]
+A time tag represents an instantaneous observation of time.
+%
+It is defined as an identification: $\hmdatatypetimetag: \hmdatatypeId$
+\end{definition}
+
+\begin{definition}[Analysis]
+Given an analysis method $M$, such that $M: \hmdatatypeAM$, a time tag $t$, such that $t:\hmdatatypetimetag$, an element $E$, such that $E:\hmdatatypeId$, and a probability $p$, such that $p:\hmdatatypeR$, an analysis $A$ is defined as:
+%
+\\$A: \hmcartesian{\left(\hmcartesian{\hmdatatypeId}{\hmdatatypetimetag}\right)}{\left(\hmcartesian{\hmdatatypeAM}{\hmdatatypeR}\right)}$
+%
+\\$A = \left(\left(E, t\right), \left(M, p\right) \right)$
+
+\end{definition}
+The probability function is then updated accordingly to an analysis. For example, for the analysis above, the probability function $P$ can be updated as:
+$\hmprobabilitysymbol = \hmoverride{\hmprobabilitysymbol}{\left\{\hmmapsto{E}{p}\right\}}$.
+
 \begin{definition}[Hazard activation probability]
-Given a probability function $\hmprobabilitysymbol$, such that $P: \hmpartialfunction {Id}{\hmdatatypereal}$, a hazardous element $HE$, a sequence of $n$ initiating mechanisms $\hmseqenum{HM_1,\ldots,HM_n}$ and a target-threat pair $T/T$, the probability of the activation of the hazard $H = \hmhazard{HE}{\hmseqenum{HM_1,\ldots,HM_n}}{T/T}$ is:
+Given a probability function $\hmprobabilitysymbol$, such that $P: \hmpartialfunction {\hmdatatypeId}{\hmdatatypeR}$, a hazardous element $HE$, a sequence of $n$ initiating mechanisms $\hmseqenum{IM_1,\ldots,IM_n}$ and a target-threat pair $T/T$, the probability of the activation of the hazard $H = \hmhazard{HE}{\hmseqenum{IM_1,\ldots,IM_n}}{T/T}$ is:
 %
 \\$\hmprobability{H} = \hmtimes{\hmprobability{HE}}{\hmtimes{\hmtimes{\hmprobability{IM_1}}{\ldots}}{\hmprobability{IM_n}}}$
 \end{definition}
 
 \begin{definition}[Mishap]
-A mishap is defined as a pair of the probability of a hazard and the severity in case it happens: $M: \hmcartesian{\hmdatatypereal}{\hmdatatypeseverity}$.
+A mishap is defined as a pair of the probability of a hazard and the severity in case it happens: $M: \hmcartesian{\hmdatatypeR}{\hmdatatypeseverity}$.
 \end{definition}
 %
-\noindent Where $\hmdatatypeseverity \subset \hmdatatypenatural$ has the following values:
+\noindent Where $\hmdatatypeseverity$ is a finite set, such that $\hmdatatypeseverity \subset \hmdatatypeN$. It contains the following values:
 \begin{description}
-  \item[1] Catastrophic;
-  \item[2] Critical;
-  \item[3] Marginal and
-  \item[4] Negligible.
+  \item[1] $=$ Catastrophic;
+  \item[2] $=$ Critical;
+  \item[3] $=$ Marginal and
+  \item[4] $=$ Negligible.
 \end{description}
 
-{\huge
-URGENTE: vai refinar o quê?
+\section{Refinement}
+
+In this section we define a refinement relation on a hazard model of a system.
+
+\TODO{Add definitions on the hazard model
+\begin{itemize}
+  \item Set of analysis;
+  \item Probability function;
+  \item Addition of analysis updates probability function;
+\end{itemize}
 }
+
+There a few situations in which a refinement is desirable:
+\begin{description}
+  \item[Hazard analysis.] A hazard model is said to be an analysis of another model if at least one new analysis was added.
+  \item[Hazard mitigation.] A hazard model is said to be a mitigation of another if at least one hazard is mitigated through probability decrease. If $\hmprobabilitysymbol$ is the probability function of the previous model and $\hmprobabilitysymbol'$ is the probability function of the refined model, then: 
+%
+$\hmforall{e \in \hmdatatypeId}{\hmprobability[\hmprobabilitysymbol']{e}\leq\hmprobability{e}}$.
+\end{description}
+

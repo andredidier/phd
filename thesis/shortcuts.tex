@@ -19,6 +19,9 @@
 
 %%%% Abbreviations
 
+%TODO
+\newcommand{\TODO}[1]{{\color{red}\relsize{+1}TODO: #1}}
+
 %CSP
 \newif\ifcsp
 \newcommand{\CSP}{\ifcsp CSP\xspace\else Communicating Sequential Processes (CSP)\csptrue\xspace\fi}
@@ -40,3 +43,11 @@
 \newif\ifft
 \newcommand{\FT}{\ifft FT\xspace\else Fault Tree (FT)\fttrue\xspace\fi}
 \newcommand{\FTs}{\ifft FTs\xspace\else Fault Trees (FTs)\fttrue\xspace\fi}
+
+%PHL
+\newif\ifphl
+\newcommand{\PHL}{\ifphl PHL\xspace\else Preliminary Hazard List (PHL)\phltrue\xspace\fi}
+
+%PHA
+\newif\ifpha
+\newcommand{\PHA}{\ifpha PHA\xspace\else Preliminary Hazard Analysis (PHA)\phatrue\xspace\fi}
