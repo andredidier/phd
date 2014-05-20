@@ -132,6 +132,24 @@ Given a probability function $\hmprobabilitysymbol$, such that $P: \hmpartialfun
 \\$\hmprobability{H} = \hmtimes{\hmprobability{HE}}{\hmtimes{\hmtimes{\hmprobability{IM_1}}{\ldots}}{\hmprobability{IM_n}}}$
 \end{definition}
 
+\begin{definition}[Initiating mechanism]
+An initiating mechanism is a relation between components attributes and their unwanted behaviour or state. 
+%
+Some component attribute examples~\cite{EricsonII2005}:
+\begin{description}
+  \item[Hardware] Failure modes, hazardous energy sources, $IM_{H1}=\left(C_1,1\right)$, $IM_{H2}=\left(C_1,2\right)$;
+  \item[Software] Design errors, design incompatibilities, $IM_{S1}=\left(C_2,3\right)$, $IM_{S2}=\left(C_2,4\right)$
+  \item[Personnel] Human error, human injury, human control interface, $IM_{P1}=\left(C_3,3\right)$;
+  \item[Environment] Weather, external equipment;
+  \item[Procedures] Instructions, tasks, warning notes;
+  \item[Interfaces] Erroneous input/output, unexpected complexities;
+  \item[Functions] Fail to perform, performs erroneously;
+  \item[Facilities] Building faults, storage compatibility, transportation faults;
+\end{description}
+\end{definition}
+
+By the relations between components and hazards, and hazards and initiating mechanisms, a dependency graph can be built, so if a components changes, the corresponding hazards changes as well.
+
 \begin{definition}[Mishap]
 A mishap is defined as a pair of the probability of a hazard and the severity in case it happens: $M: \hmcartesian{\hmdatatypeR}{\hmdatatypeseverity}$.
 \end{definition}
@@ -150,9 +168,11 @@ In this section we define a refinement relation on a hazard model of a system.
 
 \TODO{Add definitions on the hazard model
 \begin{itemize}
-  \item Set of analysis;
+  \item Set of analyses;
   \item Probability function;
   \item Addition of analysis updates probability function;
+  \item Set of hazards;
+  \item Dependency graph (connection between components);
 \end{itemize}
 }
 
@@ -161,6 +181,13 @@ There a few situations in which a refinement is desirable:
   \item[Hazard analysis.] A hazard model is said to be an analysis of another model if at least one new analysis was added.
   \item[Hazard mitigation.] A hazard model is said to be a mitigation of another if at least one hazard is mitigated through probability decrease. If $\hmprobabilitysymbol$ is the probability function of the previous model and $\hmprobabilitysymbol'$ is the probability function of the refined model, then: 
 %
-$\hmforall{e \in \hmdatatypeId}{\hmprobability[\hmprobabilitysymbol']{e}\leq\hmprobability{e}}$.
+\\$\hmdom{\hmprobabilitysymbol} \subseteq \hmdom{\hmprobabilitysymbol'} \land%
+\hmexists{e \in \hminter{\hmseqenum{set of hazards}}{\hmdom{\hmprobabilitysymbol}}}{%
+\hmprobability[\hmprobabilitysymbol']{e} < \hmprobability{e}%
+}$.
+  \item[Hazard discovery.] A hazard model is said to be a discovery of another it the hazards set is augmented with a new discovered hazard.
+  \item[Component replacement.] A valid component replacement in a model is achieved if all analyses for the replaced component are updated with the new component and the probability of activation is less than or equal to the previous ones.
+  \item[Component addition.] A valid component addition in a model is achieved if the component is not in any other component hierarchy or, if it is, then the analyses of all affected component hierarchy and related components are updated and the probability of activation is less than or equal to the previous ones.
+  \item[Component removal.] A valid component removal in a model is achieved if the analyses of all affected component hierarchy and related components are updated and the proability of activation is less than or equal to the previous ones. 
 \end{description}
 

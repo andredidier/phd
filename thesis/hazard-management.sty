@@ -1,4 +1,5 @@
 \RequirePackage{relsize}
+%\ProvidePakcage{hazard-management}[2014-05-20 12:00 Hazard Management]
 
 %Datatypes
 \def\hmdatatypeHE{\mathrm{HE}}
@@ -29,7 +30,9 @@
 \def\hmfunctionsymbol{\rightarrow}
 \def\hminjectivefunctionsymbol{\underset{\mathsmaller{\mathrm{I}}}{\hmfunctionsymbol}}
 \def\hmtotalbijectivefunctionsymbol{\underset{\mathsmaller{\mathrm{TB}}}{\hmfunctionsymbol}}
-
+\def\hmdomsymbol{\mathrm{dom}}
+\def\hmransymbol{\mathrm{ran}}
+\def\hmintersectionsymbol{\cap}
 
 %COMMANDS
 \newcommand{\hmcat}[2]{#1\mathop{\hmcatsymbol}#2}
@@ -56,3 +59,10 @@
 \newcommand{\hmtotalbijectivefunction}[2]{#1\mathop{\hmtotalbijectivefunctionsymbol}#2}
 
 \newcommand{\hmforall}[2]{\forall #1 \bullet #2}
+\newcommand{\hmexists}[2]{\exists #1 \bullet #2}
+
+\newcommand{\hmdom}[1]{\mathop{\hmdomsymbol} #1}
+
+\newcommand{\hmran}[1]{\mathop{\hmransymbol} #1}
+
+\newcommand{\hminter}[2]{#1\hmintersectionsymbol #2}
