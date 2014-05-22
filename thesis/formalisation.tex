@@ -1,6 +1,6 @@
 \chapter{Formalisation of Hazard Management}
 
-Hazard properties, extracted from~\cite{ericsonII2005}:
+Hazard properties, extracted from~\cite{EricsonII2005}:
 %
 \begin{enumerate}
   \item Hazardous element (HE);
@@ -38,19 +38,31 @@ Hazard properties, extracted from~\cite{ericsonII2005}:
 Scope of system to which Hazard Analysis make sense: those that have signal, material and energy.
 %
 All system functional elements~\cite[p. 47]{KSS+2011} are:
-\begin{itemize}
-  \item Signal---generate, transmit, distribute, and receive signals used in passive or active sensing and in communications;
-  \item Data---analyse, interpret, organize, query, and/or convert data and information into forms desired by the user or other systems;
-  \item Material---provide system structural support or enclosure, or transform the shape, composition, or location of material substances;
-  \item Energy---provide and convert energy or propulsive power to the system.
-\end{itemize}
+\begin{description}
+  \item[Signal.] Generate, transmit, distribute, and receive signals used in passive or active sensing and in communications;
+  \item[Data.]Analyse, interpret, organize, query, and/or convert data and information into forms desired by the user or other systems;
+  \item[Material.] Provide system structural support or enclosure, or transform the shape, composition, or location of material substances;
+  \item[Energy.] Provide and convert energy or propulsive power to the system.
+\end{description}
 
 \begin{definition}[Identifier]
-It can be modelled as any user-defined data type. It can be a sequence of alphanumeric symbols (a descriptive text of the element) or a natural number (for example: an identification of a system element). It is a basic data type $\hmdatatypeId$ used in other definitions.
+It is modelled as any user-defined data type. It can be a sequence of alphanumeric symbols (a descriptive text of the element) or a natural number (for example: an identification of a system element). It is a basic data type $\hmdatatypeId$ used in other definitions.
 \end{definition}
 
 \begin{definition}[Component]
-A component is any functional or physical block within a system that may contain a hazard. $\hmdatatypecomponent: \hmdatatypeId$
+A component is any functional or physical block within a system that may contain a hazard. 
+%
+It is defined as an identifier and a set of identifiers: 
+%
+\\$\hmdatatypecomponent: \hmcartesian{\hmdatatypeId}{\hmpowerset{\hmdatatypeId}}$.
+%
+\\Every subcomponent cannot contain any ancestor.
+%
+Given a component $C=\left(c_0,CS_0\right)$, the subcomponents set is obtained by a folding operation.
+%
+\\$\hmsubcomponents{C} = \hmsetcomprehension{\hmunion{\hmsetenum{\hmfirst{C_i}}}{\hmsubcomponents{C_i}}}{C_i \in \hmsecond{C}}$.
+%
+\\For every component $C$: $\hmforall{C_i \in CS_0}{c_0 \notin \hmsubcomponents{C_i}}$ 
 \end{definition}
 
 \begin{definition}[Hazardous element]
@@ -170,7 +182,7 @@ In this section we define a refinement relation on a hazard model of a system.
 \begin{itemize}
   \item Set of analyses;
   \item Probability function;
-  \item Addition of analysis updates probability function;
+  \item Addition of analysis $\implies$ updates probability function;
   \item Set of hazards;
   \item Dependency graph (connection between components);
 \end{itemize}
@@ -179,15 +191,15 @@ In this section we define a refinement relation on a hazard model of a system.
 There a few situations in which a refinement is desirable:
 \begin{description}
   \item[Hazard analysis.] A hazard model is said to be an analysis of another model if at least one new analysis was added.
-  \item[Hazard mitigation.] A hazard model is said to be a mitigation of another if at least one hazard is mitigated through probability decrease. If $\hmprobabilitysymbol$ is the probability function of the previous model and $\hmprobabilitysymbol'$ is the probability function of the refined model, then: 
+  \item[Hazard mitigation.] A hazard model is said to be a mitigation of another if at least one hazard is mitigated by decrement of probability value. If $\hmprobabilitysymbol$ is the probability function of the previous model and $\hmprobabilitysymbol'$ is the probability function of the refined model, then: 
 %
 \\$\hmdom{\hmprobabilitysymbol} \subseteq \hmdom{\hmprobabilitysymbol'} \land%
 \hmexists{e \in \hminter{\hmseqenum{set of hazards}}{\hmdom{\hmprobabilitysymbol}}}{%
 \hmprobability[\hmprobabilitysymbol']{e} < \hmprobability{e}%
 }$.
-  \item[Hazard discovery.] A hazard model is said to be a discovery of another it the hazards set is augmented with a new discovered hazard.
+  \item[Hazard discovery.] A hazard model is said to be a discovery of another if the hazards set is augmented with a new discovered hazard.
   \item[Component replacement.] A valid component replacement in a model is achieved if all analyses for the replaced component are updated with the new component and the probability of activation is less than or equal to the previous ones.
   \item[Component addition.] A valid component addition in a model is achieved if the component is not in any other component hierarchy or, if it is, then the analyses of all affected component hierarchy and related components are updated and the probability of activation is less than or equal to the previous ones.
-  \item[Component removal.] A valid component removal in a model is achieved if the analyses of all affected component hierarchy and related components are updated and the proability of activation is less than or equal to the previous ones. 
+  \item[Component removal.] A valid component removal in a model is achieved if the analyses of all affected component hierarchy and related components are updated and the probability of activation is less than or equal to the previous ones. 
 \end{description}
 

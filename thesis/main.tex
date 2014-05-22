@@ -1,5 +1,7 @@
 %%This is a very basic article template.
 %%There is just one section and two subsections.
+\newif\ifdraft
+\drafttrue
 \documentclass[en,twoside,onehalfspacing,phd]{risethesis}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -57,7 +59,7 @@
 \universityen{Federal University of Pernambuco}
 
 \departmentpt{Centro de Informática}
-\departmenten{Center for Informatics}
+\departmenten{Center of Informatics}
 
 \programpt{Pós-graduação em Ciência da Computação}
 \programen{Graduate in Computer Science}
@@ -75,47 +77,51 @@
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
 
+\includeonly{formalisation}
 \input{shortcuts}
+
 \begin{document}
-
+\ifdraft\else
 \frontmatter
-
 \frontpage
+\fi
 
 \presentationpage
 
+\ifdraft\else
 \begin{fichacatalografica}
   \FakeFichaCatalografica % Comment this line when you have the correct file
 %     \includepdf{fig_ficha_catalografica.pdf} % Uncomment this
 \end{fichacatalografica}
-
 \banca
-
 \input{acknowledgements}
+\fi
 
 \input{abstract}
 
+\ifdraft\else
 \listoffigures
 \listoftables
 % Acronyms manual: http://linorg.usp.br/CTAN/macros/latex/contrib/acronym/acronym.pdf
 \listofacronyms
 %\input{acronyms}
 %\lstlistoflistings
+\fi
 \tableofcontents
 
 \mainmatter
 
-\input{introduction}
+\include{introduction}
 
-\input{hazard-management}
+\include{hazard-management}
 
-\input{dependability}
+\include{dependability}
 
-\input{temporal-fault-trees}
+\include{temporal-fault-trees}
 
-\input{formalisation}
+\include{formalisation}
 
-\input{related-work}
+\include{related-work}
 
 %\bibliographystyle{natbib}
 %\addcontentsline{toc}{chapter}{\bibliographytocname}

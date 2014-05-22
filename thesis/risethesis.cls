@@ -504,14 +504,14 @@ requirements for the degree of \@degree\ in \@majorfielden.
     \begin{center}
       \Large \@author
       \vskip4\baselineskip
-      {\large\bfseries{\MakeUppercase{\@title}}}
+      %{\large\bfseries{\MakeUppercase{\@title}}}
       \vskip2\baselineskip
       {{\large \@texttype}}\\
     \end{center}
   \vspace{1.4cm}
   \includegraphics[width=1cm]{ufpelogo} \\
   \if\@language0
-    {\fontfamily{times}\selectfont \tiny \@universitypt\\}
+    {\fontfamily{times}\selectfont \tiny \@universitypt\\} %TODo report issue fallback to cmr
   \else
     {\fontfamily{times}\selectfont \tiny \@universityen\\}
   \fi
@@ -567,7 +567,7 @@ requirements for the degree of \@degree\ in \@majorfielden.
                 \vskip 0.1cm
               \fi
               \if\@showdepartment1
-                \\
+                %\\ TODO: open issue on risethesis
                 \@departmenten
                 \vskip 0.1cm
               \fi
