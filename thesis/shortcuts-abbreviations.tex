@@ -1,0 +1,89 @@
+\newcommand{\newabbrevdescr}[2]{%
+\expandafter\newif\csname if#1CHECK\endcsname%
+\expandafter\newcommand\csname #1presentation\endcsname{#1\xspace}%
+\expandafter\newcommand\csname #1expanded\endcsname{#2\global\csname#1CHECKtrue\endcsname\xspace}%
+\expandafter\newcommand\csname #1\endcsname{%
+  \csname if#1CHECK\endcsname%
+  \csname #1presentation\endcsname%
+  \else
+  \csname #1expanded\endcsname (\csname #1presentation\endcsname)%
+  \fi
+}%
+}
+
+\newcommand{\renewabbrevdescr}[2]{%
+\expandafter\newif\csname if#1CHECK\endcsname%
+\expandafter\newcommand\csname #1presentation\endcsname{#1}%
+\expandafter\newcommand\csname #1expanded\endcsname{#2\global\csname #1CHECKtrue\endcsname\xspace}%
+\expandafter\renewcommand\csname #1\endcsname{%
+  \csname if#1CHECK\endcsname%
+  \csname #1presentation\endcsname\xspace
+  \else
+  \csname #1expanded\endcsname
+  \fi
+}%
+}
+
+\newcommand{\newabbrevdescrext}[3]{%
+\expandafter\newcommand\csname #2\endcsname{%
+  \csname if#1CHECK\endcsname%
+  #2\xspace
+  \else
+  #3\xspace\expandafter\csname #1CHECKtrue\endcsname
+  \fi
+}%
+}
+
+\newabbrevdescr{CSP}{Communicating Sequential Processes}
+\renewabbrevdescr{CSPM}{Machine-readable version of \CSP}
+\renewcommand\CSPMpresentation{\CSP{$_M$}}
+
+\newabbrevdescr{TTT}{Temporal Truth Table}
+\newabbrevdescrext{TTT}{TTTs}{Temporal Truth Tables}
+
+\newabbrevdescr{TFT}{Temporal Fault Tree}
+\newabbrevdescrext{TFT}{TFTs}{Temporal Fault Trees}
+
+\newabbrevdescr{FT}{Fault Tree}
+\newabbrevdescrext{FT}{FTs}{Fault Trees}
+
+\newabbrevdescr{CDHAT}{Conceptual design hazard analysis type}
+\renewcommand{\CDHATpresentation}{CD-HAT}
+\newabbrevdescr{PDHAT}{Preliminary design hazard analysis type}
+\renewcommand{\PDHATpresentation}{PD-HAT}
+\newabbrevdescr{DDHAT}{Detailed design hazard analysis type}
+\renewcommand{\DDHATpresentation}{DD-HAT}
+\newabbrevdescr{SDHAT}{System design hazard analysis type}
+\renewcommand{\SDHATpresentation}{SD-HAT}
+\newabbrevdescr{ODHAT}{Operations design hazard analysis type}
+\renewcommand{\ODHATpresentation}{OD-HAT}
+\newabbrevdescr{HDHAT}{Health design hazard analysis type}
+\renewcommand{\HDHATpresentation}{HD-HAT}
+\newabbrevdescr{RDHAT}{Requirements design hazard analysis type}
+\renewcommand{\RDHATpresentation}{RD-HAT}
+
+\newabbrevdescr{PHL}{Preliminary Hazard List}
+\newabbrevdescr{PHA}{Preliminary Hazard Analysis}
+\newabbrevdescr{SSHA}{Subsystem Hazard Analysis}
+\newabbrevdescr{SHA}{System Hazard Analysis}
+\newabbrevdescr{OSHA}{Operating and Support Hazard Analysis}
+\renewcommand{\OSHApresentation}{O\&SHA}
+\newabbrevdescr{HHA}{Health Hazard Assessment}
+\newabbrevdescr{SRCA}{Safety Requirements/Criteria Analysis}
+\newabbrevdescr{FTA}{Fault Tree Analysis}
+\newabbrevdescr{ETA}{Event Tree Analysis}
+\newabbrevdescr{FMEA}{Failure Mode and Effects Analysis}
+\newabbrevdescr{FaHA}{Fault Hazard Analysis}
+\newabbrevdescr{FuHA}{Functional Hazard Analysis}
+\newabbrevdescr{SCA}{Sneak Circuit Analysis}
+\newabbrevdescr{SWSCA}{}
+\newabbrevdescr{PNA}{Petri Net Analysis}
+\newabbrevdescr{MA}{Markov Analysis}
+\newabbrevdescr{BA}{Barrier Analysis}
+\newabbrevdescr{HAZOP}{Hazard and Operability Analysis}
+\newabbrevdescr{CCA}{Cause--Consequence Analysis}
+\newabbrevdescr{CCFA}{Common Cause Failure Analysis}
+\newabbrevdescr{MORT}{Management Oversight Risk Tree Analysis}
+\newabbrevdescr{SWHA}{Software Safety Assessment}
+\newabbrevdescr{BPA}{Bent Pin Analysis}
+\newabbrevdescr{THA}{Threat Hazard Assessment}

@@ -46,15 +46,18 @@ All system functional elements~\cite[p. 47]{KSS+2011} are:
 \end{description}
 
 \begin{definition}[Identifier]
-It is modelled as any user-defined data type. It can be a sequence of alphanumeric symbols (a descriptive text of the element) or a natural number (for example: an identification of a system element). It is a basic data type $\hmdatatypeId$ used in other definitions.
+\hmreg{Id}{\mathrm{Id}}
+It is modelled as any user-defined data type. It can be a sequence of alphanumeric symbols (a descriptive text of the element) or a natural number (for example: an identification of a system element). It is a basic data type $\hmuse{Id}$ used in other definitions.
 \end{definition}
 
 \begin{definition}[Component]
+\hmreg{Component}{\mathrm{C}}
+\hmreg{subcomponents}{\mathop{\mathrm{subcomponents}}}
 A component is any functional or physical block within a system that may contain a hazard. 
 %
 It is defined as an identifier and a set of identifiers: 
 %
-\\$\hmdatatypecomponent: \hmcartesian{\hmdatatypeId}{\hmpowerset{\hmdatatypeId}}$.
+\\$\hmuse{Component}: \hmcartesian{\hmuse{Id}}{\hmpowerset{\hmuse{Id}}}$.
 %
 \\Every subcomponent cannot contain any ancestor.
 %
@@ -69,6 +72,9 @@ Given a component $C=\left(c_0,CS_0\right)$, the subcomponents set is obtained b
 A hazardous element represents an element that can potentially harm someone or something.
 $\hmdatatypeHE: \hmdatatypeId$.
 \end{definition}
+
+%\hmregisterbinop{OPA}{\mathrm{OPA}}
+%$\hmop{OPA}{X}{Y}$
 
 \begin{definition}[Initiating mechanism]
 An initiating mechanism is an event on the system.
@@ -101,16 +107,90 @@ It is defined through analysis.
 $\hmprobabilitysymbol: \hmpartialfunction{\hmdatatypeId}{\hmdatatypeR}$
 \end{definition}
 
+\begin{definition}[Hazard analysis type]
+A hazard analysis type is a categorization of the analysis methods as follows:
+%
+\newcommand{\HATdescr}[1]{\item[\expandafter\csname #1presentation\endcsname.] \expandafter\csname #1expanded\endcsname\csname #1CHECKtrue\endcsname}
+%
+\begin{description}
+  \HATdescr{CDHAT}
+  \HATdescr{PDHAT}
+  \HATdescr{DDHAT}
+  \HATdescr{SDHAT}
+  \HATdescr{ODHAT}
+  \HATdescr{HDHAT}
+  \HATdescr{RDHAT} 
+\end{description}
+\end{definition}
+
 \begin{definition}[Analysis method]
 An analysis method $\hmdatatypeAM$, such that $\hmdatatypeAM: \hmdatatypeId$, describes a method used to analyse an element. 
 %
-It is defined as an enumerated set with the following value correspondence:
+It is defined as an enumerated set with the value correspondence shown in \cref{tbl:analysis-methods}.
 %
-\begin{description}
-  \item[PHL] \PHL;
-  \item[PHA] \PHA;
-  \item[\ldots] \TODO{Add others.}
-\end{description}
+\newcounter{analysismethods}
+\newcommand{\amcount}{\addtocounter{analysismethods}{1}\arabic{analysismethods}}
+\newcommand{\amline}[3]{\amcount & \csname #1presentation\endcsname#3 & #2 & \csname #1expanded\endcsname}
+%
+\begin{table}
+\centering
+\begin{tabular}{c|l|l|l}
+Seq. & Abbrev. & Hazard analysis type & Description\\
+\hline
+\hline
+\amline{PHL}{\CDHAT}{*}\\
+\hline
+\amline{PHA}{\PDHAT}{*}\\
+\hline
+\amline{SSHA}{\DDHAT}{*}\\
+\hline
+\amline{SHA}{\SDHAT}{*}\\
+\hline
+\amline{OSHA}{\ODHAT}{*}\\
+\hline
+\amline{HHA}{\HDHAT}{*}\\
+\hline
+\amline{SRCA}{\RDHAT}{*}\\
+\hline
+\amline{FTA}{\SDHAT, \DDHAT}{}\\
+\hline
+\amline{ETA}{\SDHAT}{}\\
+\hline
+\amline{FMEA}{\DDHAT}{}\\
+\hline
+\amline{FaHA}{\DDHAT}{}\\
+\hline
+\amline{FuHA}{\SDHAT, \DDHAT}{}\\
+\hline
+\amline{SCA}{\SDHAT, \DDHAT}{}\\
+\hline
+\amline{PNA}{\SDHAT, \DDHAT}{}\\
+\hline
+\amline{MA}{\SDHAT, \DDHAT}{}\\
+\hline
+\amline{BA}{\SDHAT}{}\\
+\hline
+\amline{BPA}{\DDHAT}{}\\
+\hline
+\amline{HAZOP}{\SDHAT, \DDHAT}{}\\
+\hline
+\amline{CCA}{\SDHAT, \DDHAT}{}\\
+\hline
+\amline{CCFA}{\SDHAT, \DDHAT}{}\\
+\hline
+\amline{MORT}{\SDHAT, \DDHAT}{}\\
+\hline
+\amline{SWSCA}{}{}\\
+\hline
+\amline{SWHA}{}{}\\
+\hline
+\amline{THA}{}{}\\
+\hline
+\hline 
+\end{tabular}
+\caption{Analysis methods}
+\label{tbl:analysis-methods}
+\end{table}
 \end{definition}
 
 \begin{definition}[Time]
@@ -173,6 +253,11 @@ A mishap is defined as a pair of the probability of a hazard and the severity in
   \item[3] $=$ Marginal and
   \item[4] $=$ Negligible.
 \end{description}
+
+\begin{definition}[Hazard Model]
+\hmreg{hazardmodel}{\mathrm{HM}}
+A $\hmuse{hazardmodel}$\ldots
+\end{definition}
 
 \section{Refinement}
 

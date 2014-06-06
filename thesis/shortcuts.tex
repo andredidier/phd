@@ -22,32 +22,5 @@
 %TODO
 \newcommand{\TODO}[1]{{\color{red}\relsize{+1}TODO: #1}}
 
-%CSP
-\newif\ifcsp
-\newcommand{\CSP}{\ifcsp CSP\xspace\else Communicating Sequential Processes (CSP)\csptrue\xspace\fi}
 
-\newif\ifcspm
-\renewcommand{\CSPM}{\ifcspm \CSP{$_M$}\xspace\else \CSP{$_M$}\footnote{Machine-readable version of \CSP}\cspmtrue\xspace\fi}
-
-%TTT
-\newif\ifttt
-\newcommand{\TTT}{\ifttt TTT\xspace\else Temporal Truth Table (TTT)\ttttrue\xspace\fi}
-\newcommand{\TTTs}{\ifttt TTTs\xspace\else Temporal Truth Tables (TTTs)\ttttrue\xspace\fi}
-
-%TFT
-\newif\iftft
-\newcommand{\TFT}{\iftft TFT\xspace\else Temporal Fault Tree (TFT)\tfttrue\xspace\fi}
-\newcommand{\TFTs}{\iftft TFTs\xspace\else Temporal Fault Trees (TFTs)\tfttrue\xspace\fi}
-
-%FT
-\newif\ifft
-\newcommand{\FT}{\ifft FT\xspace\else Fault Tree (FT)\fttrue\xspace\fi}
-\newcommand{\FTs}{\ifft FTs\xspace\else Fault Trees (FTs)\fttrue\xspace\fi}
-
-%PHL
-\newif\ifphl
-\newcommand{\PHL}{\ifphl PHL\xspace\else Preliminary Hazard List (PHL)\phltrue\xspace\fi}
-
-%PHA
-\newif\ifpha
-\newcommand{\PHA}{\ifpha PHA\xspace\else Preliminary Hazard Analysis (PHA)\phatrue\xspace\fi}
+\input{shortcuts-abbreviations}

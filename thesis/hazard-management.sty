@@ -1,6 +1,16 @@
 \RequirePackage{relsize}
 %\ProvidePakcage{hazard-management}[2014-05-20 12:00 Hazard Management]
 
+\def\hmprefix{hm}
+
+\newcommand{\hmreg}[2]{%
+\expandafter\gdef\csname \hmprefix #1\endcsname{#2}%
+}
+\newcommand{\hmuse}[1]{\csname \hmprefix #1\endcsname}
+
+\newcommand{\hmfuse}[2]{#1\left(#2\right)}
+
+
 %Datatypes
 \def\hmdatatypeHE{\mathrm{HE}}
 \def\hmdatatypeTT{\mathrm{T/T}}
