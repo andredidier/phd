@@ -1,36 +1,38 @@
 \newcommand{\newabbrevdescr}[2]{%
 \expandafter\newif\csname if#1CHECK\endcsname%
-\expandafter\newcommand\csname #1presentation\endcsname{#1\xspace}%
-\expandafter\newcommand\csname #1expanded\endcsname{#2\global\csname#1CHECKtrue\endcsname\xspace}%
+\expandafter\newcommand\csname #1presentation\endcsname{#1}%
+\expandafter\newcommand\csname #1expanded\endcsname{#2\global\csname#1CHECKtrue\endcsname}%
 \expandafter\newcommand\csname #1\endcsname{%
   \csname if#1CHECK\endcsname%
   \csname #1presentation\endcsname%
   \else
-  \csname #1expanded\endcsname (\csname #1presentation\endcsname)%
-  \fi
-}%
+  \csname #1expanded\endcsname~(\csname #1presentation\endcsname)%
+  \fi%
+\xspace}%
 }
 
 \newcommand{\renewabbrevdescr}[2]{%
 \expandafter\newif\csname if#1CHECK\endcsname%
 \expandafter\newcommand\csname #1presentation\endcsname{#1}%
-\expandafter\newcommand\csname #1expanded\endcsname{#2\global\csname #1CHECKtrue\endcsname\xspace}%
+\expandafter\newcommand\csname #1expanded\endcsname{#2\global\csname #1CHECKtrue\endcsname}%
 \expandafter\renewcommand\csname #1\endcsname{%
   \csname if#1CHECK\endcsname%
-  \csname #1presentation\endcsname\xspace
+  \csname #1presentation\endcsname
   \else
   \csname #1expanded\endcsname
-  \fi
+  \fi%
+\xspace
 }%
 }
 
 \newcommand{\newabbrevdescrext}[3]{%
 \expandafter\newcommand\csname #2\endcsname{%
   \csname if#1CHECK\endcsname%
-  #2\xspace
+  #2
   \else
-  #3\xspace\expandafter\csname #1CHECKtrue\endcsname
-  \fi
+  #3\expandafter\csname #1CHECKtrue\endcsname
+  \fi%
+\xspace
 }%
 }
 
