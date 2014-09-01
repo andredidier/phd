@@ -1,12 +1,9 @@
 
-nametype IntDomain = { -5..5 }
+channel emi_start, emi_end
 
-nametype NatDomain = { 0..5 }
-
-datatype Value = Nominal.IntDomain
+datatype Value = Nominal
                 |Omission
-                |Comission.IntDomain
-                |EMI
+                |Commission
                 |ValueOutsideDomain
 
 subtype NominalValue = Nominal.IntDomain
