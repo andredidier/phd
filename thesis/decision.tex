@@ -1,0 +1,38 @@
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l|p{6.5cm}|p{6.5cm}}
+Item & Hazard & Dynamic FT\\
+\hline
+\hline
+Objetivo 
+  & Realizar a evolução do gerenciamento de Hazard de maneira controlada através de métodos formais. 
+  & Analisar o sistema qualitativamente, com relações de causa e consequência (bottom-up), e quantitativamente com cálculo da probabilidade do evento raiz.\\
+\hline
+Análises 
+  & Dado um sistema com Hazards, probabilidades calculadas e mudanças a serem feitas, verificar o quanto as mudanças impactam o sistema. Uma mudança não impacta se a probabilidade de falha do sistema não é alterada após as mudanças. As probabilidades de falhas das partes do sistema são calculadas da maneira convencional, usando uma das técnicas existentes. 
+  & Busca dos conjuntos de eventos mínimos que causam o evento raiz e aderência da árvore ao sistema ou a seu modelo. \\
+\hline
+Tese 
+  & Existem ao menos uma modelagem do sistema e uma relação de refinamento que garante a evolução do gerencimaneto. 
+  & A partir do modelo nominal arquitetural do sistema é possível injetar falhas a fim de obter lógica de falhas (equivalentes a árvores de falhas), garantindo a aderência de uma árvore de falha ao modelo do sistema. OU A partir de um modelo nominal arquitetural, é possível injetar falhas a fim de obter a probabilidade de falhas do sistema.\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Opções de tese}
+\label{tbl:thesis-decision}
+\end{table}
+
+Opção escolha a partir da tabela \cref{tbl:thesis-decision}: Dynamic FT.
+
+Solução:
+\begin{enumerate}
+  \item A escolha da arquitetura define combinações de falha. Com as probabilidade individuais de cada falha, é possível calcular a probabilidade. 
+  \item Como resolver o problema de ordem de falha? Ex.: comissão de sinal. Se em uma replicação ambos sofrem comissão de sinal ao mesmo tempo, consiste-se em uma falha. Se um sofre comissão e em um momento seguinte, o outro, então não se configura uma falha.
+  \item É preciso indicar como cada um dos componentes responde aos tipos de falhas:
+  \begin{itemize}
+    \item Omissão, comissão, degradação, EMI/P (\emph{Eletromagnetic Interference or Pulse}).
+    \item O tipo de falha é definido pelo designer. A cada tipo adicionado, é preciso revisar os itens já definidos.
+  \end{itemize}
+
+\end{enumerate}

@@ -81,7 +81,10 @@
 \input{shortcuts}
 
 \begin{document}
-\ifdraft\else
+
+\ifdraft
+\input{decision}
+\else
 \frontmatter
 \frontpage
 \fi
@@ -91,7 +94,7 @@
 \ifdraft\else
 \begin{fichacatalografica}
   \FakeFichaCatalografica % Comment this line when you have the correct file
-%     \includepdf{fig_ficha_catalografica.pdf} % Uncomment this
+%     \includepdf{ficha_catalografica.pdf} % Uncomment this
 \end{fichacatalografica}
 \banca
 \input{acknowledgements}
