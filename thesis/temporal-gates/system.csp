@@ -1,0 +1,96 @@
+
+nametype IntDomain = { -5..5 }
+
+nametype NatDomain = { 0..5 }
+
+datatype Value = Nominal.IntDomain
+                |Omission
+                |Comission.IntDomain
+                |EMI
+                |ValueOutsideDomain
+
+subtype NominalValue = Nominal.IntDomain
+                
+
+datatype Port = In.NatDomain | Out.NatDomain
+
+datatype State = Component.NatDomain.Port.Value
+
+channel get_cell, set_cell: Value
+
+channel get_state, set_state: State
+
+channel in, out: Value
+
+CELL =
+  let
+    C(v) = SET [] GET(v)
+    SET = set_cell?n -> C(n)
+    GET(v) = get_cell!v -> C(v)
+  within
+    SET
+
+BLOCK(c, PROCESS) =
+  let
+    ports = Ports(c)
+    isIn(In._) = true
+    isIn(_) = false
+    isOut(Out._) = true
+    isOut(_) = false
+    inputs = { p | p<-ports, isIn(p) }
+    outputs = { p | p<-ports, isOut(p) }
+    INPUTS = ||| p: inputs @ set_state.c.p?v -> SKIP
+    OUTPUT = ||| p: outputs @ get_state.c.p?v -> SKIP
+  within
+    INPUTS; PROCESS; OUTPUT
+
+channel end_state
+STATEFUL_BLOCK(c, PROCESS) =
+  let
+    activeState = {| get_state.c.p, set_state.c.p | p<-ports |}
+    ports = Ports(c)
+    STATE =
+      (||| p : ports @ 
+        CELL 
+          [[ get_cell.x <- get_state.c.p.x, 
+            set_cell.x <- set_state.c.p.x 
+            | x<-Value ]]) /\ end_state -> SKIP 
+  within
+    ( 
+    (BLOCK(c, PROCESS); end_state -> SKIP) 
+    [| union(activeState, {end_state}) |] 
+    STATE
+    ) \ {end_state}
+    
+--------------------------------------------------------------------------------
+sum(Nominal.v1, Nominal.v2) =
+  let
+    newValue = Nominal.(v1 + v2)
+  within 
+    if member(newValue, NominalValue)
+    then newValue
+    else ValueOutsideDomain
+sum(err, _) = err
+sum(_, err) = err
+  
+COMPONENT(Component.1) =
+  let
+    c = Component.1
+    P = get_state.c.In.1?v1 -> get_state.c.In.2?v2 ->
+      set_state.c.Out.1!sum(v1, v2) -> SKIP
+  within STATEFUL_BLOCK(c, P)
+  
+Ports(Component.1) = { In.1, In.2, Out.1 }
+    
+T1 = COMPONENT(Component.1)
+--T1 = STATEFUL_BLOCK(Component.1, SKIP)
+
+channel sys_in: {1,2}.Value
+channel sys_out: Value
+
+System = COMPONENT(Component.1) 
+  [[ 
+    set_state.Component.1.In.1 <- sys_in.1,
+    set_state.Component.1.In.2 <- sys_in.2,
+    get_state.Component.1.Out.1 <- sys_out
+  ]]
