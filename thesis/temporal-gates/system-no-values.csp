@@ -1,0 +1,137 @@
+-- A part:
+-- * Has inputs and outputs as class of data
+-- * How they respond to failures in inputs
+-- * Non-deterministically fail internally
+-- * Fail if an environment condition happens
+
+datatype OperationalState = Nominal
+                          | Omission
+                          | VooD -- Value out of Domain
+                          | InternalError
+                          
+nametype IOIndex = { 0..5 }
+channel receive, transmit: IOIndex.OperationalState
+
+--------------------------------------------------------------------------------
+-- Environment
+datatype Environment = EMI
+                      |Eletrostastic
+                      |Water
+                      
+channel env_start, env_end: Environment
+--------------------------------------------------------------------------------
+-- State
+-- State is also related to WHEN. When a condition is detected.
+
+datatype StateValue = UndefinedStateValue
+                    | OperationalStateValue.OperationalState
+                    
+datatype StateVarType = StateVar.{0..10}
+
+channel state_set, state_get, state_init, state_change: StateVarType.StateValue
+channel sync -- to indicate that the events happen at the same time
+
+STATE_CELL(var) =
+  let
+    INIT = state_init.var?value -> OPERATIONAL(value)
+    OPERATIONAL(UndefinedStateValue) = WRITE(UndefinedStateValue)
+    OPERATIONAL(value) = READ(value) [] WRITE(value)
+    READ(value) = state_get.var!value -> OPERATIONAL(value)
+    WRITE(value) = 
+      state_set.var?new ->
+      if new == value
+        then OPERATIONAL(new)
+        else state_change.var!new -> OPERATIONAL(new)
+  within INIT
+  
+channel terminate_state
+STATE =
+  let
+    INIT = OPERATIONAL /\ terminate_state -> SKIP
+    CELLS = ||| var: StateVarType @ STATE_CELL(var)
+    OPERATIONAL = 
+      CELLS [| {| state_change |} |] CONTROL(true, false)
+    CONTROL(canSync, canWrite) = 
+      canSync & (sync -> CONTROL(false, true))
+      []
+      canWrite & (state_change?var?value -> CONTROL(true, true))
+  within INIT
+{-
+Um sync deve vir seguido de ao menos 1  state_set
+-}
+-------------------------------------------------------------------------------- 
+
+PART = 
+  let
+    INIT = SKIP
+    OPERATIONAL = SKIP
+  within INIT; OPERATIONAL
+    
+{-
+
+Um monitor tem uma falha interna: o switch interno pode falhar. Se a entrada 
+principal falhar depois do switch ou ao mesmo tempo, então o sistema irá falhar.
+
+-}
+--------------------------------------------------------------------------------
+-- Instância do sistema --------------------------------------------------------
+--------------------------------------------------------------------------------
+channel power
+
+BATTERY(stateVar) =
+  let
+    INIT = state_init!stateVar!OperationalStateValue.Nominal -> OPERATIONAL
+    OPERATIONAL = 
+      (power -> OPERATIONAL) 
+      |~| 
+      (state_set!stateVar!OperationalStateValue.Omission -> TERMINATE)
+      |~|
+      (state_set!stateVar!OperationalStateValue.VooD -> OPERATIONAL)
+    TERMINATE = terminate_state -> SKIP
+  within INIT
+  
+MONITOR(stateVarIn1, stateVarIn2, stateInternal, stateVarOut) =
+  let
+    INIT =
+      state_init!stateInternal!OperationalStateValue.Nominal -> 
+      state_get!stateVarIn1?vin1 -> state_init!stateVarOut!vin1 -> OPERATIONAL
+    
+    OPERATIONAL =
+      state_get!stateVarIn1?vin1 ->
+      if (vin1 == (OperationalStateValue.Omission))
+        then 
+          (state_get!stateVarIn2?vin2 ->
+          state_set!stateVarOut!vin2 -> OPERATIONAL)
+          |~|
+          (state_set!stateInternal!OperationalStateValue.InternalError ->
+          state_set!stateVarOut!vin1 ->
+          OPERATIONAL)
+        else state_set!stateVarOut!vin1 -> OPERATIONAL
+  within INIT
+  
+  
+SYSTEM = 
+  let
+    PARTS = 
+      BATTERY(StateVar.0) 
+      |||
+      BATTERY(StateVar.1)
+      |||
+      MONITOR(StateVar.0, StateVar.1, StateVar.2, StateVar.3)
+  within
+    (PARTS /\ terminate_state -> SKIP) 
+    [| {| state_set, state_get, state_init, terminate_state |} |] 
+    STATE
+
+channel propertyFail
+PROPERTY =
+  let
+    P = 
+    SYSTEM 
+    [| {|state_change.StateVar.3.OperationalStateValue.Omission|} |] 
+    STOP
+  within
+    (SYSTEM [| Events |] P) \ {|state_get, state_set, state_init|}
+  
+assert SYSTEM [|{|terminate_state|}|] STOP :[deadlock free [F]]
+assert PROPERTY [|{|terminate_state|}|] STOP  :[deadlock free [F]]
