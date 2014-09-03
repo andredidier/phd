@@ -33,8 +33,12 @@ channel b1_m_in, b1_m_out, b2_m_in, b2_m_out: SignalValue
 
 BATTERY =
   inputs_read -> 
-  set_state.StateVar.1.NominalState -> state_updated ->
-  out_port.1.NominalValue -> outputs_set -> BATTERY
+  |~| state: StateValue @
+    let
+      outValue = if state == NominalState then NominalValue else Omission
+    within 
+      set_state.StateVar.1.state -> state_updated ->
+      out_port.1.outValue -> outputs_set -> BATTERY
 
 BATTERY_BLOCK = 
   (BATTERY [|BlockInstanceChanset|] BLOCK)
@@ -95,3 +99,11 @@ SYSTEM =
   within
     || i: {1..5} @ [alpha(i)] P(i)
     
+assert SYSTEM :[deadlock free]
+assert SYSTEM :[divergence free]
+
+FAILURE = out_port.1.Omission -> STOP
+
+PROPERTY = SYSTEM [| {|out_port.1.Omission|} |] STOP
+    
+assert PROPERTY :[deadlock free [F]]
