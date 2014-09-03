@@ -55,10 +55,17 @@ B2 = BATTERY_BLOCK
 MONITOR =
   in_port.1?in1 -> in_port.2?in2 -> inputs_read ->
   let
-    outValue = if in1 == NominalValue then NominalValue else in2
+    outValueInputs = if in1 == NominalValue then NominalValue else in2
   within
-    set_state.StateVar.1.NominalState -> state_updated ->
-    out_port.1.outValue -> outputs_set -> MONITOR
+    |~| state: StateValue @
+      let
+        outValue = 
+          if state == InternalFailure 
+          then if outValueInputs == in1 then in2 else in1
+          else outValueInputs
+      within
+        set_state.StateVar.1.state -> state_updated ->
+        out_port.1.outValue -> outputs_set -> MONITOR
 
 MONITOR_BLOCK = 
   (MONITOR [|BlockInstanceChanset|] BLOCK)
