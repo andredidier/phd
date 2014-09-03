@@ -4,7 +4,7 @@
 -- In FDR3 do set property refinement.desired_counterexample_count to 10000 or 
 -- more.
 
-channel sync
+channel instant
 channel inputs_read, state_updated, outputs_set
 
 datatype SignalValue = NominalValue
@@ -13,28 +13,30 @@ datatype SignalValue = NominalValue
                       | VooD -- Value outside of Domain
 channel signal_input, signal_output: SignalValue
 
-BLOCK = sync -> inputs_read -> state_updated -> outputs_set -> BLOCK
+BLOCK = instant -> inputs_read -> state_updated -> outputs_set -> BLOCK
 BlockInstanceChanset = {| inputs_read, state_updated, outputs_set |}
 
 SIGNAL = signal_input?x -> signal_output!x -> SIGNAL
 
 --------------------------------------------------------------------------------
-nametype PortIndex = {1..10}
-
+-- State -----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 datatype StateVariable = StateVar.{1..5}
 datatype StateValue = NominalState
                     | InternalFailure
 
-channel in_port, out_port: PortIndex.SignalValue
-channel read_state, set_state: StateVariable.StateValue
+channel read_state, set_state, state_changed: StateVariable.StateValue
 
 STATE_CELL(var) = 
   let
     INIT = OPERATIONAL(NominalState)
     OPERATIONAL(value) = 
-      (set_state.var?new -> OPERATIONAL(new))
+      (set_state.var?value_ -> CHECK(value, value_))
       []
       (read_state.var.value -> OPERATIONAL(value))
+    CHECK(value, value_) =
+      if value == value_ then OPERATIONAL(value)
+      else state_changed.var!value_ -> OPERATIONAL(value_)
   within INIT
 
 STATE = 
@@ -43,16 +45,38 @@ STATE =
   within
     OPERATIONAL
 --------------------------------------------------------------------------------
+-- Simultaneous control --------------------------------------------------------
+--------------------------------------------------------------------------------
+channel sync
+
+SIMULTANEOUS =
+  let
+    INIT = sync -> OPERATIONAL(true)
+    OPERATIONAL(canInc) =
+      canInc & sync -> OPERATIONAL(false)
+      []
+      state_changed?var?value -> OPERATIONAL(true)
+  within INIT
+
+--------------------------------------------------------------------------------
 -- Library ---------------------------------------------------------------------
 --------------------------------------------------------------------------------
+nametype PortIndex = {1..10}
+channel in_port, out_port: PortIndex.SignalValue
+
 BATTERY =
-  inputs_read -> 
-  |~| state: StateValue @
-    let
-      outValue = if state == NominalState then NominalValue else Omission
-    within 
-      set_state.StateVar.1.state -> state_updated ->
-      out_port.1.outValue -> outputs_set -> BATTERY
+  inputs_read ->
+  read_state.StateVar.1?state  ->
+  let
+    nextStates(NominalState) = StateValue
+    nextStates(InternalFailure) = { InternalFailure } 
+  within
+    |~| state_: nextStates(state) @
+      let
+        outValue = if state_ == NominalState then NominalValue else Omission
+      within 
+        set_state.StateVar.1.state_ -> state_updated ->
+        out_port.1.outValue -> outputs_set -> BATTERY
 
 BATTERY_BLOCK = 
   (BATTERY [|BlockInstanceChanset|] BLOCK)
@@ -60,16 +84,21 @@ BATTERY_BLOCK =
 
 MONITOR =
   in_port.1?in1 -> in_port.2?in2 -> inputs_read ->
-  |~| state: StateValue @
-    let
-      best(a,b) = if a == NominalValue then a else b
-      choose(a,b) = 
-        if state == NominalState 
-          then best(a,b)
-          else if a == best(a,b) then b else a
-    within
-      set_state.StateVar.1.state -> state_updated ->
-      out_port.1.choose(in1,in2) -> outputs_set -> MONITOR
+  read_state.StateVar.1?state ->
+  let
+    nextStates(NominalState) = StateValue
+    nextStates(InternalFailure) = { InternalFailure }
+  within
+    |~| state_: nextStates(state) @
+      let
+        best(a,b) = if a == NominalValue then a else b
+        choose(a,b) = 
+          if state_ == NominalState 
+            then best(a,b)
+            else if a == best(a,b) then b else a
+      within
+        set_state.StateVar.1.state_ -> state_updated ->
+        out_port.1.choose(in1,in2) -> outputs_set -> MONITOR
 
 MONITOR_BLOCK = 
   (MONITOR [|BlockInstanceChanset|] BLOCK)
@@ -81,12 +110,14 @@ B1 = BATTERY_BLOCK
       [[ out_port.1 <- b1_m_in ]]
 B2 = BATTERY_BLOCK
       [[ 
+        read_state.StateVar.1 <- read_state.StateVar.2,
         set_state.StateVar.1 <- set_state.StateVar.2,
         out_port.1 <- b2_m_in
       ]]
   
 M = MONITOR_BLOCK
       [[ 
+        read_state.StateVar.1 <- read_state.StateVar.3,
         set_state.StateVar.1 <- set_state.StateVar.3,
         in_port.1 <- b1_m_out,
         in_port.2 <- b2_m_out 
@@ -112,17 +143,22 @@ SYSTEM =
     P(4) = S_B1_M
     P(5) = S_B2_M
     P(6) = STATE
-    alpha(1) = {| sync, set_state.StateVar.1, b1_m_in |}
-    alpha(2) = {| sync, set_state.StateVar.2, b2_m_in |}
-    alpha(3) = {| sync, set_state.StateVar.3, b1_m_out, b2_m_out, out_port.1 |}
+    P(7) = SIMULTANEOUS
+    alpha(1) = {| instant, read_state.StateVar.1, set_state.StateVar.1, b1_m_in |}
+    alpha(2) = {| instant, read_state.StateVar.2, set_state.StateVar.2, b2_m_in |}
+    alpha(3) = {| instant, read_state.StateVar.3, set_state.StateVar.3, b1_m_out, 
+                  b2_m_out, out_port.1 |}
     alpha(4) = {| b1_m_in, b1_m_out |}
     alpha(5) = {| b2_m_in, b2_m_out |}
-    alpha(6) = {| set_state.StateVar.var | var<-{1..3} |}
-    syncChanset = {| sync, b1_m_in, b1_m_out, b2_m_in, b2_m_out |}
-    PROCESSES = || i: {1..6} @ [alpha(i)] P(i)
+    alpha(6) = {| read_state.StateVar.var, set_state.StateVar.var,
+                  state_changed.StateVar.var | var<-{1..3} |}
+    alpha(7) = {| sync, state_changed.StateVar.var | var<-{1..3} |}
+    syncChanset = {| instant, b1_m_in, b1_m_out, b2_m_in, b2_m_out |}
+    PROCESSES = || i: {1..7} @ [alpha(i)] P(i)
     signalsChanset = {| b1_m_in, b1_m_out, b2_m_in, b2_m_out |}
+    stateAccess = {| read_state, set_state |}
   within
-    PROCESSES \ signalsChanset
+    PROCESSES \ union(signalsChanset, stateAccess) 
     
 assert SYSTEM :[deadlock free]
 assert SYSTEM :[divergence free]
@@ -130,3 +166,4 @@ assert SYSTEM :[divergence free]
 PROPERTY = SYSTEM [| {|out_port.1.Omission|} |] STOP
     
 assert not PROPERTY :[deadlock free [F]]
+
