@@ -51,7 +51,7 @@ channel sync
 
 SIMULTANEOUS =
   let
-    INIT = sync -> OPERATIONAL(true)
+    INIT = sync -> OPERATIONAL(false)
     OPERATIONAL(canInc) =
       canInc & sync -> OPERATIONAL(false)
       []
@@ -163,7 +163,15 @@ SYSTEM =
 assert SYSTEM :[deadlock free]
 assert SYSTEM :[divergence free]
 
-PROPERTY = SYSTEM [| {|out_port.1.Omission|} |] STOP
+SYNC_CONTROL(n) = 
+  let
+    INIT = OPERATIONAL(0)
+    OPERATIONAL(c) =
+      if c < n then sync -> OPERATIONAL(c+1)
+      else out_port.1.Omission -> OPERATIONAL(c)
+  within INIT
+
+PROPERTY = SYSTEM [| {|sync, out_port.1.Omission|} |] SYNC_CONTROL(4)
     
 assert not PROPERTY :[deadlock free [F]]
 
