@@ -45,6 +45,28 @@ STATE =
   within
     OPERATIONAL
 --------------------------------------------------------------------------------
+-- Fault activation ------------------------------------------------------------
+--------------------------------------------------------------------------------
+nametype BasicEventsIndexes = {1..10}
+datatype BasicEventVariable = BasicEvent.BasicEventsIndexes
+datatype SwitchStatus = On | Off
+
+channel activate: BasicEventVariable
+channel available: union({0},BasicEventsIndexes)
+
+FAULT_ACTIVATION(n) =
+  let
+    calc(m) = length(keys(m))
+    keys(m) = < k | (k,v)<-mapToList(m), v == Off >
+    INIT = OPERATIONAL(mapFromList(< (BasicEvent.i, Off) | i<-<1..n> >))
+    OPERATIONAL(m) = 
+      (activate?var:set(keys(m)) -> OPERATIONAL(mapUpdate(m, var, On)))
+      []
+      (available!calc(m) -> OPERATIONAL(m))
+  within INIT
+
+
+--------------------------------------------------------------------------------
 -- Simultaneous control --------------------------------------------------------
 --------------------------------------------------------------------------------
 channel sync
@@ -171,7 +193,7 @@ SYNC_CONTROL(n) =
       else out_port.1.Omission -> OPERATIONAL(c)
   within INIT
 
-PROPERTY = SYSTEM [| {|sync, out_port.1.Omission|} |] SYNC_CONTROL(4)
+PROPERTY = SYSTEM [| {|sync, out_port.1.Omission|} |] SYNC_CONTROL(3)
     
 assert not PROPERTY :[deadlock free [F]]
 
