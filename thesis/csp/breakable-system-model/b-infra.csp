@@ -5,7 +5,7 @@
 -- more.
 
 channel instant
-channel inputs_read, state_updated, outputs_set
+channel inputs_read, fault_activated, outputs_set
 
 datatype SignalValue = NominalValue
                       | Omission 
@@ -13,37 +13,10 @@ datatype SignalValue = NominalValue
                       | VooD -- Value outside of Domain
 channel signal_input, signal_output: SignalValue
 
-BLOCK = instant -> inputs_read -> state_updated -> outputs_set -> BLOCK
-BlockInstanceChanset = {| inputs_read, state_updated, outputs_set |}
+BLOCK = instant -> inputs_read -> outputs_set -> BLOCK
+BlockInstanceChanset = {| inputs_read, fault_activated, outputs_set |}
 
 SIGNAL = signal_input?x -> signal_output!x -> SIGNAL
-
---------------------------------------------------------------------------------
--- State -----------------------------------------------------------------------
---------------------------------------------------------------------------------
-datatype StateVariable = StateVar.{1..5}
-datatype StateValue = NominalState
-                    | InternalFailure
-
-channel read_state, set_state, state_changed: StateVariable.StateValue
-
-STATE_CELL(var) = 
-  let
-    INIT = OPERATIONAL(NominalState)
-    OPERATIONAL(value) = 
-      (set_state.var?value_ -> CHECK(value, value_))
-      []
-      (read_state.var.value -> OPERATIONAL(value))
-    CHECK(value, value_) =
-      if value == value_ then OPERATIONAL(value)
-      else state_changed.var!value_ -> OPERATIONAL(value_)
-  within INIT
-
-STATE = 
-  let
-    OPERATIONAL = ||| var: StateVariable @ STATE_CELL(var)
-  within
-    OPERATIONAL
 --------------------------------------------------------------------------------
 -- Fault activation ------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -52,20 +25,25 @@ datatype BasicEventVariable = BasicEvent.BasicEventsIndexes
 datatype SwitchStatus = On | Off
 
 channel activate: BasicEventVariable
+channel activationStatus: BasicEventVariable.SwitchStatus
 channel available: union({0},BasicEventsIndexes)
 
 FAULT_ACTIVATION(n) =
   let
-    calc(m) = length(keys(m))
-    keys(m) = < k | (k,v)<-mapToList(m), v == Off >
     INIT = OPERATIONAL(mapFromList(< (BasicEvent.i, Off) | i<-<1..n> >))
     OPERATIONAL(m) = 
-      (activate?var:set(keys(m)) -> OPERATIONAL(mapUpdate(m, var, On)))
-      []
-      (available!calc(m) -> OPERATIONAL(m))
+      let
+        calcOff = card(keysOff)
+        keysOff = keys(\ v @ v == Off)
+        allKeys = keys(\ v @ true)
+        keys(f) = set(< k | (k,v)<-mapToList(m), f(v) >)
+      within
+        (activate?var:keysOff -> OPERATIONAL(mapUpdate(m, var, On)))
+        []
+        (available!calcOff -> OPERATIONAL(m))
+        []
+        (activationStatus?var:allKeys!mapLookup(m, var) -> OPERATIONAL(m))
   within INIT
-
-
 --------------------------------------------------------------------------------
 -- Simultaneous control --------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -75,9 +53,12 @@ SIMULTANEOUS =
   let
     INIT = sync -> OPERATIONAL(false)
     OPERATIONAL(canInc) =
-      canInc & sync -> OPERATIONAL(false)
-      []
-      state_changed?var?value -> OPERATIONAL(true)
+      available?c ->
+      (
+        ((c > 0) and canInc) & sync -> OPERATIONAL(false)
+        []
+        activate?var -> OPERATIONAL(true)
+      )
   within INIT
 
 --------------------------------------------------------------------------------
@@ -88,17 +69,11 @@ channel in_port, out_port: PortIndex.SignalValue
 
 BATTERY =
   inputs_read ->
-  read_state.StateVar.1?state  ->
-  let
-    nextStates(NominalState) = StateValue
-    nextStates(InternalFailure) = { InternalFailure } 
-  within
-    |~| state_: nextStates(state) @
-      let
-        outValue = if state_ == NominalState then NominalValue else Omission
-      within 
-        set_state.StateVar.1.state_ -> state_updated ->
-        out_port.1.outValue -> outputs_set -> BATTERY
+  activationStatus!BasicEvent.1?state_ ->
+    let
+      outValue = if state_ == Off then NominalValue else Omission
+    within
+      out_port.1.outValue -> outputs_set -> BATTERY
 
 BATTERY_BLOCK = 
   (BATTERY [|BlockInstanceChanset|] BLOCK)
@@ -106,21 +81,15 @@ BATTERY_BLOCK =
 
 MONITOR =
   in_port.1?in1 -> in_port.2?in2 -> inputs_read ->
-  read_state.StateVar.1?state ->
+  activationStatus!BasicEvent.1?state_ ->
   let
-    nextStates(NominalState) = StateValue
-    nextStates(InternalFailure) = { InternalFailure }
+    best(a,b) = if a == NominalValue then a else b
+    choose(a,b) = 
+      if state_ == Off 
+        then best(a,b)
+        else if a == best(a,b) then b else a
   within
-    |~| state_: nextStates(state) @
-      let
-        best(a,b) = if a == NominalValue then a else b
-        choose(a,b) = 
-          if state_ == NominalState 
-            then best(a,b)
-            else if a == best(a,b) then b else a
-      within
-        set_state.StateVar.1.state_ -> state_updated ->
-        out_port.1.choose(in1,in2) -> outputs_set -> MONITOR
+     out_port.1.choose(in1,in2) -> outputs_set -> MONITOR
 
 MONITOR_BLOCK = 
   (MONITOR [|BlockInstanceChanset|] BLOCK)
@@ -132,15 +101,13 @@ B1 = BATTERY_BLOCK
       [[ out_port.1 <- b1_m_in ]]
 B2 = BATTERY_BLOCK
       [[ 
-        read_state.StateVar.1 <- read_state.StateVar.2,
-        set_state.StateVar.1 <- set_state.StateVar.2,
+        activationStatus.BasicEvent.1 <- activationStatus.BasicEvent.2,
         out_port.1 <- b2_m_in
       ]]
   
 M = MONITOR_BLOCK
       [[ 
-        read_state.StateVar.1 <- read_state.StateVar.3,
-        set_state.StateVar.1 <- set_state.StateVar.3,
+        activationStatus.BasicEvent.1 <- activationStatus.BasicEvent.3,
         in_port.1 <- b1_m_out,
         in_port.2 <- b2_m_out 
       ]]
@@ -164,24 +131,27 @@ SYSTEM =
     P(3) = M
     P(4) = S_B1_M
     P(5) = S_B2_M
-    P(6) = STATE
+    P(6) = FAULT_ACTIVATION(3)
     P(7) = SIMULTANEOUS
-    alpha(1) = {| instant, read_state.StateVar.1, set_state.StateVar.1, b1_m_in |}
-    alpha(2) = {| instant, read_state.StateVar.2, set_state.StateVar.2, b2_m_in |}
-    alpha(3) = {| instant, read_state.StateVar.3, set_state.StateVar.3, b1_m_out, 
+    alpha(1) = {| instant, activationStatus.BasicEvent.1, b1_m_in |}
+    alpha(2) = {| instant, activationStatus.BasicEvent.2, b2_m_in |}
+    alpha(3) = {| instant, activationStatus.BasicEvent.3, b1_m_out, 
                   b2_m_out, out_port.1 |}
     alpha(4) = {| b1_m_in, b1_m_out |}
     alpha(5) = {| b2_m_in, b2_m_out |}
-    alpha(6) = {| read_state.StateVar.var, set_state.StateVar.var,
-                  state_changed.StateVar.var | var<-{1..3} |}
-    alpha(7) = {| sync, state_changed.StateVar.var | var<-{1..3} |}
+    alpha(6) = {| activate.BasicEvent.var, activationStatus.BasicEvent.var,
+                  available.c 
+                  | var<-{1..3}, c<-{0..3} |}
+    alpha(7) = {| sync, activate.BasicEvent.var, available.c 
+                  | var<-{1..3}, c<-{0..3} |}
     syncChanset = {| instant, b1_m_in, b1_m_out, b2_m_in, b2_m_out |}
     PROCESSES = || i: {1..7} @ [alpha(i)] P(i)
     signalsChanset = {| b1_m_in, b1_m_out, b2_m_in, b2_m_out |}
-    stateAccess = {| read_state, set_state |}
+    stateAccess = {| available, activationStatus |}
   within
     PROCESSES \ union(signalsChanset, stateAccess) 
-    
+
+
 assert SYSTEM :[deadlock free]
 assert SYSTEM :[divergence free]
 
