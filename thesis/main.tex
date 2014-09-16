@@ -77,17 +77,16 @@
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
 
-\includeonly{formalisation}
+\ifdraft
+\includeonly{temporal-fault-trees}
+%\includeonly{formalisation}
+\fi
 \input{shortcuts}
 
 \begin{document}
 
-\ifdraft
-\input{decision}
-\else
 \frontmatter
 \frontpage
-\fi
 
 \presentationpage
 
@@ -115,10 +114,6 @@
 \mainmatter
 
 \include{introduction}
-
-\include{hazard-management}
-
-\include{dependability}
 
 \include{temporal-fault-trees}
 
