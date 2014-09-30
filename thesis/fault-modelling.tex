@@ -1,0 +1,67 @@
+\chapter{Modelling faults}
+\label{sec:fault-modelling}
+
+\begin{quotation}[Título]{Autor}
+Texto \\
+Text
+\end{quotation}
+
+In this section we show how to model faults using functions a component-level failure logic.
+%
+We define two relations to establish our axioms: (i) failure value and failure state, (ii) order of occurrence.
+%
+Items (i) and (ii) are already a subject of comprehensive studies, but we abstract the detection assuming proper detection to model the actual state of a system.
+
+Using these three definition we are able to create a library of basic components that can be used as building blocks to create new components or to compose a system model.
+
+\section{Modelling a system}
+\label{sec:modelling-a-system}
+
+A system is a block diagram (nodes) with directed connected arrows. 
+%
+An arrow origin is the output of some component and the destination is one or more inputs.
+%
+Two output ports cannot be directly connected, not does two inputs.
+%
+It is required an output and at least one input to connect two nodes.
+
+Arrows and nodes contain fault-related information.
+%
+An arrow contains the current value of the output of the originating node.
+%
+It is a Boolean indicating a nominal or an erroneous value. 
+%
+In the last case, the arrow also contains the error mode.
+%
+A node contains: (i) state information, indicating whether the component is in failure, and (ii) a logic for each output that expresses how the output reacts to internal failures and failures on the inputs. 
+%
+Item (ii) is very similar to the cause of output deviation in \HIPHOPS.
+%
+It also includes the order of occurrence of the failures.
+
+Differently from \HIPHOPS, an output expression also contains the nominal case to cover all possibilities on the components, to avoid missing a case.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Failure value and failure state%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Failure value and failure state}
+
+A function $F_I : Input \rightarrow Boolean$ expresses whether the current value on an input is a failure value. 
+%
+Similarly, a function $N_C : Component \rightarrow Boolean$ expresses whether the current state of a component is a failure state.
+%
+The type of a failure value is defined by a unbounded value.
+
+To illustrate these definitions, suppose a component $C$ that contains only one output and its failure logic depends only on its internal state: if it is faulty, it produces an omission value $O_M$, otherwise it produces a nominal value $N$. 
+%
+The failure logic for its output $O$ is: $O = F(C) \land O_M \lor \lnot F(C) \land N$.
+
+\subsection{Order of occurrence}
+
+The order of occurrence of events is defined as a sequence value as it is in \HIPHOPS: it is a natural value assigned to each input.
+%
+The value does not contain gaps, so always there is a pair of input that the modulus of the difference of their sequence values is 1, or the modulus of the difference is 0 for all pairs of inputs.
+%
+For example, if we have two variables, they can be assigned values 0 and 1 or 1 and 2, but not 0 and 2. 
+
+We define a relation $S : Input \rightarrow \nat $ of sequence values.
