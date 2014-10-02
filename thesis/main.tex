@@ -36,6 +36,7 @@
 \usepackage{etoolbox}
 \usepackage{hazard-management}
 \usepackage{amsthm}
+\usepackage{tikz}
 
 \captionsetup[table]{position=top,justification=centering,width=.85\textwidth,labelfont=bf,font=small}
 \captionsetup[lstlisting]{position=top,justification=centering,width=.85\textwidth,labelfont=bf,font=small}
@@ -78,19 +79,18 @@
 \newtheorem{lemma}{Lemma}
 
 \ifdraft
-\includeonly{temporal-fault-trees,fault-modelling}
+\includeonly{introduction,temporal-fault-trees,fault-modelling}
 %\includeonly{formalisation}
 \fi
 \input{shortcuts}
 
 \begin{document}
 
+\ifdraft\else
 \frontmatter
 \frontpage
-
 \presentationpage
 
-\ifdraft\else
 \begin{fichacatalografica}
   \FakeFichaCatalografica % Comment this line when you have the correct file
 %     \includepdf{ficha_catalografica.pdf} % Uncomment this
