@@ -15,21 +15,21 @@ Using these definitions we are able to create a library of basic components that
 \section{Modelling a system}
 \label{sec:modelling-a-system}
 
-A system model is a block diagram (nodes) with directed connected arrows. 
+A system model is a block diagram (nodes) with directed connected edges. 
 %
-An arrow origin is the output of some component and the destination is one or more inputs of other component.
+An edge's origin is the output of some component and the destination is one or more inputs of other component.
 %
 Two output ports cannot be directly connected, nor does two inputs.
 %
 It is required an output and at least one input to connect two components.
 
-Arrows and nodes contain fault-related information.
+Edges and nodes contain fault-related information.
 %
-An arrow contains the current value of the output of the originating node.
+An edge contains the current value of the output of the originating node.
 %
 It is a Boolean indicating a nominal or an erroneous value. 
 %
-In the last case, the arrow also contains the error mode.
+In the last case, the edge also contains the error mode.
 %
 A node contains: (i) state information, indicating whether the component is in failure, and (ii) a logic for each output that expresses how the output reacts to internal failures and failures on the inputs. 
 %
@@ -39,20 +39,35 @@ It also includes the order of occurrence of the failures.
 
 Differently from \HIPHOPS, an output expression also contains the nominal case to cover all possibilities on the components, to avoid missing a case.
 
+\begin{definition}[Component]
+$C = \left(I, \left( O_1\left(I,F\right),\ldots,O_{n_o}\left(I,F\right) \right) \right)$
+
+\noindent where $I = \left(i_1,\ldots,i_{n_i}\right)$ are inputs of type $FailureMode$, $O_k$ are functions that describe outputs, $F$ indicates an internal failure of the component, and $n_i$ and $n_o$ are the number of inputs and outputs.
+
+The type $FailureMode$ contains enumerated values of failure modes, but contains at least a value $N$ to express a nominal value.
+\end{definition}
+
+\begin{definition}[System model]
+$S = \left(Cs, A\right)$
+\noindent where $Cs$ is a set of components and $A$ is a function $A : (Component \cross \nat) \cross (Component \cross \nat) \rightarrow Boolean$\footnote{Or it is a relation of type $(Component \cross \nat) \cross (Component \cross \nat)$.} that relates a component output to another component's input.
+\end{definition}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Failure value and failure state%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Failure value and failure state}
 
-A function $F_i : Input \rightarrow Boolean$ expresses whether the current value on an input is a failure value. 
+%A function $F_i : Input \rightarrow Boolean$ expresses whether the current value on an input is a failure value. 
 %
-Similarly, a function $F_c : Component \rightarrow Boolean$ expresses whether the current state of a component is a failure state.
+%Similarly, a function $F_c : Component \rightarrow Boolean$ expresses whether the current state of a component is a failure state.
 %
-The type of a failure value is defined by a unbounded value.
+%The type of a failure value is defined by a unbounded value.
 
-To illustrate these definitions, suppose a component $C$ that contains only one output and its failure logic depends only on its internal state: if it is faulty, it produces an omission value $O_M$, otherwise it produces a nominal value $N$. 
+To illustrate these definitions, suppose a component $C$ that contains only one output, and its failure logic depends only on its internal state: if it is faulty, it produces an omission value $O_M$, otherwise it produces a nominal value $N$. 
 %
-The failure logic for its output $O$ is: $O = F_c(C) \land O_M \lor \lnot F_c(C) \land N$.
+The failure logic for its output $O$ is: $O = F \land O_M \lor \lnot F \land N$.
+
+TODO: all Boolean operators relate to $FailureMode$ as: if the Boolean value is $true$, then it results in the $FailureMode$ value, otherwise it results in $false$. It creates an invariant that all output functions are tautologies.
 
 \subsection{Order of occurrence}
 
