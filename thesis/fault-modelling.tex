@@ -39,18 +39,50 @@ It also includes the order of occurrence of the failures.
 
 Differently from \HIPHOPS, an output expression also contains the nominal case to cover all possibilities on the components, to avoid missing a case.
 
+\begin{definition}[Values]
+The set of possible values in inputs and outputs is defined as: 
+\[\Values=N.\Real \union \FMode\]
+%
+where $N$ means a nominal value and $\FMode$ specifies a failure mode, such as omission, commission etc. and denotes all possible failure modes for any component.
+\end{definition}
+
 \begin{definition}[Component]
-$C = \left(I, \left( O_1\left(I,F\right),\ldots,O_{n_o}\left(I,F\right) \right) \right)$
-
-\noindent where $I = \left(i_1,\ldots,i_{n_i}\right)$ are inputs of type $FailureMode$, $O_k$ are functions that describe outputs, $F$ indicates an internal failure of the component, and $n_i$ and $n_o$ are the number of inputs and outputs.
-
-The type $FailureMode$ contains enumerated values of failure modes, but contains at least a value $N$ to express a nominal value.
+\begin{sloppypar}
+$C_m = \left(I_m, O_m \right)$
+%
+\\where $I_m = \left(\cin{m}{1},\ldots,\cin{m}{n_{in}}\right)$ are inputs of type $\Values$, $O_m = \left( \cout{m}{1},\ldots,\cout{m}{n_{out}} \right)$ are output functions of type $\ValueFunction$, $\ValueFunction : (\Values \cross \ldots \cross \Values) \cross FMode \rightarrow \Values $, $m$ is the index of the component in a model, and $n_{in}$ and $n_{out}$ are the number of inputs and outputs.
+\end{sloppypar}
 \end{definition}
 
 \begin{definition}[System model]
 $S = \left(Cs, A\right)$
-\noindent where $Cs$ is a set of components and $A$ is a function $A : (Component \cross \nat) \cross (Component \cross \nat) \rightarrow Boolean$\footnote{Or it is a relation of type $(Component \cross \nat) \cross (Component \cross \nat)$.} that relates a component output to another component's input.
+\noindent where $Cs$ is a set of components and $A : \PortIndex \cross \PortIndex$ relates a component output to another component's input, $\PortIndex$ is a pair of indexes where the first element is a component's index and the second is the input or output index within the component, and
+\[\forall m, j \bullet \lnot \exists k \bullet A\left(\left(m, o_m\right), \left(k, i_k\right)\right) \land A\left(\left(j, o_j\right), \left(k, i_k\right)\right)\]
 \end{definition}
+
+\begin{definition}[Model inputs and outputs]
+Model inputs and outputs are all components' inputs and outputs that are not in $A$.
+\[
+\MIn = \bigcup_m \bullet \left(m,k\right) | \forall m,j,k \bullet \lnot A\left( \left(j, o_j\right), \left(m, k\right) \right)
+\]
+and
+\[
+\MOut = \bigcup_m \bullet \left(m,k\right) | \forall m,j,k \bullet \lnot A\left( \left(m, k\right), \left(j, i_j\right) \right)
+\]
+%
+where $C_m = \left(I_m, O_m\right)$, $I_m = \left(i_{m,1},\ldots,i_{m,n_{in}}\right)$ and $O_m = \left(o_{m,1},\ldots,o_{m,n_{out}}\right)$
+\end{definition}
+
+\begin{lemma}[Inputs and Outputs completeness]
+In a model, every input and output is either in $A$, or in $\MIn \cup \MOut$:
+\[\forall m,i \bullet \left(m,i\right) \in \MIn \lor \left(m,i\right) \in \ran A \]
+\[\forall m,o \bullet \left(m,o\right) \in \MOut \lor \left(m,o\right) \in \dom A \]
+\end{lemma}
+\begin{proof}
+\TODO{sorry}
+\end{proof}
+
+\TODO{Acrescentar teorema sobre como as funções de saída geram as equações para as árvores.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Failure value and failure state%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,4 +109,5 @@ The value does not contain gaps, so always there is a pair of input that the mod
 %
 For example, if we have two variables, they can be assigned values 0 and 1 or 1 and 2, but not 0 and 2. 
 
-We define a relation $S : Input \rightarrow \nat $ as the sequence value for the given input.
+We define a relation $S : Input \rightarrow \Nat $ as the sequence value for the given input.
+
