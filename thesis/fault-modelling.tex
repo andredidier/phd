@@ -82,6 +82,60 @@ In a model, every input and output is either in $A$, or in $\MIn \cup \MOut$:
 \TODO{sorry}
 \end{proof}
 
+The output functions are defined using a \emph{valued tautology} logic.
+%
+It adds value information to a Boolean expression and can be generally understood as a guarded-value expression. 
+%
+The evaluation of the expression of all guards is always \emph{true} (tautology).
+%
+The most basic example of a valued tautology is a $\top$ expression and its associated value $V : \Values$:
+\[\top^V\]
+\begin{definition}[Valued tautology]
+A valued tautology is defined as:
+\begin{align*}
+ValuedTautology & \defs E_0^{V_0} \Concat_{i=1}op_i E_i^{V_i}
+\\ E_0 \Concat_{i=1} op_i E_i & = \top
+\\ \forall i, j & \bullet E_i \land E_j \implies V_i = V_j
+\end{align*}
+%
+where $\Concat$ concatenates the expression using the operators, $op_i$ is a Boolean operator, $E_i$ is a Boolean expression and $V_i$ is a value of type $\Values$.
+\end{definition}
+
+\begin{lemma}[Valued tautology \emph{OR}]
+Given two Boolean variables $A$ and $B$, their respective values $U$ and $V$, and a third value $Q$:
+\begin{align*}
+A^U \lor B^V \lor \left(\lnot A \land \lnot B\right)^Q \defs & 
+\left(A \land \lnot B\right)^U \lor
+\\&  \left(\lnot A \land B\right)^V \lor 
+\\&  \left(A \land B \land \left(U = V\right) \right)^U \lor
+\\&  \left(\lnot A \land \lnot B\right)^Q
+\end{align*}
+
+\end{lemma}
+\begin{proof}
+Observe that given an expression $E = A \lor B$, the above expression satisfies a tautology: the $\lnot E$ is also in the expression ($\lnot A \land \lnot B$).
+%
+We prove it is a tautology by taking all guards and verifying that it is equal to $\top$:
+\[A \lor B \lor \left(\lnot A \land \lnot B\right) = \top \]
+\end{proof}
+
+
+\begin{lemma}[Valued tautology \emph{AND}]
+Give two Boolean variables $A$ and $B$, their respective values $U$ and $V$ and a third value $Q$:
+\begin{align*}
+\left(A^U \land B^V\right) \lor \left(\lnot A \lor \lnot B\right)^Q \defs & 
+\left(A \land \lnot B \right)^Q \lor
+\\&\left(\lnot A \land B\right)^Q \lor
+\\&\left(A \land B \land U = V\right)^U \lor
+\\&\left(\lnot A \land \lnot B\right)^Q
+\end{align*}
+\end{lemma}
+\begin{proof}
+Assume $E = A \land B$, $\lnot E = \left(\lnot A \lor \lnot B\right) $ is also in the expression, thus:
+\[ E \lor \lnot E = \top \] 
+\end{proof}
+\TODO{Citação do capítulo ou da seção: to be or not to be.}
+
 \TODO{Acrescentar teorema sobre como as funções de saída geram as equações para as árvores.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
