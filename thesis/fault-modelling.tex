@@ -91,41 +91,40 @@ The evaluation of the expression of all guards is always \emph{true} (tautology)
 The most basic example of a valued tautology is a $\top$ expression and its associated value $V : \Values$:
 \[\top^V\]
 \begin{definition}[Valued tautology]
+\label{def:valued-tautology}
 A valued tautology is defined as:
 \begin{align*}
-ValuedTautology & \defs E_0^{V_0} \Concat_{i=1}op_i E_i^{V_i}
-\\ E_0 \Concat_{i=1} op_i E_i & = \top
+ValuedTautology & \defs E_0^{V_0} \mathop{op_0} \ldots \mathop{op_m} E_m^{V_m}
+\\ E_0 \mathop{op_0} \ldots \mathop{op_m} E_m & = \top
 \\ \forall i, j & \bullet E_i \land E_j \implies V_i = V_j
 \end{align*}
 %
-where $\Concat$ concatenates the expression using the operators, $op_i$ is a Boolean operator, $E_i$ is a Boolean expression and $V_i$ is a value of type $\Values$.
+where $op_m$ is a Boolean operator, $E_m$ is a Boolean expression and $V_m$ is a value of type $\Values$.
 \end{definition}
 
 \begin{lemma}[Valued tautology \emph{OR}]
-Given two Boolean variables $A$ and $B$, their respective values $U$ and $V$, and a third value $Q$:
+Given two Boolean variables $A$ and $B$, their respective values $U$ and $V$, and a third value $Q$, $A^U \lor B^V \lor \left(\lnot A \land \lnot B\right)^Q $ is a valued tautology:
 \begin{align*}
 A^U \lor B^V \lor \left(\lnot A \land \lnot B\right)^Q \defs & 
 \left(A \land \lnot B\right)^U \lor
-\\&  \left(\lnot A \land B\right)^V \lor 
+\left(\lnot A \land B\right)^V \lor 
 \\&  \left(A \land B \land \left(U = V\right) \right)^U \lor
 \\&  \left(\lnot A \land \lnot B\right)^Q
 \end{align*}
 
 \end{lemma}
 \begin{proof}
-Observe that given an expression $E = A \lor B$, the above expression satisfies a tautology: the $\lnot E$ is also in the expression ($\lnot A \land \lnot B$).
-%
-We prove it is a tautology by taking all guards and verifying that it is equal to $\top$:
-\[A \lor B \lor \left(\lnot A \land \lnot B\right) = \top \]
+Assume $E = A \lor B$, $\lnot E = \left(\lnot A \land \lnot B\right) $ is also in the expression, thus:
+\[ E \lor \lnot E = \top \] 
 \end{proof}
 
 
 \begin{lemma}[Valued tautology \emph{AND}]
-Give two Boolean variables $A$ and $B$, their respective values $U$ and $V$ and a third value $Q$:
+Give two Boolean variables $A$ and $B$, their respective values $U$ and $V$ and a third value $Q$, $A^U \land B^V \lor \left(\lnot A \lor \lnot B\right)^Q $ is a valued tautology:
 \begin{align*}
 \left(A^U \land B^V\right) \lor \left(\lnot A \lor \lnot B\right)^Q \defs & 
 \left(A \land \lnot B \right)^Q \lor
-\\&\left(\lnot A \land B\right)^Q \lor
+\left(\lnot A \land B\right)^Q \lor
 \\&\left(A \land B \land U = V\right)^U \lor
 \\&\left(\lnot A \land \lnot B\right)^Q
 \end{align*}
@@ -135,6 +134,24 @@ Assume $E = A \land B$, $\lnot E = \left(\lnot A \lor \lnot B\right) $ is also i
 \[ E \lor \lnot E = \top \] 
 \end{proof}
 \TODO{Citação do capítulo ou da seção: to be or not to be.}
+
+\begin{definition}[Value of a valued tautology]
+The value of a valued tautology is the i-eth value when the i-eth expression evaluates to \emph{true}.
+%
+Given a valued tautology $T = E_0^{V_0} \mathop{op_0} \ldots \mathop{op_m} E_m^{V_m}$, the value of $T$ is defined by the function $\VTValue$:
+\[
+\exists i \bullet E_i \land \VTValue\left(T\right) = V_i  
+\]
+\end{definition}
+If an $E_j (i\neq j)$ also evaluates to \emph{true}, the value is the same, accordingly to~\cref{def:valued-tautology}.
+
+\begin{definition}[Rules for $\VTValue$]
+Given a predicate $P\left(.\right)$
+
+\begin{align}
+P\left(\VTValue\left(E_1^{V_1} \lor E_2^{V_2}\right)\right) &= 
+\end{align} 
+\end{definition}
 
 \TODO{Acrescentar teorema sobre como as funções de saída geram as equações para as árvores.}
 
