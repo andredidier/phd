@@ -170,15 +170,31 @@ It exemplifies with the expression $true \land \lnot closed(barriers)$, where we
 %
 The work reported in~\cite{XY2010} defines a formal model of static fault trees considering operands as events. 
 
+\begin{definition}[Fault tree gate]
+Given $F_f$, $f \in [0,n_F], n_F \geq 0$, Boolean variables where if $F_f$ evaluates to $true$, then a basic fault event occurs, a fault tree gate $G$ combines all $F_f$ with a Boolean operator $\mathop{op}$:
+\[G = F_0 \mathop{op} \ldots \mathop{op} F_{n_F}\]
+\end{definition}
+
+If $n_F = 0$ then the gate reduces to the variable $F_0$.
+
 \begin{definition}[Fault tree structure function]
-A \emph{fault tree structure function} is a function of Boolean variables, where each variable represents a fault event.
+\begin{sloppypar}
+Given $F_f$, $f \in [0,n_F]$ Boolean variables, and fault tree gates $G_g$, $g \in [0, n_G]$, a structure function $SF:\left(Boolean \cross \ldots \cross Boolean\right) \rightarrow Boolean $ is also a fault tree gate with operator $op$:
+\[
+SF\left(F_0, \ldots, F_{n_F}\right) = G_0\left(F_0, \ldots, F_{n_F}\right) \mathop{op} \ldots \mathop{op} G_{n_G}\left(F_0, \ldots, F_{n_F}\right)
+\]
+%
+where if $F_f$ evaluates to $true$, then a basic fault event occurs.
+% 
+Then $SF$ represents a fault tree.
+\end{sloppypar} 
 \end{definition}
 
 \begin{theorem}[A predicate over a valued tautology is a structure function of a fault tree]
-Given $F_f$, $f \in [1,n_F]$ are Boolean variables that represent basic fault events, $E_e$, $e \in [0,n_E]$ Boolean expressions that contains only $F_f$, and $T = E_0^{V_0} \mathop{op_0} \ldots \mathop{op_{n_E}} E_{n_E}^{V_{n_E}}$ a valued tautology, then a predicate $P$ is a structure function of $T$.
+Given $F_f$, $f \in [1,n_F]$ Boolean variables that represent basic fault events, $G_g$, $g \in [0,n_G]$ fault tree gates that contains only $F_f$, and $T = G_0^{V_0} \mathop{op_0} \ldots \mathop{op_{n_G}} G_{n_G}^{V_{n_G}}$ a valued tautology, then a predicate $P$ over $F_f$ is a structure function of $T$.
 \end{theorem}
 \begin{proof}
-
+\TODO{sorry.}
 \end{proof}
 
 \subsection{Example of valued tautology}
