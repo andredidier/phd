@@ -1,2 +1,4 @@
 thesis/fault-modelling-theory/output/*
 *.bak
+*~
+*.thy.marks
