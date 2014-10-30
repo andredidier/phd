@@ -61,16 +61,32 @@ definition SystemOutputs :: "System \<Rightarrow> PortIndex set" where
     (m,k) \<in> SystemComponentsOutputs S \<and> 
     ((m,k),(j,ij)) \<in> snd S) }"
 
-lemma inputs_completeness: "ValidSystem (Cs,A) \<Longrightarrow> \<forall> m i. (m,i) \<in> (SystemInputs (Cs,A) \<union> Range A)"
+lemma inputs_completeness1: "ValidSystem (Cs,A) \<Longrightarrow> 
+  (m,in_index) \<notin> Range A \<Longrightarrow> (m,in_index) \<in> SystemInputs (Cs,A)"
 apply(auto simp add: ValidSystem_def ValidConnection_def ValidComponents_def 
   ComponentOutputPortIndexes_def ComponentInputPortIndexes_def SystemInputs_def
   SystemComponentsInputs_def SystemComponentsOutputs_def)
 done
 
-lemma outputs_completeness: "ValidSystem (Cs,A) \<Longrightarrow> \<forall> m i. (m,i) \<in> (SystemOutputs (Cs,A) \<union> Domain A)"
+lemma inputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m,in_index) \<in> (SystemInputs (Cs,A) \<union> Range A)"
+apply(auto simp add: inputs_completeness1)
+done
+
+lemma outputs_completeness1: "ValidSystem (Cs,A) \<Longrightarrow> 
+  (m,out_index) \<notin> Domain A \<Longrightarrow> (m,out_index) \<in> SystemOutputs (Cs,A)"
 apply(auto simp add: ValidSystem_def ValidConnection_def ValidComponents_def 
   ComponentOutputPortIndexes_def ComponentInputPortIndexes_def SystemOutputs_def
   SystemComponentsInputs_def SystemComponentsOutputs_def)
+done
+
+lemma outputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m,out_index) \<in> (SystemOutputs (Cs,A) \<union> Domain A)"
+apply(auto simp add: outputs_completeness1)
+done
+
+theorem io_completeness: "ValidSystem (Cs,A) \<Longrightarrow> 
+  (\<forall> m in_index. (m,in_index) \<in> (SystemInputs (Cs,A) \<union> Range A)) \<and> 
+  (\<forall> m out_index. (m,out_index) \<in> (SystemOutputs (Cs,A) \<union> Domain A))"
+apply (auto simp add: inputs_completeness1 outputs_completeness1)
 done
 
 end
