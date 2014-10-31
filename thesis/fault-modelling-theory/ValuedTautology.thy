@@ -4,28 +4,71 @@ imports FaultModellingTypes
 
 begin
 
-type_synonym 'a gate = "'a \<Rightarrow> 'a \<Rightarrow> 'a"
+datatype 'variavel BoolOperand = 
+  VBBConstOp bool
+  | VBBVarOp 'variavel
+  | VBBExpUnOp "bool \<Rightarrow> bool" "'variavel BoolOperand"
+  | VBBExpBinOp "bool \<Rightarrow> bool \<Rightarrow> bool" "'variavel BoolOperand" "'variavel BoolOperand"
 
-datatype 'variavel ValuedBoolOperand = 
-  ValuedBoolConstOperand bool
-  | ValuedBoolVarOperand 'variavel
-  | ValuedBoolExpOperand "bool \<Rightarrow> bool \<Rightarrow> bool" "'variavel ValuedBoolOperand" "'variavel ValuedBoolOperand"
+datatype 'variavel ValuesOperand =
+  VBVConstOp Values
+  | VBVVarOp 'variavel
 
-type_synonym 'variavel ValuedBool = "('variavel ValuedBoolOperand \<times> Values)"
+type_synonym ('vb,'vv) ValuedBool = "('vb BoolOperand \<times> 'vv ValuesOperand)"
 
-primrec "operand_eval" :: "'variavel ValuedBoolOperand \<Rightarrow> ('variavel \<Rightarrow> bool) \<Rightarrow> bool" where
-  "operand_eval (ValuedBoolConstOperand b) valuation = b" |
-  "operand_eval (ValuedBoolVarOperand a) valuation = valuation a" |
-  "operand_eval (ValuedBoolExpOperand exp_op op1 op2) valuation = 
-    exp_op (operand_eval op1 valuation) (operand_eval op2 valuation)"
+primrec "BoolOperand_eval" :: "'variavel BoolOperand \<Rightarrow> ('variavel \<Rightarrow> bool) \<Rightarrow> bool" where
+  "BoolOperand_eval (VBBConstOp b) valuation = b" |
+  "BoolOperand_eval (VBBVarOp a) valuation = valuation a" |
+  "BoolOperand_eval (VBBExpUnOp exp_op op1) valuation = exp_op (BoolOperand_eval op1 valuation)" |
+  "BoolOperand_eval (VBBExpBinOp exp_op op1 op2) valuation = 
+    exp_op (BoolOperand_eval op1 valuation) (BoolOperand_eval op2 valuation)"
 
-definition bool_eval :: "'variavel ValuedBool \<Rightarrow> ('variavel \<Rightarrow> bool) \<Rightarrow> bool" where 
-  "bool_eval VB valuation \<equiv> operand_eval (fst VB) valuation"
+primrec "ValuesOperand_eval" :: "'variavel ValuesOperand \<Rightarrow> ('variavel \<Rightarrow> Values) \<Rightarrow> Values" where
+  "ValuesOperand_eval (VBVConstOp v) valuation = v" |
+  "ValuesOperand_eval (VBVVarOp a) valuation = valuation a"
 
-type_synonym 'a binop = "'a \<Rightarrow> 'a \<Rightarrow> 'a" 
+definition ValuedBool_bool_eval :: "('vb,'vv) ValuedBool \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" where 
+  "ValuedBool_bool_eval VB valuation \<equiv> BoolOperand_eval (fst VB) valuation"
 
-datatype 'variavel ValuedBoolExp = 
-  SingleValuedBoolExp "'variavel ValuedBool"
-  | BinaryValuedBoolExp "('variavel ValuedBool) binop" "'variavel ValuedBoolExp" "'variavel ValuedBoolExp"
+definition ValuedBool_value_eval :: "('vb, 'vv) ValuedBool \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> Values" where 
+  "ValuedBool_value_eval VB valuation \<equiv> ValuesOperand_eval (snd VB) valuation"
+
+type_synonym ('vb, 'vv) ValuedBoolExp = "(('vb,'vv) ValuedBool) list"
+
+primrec ValuedBoolExp_bool_eval :: "('vb,'vv) ValuedBoolExp \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" where
+  "ValuedBoolExp_bool_eval [] val_b = False" |
+  "ValuedBoolExp_bool_eval (s # ss) val_b = 
+    ((ValuedBool_bool_eval s val_b) \<or> (ValuedBoolExp_bool_eval ss val_b))"
+
+
+definition ValuedTautology :: "('vb, 'vv) ValuedBoolExp \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> bool" where
+  "ValuedTautology VBExp val_b val_v \<equiv> (
+      (ValuedBoolExp_bool_eval VBExp val_b) \<and>
+      (ValuedTautology_set (ValuedBoolExp_to_set VBExp) val_b val_v)
+    )"
+
+lemma not_valued_tautology1 : "\<not> ValuedTautology (SVBExp (VBBVarOp A, U)) val_b val_v"
+apply (auto simp add: ValuedTautology_def ValuedTautology_set_def)
+done
+
+lemma not_valued_tautology2 : 
+  "\<not> ValuedTautology (BVBExp (op \<or>) (SVBExp (VBBVarOp A, U)) (SVBExp (VBBVarOp B, V))) val_b val_v"
+apply (auto simp add: ValuedTautology_def ValuedTautology_set_def)
+done
+
+lemma valued_tautology_or : 
+  "(BoolOperand_eval A val_b) \<Longrightarrow> (BoolOperand_eval B val_b) \<Longrightarrow>
+  (((BoolOperand_eval A val_b) \<and> (BoolOperand_eval B val_b)) \<longrightarrow> (U = V)) \<Longrightarrow> 
+  ValuedTautology 
+    (BVBExp (op \<or>)
+      (BVBExp (op \<or>) 
+        (SVBExp (A, U))
+        (SVBExp (B, V)))
+      (SVBExp ((VBBExpBinOp (op \<and>) 
+                (VBBExpUnOp Not A) 
+                (VBBExpUnOp Not B)), Q))) 
+    val_b val_v"
+apply (auto simp add: ValuedTautology_def ValuedTautology_set_def ValuedBool_bool_eval_def)
+done
 
 end

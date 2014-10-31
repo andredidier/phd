@@ -3,8 +3,13 @@ imports Complex_Main
 
 begin
 
-datatype FMode = Omission
+type_synonym 'a binop = "'a \<Rightarrow> 'a \<Rightarrow> 'a" 
 
-datatype Values = N real | F FMode
+datatype FMode = Omission | Commission
+
+datatype Values = 
+  FMNominal real 
+  | FMFailure FMode 
+
 
 end
