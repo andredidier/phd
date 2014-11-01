@@ -31,9 +31,9 @@ primrec ValuedBool_bool_eval :: "(('vb,'vv) ValuedBool) option \<Rightarrow> ('v
   "ValuedBool_bool_eval None valuation = False" |
   "ValuedBool_bool_eval (Some VB) valuation = BoolOperand_eval (fst VB) valuation"
 
-primrec ValuedBool_value_eval :: "(('vb, 'vv) ValuedBool) option \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> Values" where 
-  "ValuedBool_value_eval None valuation = FMUndefined" |
-  "ValuedBool_value_eval (Some VB) valuation = ValuesOperand_eval (snd VB) valuation"
+primrec ValuedBool_value_eval :: "(('vb, 'vv) ValuedBool) option \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> Values option" where 
+  "ValuedBool_value_eval None valuation = None" |
+  "ValuedBool_value_eval (Some VB) valuation = Some (ValuesOperand_eval (snd VB) valuation)"
 
 type_synonym ('vb, 'vv) ValuedBoolExp = "nat \<rightharpoonup> (('vb,'vv) ValuedBool)"
 
@@ -89,6 +89,11 @@ apply (simp add: ValuedTautology_values_def)
 apply (simp add: ValuedBoolExp_bool_eval_def)
 done
 
+definition ValuedBoolExp_value_eval_i :: "nat \<Rightarrow> ('vb,'vv) ValuedBoolExp \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> Values option" where
+  "ValuedBoolExp_value_eval_i i Es val_b val_v \<equiv> 
+    if (ValuedTautology Es val_b val_v) \<and> (ValuedBool_bool_eval (Es i) val_b) 
+      then ValuedBool_value_eval (Es i) val_v
+      else None"
 
 
 end
