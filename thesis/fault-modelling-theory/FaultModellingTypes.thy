@@ -10,6 +10,7 @@ datatype FMode = Omission | Commission
 datatype Values = 
   FMNominal real 
   | FMFailure FMode 
+  | FMUndefined
 
 
 end
