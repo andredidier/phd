@@ -4,18 +4,6 @@ imports FaultModellingTypes Map
 
 begin
 
-datatype 'variavel BoolOperand = 
-  VBBConstOp bool
-  | VBBVarOp 'variavel
-  | VBBExpUnOp "bool \<Rightarrow> bool" "'variavel BoolOperand"
-  | VBBExpBinOp "bool \<Rightarrow> bool \<Rightarrow> bool" "'variavel BoolOperand" "'variavel BoolOperand"
-
-datatype 'variavel ValuesOperand =
-  VBVConstOp Values
-  | VBVVarOp 'variavel
-
-type_synonym ('vb,'vv) ValuedBool = "('vb BoolOperand \<times> 'vv ValuesOperand)"
-
 primrec "BoolOperand_eval" :: "'variavel BoolOperand \<Rightarrow> ('variavel \<Rightarrow> bool) \<Rightarrow> bool" where
   "BoolOperand_eval (VBBConstOp b) valuation = b" |
   "BoolOperand_eval (VBBVarOp a) valuation = valuation a" |
@@ -34,8 +22,6 @@ primrec ValuedBool_bool_eval :: "(('vb,'vv) ValuedBool) option \<Rightarrow> ('v
 primrec ValuedBool_value_eval :: "(('vb, 'vv) ValuedBool) option \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> Values option" where 
   "ValuedBool_value_eval None valuation = None" |
   "ValuedBool_value_eval (Some VB) valuation = Some (ValuesOperand_eval (snd VB) valuation)"
-
-type_synonym ('vb, 'vv) ValuedBoolExp = "nat \<rightharpoonup> (('vb,'vv) ValuedBool)"
 
 definition ValuedBoolExp_bool_eval :: "('vb,'vv) ValuedBoolExp \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" where
   "ValuedBoolExp_bool_eval Es val_b \<equiv> (\<exists> i \<in> (dom Es). ValuedBool_bool_eval (Es i) val_b)"
