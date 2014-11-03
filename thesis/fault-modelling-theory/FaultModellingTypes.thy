@@ -15,15 +15,12 @@ datatype 'variavel BoolOperand =
   VBBConstOp bool
   | VBBVarOp 'variavel
   | VBBExpUnOp "bool \<Rightarrow> bool" "'variavel BoolOperand"
-  | VBBExpBinOp "bool \<Rightarrow> bool \<Rightarrow> bool" "'variavel BoolOperand" "'variavel BoolOperand"
+  | VBBExpBinOp "bool binop" "'variavel BoolOperand" "'variavel BoolOperand"
 
-datatype 'variavel ValuesOperand =
+datatype ('vb, 'vv) ValuesOperand =
   VBVConstOp Values
-  | VBVVarOp 'variavel
-
-type_synonym ('vb,'vv) ValuedBool = "('vb BoolOperand \<times> 'vv ValuesOperand)"
-
-type_synonym ('vb, 'vv) ValuedBoolExp = "nat \<rightharpoonup> (('vb,'vv) ValuedBool)"
-
+  | VBVVarOp 'vv
+  | VBVExpOp "('vb, 'vv) ValuedBool list" and
+  ('vb, 'vv) ValuedBool = VB "'vb BoolOperand" "('vb, 'vv) ValuesOperand"
 
 end

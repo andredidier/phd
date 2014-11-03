@@ -9,7 +9,7 @@ e
 isabelle build -D fault-modelling-theory/
 *}
 
-type_synonym ('vb, 'vv) Port = "('vb, 'vv) ValuedBoolExp"
+type_synonym ('vb, 'vv) Port = "('vb, 'vv) ValuesOperand"
 
 (* Component Index x Port Index within the component *)
 type_synonym PortIndex = "(nat \<times> nat)"
