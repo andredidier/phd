@@ -4,12 +4,12 @@ imports FaultModellingTypes Map
 
 begin
 
-primrec "BoolOperand_eval" :: "'variavel BoolOperand \<Rightarrow> ('variavel \<Rightarrow> bool) \<Rightarrow> bool" where
-  "BoolOperand_eval (VBBConstOp b) valuation = b" |
-  "BoolOperand_eval (VBBVarOp a) valuation = valuation a" |
-  "BoolOperand_eval (VBBExpUnOp exp_op op1) valuation = exp_op (BoolOperand_eval op1 valuation)" |
-  "BoolOperand_eval (VBBExpBinOp exp_op op1 op2) valuation = 
-    exp_op (BoolOperand_eval op1 valuation) (BoolOperand_eval op2 valuation)"
+primrec "BoolOperand_eval" :: "'vb BoolOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" where
+  "BoolOperand_eval (VBBConstOp b) vb = b" |
+  "BoolOperand_eval (VBBVarOp a) vb = vb a" |
+  "BoolOperand_eval (VBBExpUnOp exp_op op1) vb = exp_op (BoolOperand_eval op1 vb)" |
+  "BoolOperand_eval (VBBExpBinOp exp_op op1 op2) vb = 
+    exp_op (BoolOperand_eval op1 vb) (BoolOperand_eval op2 vb)"
 
 primrec 
   expand_BoolOperand_ValuesOperand :: "'vb BoolOperand \<Rightarrow> ('vb, 'vv) ValuesOperand \<Rightarrow> ('vb, 'vv) ValuedBool list" and
@@ -43,7 +43,7 @@ lemma normalise_sanity1:
 apply (auto)
 done
 
-(*
+
 primrec 
   ValuesOperand_bool_eval :: "('vb, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" and
   ValuesOperand_bool_eval_list :: "('vb, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" and
@@ -57,19 +57,18 @@ where
   "ValuesOperand_bool_eval_list (E # Es) vb = 
     ((ValuesOperand_bool_eval_VB E vb) \<or> (ValuesOperand_bool_eval_list Es vb))" |
   "ValuesOperand_bool_eval_VB (VB e v) vb = (BoolOperand_eval e vb)"
-*)
 
 primrec choose_value :: "Values option binop" where
   "choose_value None vo = vo" |
-  "choose_value (Some v) vo = Some v"
+  "choose_value (Some v) vo = (if (Some v) = vo then vo else None)"
 
 primrec
-  ValuesOperand_value_eval :: "('vb, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> Values option" and
-  ValuesOperand_value_eval_list :: "('vb, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> Values option list" and
-  ValuesOperand_value_eval_VB :: "('vb, 'vv) ValuedBool \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> Values option" 
+  ValuesOperand_value_eval :: "('vb, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values option) \<Rightarrow> Values option" and
+  ValuesOperand_value_eval_list :: "('vb, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values option) \<Rightarrow> Values option list" and
+  ValuesOperand_value_eval_VB :: "('vb, 'vv) ValuedBool \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values option) \<Rightarrow> Values option" 
 where
   "ValuesOperand_value_eval (VBVConstOp c) vb vv = Some c" |
-  "ValuesOperand_value_eval (VBVVarOp v) vb vv = Some (vv v)" |
+  "ValuesOperand_value_eval (VBVVarOp v) vb vv = vv v" |
   "ValuesOperand_value_eval (VBVExpOp Es) vb vv = 
     (fold choose_value (ValuesOperand_value_eval_list Es vb vv) None)" |
   "ValuesOperand_value_eval_list [] vb vv = []" |
@@ -79,22 +78,26 @@ where
     (if (BoolOperand_eval e vb) then (ValuesOperand_value_eval v vb vv) else None)"
 
 definition
-  TwoActiveSameValue :: "('vb, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" 
+  UniqueValue :: "('vb, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values option) \<Rightarrow> bool" 
 where
-  "TwoActiveSameValue Es vb \<equiv> \<forall> i j ei vi ej vj. ((*(i < length Es) \<and> (j < length Es) \<and>*)
-    (VB ei vi = Es!i) \<and> (VB ej vj = Es!j) \<and> BoolOperand_eval ei vb \<and> BoolOperand_eval ej vb)
-    \<longrightarrow>
-    ((normalise_ValuesOperand vi) = (normalise_ValuesOperand vj))"
+  "UniqueValue Es vb vv \<equiv> 
+  card (
+    set (
+      map 
+        (\<lambda> E. ValuesOperand_value_eval_VB E vb vv) 
+        (filter (\<lambda> E. ValuesOperand_bool_eval_VB E vb) Es)
+    )
+  ) = 1"
 
 primrec 
-  ValuedTautology :: "('vb, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values) \<Rightarrow> bool" and
+  ValuedTautology :: "('vb, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> Values option) \<Rightarrow> bool" and
   ValuedTautology_list :: "('vb, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" and
   ValuedTautology_VB :: "('vb, 'vv) ValuedBool \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" 
 where
   "ValuedTautology (VBVConstOp c) vb vv = True" |
   "ValuedTautology (VBVVarOp v) vb vv = True" |
   "ValuedTautology (VBVExpOp Es) vb vv = 
-    ((ValuedTautology_list Es vb) \<and> (TwoActiveSameValue (normalise_ValuesOperand_list Es) vb))" |
+    ((ValuedTautology_list Es vb) \<and> (UniqueValue Es vb vv))" |
   "ValuedTautology_list [] vb = False" |
   "ValuedTautology_list (E # Es) vb = 
     ((ValuedTautology_VB E vb) \<or> (ValuedTautology_list Es vb))" |
@@ -108,42 +111,30 @@ lemma to_be_or_not_to_be_list[simp]: "ValuedTautology_list [VB A U, VB (VBBExpUn
 apply (auto)
 done
 
-lemma to_be_or_not_to_be_two_active_list[simp]: "TwoActiveSameValue [VB A U, VB (VBBExpUnOp Not A) V] vb"
-apply (auto simp add: TwoActiveSameValue_def)
-apply (auto simp add: normalise_ValuesOperand_def)
-apply (auto simp add: expand_BoolOperand_ValuesOperand_def)
+lemma to_be_or_not_to_be_two_active_list[simp]: "UniqueValue [VB A U, VB (VBBExpUnOp Not A) V] vb vv"
+apply (simp add: UniqueValue_def)
 done
 
 lemma valued_tautology_basic_or : 
-  "ValuedTautology (VBVExpOp [VB A U, VB (VBBExpUnOp Not A) V]) 
-  vb vv"
+  "ValuedTautology (VBVExpOp [VB A U, VB (VBBExpUnOp Not A) V]) vb vv"
 apply (auto)
-apply (auto simp add: append_def)
-apply (auto simp add: TwoActiveSameValue_def)
-apply (auto simp add: normalise_ValuesOperand_def)
-apply (auto simp add: append_def)
-apply (auto simp add: expand_BoolOperand_ValuesOperand_def)
-apply (auto simp add: BoolOperand_eval_def)
 done
 
 lemma valued_tautology_or : 
-  "ValuedTautology (VBVExpOp [VB A U, VB B V, 
+  "((BoolOperand_eval A vb \<and> BoolOperand_eval B vb) \<longrightarrow> U = V) \<Longrightarrow> ValuedTautology (VBVExpOp [VB A U, VB B V, 
     VB (VBBExpBinOp (op \<and>) (VBBExpUnOp Not A) (VBBExpUnOp Not B)) Q]) 
   vb vv"
-sorry
-
-lemma not_valued_tautology1 : "\<not> (val_b A) \<Longrightarrow> \<not> ValuedTautology (map_of [(1,(VBBVarOp A, U))]) val_b val_v"
 apply (auto)
-apply (simp add: ValuedTautology_def)
-apply (simp add: ValuedTautology_values_def)
-apply (simp add: ValuedBoolExp_bool_eval_def)
+apply (auto simp add: UniqueValue_def)
+done
+
+lemma not_valued_tautology1 : "(\<not> (BoolOperand_eval A vb)) \<Longrightarrow> (\<not> ValuedTautology (VBVExpOp [VB A U]) vb vv)"
+apply (auto)
 done
 
 lemma not_valued_tautology2 : 
-  "\<not> (val_b A) \<and> \<not> (val_b B) \<Longrightarrow> \<not> ValuedTautology (map_of [(1,(VBBVarOp A, U)), (2,(VBBVarOp B, V))]) val_b val_v"
-apply (auto simp add: ValuedTautology_def )
-apply (simp add: ValuedTautology_values_def)
-apply (simp add: ValuedBoolExp_bool_eval_def)
+  "(\<not> (BoolOperand_eval A vb) \<and> \<not> (BoolOperand_eval B vb)) \<Longrightarrow> \<not> ValuedTautology (VBVExpOp [VB A U, VB B V]) vb vv"
+apply (auto)
 done
 
 
