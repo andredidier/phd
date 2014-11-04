@@ -9,77 +9,106 @@ e
 isabelle build -D fault-modelling-theory/
 *}
 
-type_synonym ('vb, 'vv) Port = "('vb, 'vv) ValuesOperand"
+type_synonym ComponentPort = "(nat \<times> nat)"
 
-(* Component Index x Port Index within the component *)
-type_synonym PortIndex = "(nat \<times> nat)"
+type_synonym CPValuation = "ComponentPort \<Rightarrow> Values option"
 
-type_synonym ('vb, 'vv) ComponentPort = "(nat \<times> ('vb, 'vv) Port)"
+(* Quantidade de entradas e lista de expressões de saída *)
+type_synonym 'vb Component = "(nat \<times> ('vb, CPValuation) ValuesOperand list)"
 
-type_synonym ('vb, 'vv) Component = "(nat \<times> (('vb, 'vv) ComponentPort set \<times> ('vb, 'vv) ComponentPort set))"
+definition NumberOfInputs :: "'vb Component \<Rightarrow> nat"
+where
+  "NumberOfInputs C \<equiv> fst C "
 
-definition ComponentInputPortIndexes :: "('vb, 'vv) Component \<Rightarrow> PortIndex set" where
-  "ComponentInputPortIndexes C \<equiv> { (c,p). c = fst C \<and> p \<in> Domain (snd (snd C)) }"
+definition NumberOfOutputs :: "'vb Component \<Rightarrow> nat"
+where
+  "NumberOfOutputs C \<equiv> length (snd C)"
 
-definition ComponentOutputPortIndexes :: "('vb, 'vv) Component \<Rightarrow> PortIndex set" where
-  "ComponentOutputPortIndexes C \<equiv> { (c,p). c = fst C \<and> p \<in> Domain (fst (snd C)) }"
+text {* Input .> Output  *}
+type_synonym 'vv Connections = "'vv \<rightharpoonup> 'vv"
 
-type_synonym Connections = "(PortIndex \<times> PortIndex) set"
+(* Lista de componentes e conexões*)
+type_synonym 'vb System = "('vb Component list \<times> ComponentPort Connections)"
 
-type_synonym ('vb, 'vv) System = "(('vb, 'vv) Component set \<times> Connections)"
+definition SystemComponents :: "'vb System \<Rightarrow> 'vb Component list"
+where
+  "SystemComponents S \<equiv> (fst S)"
 
-definition ValidConnection :: "Connections \<Rightarrow> bool"  where 
-  "ValidConnection A \<equiv> \<forall> m j om oj ik. \<not> (\<exists> k. ((m, om), (k, ik)) \<in> A \<and> ((j, oj), (k, ik)) \<in> A)"
+definition SystemComponent :: "'vb System \<Rightarrow> nat \<Rightarrow> 'vb Component"
+where
+  "SystemComponent S i \<equiv> ((SystemComponents S)!i)"
 
-definition SystemComponentsInputs :: "('vb, 'vv) System \<Rightarrow> PortIndex set" where
-  "SystemComponentsInputs S \<equiv> {p. p \<in> (\<Union> C \<in> fst S. ComponentInputPortIndexes C)}"
+definition SystemConnections :: "'vb System \<Rightarrow> ComponentPort Connections"
+where
+  "SystemConnections S \<equiv> snd S"
 
-definition SystemComponentsOutputs :: "('vb, 'vv) System \<Rightarrow> PortIndex set" where
-  "SystemComponentsOutputs S \<equiv> {p. p \<in> (\<Union> C \<in> fst S. ComponentOutputPortIndexes C)}"
+(* Rever se isso faz sentido... *)
+definition ValidConnection :: "'vv Connections \<Rightarrow> bool"  where 
+  "ValidConnection A \<equiv> \<forall> om oj. \<not> (\<exists> ik. (om \<noteq> oj) \<longrightarrow> (A ik = om \<and> A ik = oj))"
 
-definition ValidComponents :: "('vb, 'vv) System \<Rightarrow> bool" where
+(* [0,n) *)
+definition ComponentInputPortIndexes :: "'vb Component \<Rightarrow> nat set"
+where
+  "ComponentInputPortIndexes C \<equiv> {..<(NumberOfInputs C)} "
+
+definition ComponentOutputPortIndexes :: "'vb Component \<Rightarrow> nat set"
+where
+  "ComponentOutputPortIndexes C \<equiv> {..<(NumberOfOutputs C)}"
+
+definition SystemComponentsInputs :: "'vb System \<Rightarrow> ComponentPort set" where
+  "SystemComponentsInputs S \<equiv> { (c,i). c \<in> {..<(length (SystemComponents S))} \<and> i \<in> ComponentInputPortIndexes (SystemComponent S c)}"
+
+definition SystemComponentsOutputs :: "'vb System \<Rightarrow> ComponentPort set" where
+  "SystemComponentsOutputs S \<equiv> { (c,i). c \<in> {..<(length (SystemComponents S))} \<and> i \<in> ComponentOutputPortIndexes (SystemComponent S c)}"
+
+definition ValidPortIndex :: "'vb System \<Rightarrow> ComponentPort \<Rightarrow> ('vb Component \<Rightarrow> nat) \<Rightarrow> bool" 
+where
+  "ValidPortIndex S cp f \<equiv> 
+    let (c,i) = cp 
+    in c < length (SystemComponents S) \<and> i < f (SystemComponent S c)"
+
+(*TODO: cpin pertence às conexões união com os *)
+definition ValidComponents :: "'vb System \<Rightarrow> bool" where
   "ValidComponents S \<equiv> 
-    (fst S) \<noteq> Set.empty \<and> 
-    Domain (snd S) \<subseteq> {p. p \<in> (\<Union> C \<in> fst S. ComponentOutputPortIndexes C)} \<and>
-    Range (snd S) \<subseteq> {p. p \<in> (\<Union> C \<in> fst S. ComponentInputPortIndexes C)} "
+    (fst S) \<noteq> [] \<and> 
+    (\<forall> cpin. (cpin \<in> dom (SystemConnections S)) \<longrightarrow> (ValidPortIndex S cpin NumberOfInputs)) \<and>
+    (\<forall> cpout. (cpout \<in> ran (SystemConnections S)) \<longrightarrow> (ValidPortIndex S cpout NumberOfOutputs))"
 
-definition ValidSystem :: "('vb, 'vv) System \<Rightarrow> bool" where "ValidSystem S \<equiv> ValidConnection (snd S) \<and> ValidComponents S"
+definition ValidSystem :: "'vb System \<Rightarrow> bool" 
+where 
+  "ValidSystem S \<equiv> ValidConnection (snd S) \<and> ValidComponents S"
 
-definition SystemInputs :: "('vb, 'vv) System \<Rightarrow> PortIndex set" where 
-  "SystemInputs S \<equiv> { (m,k). \<not> (\<exists> j oj. 
-    (m,k) \<in> SystemComponentsInputs S \<and> 
-    ((j,oj),(m,k)) \<in> snd S) }"
+definition SystemInputs :: "'vb System \<Rightarrow> ComponentPort set" where 
+  "SystemInputs S \<equiv> { ii. \<not> (\<exists> oj. ii \<in> SystemComponentsInputs S \<and> ((snd S) ii = oj)) }"
 
-definition SystemOutputs :: "('vb, 'vv) System \<Rightarrow> PortIndex set" where
-  "SystemOutputs S \<equiv> { (m,k). \<not> (\<exists> j ij. 
-    (m,k) \<in> SystemComponentsOutputs S \<and> 
-    ((m,k),(j,ij)) \<in> snd S) }"
+definition SystemOutputs :: "'vb System \<Rightarrow> ComponentPort set" where
+  "SystemOutputs S \<equiv> { oi. \<not> (\<exists> ij. oi \<in> SystemComponentsOutputs S \<and> ((snd S) ij = Some oi)) }"
 
 lemma inputs_completeness1: "ValidSystem (Cs,A) \<Longrightarrow> 
-  (m,in_index) \<notin> Range A \<Longrightarrow> (m,in_index) \<in> SystemInputs (Cs,A)"
+  (m,in_index) \<notin> ran A \<Longrightarrow> (m,in_index) \<in> SystemInputs (Cs,A)"
 apply(auto simp add: ValidSystem_def ValidConnection_def ValidComponents_def 
   ComponentOutputPortIndexes_def ComponentInputPortIndexes_def SystemInputs_def
   SystemComponentsInputs_def SystemComponentsOutputs_def)
 done
 
-lemma inputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m,in_index) \<in> (SystemInputs (Cs,A) \<union> Range A)"
+lemma inputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m,in_index) \<in> (SystemInputs (Cs,A) \<union> ran A)"
 apply(auto simp add: inputs_completeness1)
 done
 
 lemma outputs_completeness1: "ValidSystem (Cs,A) \<Longrightarrow> 
-  (m,out_index) \<notin> Domain A \<Longrightarrow> (m,out_index) \<in> SystemOutputs (Cs,A)"
+  (m,out_index) \<notin> dom A \<Longrightarrow> (m,out_index) \<in> SystemOutputs (Cs,A)"
 apply(auto simp add: ValidSystem_def ValidConnection_def ValidComponents_def 
   ComponentOutputPortIndexes_def ComponentInputPortIndexes_def SystemOutputs_def
   SystemComponentsInputs_def SystemComponentsOutputs_def)
 done
 
-lemma outputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m,out_index) \<in> (SystemOutputs (Cs,A) \<union> Domain A)"
+lemma outputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m,out_index) \<in> (SystemOutputs (Cs,A) \<union> dom A)"
 apply(auto simp add: outputs_completeness1)
 done
 
 theorem io_completeness: "ValidSystem (Cs,A) \<Longrightarrow> 
-  (\<forall> m in_index. (m,in_index) \<in> (SystemInputs (Cs,A) \<union> Range A)) \<and> 
-  (\<forall> m out_index. (m,out_index) \<in> (SystemOutputs (Cs,A) \<union> Domain A))"
+  (\<forall> m in_index. (m,in_index) \<in> (SystemInputs (Cs,A) \<union> ran A)) \<and> 
+  (\<forall> m out_index. (m,out_index) \<in> (SystemOutputs (Cs,A) \<union> dom A))"
 apply (auto simp add: inputs_completeness1 outputs_completeness1)
 done
 
