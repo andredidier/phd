@@ -43,6 +43,7 @@ lemma normalise_sanity1:
 apply (auto)
 done
 
+(*
 primrec 
   ValuesOperand_bool_eval :: "('vb, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" and
   ValuesOperand_bool_eval_list :: "('vb, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" and
@@ -56,6 +57,7 @@ where
   "ValuesOperand_bool_eval_list (E # Es) vb = 
     ((ValuesOperand_bool_eval_VB E vb) \<or> (ValuesOperand_bool_eval_list Es vb))" |
   "ValuesOperand_bool_eval_VB (VB e v) vb = (BoolOperand_eval e vb)"
+*)
 
 primrec choose_value :: "Values option binop" where
   "choose_value None vo = vo" |
@@ -79,7 +81,7 @@ where
 definition
   TwoActiveSameValue :: "('vb, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" 
 where
-  "TwoActiveSameValue Es vb \<equiv> \<forall> i j ei vi ej vj. ((i < length Es) \<and> (j < length Es) \<and> 
+  "TwoActiveSameValue Es vb \<equiv> \<forall> i j ei vi ej vj. ((*(i < length Es) \<and> (j < length Es) \<and>*)
     (VB ei vi = Es!i) \<and> (VB ej vj = Es!j) \<and> BoolOperand_eval ei vb \<and> BoolOperand_eval ej vb)
     \<longrightarrow>
     ((normalise_ValuesOperand vi) = (normalise_ValuesOperand vj))"
@@ -98,15 +100,31 @@ where
     ((ValuedTautology_VB E vb) \<or> (ValuedTautology_list Es vb))" |
   "ValuedTautology_VB (VB e v) vb = (BoolOperand_eval e vb)"
 
+lemma to_be_or_not_to_be[simp]: "(BoolOperand_eval A vb) \<or> (BoolOperand_eval (VBBExpUnOp Not A) vb)"
+apply (auto)
+done
+
+lemma to_be_or_not_to_be_list[simp]: "ValuedTautology_list [VB A U, VB (VBBExpUnOp Not A) V] vb"
+apply (auto)
+done
+
+lemma to_be_or_not_to_be_two_active_list[simp]: "TwoActiveSameValue [VB A U, VB (VBBExpUnOp Not A) V] vb"
+apply (auto simp add: TwoActiveSameValue_def)
+apply (auto simp add: normalise_ValuesOperand_def)
+apply (auto simp add: expand_BoolOperand_ValuesOperand_def)
+done
+
 lemma valued_tautology_basic_or : 
   "ValuedTautology (VBVExpOp [VB A U, VB (VBBExpUnOp Not A) V]) 
   vb vv"
 apply (auto)
+apply (auto simp add: append_def)
 apply (auto simp add: TwoActiveSameValue_def)
+apply (auto simp add: normalise_ValuesOperand_def)
+apply (auto simp add: append_def)
 apply (auto simp add: expand_BoolOperand_ValuesOperand_def)
-apply (auto simp add: expand_BoolOperand_ValuesOperand_def TwoActiveSameValue_def
-  normalise_ValuesOperand_def BoolOperand_eval_def)
-sorry
+apply (auto simp add: BoolOperand_eval_def)
+done
 
 lemma valued_tautology_or : 
   "ValuedTautology (VBVExpOp [VB A U, VB B V, 
