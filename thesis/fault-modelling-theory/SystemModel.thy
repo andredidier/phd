@@ -14,7 +14,7 @@ type_synonym ComponentPort = "(nat \<times> nat)"
 type_synonym CPValuation = "ComponentPort \<Rightarrow> Values option"
 
 (* Quantidade de entradas e lista de expressões de saída *)
-type_synonym 'vb Component = "(nat \<times> ('vb, CPValuation) ValuesOperand list)"
+type_synonym 'vb Component = "(nat \<times> ('vb, ComponentPort) ValuesOperand list)"
 
 definition NumberOfInputs :: "'vb Component \<Rightarrow> nat"
 where
@@ -71,45 +71,64 @@ where
 definition ValidComponents :: "'vb System \<Rightarrow> bool" where
   "ValidComponents S \<equiv> 
     (fst S) \<noteq> [] \<and> 
-    (\<forall> cpin. (cpin \<in> dom (SystemConnections S)) \<longrightarrow> (ValidPortIndex S cpin NumberOfInputs)) \<and>
-    (\<forall> cpout. (cpout \<in> ran (SystemConnections S)) \<longrightarrow> (ValidPortIndex S cpout NumberOfOutputs))"
+    (dom (SystemConnections S) \<subseteq> SystemComponentsInputs S) \<and>
+    (ran (SystemConnections S) \<subseteq> SystemComponentsOutputs S)"
 
 definition ValidSystem :: "'vb System \<Rightarrow> bool" 
 where 
-  "ValidSystem S \<equiv> ValidConnection (snd S) \<and> ValidComponents S"
+  "ValidSystem S \<equiv> ValidConnection (SystemConnections S) \<and> ValidComponents S"
 
 definition SystemInputs :: "'vb System \<Rightarrow> ComponentPort set" where 
-  "SystemInputs S \<equiv> { ii. \<not> (\<exists> oj. ii \<in> SystemComponentsInputs S \<and> ((snd S) ii = oj)) }"
+  "SystemInputs S \<equiv> { ii. ii \<in> SystemComponentsInputs S \<and> \<not> (\<exists> oj.  
+    oj \<in> SystemComponentsOutputs S \<and> ((SystemConnections S) ii = Some oj)) }"
 
 definition SystemOutputs :: "'vb System \<Rightarrow> ComponentPort set" where
-  "SystemOutputs S \<equiv> { oi. \<not> (\<exists> ij. oi \<in> SystemComponentsOutputs S \<and> ((snd S) ij = Some oi)) }"
+  "SystemOutputs S \<equiv> { oi. oi \<in> SystemComponentsOutputs S \<and> \<not> (\<exists> ij. ij \<in> SystemComponentsInputs S \<and> 
+     ((SystemConnections S) ij = Some oi)) }"
 
-lemma inputs_completeness1: "ValidSystem (Cs,A) \<Longrightarrow> 
-  (m,in_index) \<notin> ran A \<Longrightarrow> (m,in_index) \<in> SystemInputs (Cs,A)"
-apply(auto simp add: ValidSystem_def ValidConnection_def ValidComponents_def 
-  ComponentOutputPortIndexes_def ComponentInputPortIndexes_def SystemInputs_def
-  SystemComponentsInputs_def SystemComponentsOutputs_def)
+lemma SystemInputs_ComponentInputs : "ValidSystem S \<Longrightarrow> SystemInputs S \<subseteq> SystemComponentsInputs S"
+apply (auto simp add: SystemInputs_def)
 done
 
-lemma inputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m,in_index) \<in> (SystemInputs (Cs,A) \<union> ran A)"
-apply(auto simp add: inputs_completeness1)
+lemma SystemOutputs_ComponentOutputs : "ValidSystem S \<Longrightarrow> SystemOutputs S \<subseteq> SystemComponentsOutputs S"
+apply (auto simp add: SystemOutputs_def)
 done
 
-lemma outputs_completeness1: "ValidSystem (Cs,A) \<Longrightarrow> 
-  (m,out_index) \<notin> dom A \<Longrightarrow> (m,out_index) \<in> SystemOutputs (Cs,A)"
-apply(auto simp add: ValidSystem_def ValidConnection_def ValidComponents_def 
-  ComponentOutputPortIndexes_def ComponentInputPortIndexes_def SystemOutputs_def
-  SystemComponentsInputs_def SystemComponentsOutputs_def)
+
+lemma inputs_completeness1: "ValidSystem (Cs,A) \<Longrightarrow> (m, i) \<in> SystemComponentsInputs (Cs,A) \<Longrightarrow>
+  (m, i) \<notin> dom A \<Longrightarrow> (m, i) \<in> SystemInputs (Cs,A)"
+apply (auto simp add: ValidSystem_def ValidConnection_def)
 done
 
-lemma outputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m,out_index) \<in> (SystemOutputs (Cs,A) \<union> dom A)"
-apply(auto simp add: outputs_completeness1)
+lemma inputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m, i) \<in> SystemComponentsInputs (Cs,A) \<Longrightarrow>
+  (m, i) \<notin> SystemInputs (Cs,A) \<Longrightarrow> (m, i) \<in> dom A"
+apply (auto simp add: ValidSystem_def ValidConnection_def)
+done
+
+lemma inputs_completeness3: "ValidSystem (Cs,A) \<Longrightarrow> (m, i) \<in> SystemComponentsInputs (Cs,A) \<Longrightarrow> 
+  (m, i) \<in> (SystemInputs (Cs,A) \<union> dom A)"
+apply (auto simp add: ValidSystem_def ValidConnection_def)
+done
+
+lemma outputs_completeness1: "ValidSystem (Cs,A) \<Longrightarrow> (m, oi) \<in> SystemComponentsOutputs (Cs,A) \<Longrightarrow>
+  (m, oi) \<notin> ran A \<Longrightarrow> (m, oi) \<in> SystemOutputs (Cs,A)"
+apply(auto simp add: ValidSystem_def ValidConnection_def)
+done
+
+lemma outputs_completeness2: "ValidSystem (Cs,A) \<Longrightarrow> (m, oi) \<in> SystemComponentsOutputs (Cs,A) \<Longrightarrow>
+  (m, oi) \<notin> SystemOutputs (Cs,A) \<Longrightarrow> (m, oi) \<in> ran A"
+apply(auto simp add: ValidSystem_def ValidConnection_def)
+done
+
+lemma outputs_completeness3: "ValidSystem (Cs,A) \<Longrightarrow> (m, oi) \<in> (SystemOutputs (Cs,A) \<union> ran A)"
+apply(auto simp add: ValidSystem_def ValidConnection_def)
 done
 
 theorem io_completeness: "ValidSystem (Cs,A) \<Longrightarrow> 
-  (\<forall> m in_index. (m,in_index) \<in> (SystemInputs (Cs,A) \<union> ran A)) \<and> 
-  (\<forall> m out_index. (m,out_index) \<in> (SystemOutputs (Cs,A) \<union> dom A))"
-apply (auto simp add: inputs_completeness1 outputs_completeness1)
+  (mi, ini) \<in> SystemComponentsInputs (Cs,A) \<Longrightarrow> (mo, oi) \<in> SystemComponentsOutputs (Cs,A) \<Longrightarrow>
+  (mi, ini) \<in> (SystemInputs (Cs,A) \<union> dom A) \<and> 
+  (mo, oi) \<in> (SystemOutputs (Cs,A) \<union> ran A)"
+apply (auto simp add: ValidSystem_def ValidConnection_def)
 done
 
 end
