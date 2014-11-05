@@ -1,48 +1,8 @@
 theory ValuedTautology
 
-imports FaultModellingTypes Map
+imports FaultModellingTypes Map BoolOperand
 
 begin
-
-primrec "BoolOperand_eval" :: "'vb BoolOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" where
-  "BoolOperand_eval (VBBConstOp b) vb = b" |
-  "BoolOperand_eval (VBBVarOp a) vb = vb a" |
-  "BoolOperand_eval (VBBExpUnOp exp_op op1) vb = exp_op (BoolOperand_eval op1 vb)" |
-  "BoolOperand_eval (VBBExpBinOp exp_op op1 op2) vb = 
-    exp_op (BoolOperand_eval op1 vb) (BoolOperand_eval op2 vb)"
-
-primrec 
-  expand_BoolOperand_ValuesOperand :: "'vb BoolOperand \<Rightarrow> ('vb, 'vv) ValuesOperand \<Rightarrow> ('vb, 'vv) ValuedBool list" and
-  expand_BoolOperand_ValuesOperand_list :: "'vb BoolOperand \<Rightarrow> ('vb, 'vv) ValuedBool list \<Rightarrow> ('vb, 'vv) ValuedBool list" and
-  expand_BoolOperand_ValuesOperand_VB :: "'vb BoolOperand \<Rightarrow> ('vb, 'vv) ValuedBool \<Rightarrow> ('vb, 'vv) ValuedBool"
-where
-  "expand_BoolOperand_ValuesOperand e (VBVConstOp c) = (VB e (VBVConstOp c)) # []" |
-  "expand_BoolOperand_ValuesOperand e (VBVVarOp v) = (VB e (VBVVarOp v)) # []" |
-  expand_BoolOperand_ValuesOperand_VBExpOp:
-  "expand_BoolOperand_ValuesOperand e (VBVExpOp Es) = expand_BoolOperand_ValuesOperand_list e Es" |
-  "expand_BoolOperand_ValuesOperand_list e [] = []" |
-  "expand_BoolOperand_ValuesOperand_list e (E # Es) = 
-    (expand_BoolOperand_ValuesOperand_VB e E) # (expand_BoolOperand_ValuesOperand_list e Es)" |
-  "expand_BoolOperand_ValuesOperand_VB e1 (VB e2 v2) = VB (VBBExpBinOp (op \<and>) e1 e2) v2"
-
-primrec 
-  normalise_ValuesOperand :: "('vb, 'vv) ValuesOperand \<Rightarrow> ('vb, 'vv) ValuesOperand" and
-  normalise_ValuesOperand_list :: "('vb, 'vv) ValuedBool list \<Rightarrow> ('vb, 'vv) ValuedBool list" and
-  normalise_ValuesOperand_VB :: "('vb, 'vv) ValuedBool \<Rightarrow> ('vb, 'vv) ValuedBool list" 
-where
-  "normalise_ValuesOperand (VBVConstOp c) = VBVConstOp c" |
-  "normalise_ValuesOperand (VBVVarOp v) = VBVVarOp v" |
-  normalise_ValuesOperand_VBVExpOp:
-  "normalise_ValuesOperand (VBVExpOp E) = VBVExpOp (normalise_ValuesOperand_list E)" |
-  "normalise_ValuesOperand_list [] = []" |
-  "normalise_ValuesOperand_list (e # E) = (normalise_ValuesOperand_VB e) @ (normalise_ValuesOperand_list E)" |
-  "normalise_ValuesOperand_VB (VB e v) = expand_BoolOperand_ValuesOperand e v"
-
-lemma normalise_sanity1: 
-  "(normalise_ValuesOperand (VBVExpOp [ VB e1 (VBVExpOp [VB e2 v2]) ])) = (VBVExpOp [ VB (VBBExpBinOp (op \<and>) e1 e2) v2])"
-apply (auto)
-done
-
 
 primrec 
   ValuesOperand_bool_eval :: "('vb, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" and
@@ -137,5 +97,29 @@ lemma not_valued_tautology2 :
 apply (auto)
 done
 
+primrec 
+  ValuesOperandPredicate_BoolOperand :: "('vb, 'vv) ValuesOperand \<Rightarrow> 
+    (('vb, 'vv) ValuesOperand \<Rightarrow> bool) \<Rightarrow> 'vb BoolOperand" and
+  ValuesOperandPredicate_BoolOperand_list :: "('vb, 'vv) ValuedBool list \<Rightarrow> 
+    (('vb, 'vv) ValuesOperand \<Rightarrow> bool) \<Rightarrow> 'vb BoolOperand" and
+  ValuesOperandPredicate_BoolOperand_VB :: "('vb, 'vv) ValuedBool \<Rightarrow> 
+    (('vb, 'vv) ValuesOperand \<Rightarrow> bool) \<Rightarrow> 'vb BoolOperand"
+where
+  "ValuesOperandPredicate_BoolOperand (VBVConstOp c) P = (VBBConstOp (P (VBVConstOp c)))" |
+  "ValuesOperandPredicate_BoolOperand (VBVVarOp v) P = (VBBConstOp (P (VBVVarOp v)))" |
+  "ValuesOperandPredicate_BoolOperand (VBVExpOp Es) P = ValuesOperandPredicate_BoolOperand_list Es P" |
+  "ValuesOperandPredicate_BoolOperand_list [] P = (VBBConstOp False)" |
+  "ValuesOperandPredicate_BoolOperand_list (E # Es) P = VBBExpBinOp (op \<or>) 
+    (ValuesOperandPredicate_BoolOperand_VB E P) (ValuesOperandPredicate_BoolOperand_list Es P)" |
+  "ValuesOperandPredicate_BoolOperand_VB (VB e v) P = (if (P v) then e else (VBBConstOp False))"
+
+
+lemma 
+  "(normalise_ValuesOperand V) \<noteq> (normalise_ValuesOperand U) \<Longrightarrow>
+  BoolOperand_eval ((ValuesOperandPredicate_BoolOperand (VBVExpOp [VB A U, VB (VBBExpUnOp Not A) V]) 
+    (\<lambda> Es. ((normalise_ValuesOperand Es) = (normalise_ValuesOperand U))))) vb
+  = (BoolOperand_eval A vb)"
+apply (auto)
+done
 
 end
