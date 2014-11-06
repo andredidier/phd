@@ -14,42 +14,42 @@ definition Battery :: "nat \<Rightarrow> FailureVarName Component" where
     ])"
 
 
-definition Monitor :: "nat \<Rightarrow> ((FailureVarName, ComponentPort) ValuesOperand \<Rightarrow> bool) \<Rightarrow> FailureVarName Component" where
-  "Monitor m P \<equiv> (2, 
+definition Monitor :: "(nat \<Rightarrow> ComponentPort) \<Rightarrow> ((FailureVarName, ComponentPort) ValuesOperand \<Rightarrow> bool) \<Rightarrow> FailureVarName Component" where
+  "Monitor Port P \<equiv> (2, 
     [
         VBVExpOp [
           VB 
             (VBBExpBinOp 
               (op \<and>) 
               (VBBExpUnOp Not (VBBVarOp FMon))
-              (VBBConstOp (P (VBVVarOp (m, 1)))))
-            (VBVVarOp (m, 1)),
+              (VBBConstOp (P (VBVVarOp (Port 1)))))
+            (VBVVarOp (Port 1)),
           VB 
             (VBBExpBinOp 
               (op \<and>) 
               (VBBExpUnOp Not (VBBVarOp FMon))
-              (VBBExpUnOp Not (VBBConstOp (P (VBVVarOp (m, 1))))))
-            (VBVVarOp (m, 2)),
+              (VBBExpUnOp Not (VBBConstOp (P (VBVVarOp (Port 1))))))
+            (VBVVarOp (Port 2)),
           VB 
             (VBBExpBinOp 
               (op \<and>) 
               (VBBVarOp FMon)
-              (VBBConstOp (P (VBVVarOp (m, 1)))))
-            (VBVVarOp (m, 2)),
+              (VBBConstOp (P (VBVVarOp (Port 1)))))
+            (VBVVarOp (Port 2)),
           VB 
             (VBBExpBinOp 
               (op \<and>) 
               (VBBVarOp FMon)
-              (VBBExpUnOp Not (VBBConstOp (P (VBVVarOp (m, 1))))))
-            (VBVVarOp (m, 1))
+              (VBBExpUnOp Not (VBBConstOp (P (VBVVarOp (Port 1))))))
+            (VBVVarOp (Port 1))
         ]
     ])"
 
 
 definition SMon :: "FailureVarName System" where
   "SMon \<equiv> (
-    [ Battery 0, Battery 1, Monitor 2 (\<lambda> x. False)], 
-    [ (2,1) \<mapsto> (0,1), (2,2) \<mapsto> (1,1) ]
+    [ Battery 1, Battery 2, Monitor (\<lambda> p_index. (2, p_index)) (\<lambda> x. False)], 
+    [ (2,0) \<mapsto> (0,0), (2,1) \<mapsto> (1,0) ]
   )"
 
 end

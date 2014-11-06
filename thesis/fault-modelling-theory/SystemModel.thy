@@ -13,7 +13,7 @@ type_synonym ComponentPort = "(nat \<times> nat)"
 
 type_synonym CPValuation = "ComponentPort \<Rightarrow> Values option"
 
-(* Quantidade de entradas e lista de expressões de saída *)
+text {* A component is a pair of the number of inputs and the list of outputs as ValuesOperands. *}
 type_synonym 'vb Component = "(nat \<times> ('vb, ComponentPort) ValuesOperand list)"
 
 definition NumberOfInputs :: "'vb Component \<Rightarrow> nat"

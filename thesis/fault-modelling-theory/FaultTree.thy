@@ -21,19 +21,19 @@ primrec FT_to_BO :: "'vb FaultTree \<Rightarrow> 'vb BoolOperand" where
 
 definition FaultTree_eval :: "'vb FaultTree \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool"
 where "FaultTree_eval T vb = BoolOperand_eval (FT_to_BO T) vb"
-
+(*
 theorem "FaultTree_eval T vb \<longrightarrow> BoolOperand_eval (FT_to_BO T) vb"
-apply (auto)
+(*apply (auto)
 apply (auto simp add: FT_to_BO_def)
 apply (auto simp add: FaultTree_eval_def)
-apply (auto simp add: BoolOperand_eval_def)
-done
-
+apply (auto simp add: BoolOperand_eval_def)*)
+done*)
+(*
 theorem "(BoolOperand_eval (FT_to_BO T) = (BoolOperand_eval B)) \<longrightarrow> (FaultTree_eval T vb = BoolOperand_eval B vb)"
 apply (auto)
 apply (auto simp add: FT_to_BO_def)
 apply (auto simp add: FaultTree_eval_def)
 apply (auto simp add: BoolOperand_eval_def)
-done
+done*)
 
 end
