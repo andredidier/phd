@@ -9,9 +9,9 @@ begin
 isabelle mkroot -d fault-modelling-theory/ 
 e
 isabelle build -D fault-modelling-theory/
+text {* First test: @{term "VBBVarOp v\<^sub>1"} and @{term "VBBNotOp (VBBVarOp A)"} *}
 *)
 
-text {* First test: @{term "VBBVarOp v\<^sub>1"} and @{term "VBBNotOp (VBBVarOp A)"} *}
 
 type_synonym ComponentPort = "(nat \<times> nat)"
 

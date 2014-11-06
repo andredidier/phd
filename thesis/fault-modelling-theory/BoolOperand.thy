@@ -1,14 +1,17 @@
+(*<*)
 theory BoolOperand
 
 imports Main 
 
 begin
+(*>*)
 
-datatype 'variavel BoolOperand = 
+(*<*)
+datatype 'vb BoolOperand = 
   VBBConstOp bool ("BO")
-  | VBBVarOp 'variavel 
-  | VBBNotOp "'variavel BoolOperand" 
-  | VBBAndOp "'variavel BoolOperand" "'variavel BoolOperand" 
+  | VBBVarOp 'vb 
+  | VBBNotOp "'vb BoolOperand" 
+  | VBBAndOp "'vb BoolOperand" "'vb BoolOperand" 
 
 notation (output) VBBConstOp  ("_\<^sub>B\<^sub>O" 50)
 notation (latex) VBBConstOp ("_\<^raw:$_{\mathrm{BO}}$>" 51)
@@ -23,6 +26,25 @@ where "VBBOrOp b1 b2 \<equiv> VBBNotOp (VBBAndOp (VBBNotOp b1) (VBBNotOp b2))"
 
 notation (output) VBBOrOp ("_+\<^sub>B\<^sub>O_" 75)
 notation (latex) VBBOrOp ("_+\<^raw:$_{\mathrm{BO}}$>_" 76)
+
+(*>*)
+
+text {* Before introducing our fault modelling formalisation, we define new datatypes and slight 
+modification in existing ones.
+%
+To be able to later compare Boolean variables to fault trees' basic events variables, we introduce 
+Boolean expressions with variables.
+%
+Accordingly to the work reported in %~\cite{}
+, all Boolean operators can be derived from @{term "Not A"} @{const "Not"} @{text "\<not>" }
+and @{term "(op \<and>) A B"} @{text "\<and>" }operators.
+%
+For example, to express an @{term "(op \<or>) A B"}, we use the expression 
+@{term "Not ((op \<and>) (Not A) (Not B))"}.
+%
+Following this idea, we introduce our datatype @{typ "'VarNames BoolOperand"}
+  *}
+
 
 primrec normalise_BoolOperand :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
 where

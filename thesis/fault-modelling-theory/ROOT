@@ -4,11 +4,10 @@ session "fault-modelling-theory" = "HOL" +
     (* Foo *)
     (* Bar *)
   theories
-  	FaultModelling
-  	(*BoolOperand
-  	ValuedTautology
+  	BoolOperand
+  	ValuesOperand
   	FaultTree
-  	SystemModel
-  	SimpleMonitorExample*)
+  	FaultModelling
+  	SimpleMonitorExample
   document_files
     "root.tex"
