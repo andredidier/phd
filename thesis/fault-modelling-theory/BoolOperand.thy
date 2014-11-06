@@ -10,17 +10,19 @@ datatype 'variavel BoolOperand =
   | VBBNotOp "'variavel BoolOperand" 
   | VBBAndOp "'variavel BoolOperand" "'variavel BoolOperand" 
 
-notation VBBConstOp  ("_\<^sub>B\<^sub>O" 50)
-notation VBBVarOp ("\<lbrakk>_\<rbrakk>\<^sub>B\<^sub>O" 60)
+notation (output) VBBConstOp  ("_\<^sub>B\<^sub>O" 50)
+notation (latex) VBBConstOp ("_\<^raw:_{\mathrm{BO}}>" 51)
+notation (output) VBBVarOp ("\<lbrakk>_\<rbrakk>\<^sub>B\<^sub>O" 60)
 notation (latex) VBBVarOp ("\<lbrakk>_\<rbrakk>\<^raw:_{\mathrm{BO}}>" 61)
-notation VBBNotOp ("\<not>\<^sub>B\<^sub>O _" 80)
+notation (output) VBBNotOp ("\<not>\<^sub>B\<^sub>O _" 80)
 notation (latex) VBBNotOp ("\<^raw:\overline{>_\<^raw:}>" 81)
-notation VBBAndOp ("_\<cdot>_" 70)
+notation (latex output) VBBAndOp ("_\<cdot>_" 70)
 
 abbreviation VBBOrOp :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
 where "VBBOrOp b1 b2 \<equiv> VBBNotOp (VBBAndOp (VBBNotOp b1) (VBBNotOp b2))"
 
-notation VBBOrOp ("_+\<^sub>B\<^sub>O_" 90)
+notation (output) VBBOrOp ("_+\<^sub>B\<^sub>O_" 75)
+notation (latex) VBBOrOp ("_+\<^raw:_{\mathrm{BO}}>_" 76)
 
 primrec normalise_BoolOperand :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
 where
