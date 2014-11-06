@@ -1,9 +1,10 @@
+(*<*)
 theory FaultModelling
 
 imports BoolOperand ValuesOperand
 
 begin
-
+(*>*)
 (* O Conteúdo deste diretório foi obtido através dos comandos: 
 isabelle mkroot -d fault-modelling-theory/ 
 e
