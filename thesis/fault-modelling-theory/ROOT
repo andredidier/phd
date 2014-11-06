@@ -5,12 +5,10 @@ session "fault-modelling-theory" = "HOL" +
     (* Bar *)
   theories
   	FaultModelling
-  	FaultModellingTypes
-  	BoolOperand
+  	(*BoolOperand
   	ValuedTautology
   	FaultTree
   	SystemModel
-  	SimpleMonitorExample
-    (* Baz *)
+  	SimpleMonitorExample*)
   document_files
     "root.tex"
