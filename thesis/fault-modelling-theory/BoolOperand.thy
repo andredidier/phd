@@ -66,12 +66,22 @@ where
   "normalise_BoolOperand (VBBAndOp b1 b2) = 
     normalise_BoolOperandAnd (normalise_BoolOperand b1) (normalise_BoolOperand b2)"
 
-primrec isNormal_BoolOperand :: "'vb BoolOperand \<Rightarrow> bool"
+primrec isNormal_not_VBBConstOp :: "'vb BoolOperand \<Rightarrow> bool"
+where
+  "isNormal_not_VBBConstOp (VBBConstOp _) = False" |
+  "isNormal_not_VBBConstOp (VBBVarOp _) = True" |
+  "isNormal_not_VBBConstOp (VBBNotOp BOp) = (
+    case BOp of
+      (VBBNotOp _) \<Rightarrow> False |
+      _ \<Rightarrow> isNormal_not_VBBConstOp BOp
+  )" |
+  "isNormal_not_VBBConstOp (VBBAndOp BOp1 BOp2) = 
+    ((BOp1 \<noteq> BOp2) \<and> (isNormal_not_VBBConstOp BOp1) \<and> (isNormal_not_VBBConstOp BOp2))"
+
+fun isNormal_BoolOperand :: "'vb BoolOperand \<Rightarrow> bool"
 where
   "isNormal_BoolOperand (VBBConstOp _) = True" |
-  "isNormal_BoolOperand (VBBVarOp _) = True" |
-  "isNormal_BoolOperand (VBBNotOp b) = isNormal_BoolOperand b" |
-  "isNormal_BoolOperand (VBBAndOp b1 b2) = ((isNormal_BoolOperand b1) \<and> (isNormal_BoolOperand b2))"
+  "isNormal_BoolOperand BOp = isNormal_not_VBBConstOp BOp" 
 
 primrec "BoolOperand_eval" :: "'vb BoolOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" where
   "BoolOperand_eval (VBBConstOp b) vb = b" |
@@ -129,53 +139,17 @@ lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp True) (VBBConstOp False)) = V
 apply (auto)
 done
 
-(*
-lemma "(BOp = (normalise_BoolOperand BOp)) \<Longrightarrow> 
-  case BOp of VBBConstOp c \<Rightarrow> True | _ \<Rightarrow> no_VBBConstOp BOp"
-apply (case_tac "BOp")
-apply (auto simp add: no_VBBConstOp_def)
-apply (auto simp add: normalise_BoolOperand_def)
-done
-*)
 (* Fim dos lemas de sanidade. *) (*>*)
 
-(*
-theorem normalise_implies_eval : "(A \<noteq> B) \<Longrightarrow> 
-  (normalise_BoolOperand A = normalise_BoolOperand B) \<Longrightarrow> 
-  (BoolOperand_eval A vb = BoolOperand_eval B vb)"
-apply (auto)
-apply (auto simp add: BoolOperand_eval_def)
-apply (auto simp add: normalise_BoolOperand_def)
-done
-*)
-
-lemma eval_norm_l1_l1 [simp]: "
-  BoolOperand_eval
-    (normalise_BoolOperandNot (normalise_BoolOperandNot (normalise_BoolOperand BOp))) vb = 
-  BoolOperand_eval BOp vb"
-apply (case_tac BOp)
-apply (auto)
+theorem normalise_isNormal: "(BOp = normalise_BoolOperand BOp) \<longleftrightarrow> (isNormal_BoolOperand BOp)"
 sorry
 
-
-lemma eval_norm_l1_l2 [simp]: "
-  (BoolOperand_eval
-    (normalise_BoolOperandNot (
-      normalise_BoolOperandAnd (normalise_BoolOperand BOp1) (normalise_BoolOperand BOp2)
-    )) vb) = 
-  (\<not> (BoolOperand_eval BOp1 vb) \<or> (\<not> BoolOperand_eval BOp2 vb))"
-apply (auto)
-sorry
-
-
-lemma eval_norm_l1 [simp]: "
+lemma eval_norm_l1: "
   BoolOperand_eval (normalise_BoolOperandNot (normalise_BoolOperand BOp)) vb = 
   (\<not> (BoolOperand_eval BOp vb))"
-apply (case_tac BOp)
-apply (auto)
-done
+sorry
 
-lemma eval_norm_l2 [simp]: "BoolOperand_eval (normalise_BoolOperandAnd 
+lemma eval_norm_l2: "BoolOperand_eval (normalise_BoolOperandAnd 
   (normalise_BoolOperand BOp1) (normalise_BoolOperand BOp2)) vb = 
   ((BoolOperand_eval BOp1 vb) \<and> (BoolOperand_eval BOp2 vb))"
 apply (auto)
@@ -183,7 +157,10 @@ sorry
 
 theorem eval_norm: "BoolOperand_eval BOp vb = BoolOperand_eval (normalise_BoolOperand BOp) vb"
 apply (case_tac BOp)
-apply (auto)
+apply (simp)
+apply (simp)
+apply (simp add: eval_norm_l1)
+apply (simp add: eval_norm_l2)
 done
 
 end
