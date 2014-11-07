@@ -45,35 +45,33 @@ For example, to express an @{term "(op \<or>) A B"}, we use the expression
 Following this idea, we introduce our datatype @{typ "'VarNames BoolOperand"}
   *}
 
+primrec normalise_BoolOperandNot :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
+where
+  "normalise_BoolOperandNot (VBBConstOp c) = VBBConstOp (\<not> c)" |
+  "normalise_BoolOperandNot (VBBVarOp v) = VBBNotOp (VBBVarOp v)" |
+  "normalise_BoolOperandNot (VBBNotOp b) = b" |
+  "normalise_BoolOperandNot (VBBAndOp b1 b2) = VBBNotOp (VBBAndOp b1 b2)"
+
+fun normalise_BoolOperandAnd :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
+where
+  "normalise_BoolOperandAnd (VBBConstOp c1) b2 = (if c1 then b2 else (VBBConstOp c1))" |
+  "normalise_BoolOperandAnd b1 (VBBConstOp c2) = (if c2 then b1 else (VBBConstOp c2))" |
+  "normalise_BoolOperandAnd b1 b2 = (if b1 = b2 then b1 else VBBAndOp b1 b2)"
 
 primrec normalise_BoolOperand :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
 where
   "normalise_BoolOperand (VBBConstOp c) = VBBConstOp c" |
   "normalise_BoolOperand (VBBVarOp v) = VBBVarOp v" |
-  "normalise_BoolOperand (VBBNotOp b) = (
-    let nb = normalise_BoolOperand b
-    in
-    case nb of
-      VBBConstOp c \<Rightarrow> VBBConstOp (\<not> c) |
-      VBBNotOp b2 \<Rightarrow> b2 |
-      _ \<Rightarrow> VBBNotOp nb
-  )" |
-  "normalise_BoolOperand (VBBAndOp b1 b2) = (
-    let nb1 = normalise_BoolOperand b1
-    in let nb2 = normalise_BoolOperand b2
-    in
-      if nb1 = nb2 then nb1
-      else if VBBNotOp nb1 = nb2 then VBBConstOp False
-      else if nb1 = VBBNotOp nb2 then VBBConstOp False
-      else
-        case nb1 of
-          VBBConstOp c1 \<Rightarrow> if c1 then nb2 else nb1 |
-          _ \<Rightarrow> (
-            case nb2 of
-              VBBConstOp c2 \<Rightarrow> if c2 then nb1 else nb2 |
-              _ \<Rightarrow> VBBAndOp nb1 nb2
-          )
-  )"
+  "normalise_BoolOperand (VBBNotOp b) = normalise_BoolOperandNot (normalise_BoolOperand b)" |
+  "normalise_BoolOperand (VBBAndOp b1 b2) = 
+    normalise_BoolOperandAnd (normalise_BoolOperand b1) (normalise_BoolOperand b2)"
+
+primrec isNormal_BoolOperand :: "'vb BoolOperand \<Rightarrow> bool"
+where
+  "isNormal_BoolOperand (VBBConstOp _) = True" |
+  "isNormal_BoolOperand (VBBVarOp _) = True" |
+  "isNormal_BoolOperand (VBBNotOp b) = isNormal_BoolOperand b" |
+  "isNormal_BoolOperand (VBBAndOp b1 b2) = ((isNormal_BoolOperand b1) \<and> (isNormal_BoolOperand b2))"
 
 primrec "BoolOperand_eval" :: "'vb BoolOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" where
   "BoolOperand_eval (VBBConstOp b) vb = b" |
@@ -131,13 +129,6 @@ lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp True) (VBBConstOp False)) = V
 apply (auto)
 done
 
-primrec no_VBBConstOp :: "'vb BoolOperand \<Rightarrow> bool"
-where
-  "no_VBBConstOp (VBBConstOp c) = False" |
-  "no_VBBConstOp (VBBVarOp v) = True" |
-  "no_VBBConstOp (VBBNotOp b) = no_VBBConstOp b" |
-  "no_VBBConstOp (VBBAndOp b1 b2) = (no_VBBConstOp b1 \<and> no_VBBConstOp b2)"
-
 (*
 lemma "(BOp = (normalise_BoolOperand BOp)) \<Longrightarrow> 
   case BOp of VBBConstOp c \<Rightarrow> True | _ \<Rightarrow> no_VBBConstOp BOp"
@@ -157,5 +148,42 @@ apply (auto simp add: BoolOperand_eval_def)
 apply (auto simp add: normalise_BoolOperand_def)
 done
 *)
+
+lemma eval_norm_l1_l1 [simp]: "
+  BoolOperand_eval
+    (normalise_BoolOperandNot (normalise_BoolOperandNot (normalise_BoolOperand BOp))) vb = 
+  BoolOperand_eval BOp vb"
+apply (case_tac BOp)
+apply (auto)
+sorry
+
+
+lemma eval_norm_l1_l2 [simp]: "
+  (BoolOperand_eval
+    (normalise_BoolOperandNot (
+      normalise_BoolOperandAnd (normalise_BoolOperand BOp1) (normalise_BoolOperand BOp2)
+    )) vb) = 
+  (\<not> (BoolOperand_eval BOp1 vb) \<or> (\<not> BoolOperand_eval BOp2 vb))"
+apply (auto)
+sorry
+
+
+lemma eval_norm_l1 [simp]: "
+  BoolOperand_eval (normalise_BoolOperandNot (normalise_BoolOperand BOp)) vb = 
+  (\<not> (BoolOperand_eval BOp vb))"
+apply (case_tac BOp)
+apply (auto)
+done
+
+lemma eval_norm_l2 [simp]: "BoolOperand_eval (normalise_BoolOperandAnd 
+  (normalise_BoolOperand BOp1) (normalise_BoolOperand BOp2)) vb = 
+  ((BoolOperand_eval BOp1 vb) \<and> (BoolOperand_eval BOp2 vb))"
+apply (auto)
+sorry
+
+theorem eval_norm: "BoolOperand_eval BOp vb = BoolOperand_eval (normalise_BoolOperand BOp) vb"
+apply (case_tac BOp)
+apply (auto)
+done
 
 end
