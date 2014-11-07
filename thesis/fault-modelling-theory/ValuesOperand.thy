@@ -132,6 +132,39 @@ where
     (ValuesOperandPredicate_BoolOperand_VB E P) (ValuesOperandPredicate_BoolOperand_list Es P)" |
   "ValuesOperandPredicate_BoolOperand_VB (VB e v) P = (if (P v) then e else (VBBConstOp False))"
 
+primrec 
+  expand_BoolOperand_ValuesOperand :: 
+    "'vb BoolOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list" and
+  expand_BoolOperand_ValuesOperand_list :: 
+    "'vb BoolOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> 
+      ('vb, 'vv, 'FMode) ValuedBool list" and
+  expand_BoolOperand_ValuesOperand_VB :: 
+    "'vb BoolOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool"
+where
+  "expand_BoolOperand_ValuesOperand e (VBVConstOp c) = (VB e (VBVConstOp c)) # []" |
+  "expand_BoolOperand_ValuesOperand e (VBVVarOp v) = (VB e (VBVVarOp v)) # []" |
+  expand_BoolOperand_ValuesOperand_VBExpOp:
+  "expand_BoolOperand_ValuesOperand e (VBVExpOp Es) = expand_BoolOperand_ValuesOperand_list e Es" |
+  "expand_BoolOperand_ValuesOperand_list e [] = []" |
+  "expand_BoolOperand_ValuesOperand_list e (E # Es) = 
+    (expand_BoolOperand_ValuesOperand_VB e E) # (expand_BoolOperand_ValuesOperand_list e Es)" |
+  "expand_BoolOperand_ValuesOperand_VB e1 (VB e2 v2) = VB (VBBAndOp e1 e2) v2"
+
+primrec 
+  normalise_ValuesOperand :: 
+    "('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuesOperand" and
+  normalise_ValuesOperand_list :: 
+    "('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list" and
+  normalise_ValuesOperand_VB :: 
+    "('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list" 
+where
+  "normalise_ValuesOperand (VBVConstOp c) = VBVConstOp c" |
+  "normalise_ValuesOperand (VBVVarOp v) = VBVVarOp v" |
+  normalise_ValuesOperand_VBVExpOp:
+  "normalise_ValuesOperand (VBVExpOp E) = VBVExpOp (normalise_ValuesOperand_list E)" |
+  "normalise_ValuesOperand_list [] = []" |
+  "normalise_ValuesOperand_list (e # E) = (normalise_ValuesOperand_VB e) @ (normalise_ValuesOperand_list E)" |
+  "normalise_ValuesOperand_VB (VB e v) = expand_BoolOperand_ValuesOperand e v"
 
 lemma 
   "(normalise_ValuesOperand V) \<noteq> (normalise_ValuesOperand U) \<Longrightarrow>
