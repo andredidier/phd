@@ -1,0 +1,3 @@
+#!/bin/bash
+ sed -n '/DefineSnippet/,/EndSnippet/p' temp.tex > ../snippets.tex
+ #touch ../document.pdf

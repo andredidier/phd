@@ -94,49 +94,49 @@ primrec "BoolOperand_eval" :: "'vb BoolOperand \<Rightarrow> ('vb \<Rightarrow> 
 text {* True \<or> False = True *}
 
 lemma "normalise_BoolOperand (VBBOrOp (VBBConstOp True) (VBBConstOp False)) = VBBConstOp True"
-apply (auto)
+apply (simp)
 done
 
 text {* False \<and> True = False *}
 
 lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp False) (VBBConstOp True)) = VBBConstOp False"
-apply (auto)
+apply (simp)
 done
 
 text {* False \<or> True = False *}
 
 lemma "normalise_BoolOperand (VBBOrOp (VBBConstOp False) (VBBConstOp True)) = VBBConstOp True"
-apply (auto)
+apply (simp)
 done
 
 text {* True \<and> False = True *}
 
 lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp True) (VBBConstOp False)) = VBBConstOp False"
-apply (auto)
+apply (simp)
 done
 
 text {* \<not> False \<or> False = True *}
 
 lemma "normalise_BoolOperand (VBBOrOp (VBBNotOp (VBBConstOp False)) (VBBConstOp False)) = VBBConstOp True"
-apply (auto)
+apply (simp)
 done
 
 text {* \<not> True \<and> True = False *}
 
 lemma "normalise_BoolOperand (VBBAndOp (VBBNotOp (VBBConstOp True)) (VBBConstOp True)) = VBBConstOp False"
-apply (auto)
+apply (simp)
 done
 
 text {* \<not> True \<or> True = False *}
 
 lemma "normalise_BoolOperand (VBBOrOp (VBBNotOp (VBBConstOp True)) (VBBConstOp True)) = VBBConstOp True"
-apply (auto)
+apply (simp)
 done
 
 text {* True \<and> False = True *}
 
 lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp True) (VBBConstOp False)) = VBBConstOp False"
-apply (auto)
+apply (simp)
 done
 
 (* Fim dos lemas de sanidade. *) (*>*)

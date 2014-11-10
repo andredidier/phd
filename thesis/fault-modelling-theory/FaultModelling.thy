@@ -129,8 +129,12 @@ lemma outputs_completeness3: "ValidSystem (Cs,A) \<Longrightarrow> (m, oi) \<in>
 apply(auto simp add: ValidSystem_def ValidConnection_def)
 done
 
-theorem io_completeness: "ValidSystem (Cs,A) \<Longrightarrow> 
-  (mi, ini) \<in> SystemComponentsInputs (Cs,A) \<Longrightarrow> (mo, oi) \<in> SystemComponentsOutputs (Cs,A) \<Longrightarrow>
+theorem io_completeness: "
+  \<lbrakk> 
+  ValidSystem (Cs,A); 
+  (mi, ini) \<in> SystemComponentsInputs (Cs,A);
+  (mo, oi) \<in> SystemComponentsOutputs (Cs,A)
+  \<rbrakk> \<Longrightarrow>
   (mi, ini) \<in> (SystemInputs (Cs,A) \<union> dom A) \<and> 
   (mo, oi) \<in> (SystemOutputs (Cs,A) \<union> ran A)"
 apply (auto simp add: ValidSystem_def ValidConnection_def)
