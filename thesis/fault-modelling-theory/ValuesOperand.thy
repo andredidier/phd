@@ -53,7 +53,7 @@ where
   "ValuesOperand_values_eval_VB (VB e v) vb vv = 
     (if (BoolOperand_eval e vb) then (ValuesOperand_values_eval v vb vv) else [])"
 
-
+(*
 primrec
   ValuesOperand_value_eval :: "('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> 
     ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> 'FMode Values option) \<Rightarrow> 'FMode Values option" and
@@ -71,34 +71,6 @@ where
     (ValuesOperand_value_eval_VB E vb vv) # (ValuesOperand_value_eval_list Es vb vv)" |
   "ValuesOperand_value_eval_VB (VB e v) vb vv = 
     (if (BoolOperand_eval e vb) then (ValuesOperand_value_eval v vb vv) else None)"
-
-definition
-  UniqueValue :: "('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> 
-    ('vv \<Rightarrow> 'FMode Values option) \<Rightarrow> bool" 
-where
-  "UniqueValue Es vb vv \<equiv> 
-  card (
-    set (
-      map 
-        (\<lambda> E. ValuesOperand_value_eval_VB E vb vv) 
-        (filter (\<lambda> E. ValuesOperand_bool_eval_VB E vb) Es)
-    )
-  ) = 1"
-(*
-primrec 
-  ValuedTautology :: "('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> 
-    ('vv \<Rightarrow> 'FMode Values option) \<Rightarrow> bool" and
-  ValuedTautology_list :: "('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" and
-  ValuedTautology_VB :: "('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" 
-where
-  "ValuedTautology (VBVConstOp c) vb vv = True" |
-  "ValuedTautology (VBVVarOp v) vb vv = True" |
-  "ValuedTautology (VBVExpOp Es) vb vv = 
-    ((ValuedTautology_list Es vb) \<and> (UniqueValue Es vb vv))" |
-  "ValuedTautology_list [] vb = False" |
-  "ValuedTautology_list (E # Es) vb = 
-    ((ValuedTautology_VB E vb) \<or> (ValuedTautology_list Es vb))" |
-  "ValuedTautology_VB (VB e v) vb = (BoolOperand_eval e vb)"
 *)
 
 primrec ValuedTautology_values_nonemptylist :: "'FMode Values \<Rightarrow> 'FMode Values list \<Rightarrow> bool"
@@ -117,33 +89,28 @@ definition ValuedTautology :: "('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> ('
 where
   "ValuedTautology Es vb vv \<equiv> ValuedTautology_values_list (ValuesOperand_values_eval Es vb vv)"
 
-lemma to_be_or_not_to_be_bo[simp]: "(BoolOperand_eval A vb) \<or> (BoolOperand_eval (VBBNotOp A) vb)"
-apply (auto)
+lemma [simp]: "(BoolOperand_eval A vb) \<or> (BoolOperand_eval (VBBNotOp A) vb)"
+apply (simp)
 done
 
-lemma  "
+lemma  [simp]: "
   \<lbrakk>
     ValuesOperand_values_eval U vb vv \<noteq> [];
     ValuesOperand_values_eval V vb vv \<noteq> []
   \<rbrakk> 
   \<Longrightarrow> 
   (ValuesOperand_values_eval (VBVExpOp [VB A U, VB (VBBNotOp A) V]) vb vv) \<noteq> []"
-apply (auto)
+apply (simp)
 done
 
-lemma to_be_or_not_to_be[simp]: 
-  "
+theorem [simp]: "
   \<lbrakk>
     ValuedTautology U vb vv;
     ValuedTautology V vb vv
   \<rbrakk> 
   \<Longrightarrow> 
   ValuedTautology (VBVExpOp [VB A U, VB (VBBNotOp A) V]) vb vv"
-apply (auto simp add: ValuedTautology_def)
-done
-
-lemma to_be_or_not_to_be_two_active_list[simp]: "UniqueValue [VB A U, VB (VBBNotOp A) V] vb vv"
-apply (simp add: UniqueValue_def)
+apply (simp add: ValuedTautology_def)
 done
 
 lemma [simp]: "ValuedTautology V vb vv \<Longrightarrow> ValuesOperand_values_eval V vb vv \<noteq> []"
@@ -152,14 +119,15 @@ done
 
 lemma [simp]: "ValuedTautology V vb vv \<Longrightarrow> ValuedTautology_values_list (
     ValuesOperand_values_eval V vb vv )"
-apply (auto simp add: ValuedTautology_def ValuesOperand_values_eval_def)
+apply (simp add: ValuedTautology_def ValuesOperand_values_eval_def)
 done
 
 lemma [simp]: "ValuedTautology_values_list xs \<longrightarrow> ValuedTautology_values_list (xs @ xs)"
 apply (induct_tac xs)
 apply (simp)
-apply (auto simp add: ValuedTautology_values_list_def)
-done
+apply (simp add: ValuedTautology_values_list_def)
+apply (simp add: ValuedTautology_values_nonemptylist_def)
+sorry
 
 lemma [simp]: "ValuedTautology V vb vv \<Longrightarrow> ValuedTautology_values_list (
     (ValuesOperand_values_eval V vb vv) @ (ValuesOperand_values_eval V vb vv))"
@@ -180,11 +148,13 @@ done
 
 lemma not_valued_tautology1 : "(\<not> (BoolOperand_eval A vb)) \<Longrightarrow> (\<not> ValuedTautology (VBVExpOp [VB A U]) vb vv)"
 apply (auto)
+apply (auto simp add: ValuedTautology_def)
 done
 
 lemma not_valued_tautology2 : 
   "(\<not> (BoolOperand_eval A vb) \<and> \<not> (BoolOperand_eval B vb)) \<Longrightarrow> \<not> ValuedTautology (VBVExpOp [VB A U, VB B V]) vb vv"
 apply (auto)
+apply (auto simp add: ValuedTautology_def)
 done
 
 primrec 
@@ -244,5 +214,33 @@ lemma
   = (BoolOperand_eval A vb)"
 apply (auto)
 done
+
+primrec choose_values :: "'FMode Values \<Rightarrow> 'FMode Values option \<Rightarrow> 'FMode Values option"
+where
+  "choose_values _ None = None" |
+  "choose_values v1 (Some v2) = (if (v1 = v2) then (Some v1) else None)"
+
+definition ValuesOperand_value_eval :: "('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> 
+  ('vb \<Rightarrow> bool) \<Rightarrow> ('vv \<Rightarrow> 'FMode Values) \<Rightarrow> 'FMode Values option"
+where
+  "ValuesOperand_value_eval Es vb vv \<equiv> 
+    fold choose_values (ValuesOperand_values_eval Es vb vv) None"
+
+lemma [simp]: "(ValuedTautology (VBVExpOp Es) vb vv) \<Longrightarrow> 
+  (length (ValuesOperand_values_eval (VBVExpOp Es) vb vv) > 0)"
+apply (auto)
+apply (auto simp add: ValuedTautology_def)
+done
+
+lemma "(ValuedTautology (VBVExpOp Es) vb vv) \<Longrightarrow> 
+  (ValuesOperand_value_eval (VBVExpOp Es) vb vv = Some v)"
+apply (auto simp add: ValuedTautology_def)
+apply (auto simp add: ValuesOperand_value_eval_def)
+apply (auto simp add: choose_values_def)
+apply (auto simp add: ValuedTautology_values_list_def)
+apply (auto simp add: ValuedTautology_values_nonemptylist_def)
+apply (auto simp add: fold_def)
+apply (auto simp add: ValuesOperand_values_eval_list_def)
+sorry
 
 end
