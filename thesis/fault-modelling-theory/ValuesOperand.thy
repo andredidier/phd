@@ -10,11 +10,11 @@ datatype 'FMode Values =
   FMNominal real 
   | FMFailure "'FMode"
 
-datatype ('vb, 'vv, 'FMode) ValuesOperand =
+datatype_new ('vb, 'vv, 'FMode) ValuesOperand =
   VBVConstOp "'FMode Values"
   | VBVVarOp 'vv
   | VBVExpOp "('vb, 'vv, 'FMode) ValuedBool list" and
-  ('vb, 'vv, 'FMode) ValuedBool = VB "'vb BoolOperand" "('vb, 'vv, 'FMode) ValuesOperand"
+  ('vb, 'vv, 'FMode) ValuedBool = VB (VBE:"'vb BoolOperand") (VBV:"('vb, 'vv, 'FMode) ValuesOperand")
 
 notation (output) FMNominal ("_\<^sub>N" 40)
 notation (output) FMFailure ("_\<^sub>F" 41)
@@ -40,11 +40,17 @@ where
     ((ValuesOperand_bool_eval_VB E vb) \<or> (ValuesOperand_bool_eval_list Es vb))" |
   "ValuesOperand_bool_eval_VB (VB e v) vb = (BoolOperand_eval e vb)"
 
-value "op \<or>"
-
 primrec choose_value :: "'FMode Values option binop" where
   "choose_value None vo = vo" |
   "choose_value (Some v) vo = (if (Some v) = vo then vo else None)"
+
+primrec single_value :: "('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> 
+  ('vb, 'vv, 'FMode) ValuedBool \<Rightarrow>
+  ('vb, 'vv, 'FMode) ValuedBool option"
+where
+  "single_value [] E = (Some E)" |
+  "single_value (E1 # Es) E2 = 
+    (if (VBV E1) = (VBV E2) then (single_value Es E2) else None)" 
 
 primrec
   ValuesOperand_values_eval :: "('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> 
@@ -184,22 +190,71 @@ where
   "ValuesOperandPredicate_BoolOperand_VB (VB e v) P = (if (P v) then e else (VBBConstOp False))"
 
 primrec 
-  expand_BoolOperand_ValuesOperand :: 
+  apply_BoolOperand :: 
     "'vb BoolOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list" and
-  expand_BoolOperand_ValuesOperand_list :: 
+  apply_BoolOperand_list :: 
     "'vb BoolOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> 
       ('vb, 'vv, 'FMode) ValuedBool list" and
-  expand_BoolOperand_ValuesOperand_VB :: 
+  apply_BoolOperand_VB :: 
     "'vb BoolOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool"
 where
-  "expand_BoolOperand_ValuesOperand e (VBVConstOp c) = (VB e (VBVConstOp c)) # []" |
-  "expand_BoolOperand_ValuesOperand e (VBVVarOp v) = (VB e (VBVVarOp v)) # []" |
+  "apply_BoolOperand e (VBVConstOp c) = (VB e (VBVConstOp c)) # []" |
+  "apply_BoolOperand e (VBVVarOp v) = (VB e (VBVVarOp v)) # []" |
   expand_BoolOperand_ValuesOperand_VBExpOp:
-  "expand_BoolOperand_ValuesOperand e (VBVExpOp Es) = expand_BoolOperand_ValuesOperand_list e Es" |
-  "expand_BoolOperand_ValuesOperand_list e [] = []" |
-  "expand_BoolOperand_ValuesOperand_list e (E # Es) = 
-    (expand_BoolOperand_ValuesOperand_VB e E) # (expand_BoolOperand_ValuesOperand_list e Es)" |
-  "expand_BoolOperand_ValuesOperand_VB e1 (VB e2 v2) = VB (VBBAndOp e1 e2) v2"
+  "apply_BoolOperand e (VBVExpOp Es) = apply_BoolOperand_list e Es" |
+  "apply_BoolOperand_list e [] = []" |
+  "apply_BoolOperand_list e (E # Es) = 
+    (apply_BoolOperand_VB e E) # (apply_BoolOperand_list e Es)" |
+  "apply_BoolOperand_VB e1 (VB e2 v2) = VB (VBBAndOp e1 e2) v2"
+
+
+primrec 
+  expand_ValuesOperand :: 
+    "('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuesOperand" and
+  expand_ValuesOperand_list :: 
+    "('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list" and
+  expand_ValuesOperand_VB :: 
+    "('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list" 
+where
+  "expand_ValuesOperand (VBVConstOp c) = VBVConstOp c" |
+  "expand_ValuesOperand (VBVVarOp v) = VBVVarOp v" |
+  expand_ValuesOperand_VBVExpOp:
+  "expand_ValuesOperand (VBVExpOp E) = VBVExpOp (expand_ValuesOperand_list E)" |
+  "expand_ValuesOperand_list [] = []" |
+  "expand_ValuesOperand_list (e # E) = 
+    (expand_ValuesOperand_VB e) @ (expand_ValuesOperand_list E)" |
+  "expand_ValuesOperand_VB (VB e v) = (
+    case v of
+      (VBVExpOp E2) \<Rightarrow> (apply_BoolOperand e (expand_ValuesOperand v)) |
+      _ \<Rightarrow> [VB e (expand_ValuesOperand v)]
+  )"
+
+value "expand_ValuesOperand (
+  VBVExpOp [VB (VBBVarOp v1) (
+      VBVExpOp [
+        VB (VBBVarOp v2) (VBVExpOp [
+          VB (VBBVarOp v3) (VBVVarOp v4)
+        ])
+      ]
+    )]
+  )"
+
+lemma "expand_ValuesOperand (
+  VBVExpOp [VB (VBBVarOp v1) (
+      VBVExpOp [
+        VB (VBBVarOp v2) (VBVExpOp [
+          VB (VBBVarOp v3) (VBVVarOp v4)
+        ])
+      ]
+    )]
+  ) = 
+  (VBVExpOp [
+    VB 
+      (VBBAndOp (VBBVarOp v1) (VBBAndOp (VBBVarOp v2) (VBBVarOp v3)))
+      (VBVVarOp v4)
+  ])"
+apply (auto)
+done
 
 primrec 
   normalise_ValuesOperand :: 
@@ -207,16 +262,21 @@ primrec
   normalise_ValuesOperand_list :: 
     "('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list" and
   normalise_ValuesOperand_VB :: 
-    "('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list" 
+    "('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool" 
 where
-  "normalise_ValuesOperand (VBVConstOp c) = VBVConstOp c" |
-  "normalise_ValuesOperand (VBVVarOp v) = VBVVarOp v" |
-  normalise_ValuesOperand_VBVExpOp:
-  "normalise_ValuesOperand (VBVExpOp E) = VBVExpOp (normalise_ValuesOperand_list E)" |
+  "normalise_ValuesOperand (VBVConstOp c) = (VBVConstOp c)" |
+  "normalise_ValuesOperand (VBVVarOp v) = (VBVVarOp v)" |
+  "normalise_ValuesOperand (VBVExpOp Es) =  (
+    VBVExpOp (normalise_ValuesOperand_list Es)
+  )" |
   "normalise_ValuesOperand_list [] = []" |
-  "normalise_ValuesOperand_list (e # E) = 
-    (normalise_ValuesOperand_VB e) @ (normalise_ValuesOperand_list E)" |
-  "normalise_ValuesOperand_VB (VB e v) = expand_BoolOperand_ValuesOperand e v"
+  "normalise_ValuesOperand_list (E # Es) = 
+    (normalise_ValuesOperand_VB E) # (normalise_ValuesOperand_list Es)" |
+  "normalise_ValuesOperand_VB (VB e v) = (VB e (normalise_ValuesOperand v))"
+
+value "normalise_ValuesOperand (VBVExpOp [
+  VB (VBBVarOp A) (VBVVarOp U), 
+  VB (VBBVarOp B) (VBVVarOp U)] )"
 
 lemma 
   "(normalise_ValuesOperand V) \<noteq> (normalise_ValuesOperand U) \<Longrightarrow>
@@ -236,6 +296,10 @@ definition ValuesOperand_value_eval :: "('vb, 'vv, 'FMode) ValuesOperand \<Right
 where
   "ValuesOperand_value_eval Es vb vv \<equiv> 
     fold choose_values (ValuesOperand_values_eval Es vb vv) None"
+
+value "ValuesOperand_value_eval (VBVExpOp [
+  VB (VBBVarOp A) (VBVVarOp U), 
+  VB (VBBVarOp B) (VBVVarOp U)] ) vb vv"
 
 lemma [simp]: "(ValuedTautology (VBVExpOp Es) vb vv) \<Longrightarrow> 
   (length (ValuesOperand_values_eval (VBVExpOp Es) vb vv) > 0)"
