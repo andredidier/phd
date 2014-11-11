@@ -11,14 +11,20 @@ datatype FailureVarName = FB1 | FB2 | FMon
 notation FB1 ("F\<^sub>B\<^sub>1" 50)
 notation FB2 ("F\<^sub>B\<^sub>2" 50)
 
-definition Battery :: "FailureVarName \<Rightarrow> (FailureVarName, FMode) Component" where
-  "Battery FB \<equiv> (0, 
-    [
+datatype ComponentPortName = 
+  OutB1 ("out\<^sub>B\<^sub>1") 
+  | OutB2 ("out\<^sub>B\<^sub>2") 
+  | In1Mon ("in\<^sub>M\<^sub>o\<^sub>n\<^sub>1")
+  | In2Mon ("in\<^sub>M\<^sub>o\<^sub>n\<^sub>2")
+  | OutMon ("out\<^sub>M\<^sub>o\<^sub>n")
+
+definition Battery :: "FailureVarName \<Rightarrow> (FailureVarName, ComponentPortName, FMode) Component" where
+  "Battery FB \<equiv> [OutB1 \<mapsto> 
         VBVExpOp [ 
           VB (VBBVarOp (FB)) (VBVConstOp (FMFailure Omission)),
           VB (VBBNotOp (VBBVarOp (FB))) (VBVConstOp (FMNominal 5))
         ]
-    ])"
+    ]"
 
 fun lt_values_fmode :: "FMode Values option \<Rightarrow> FMode Values \<Rightarrow> bool"
 where
@@ -27,53 +33,50 @@ where
   "lt_values_fmode (Some (FMFailure _)) (FMNominal b) = (b > 0)" |
   "lt_values_fmode _ (FMFailure _) = False" 
 
-definition Monitor :: "(nat \<Rightarrow> ComponentPort) \<Rightarrow> 
-  ((FailureVarName, ComponentPort, FMode) ValuesOperand \<Rightarrow> bool) \<Rightarrow> 
-  (FailureVarName, FMode) Component" where
-  "Monitor Port P \<equiv> (2, 
-    [
+definition Monitor :: " 
+  ((FailureVarName, ComponentPortName, FMode) ValuesOperand \<Rightarrow> bool) \<Rightarrow> 
+  (FailureVarName, ComponentPortName, FMode) Component" where
+  "Monitor P \<equiv>  
+    [ OutMon \<mapsto>
         VBVExpOp [
           VB 
             (VBBAndOp 
               (VBBNotOp (VBBVarOp FMon))
-              (VBBConstOp (P (VBVVarOp (Port 0)))))
-            (VBVVarOp (Port 0)),
+              (VBBConstOp (P (VBVVarOp In1Mon))))
+            (VBVVarOp In1Mon),
           VB 
             (VBBAndOp 
               (VBBNotOp (VBBVarOp FMon))
-              (VBBNotOp (VBBConstOp (P (VBVVarOp (Port 0))))))
-            (VBVVarOp (Port 1)),
+              (VBBNotOp (VBBConstOp (P (VBVVarOp In1Mon)))))
+            (VBVVarOp In2Mon),
           VB 
             (VBBAndOp 
               (VBBVarOp FMon)
-              (VBBConstOp (P (VBVVarOp (Port 0)))))
-            (VBVVarOp (Port 1)),
+              (VBBConstOp (P (VBVVarOp In1Mon))))
+            (VBVVarOp In2Mon),
           VB 
             (VBBAndOp 
               (VBBVarOp FMon)
-              (VBBNotOp (VBBConstOp (P (VBVVarOp (Port 0))))))
-            (VBVVarOp (Port 0))
+              (VBBNotOp (VBBConstOp (P (VBVVarOp In1Mon)))))
+            (VBVVarOp In1Mon)
         ]
-    ])"
+    ]"
 
 
-definition SMon :: "(FailureVarName \<Rightarrow> bool) \<Rightarrow> (ComponentPort  \<Rightarrow> FMode Values) \<Rightarrow>
-    (FailureVarName, FMode) System" where
+definition SMon :: "(FailureVarName \<Rightarrow> bool) \<Rightarrow> (ComponentPortName \<Rightarrow> FMode Values) \<Rightarrow>
+    (FailureVarName, ComponentPortName, FMode) Component" where
   "SMon vb vv \<equiv> (
-    [ Battery FB1, Battery FB2, 
+    System 
+    [ In1Mon \<mapsto> OutB1, In2Mon \<mapsto> OutB2 ] 
+    [ Battery FB1, 
+      Battery FB2, 
       Monitor 
-        (\<lambda> p_index. (2, p_index)) 
-        (\<lambda> x. lt_values_fmode (ValuesOperand_value_eval x vb vv) (FMNominal 2))], 
-    [ (2,0) \<mapsto> (0,0), (2,1) \<mapsto> (1,0) ]
+        (\<lambda> x. lt_values_fmode (ValuesOperand_value_eval x vb vv) (FMNominal 2))]
   )"
 
-theorem valid_SMon : "ValidSystem (SMon vb vv)"
-apply (auto simp add: ValidSystem_def)
-apply (simp add: ValidConnection_def)
-apply (auto)
-apply (auto simp add: ValidComponents_def)
-apply (auto simp add: SystemConnections_def)
-apply (auto simp add: SystemComponentsInputs_def SystemComponentsOutputs_def)
-done
+value "the ((SMon vb vv) OutMon)"
+
+
+(*TODO: predicates over output expressions *)
 
 end
