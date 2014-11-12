@@ -26,15 +26,8 @@ definition Battery :: "FailureVarName \<Rightarrow> (FailureVarName, ComponentPo
         ]
     ]"
 
-fun lt_values_fmode :: "FMode Values option \<Rightarrow> FMode Values \<Rightarrow> bool"
-where
-  "lt_values_fmode None _ = False" |
-  "lt_values_fmode (Some (FMNominal a)) (FMNominal b) = (a < b)" |
-  "lt_values_fmode (Some (FMFailure _)) (FMNominal b) = (b > 0)" |
-  "lt_values_fmode _ (FMFailure _) = False" 
-
 definition Monitor :: " 
-  ((FailureVarName, ComponentPortName, FMode) ValuesOperand \<Rightarrow> bool) \<Rightarrow> 
+  ((FailureVarName, ComponentPortName, FMode) ValuesOperand \<Rightarrow> FailureVarName BoolOperand) \<Rightarrow> 
   (FailureVarName, ComponentPortName, FMode) Component" where
   "Monitor P \<equiv>  
     [ OutMon \<mapsto>
@@ -42,39 +35,42 @@ definition Monitor :: "
           VB 
             (VBBAndOp 
               (VBBNotOp (VBBVarOp FMon))
-              (VBBConstOp (P (VBVVarOp In1Mon))))
+              (P (VBVVarOp In1Mon)))
             (VBVVarOp In1Mon),
           VB 
             (VBBAndOp 
               (VBBNotOp (VBBVarOp FMon))
-              (VBBNotOp (VBBConstOp (P (VBVVarOp In1Mon)))))
+              (VBBNotOp (P (VBVVarOp In1Mon))))
             (VBVVarOp In2Mon),
           VB 
             (VBBAndOp 
               (VBBVarOp FMon)
-              (VBBConstOp (P (VBVVarOp In1Mon))))
+              (P (VBVVarOp In1Mon)))
             (VBVVarOp In2Mon),
           VB 
             (VBBAndOp 
               (VBBVarOp FMon)
-              (VBBNotOp (VBBConstOp (P (VBVVarOp In1Mon)))))
+              (VBBNotOp (P (VBVVarOp In1Mon))))
             (VBVVarOp In1Mon)
         ]
     ]"
 
 
-definition SMon :: "(FailureVarName \<Rightarrow> bool) \<Rightarrow> (ComponentPortName \<Rightarrow> FMode Values) \<Rightarrow>
+definition SMon :: "(ComponentPortName \<Rightarrow> FMode Values) \<Rightarrow>
     (FailureVarName, ComponentPortName, FMode) Component" where
-  "SMon vb vv \<equiv> (
+  "SMon vv \<equiv> (
     System 
     [ In1Mon \<mapsto> OutB1, In2Mon \<mapsto> OutB2 ] 
-    [ Battery FB1, 
+    [ 
+      Battery FB1, 
       Battery FB2, 
       Monitor 
-        (\<lambda> x. lt_values_fmode (ValuesOperand_value_eval x vb vv) (FMNominal 2))]
+        (ValuesOperandPredicate_BoolOperand (gte_Values (FMNominal 2)) vv)
+    ]
   )"
 
-value "the ((SMon vb vv) OutMon)"
+value "the ((SMon vv) OutMon)"
+
 
 
 (*TODO: predicates over output expressions *)

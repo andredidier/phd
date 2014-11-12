@@ -12,10 +12,15 @@ isabelle build -D fault-modelling-theory/
 text {* First test: @{term "VBBVarOp v\<^sub>1"} and @{term "VBBNotOp (VBBVarOp A)"} *}
 *)
 
-text {* Input .> Output  *}
-type_synonym  'vv Connections = "'vv \<rightharpoonup> 'vv"
+type_synonym 'vv CInput = 'vv
+type_synonym 'vv COutput = 'vv
 
-type_synonym ('vb, 'vv, 'FMode) Component = "'vv \<rightharpoonup> ('vb, 'vv, 'FMode) ValuesOperand"
+text {* Input .> Output  *}
+type_synonym  'vv Connections = "'vv CInput \<rightharpoonup> 'vv COutput"
+
+
+type_synonym ('vb, 'vv, 'FMode) Component = 
+  "'vv COutput \<rightharpoonup> ('vb, 'vv, 'FMode) ValuesOperand"
 
 definition apply_map :: "('a \<rightharpoonup> 'b) \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> ('a \<rightharpoonup> 'c)"
 where
@@ -36,14 +41,13 @@ where
     let input_to_out_exp = (map_comp all_cs A) in 
     (map_comp 
       (\<lambda> x. Some (
-        normalise_ValuesOperand (
+        normalise_expand_ValuesOperand (
           ValuesOperand_replace_var x input_to_out_exp)
         )
       ) 
       all_cs
     ) 
   )"
-
 (*
 
 definition SystemConnections :: "('vb, 'ComponentPort, 'FMode) System \<Rightarrow> 
