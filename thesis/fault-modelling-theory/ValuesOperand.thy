@@ -257,22 +257,55 @@ apply (auto)
 done
 
 primrec 
+  SingleOperand_list :: 
+    "('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> ('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> 
+      ('vb, 'vv, 'FMode) ValuesOperand option" and
+  SingleOperand_VB :: 
+    "('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow>
+      ('vb, 'vv, 'FMode) ValuesOperand option"
+where
+  "SingleOperand_list [] E = Some E" |
+  "SingleOperand_list (E1 # Es) E = (
+    let nE1 = (SingleOperand_VB E1 E)
+    in let nEs = (SingleOperand_list Es E)
+    in if nE1 = nEs then nE1 else None
+  )" |
+  "SingleOperand_VB (VB e v) E = (if v = E then (Some v) else None)"
+
+primrec SingleOperand :: "('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> 
+  ('vb, 'vv, 'FMode) ValuesOperand option"
+where 
+  "SingleOperand [] = None" |
+  "SingleOperand (E # Es) = (SingleOperand_list Es (VBV E))"
+
+
+primrec 
   normalise_ValuesOperand :: 
     "('vb, 'vv, 'FMode) ValuesOperand \<Rightarrow> ('vb, 'vv, 'FMode) ValuesOperand" and
   normalise_ValuesOperand_list :: 
     "('vb, 'vv, 'FMode) ValuedBool list \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool list" and
   normalise_ValuesOperand_VB :: 
-    "('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool" 
+    "('vb, 'vv, 'FMode) ValuedBool \<Rightarrow> ('vb, 'vv, 'FMode) ValuedBool option" 
 where
   "normalise_ValuesOperand (VBVConstOp c) = (VBVConstOp c)" |
   "normalise_ValuesOperand (VBVVarOp v) = (VBVVarOp v)" |
   "normalise_ValuesOperand (VBVExpOp Es) =  (
-    VBVExpOp (normalise_ValuesOperand_list Es)
+    let nEs = normalise_ValuesOperand_list Es
+    in let so = SingleOperand nEs
+    in if so = None then VBVExpOp nEs else the so
   )" |
   "normalise_ValuesOperand_list [] = []" |
-  "normalise_ValuesOperand_list (E # Es) = 
-    (normalise_ValuesOperand_VB E) # (normalise_ValuesOperand_list Es)" |
-  "normalise_ValuesOperand_VB (VB e v) = (VB e (normalise_ValuesOperand v))"
+  "normalise_ValuesOperand_list (E # Es) = (
+    let nE = normalise_ValuesOperand_VB E
+    in if nE = None then (normalise_ValuesOperand_list Es)
+    else (the nE) # (normalise_ValuesOperand_list Es)
+  )" |
+  "normalise_ValuesOperand_VB (VB e v) = (
+    let ne = (normalise_BoolOperand e)
+    in
+      if (ne = VBBConstOp False) then None
+      else Some (VB ne (normalise_ValuesOperand v))
+    )"
 
 value "normalise_ValuesOperand (VBVExpOp [
   VB (VBBVarOp A) (VBVVarOp U), 
