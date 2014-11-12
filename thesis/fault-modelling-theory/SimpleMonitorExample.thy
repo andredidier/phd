@@ -18,42 +18,48 @@ datatype ComponentPortName =
   | In2Mon ("in\<^sub>M\<^sub>o\<^sub>n\<^sub>2")
   | OutMon ("out\<^sub>M\<^sub>o\<^sub>n")
 
-definition Battery :: "FailureVarName \<Rightarrow> (FailureVarName, ComponentPortName, FMode) Component" where
-  "Battery FB \<equiv> [OutB1 \<mapsto> 
-        VBVExpOp [ 
-          VB (VBBVarOp (FB)) (VBVConstOp (FMFailure Omission)),
-          VB (VBBNotOp (VBBVarOp (FB))) (VBVConstOp (FMNominal 5))
-        ]
-    ]"
+definition Battery :: "FailureVarName \<Rightarrow> 
+  ((ComponentPortName CInput) \<Rightarrow> ((FailureVarName, ComponentPortName, FMode) ValuesOperand)) \<Rightarrow>
+  (FailureVarName, ComponentPortName, FMode) Component" where
+  "Battery FB inputs \<equiv> 
+  [
+    OutB1 \<mapsto> 
+      VBVExpOp [ 
+        VB (VBBVarOp (FB)) (VBVConstOp (FMFailure Omission)),
+        VB (VBBNotOp (VBBVarOp (FB))) (VBVConstOp (FMNominal 5))
+      ]
+  ]"
 
 definition Monitor :: " 
   ((FailureVarName, ComponentPortName, FMode) ValuesOperand \<Rightarrow> FailureVarName BoolOperand) \<Rightarrow> 
+  ((ComponentPortName CInput) \<Rightarrow> ((FailureVarName, ComponentPortName, FMode) ValuesOperand)) \<Rightarrow>
   (FailureVarName, ComponentPortName, FMode) Component" where
-  "Monitor P \<equiv>  
-    [ OutMon \<mapsto>
-        VBVExpOp [
-          VB 
-            (VBBAndOp 
-              (VBBNotOp (VBBVarOp FMon))
-              (P (VBVVarOp In1Mon)))
-            (VBVVarOp In1Mon),
-          VB 
-            (VBBAndOp 
-              (VBBNotOp (VBBVarOp FMon))
-              (VBBNotOp (P (VBVVarOp In1Mon))))
-            (VBVVarOp In2Mon),
-          VB 
-            (VBBAndOp 
-              (VBBVarOp FMon)
-              (P (VBVVarOp In1Mon)))
-            (VBVVarOp In2Mon),
-          VB 
-            (VBBAndOp 
-              (VBBVarOp FMon)
-              (VBBNotOp (P (VBVVarOp In1Mon))))
-            (VBVVarOp In1Mon)
-        ]
-    ]"
+  "Monitor P inputs \<equiv>  
+  [ 
+    OutMon \<mapsto>
+      VBVExpOp [
+        VB 
+          (VBBAndOp 
+            (VBBNotOp (VBBVarOp FMon))
+            (P (inputs In1Mon)))
+          (inputs In1Mon),
+        VB 
+          (VBBAndOp 
+            (VBBNotOp (VBBVarOp FMon))
+            (VBBNotOp (P (inputs In1Mon))))
+          (inputs In2Mon),
+        VB 
+          (VBBAndOp 
+            (VBBVarOp FMon)
+            (P (inputs In1Mon)))
+          (inputs In2Mon),
+        VB 
+          (VBBAndOp 
+            (VBBVarOp FMon)
+            (VBBNotOp (P (inputs In1Mon))))
+          (inputs In1Mon)
+      ]
+  ]"
 
 
 definition SMon :: "(ComponentPortName \<Rightarrow> FMode Values) \<Rightarrow>
@@ -65,11 +71,32 @@ definition SMon :: "(ComponentPortName \<Rightarrow> FMode Values) \<Rightarrow>
       Battery FB1, 
       Battery FB2, 
       Monitor 
-        (ValuesOperandPredicate_BoolOperand (gte_Values (FMNominal 2)) vv)
+        (ValuesOperandPredicate_BoolOperand (lte_Values (FMNominal 2)) vv)
     ]
   )"
 
 value "the ((SMon vv) OutMon)"
+
+definition Basic :: "(FailureVarName, ComponentPortName, FMode) Component" where
+  "Basic \<equiv> 
+  (
+    System
+    [ In1Mon \<mapsto> OutB1, In2Mon \<mapsto> OutB2 ]
+    [ 
+      (\<lambda> inputs. 
+        [ 
+          OutMon \<mapsto> 
+            VBVExpOp [ 
+              VB (VBBConstOp True) (inputs In1Mon),
+              VB (VBBConstOp False) (inputs In2Mon)
+            ]
+        ] ),
+      (\<lambda> inputs. [ OutB1 \<mapsto> VBVConstOp (FMNominal 1) ]),
+      (\<lambda> inputs. [ OutB2 \<mapsto> VBVConstOp (FMNominal 2) ])
+    ]
+  )"
+
+value "the (Basic OutMon)"
 
 
 

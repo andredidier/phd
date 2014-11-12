@@ -190,9 +190,7 @@ where
     (ValuesOperandPredicate_BoolOperand_VB P vv E) 
     (ValuesOperandPredicate_BoolOperand_list P vv Es)" |
   "ValuesOperandPredicate_BoolOperand_VB P vv (VB e v) = 
-    (let rb = (ValuesOperandPredicate_BoolOperand P vv v)
-    in if rb = (VBBConstOp True)
-      then e else (VBBConstOp False))"
+    VBBAndOp e (ValuesOperandPredicate_BoolOperand P vv v)"
 
 fun lte_Values :: "'FMode Values \<Rightarrow> 'FMode Values \<Rightarrow> bool" (infix "\<le>\<^sub>V" 50)
 where

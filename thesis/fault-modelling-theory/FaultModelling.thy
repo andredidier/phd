@@ -31,23 +31,35 @@ where
   "list_of_maps_to_map [] = Map.empty" |
   "list_of_maps_to_map (l # ls) = l ++ (list_of_maps_to_map ls)"
 
+primrec convert_elems :: "'a list \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> 'b list"
+where
+  "convert_elems [] _ = []" |
+  "convert_elems (l # ls) f = (f l) # (convert_elems ls f)"
+
 (* Lista de componentes e conexões*)
 definition System ::
-  "'vv Connections \<Rightarrow> ('vb, 'vv, 'FMode) Component list \<Rightarrow> 
+  "'vv Connections \<Rightarrow> 
+  (('vv CInput \<Rightarrow> ('vb, 'vv, 'FMode) ValuesOperand) \<Rightarrow> ('vb, 'vv, 'FMode) Component) list \<Rightarrow> 
     ('vb, 'vv, 'FMode) Component"
 where
   "System A Cs \<equiv> (
-    let all_cs = list_of_maps_to_map Cs in
-    let input_to_out_exp = (map_comp all_cs A) in 
-    (map_comp 
-      (\<lambda> x. Some (
-        normalise_expand_ValuesOperand (
-          ValuesOperand_replace_var x input_to_out_exp)
-        )
+    let outputs = list_of_maps_to_map (convert_elems Cs (\<lambda> C. C (\<lambda> x. VBVVarOp x) )) in
+    let input_to_out_exp = (map_comp outputs A) in 
+    let nCs = list_of_maps_to_map 
+      (convert_elems 
+        Cs 
+        (\<lambda> C. 
+          C (\<lambda> x. let r = input_to_out_exp x in if r = None then VBVVarOp x else the r)
+        ) 
+      ) in
+      (*\<lambda> x. let r = input_to_out_exp x in if r = None then VBVVarOp x else the r*) 
+      (map_comp 
+        (\<lambda> x. Some ((*normalise_expand_ValuesOperand*) x)) 
+        nCs
       ) 
-      all_cs
-    ) 
   )"
+
+
 (*
 
 definition SystemConnections :: "('vb, 'ComponentPort, 'FMode) System \<Rightarrow> 
