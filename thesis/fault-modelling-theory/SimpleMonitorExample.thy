@@ -19,7 +19,7 @@ datatype ComponentPortName =
   | OutMon ("out\<^sub>M\<^sub>o\<^sub>n")
 
 definition Battery :: "FailureVarName \<Rightarrow> 
-  (FailureVarName, FMode, ComponentPortName) PortValuation \<Rightarrow>
+  (FailureVarName, FMode, ComponentPortName, ComponentPortName) PortValuation \<Rightarrow>
   (FailureVarName, FMode, ComponentPortName) Component" where
   "Battery FB inputs \<equiv> 
   [
@@ -32,7 +32,7 @@ definition Battery :: "FailureVarName \<Rightarrow>
 
 definition Monitor :: " 
   ((FailureVarName, FMode, ComponentPortName) ValuesOperand \<Rightarrow> FailureVarName BoolOperand) \<Rightarrow> 
-  (FailureVarName, FMode, ComponentPortName) PortValuation \<Rightarrow>
+  (FailureVarName, FMode, ComponentPortName, ComponentPortName) PortValuation \<Rightarrow>
   (FailureVarName, FMode, ComponentPortName) Component" where
   "Monitor P inputs \<equiv>  
   [ 

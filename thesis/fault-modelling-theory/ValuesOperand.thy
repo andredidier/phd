@@ -160,7 +160,7 @@ apply (simp add: ValuedTautology_def)
 done
 
 lemma not_valued_tautology1 : "
-  (\<not> (BoolOperand_eval A vb)) \<Longrightarrow> 
+(\<not> (BoolOperand_eval A vb)) \<Longrightarrow> 
   (\<not> ValuedTautology (VBVExpOp [VB A U]) vb)"
 apply (auto)
 apply (auto simp add: ValuedTautology_def)

@@ -12,16 +12,15 @@ isabelle build -D fault-modelling-theory/
 text {* First test: @{term "VBBVarOp v\<^sub>1"} and @{term "VBBNotOp (VBBVarOp A)"} *}
 *)
 
-type_synonym 'PortName CInput = 'PortName
-type_synonym 'PortName COutput = 'PortName
-
 text {* Input .> Output  *}
-type_synonym  'pn Connections = "'pn CInput \<rightharpoonup> 'pn COutput"
+type_synonym  'pn Connections = "'pn \<rightharpoonup> 'pn"
 
-type_synonym ('vb, 'FMode, 'pn) PortValuation = "'pn \<Rightarrow> ('vb, 'FMode, 'pn) ValuesOperand"
+type_synonym ('vb, 'FMode, 'pin, 'pout) PortValuation = 
+  "'pin \<Rightarrow> ('vb, 'FMode, 'pout) ValuesOperand"
 
+(* outputs -. ValuesOperand*)
 type_synonym ('vb, 'FMode, 'pn) Component = 
-  "'pn COutput \<rightharpoonup> ('vb, 'FMode, 'pn) ValuesOperand"
+  "'pn \<rightharpoonup> ('vb, 'FMode, 'pn) ValuesOperand"
 
 definition apply_map :: "('a \<rightharpoonup> 'b) \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> ('a \<rightharpoonup> 'c)"
 where
@@ -37,10 +36,42 @@ where
   "convert_elems [] _ = []" |
   "convert_elems (l # ls) f = (f l) # (convert_elems ls f)"
 
+primrec 
+  replace_io_ValuesOperand :: 
+    "('vb, 'FMode, 'pn) ValuesOperand \<Rightarrow> 
+    ('vb, 'FMode, 'pn, 'pn) PortValuation \<Rightarrow> 
+    ('vb, 'FMode, 'pn) ValuesOperand" 
+  and 
+  replace_io_ValuesOperand_list :: 
+    "('vb, 'FMode, 'pn) ValuedBool list \<Rightarrow> 
+    ('vb, 'FMode, 'pn, 'pn) PortValuation \<Rightarrow> 
+    ('vb, 'FMode, 'pn) ValuedBool list" 
+  and 
+  replace_io_ValuesOperand_VB :: 
+    "('vb, 'FMode, 'pn) ValuedBool \<Rightarrow> 
+    ('vb, 'FMode, 'pn, 'pn) PortValuation \<Rightarrow> 
+    ('vb, 'FMode, 'pn) ValuedBool" 
+where
+  "replace_io_ValuesOperand (VBVConstOp c) inputs = (
+    case c of
+      FMVar vvar \<Rightarrow> 
+        let vo = (inputs vvar)
+        in (replace_io_ValuesOperand vo inputs)|
+      _ \<Rightarrow> (VBVConstOp c)
+  )" |
+  "replace_io_ValuesOperand (VBVExpOp Es) inputs = 
+    VBVExpOp (replace_io_ValuesOperand_list Es inputs)" |
+  "replace_io_ValuesOperand_list [] _ = []" |
+  "replace_io_ValuesOperand_list (E # Es) inputs = 
+    (replace_io_ValuesOperand_VB E inputs) # (replace_io_ValuesOperand_list Es inputs)" |
+  "replace_io_ValuesOperand_VB (VB e v) inputs = (VB e (replace_io_ValuesOperand v inputs))"
+  
+
 (* Lista de componentes e conexões*)
 definition System ::
   "'pn Connections \<Rightarrow> 
-  (('vb, 'FMode, 'pn CInput) PortValuation \<Rightarrow> ('vb, 'FMode, 'pn) Component) list \<Rightarrow> 
+  (('vb, 'FMode, 'pn, 'pn) PortValuation \<Rightarrow> 
+    ('vb, 'FMode, 'pn) Component) list \<Rightarrow> 
     ('vb, 'FMode, 'pn) Component"
 where
   "System A Cs \<equiv> (
