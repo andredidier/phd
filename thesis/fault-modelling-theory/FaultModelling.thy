@@ -12,15 +12,24 @@ isabelle build -D fault-modelling-theory/
 text {* First test: @{term "VBBVarOp v\<^sub>1"} and @{term "VBBNotOp (VBBVarOp A)"} *}
 *)
 
-text {* Input .> Output  *}
-type_synonym  'pn Connections = "'pn \<rightharpoonup> 'pn"
+type_synonym 'PortName CInput = 'PortName
+type_synonym 'PortName COutput = 'PortName
+
+type_synonym  ('pin, 'pout) Connections = "'pin \<rightharpoonup> 'pout"
 
 type_synonym ('vb, 'FMode, 'pin, 'pout) PortValuation = 
   "'pin \<Rightarrow> ('vb, 'FMode, 'pout) ValuesOperand"
 
 (* outputs -. ValuesOperand*)
-type_synonym ('vb, 'FMode, 'pn) Component = 
-  "'pn \<rightharpoonup> ('vb, 'FMode, 'pn) ValuesOperand"
+type_synonym ('vb, 'FMode, 'pin, 'pout) Component = 
+  "'pout \<rightharpoonup> 
+  ( ('pin \<Rightarrow> ('vb, 'FMode, 'pin) ValuesOperand) \<Rightarrow> ('vb, 'FMode, 'pin) ValuesOperand)"
+
+definition BasicComponent :: "('vb, 'FMode, nat, nat) Component"
+where
+  "BasicComponent \<equiv> [ 0 \<mapsto> (\<lambda> m. VBVExpOp [ VB (VBBConstOp True) (m 10)])  ]"
+value "(the (BasicComponent 0))
+  (\<lambda> x. if x = 10 then VBVConstOp (FMNominal 5) else VBVConstOp (FMNominal 2))"
 
 definition apply_map :: "('a \<rightharpoonup> 'b) \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> ('a \<rightharpoonup> 'c)"
 where
@@ -69,22 +78,27 @@ where
 
 (* Lista de componentes e conexões*)
 definition System ::
-  "'pn Connections \<Rightarrow> 
-  (('vb, 'FMode, 'pn, 'pn) PortValuation \<Rightarrow> 
-    ('vb, 'FMode, 'pn) Component) list \<Rightarrow> 
-    ('vb, 'FMode, 'pn) Component"
+  "('pin, 'pout) Connections \<Rightarrow> 
+  (('vb, 'FMode, 'pin, 'pout) PortValuation \<Rightarrow> 
+    ('vb, 'FMode, 'pin, 'pout) Component) list \<Rightarrow> 
+    ('vb, 'FMode, 'pin, 'pout) Component"
 where
-  "System A Cs \<equiv> (
-    let outputs = list_of_maps_to_map (convert_elems Cs (\<lambda> C. C (\<lambda> x. VBVConstOp (FMVar x)) )) in
-    let input_to_out_exp = (map_comp outputs A) in 
+  "System A vCs \<equiv> (
+    let outputs = (\<lambda> f. 
+      list_of_maps_to_map (convert_elems vCs (\<lambda> vC. vC (\<lambda> m. f m) ))
+    ) in
+    let input_to_out_exp = (
+      \<lambda> inp. let outp = A inp in 
+        if outp = None then (VBVConstOp (FMVar inp))
+        else (outputs (\<lambda> inp2. outp))
+    )  in 
     let nCs = list_of_maps_to_map 
       (convert_elems 
-        Cs 
+        vCs 
         (\<lambda> C. 
           C (\<lambda> x. let r = input_to_out_exp x in if r = None then VBVConstOp (FMVar x) else the r)
         ) 
       ) in
-      (*\<lambda> x. let r = input_to_out_exp x in if r = None then VBVVarOp x else the r*) 
       (map_comp 
         (\<lambda> x. Some ((*normalise_expand_ValuesOperand*) x)) 
         nCs
