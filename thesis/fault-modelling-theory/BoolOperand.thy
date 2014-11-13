@@ -21,6 +21,8 @@ notation (output) VBBNotOp ("\<not>\<^sub>B\<^sub>O _" 80)
 notation (latex) VBBNotOp ("\<^raw:$\overline{>_\<^raw:}$>" 81)
 notation (latex output) VBBAndOp ("_\<cdot>_" 70)
 
+type_synonym 'vb VBBVarOpVal = "'vb \<Rightarrow> bool"
+
 abbreviation VBBOrOp :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
 where "VBBOrOp b1 b2 \<equiv> VBBNotOp (VBBAndOp (VBBNotOp b1) (VBBNotOp b2))"
 

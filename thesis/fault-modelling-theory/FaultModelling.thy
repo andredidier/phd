@@ -12,19 +12,20 @@ isabelle build -D fault-modelling-theory/
 text {* First test: @{term "VBBVarOp v\<^sub>1"} and @{term "VBBNotOp (VBBVarOp A)"} *}
 *)
 
-type_synonym 'vv CInput = 'vv
-type_synonym 'vv COutput = 'vv
+type_synonym 'PortName CInput = 'PortName
+type_synonym 'PortName COutput = 'PortName
 
 text {* Input .> Output  *}
-type_synonym  'vv Connections = "'vv CInput \<rightharpoonup> 'vv COutput"
+type_synonym  'pn Connections = "'pn CInput \<rightharpoonup> 'pn COutput"
 
+type_synonym ('vb, 'FMode, 'pn) PortValuation = "'pn \<Rightarrow> ('vb, 'FMode, 'pn) ValuesOperand"
 
-type_synonym ('vb, 'vv, 'FMode) Component = 
-  "'vv COutput \<rightharpoonup> ('vb, 'vv, 'FMode) ValuesOperand"
+type_synonym ('vb, 'FMode, 'pn) Component = 
+  "'pn COutput \<rightharpoonup> ('vb, 'FMode, 'pn) ValuesOperand"
 
 definition apply_map :: "('a \<rightharpoonup> 'b) \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> ('a \<rightharpoonup> 'c)"
 where
-  "apply_map m f \<equiv> (\<lambda> x. Some (f (the (m x))))"
+  "apply_map m f \<equiv> (\<lambda> x. case (m x) of None \<Rightarrow> None | (Some mx) \<Rightarrow> Some (f mx))"
 
 primrec list_of_maps_to_map :: "('a \<rightharpoonup> 'b) list \<Rightarrow> ('a \<rightharpoonup> 'b)"
 where
@@ -38,18 +39,18 @@ where
 
 (* Lista de componentes e conexões*)
 definition System ::
-  "'vv Connections \<Rightarrow> 
-  (('vv CInput \<Rightarrow> ('vb, 'vv, 'FMode) ValuesOperand) \<Rightarrow> ('vb, 'vv, 'FMode) Component) list \<Rightarrow> 
-    ('vb, 'vv, 'FMode) Component"
+  "'pn Connections \<Rightarrow> 
+  (('vb, 'FMode, 'pn CInput) PortValuation \<Rightarrow> ('vb, 'FMode, 'pn) Component) list \<Rightarrow> 
+    ('vb, 'FMode, 'pn) Component"
 where
   "System A Cs \<equiv> (
-    let outputs = list_of_maps_to_map (convert_elems Cs (\<lambda> C. C (\<lambda> x. VBVVarOp x) )) in
+    let outputs = list_of_maps_to_map (convert_elems Cs (\<lambda> C. C (\<lambda> x. VBVConstOp (FMVar x)) )) in
     let input_to_out_exp = (map_comp outputs A) in 
     let nCs = list_of_maps_to_map 
       (convert_elems 
         Cs 
         (\<lambda> C. 
-          C (\<lambda> x. let r = input_to_out_exp x in if r = None then VBVVarOp x else the r)
+          C (\<lambda> x. let r = input_to_out_exp x in if r = None then VBVConstOp (FMVar x) else the r)
         ) 
       ) in
       (*\<lambda> x. let r = input_to_out_exp x in if r = None then VBVVarOp x else the r*) 

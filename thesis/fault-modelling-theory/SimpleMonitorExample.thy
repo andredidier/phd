@@ -19,8 +19,8 @@ datatype ComponentPortName =
   | OutMon ("out\<^sub>M\<^sub>o\<^sub>n")
 
 definition Battery :: "FailureVarName \<Rightarrow> 
-  ((ComponentPortName CInput) \<Rightarrow> ((FailureVarName, ComponentPortName, FMode) ValuesOperand)) \<Rightarrow>
-  (FailureVarName, ComponentPortName, FMode) Component" where
+  (FailureVarName, FMode, ComponentPortName) PortValuation \<Rightarrow>
+  (FailureVarName, FMode, ComponentPortName) Component" where
   "Battery FB inputs \<equiv> 
   [
     OutB1 \<mapsto> 
@@ -31,9 +31,9 @@ definition Battery :: "FailureVarName \<Rightarrow>
   ]"
 
 definition Monitor :: " 
-  ((FailureVarName, ComponentPortName, FMode) ValuesOperand \<Rightarrow> FailureVarName BoolOperand) \<Rightarrow> 
-  ((ComponentPortName CInput) \<Rightarrow> ((FailureVarName, ComponentPortName, FMode) ValuesOperand)) \<Rightarrow>
-  (FailureVarName, ComponentPortName, FMode) Component" where
+  ((FailureVarName, FMode, ComponentPortName) ValuesOperand \<Rightarrow> FailureVarName BoolOperand) \<Rightarrow> 
+  (FailureVarName, FMode, ComponentPortName) PortValuation \<Rightarrow>
+  (FailureVarName, FMode, ComponentPortName) Component" where
   "Monitor P inputs \<equiv>  
   [ 
     OutMon \<mapsto>
@@ -62,22 +62,21 @@ definition Monitor :: "
   ]"
 
 
-definition SMon :: "(ComponentPortName \<Rightarrow> FMode Values) \<Rightarrow>
-    (FailureVarName, ComponentPortName, FMode) Component" where
-  "SMon vv \<equiv> (
+definition SMon :: "(FailureVarName, FMode, ComponentPortName) Component" where
+  "SMon \<equiv> (
     System 
     [ In1Mon \<mapsto> OutB1, In2Mon \<mapsto> OutB2 ] 
     [ 
       Battery FB1, 
       Battery FB2, 
       Monitor 
-        (ValuesOperandPredicate_BoolOperand (lte_Values (FMNominal 2)) vv)
+        (ValuesOperandPredicate_BoolOperand (lte_Values (FMNominal 2)))
     ]
   )"
 
-value "the ((SMon vv) OutMon)"
+value "the (SMon OutMon)"
 
-definition Basic :: "(FailureVarName, ComponentPortName, FMode) Component" where
+definition Basic :: "(FailureVarName, FMode, ComponentPortName) Component" where
   "Basic \<equiv> 
   (
     System
