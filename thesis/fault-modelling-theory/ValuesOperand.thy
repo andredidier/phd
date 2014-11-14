@@ -4,8 +4,6 @@ imports BoolOperand Complex_Main FaultModellingTypes
 
 begin
 
-text {* We define a data type to represent  *}
-
 datatype_new ('FMode, 'vv) Values = 
   FMNominal real 
   | FMFailure "'FMode"
