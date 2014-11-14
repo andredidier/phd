@@ -89,6 +89,29 @@ value "SMon_OutMon"
 
 value "normalise_BoolOperand 
   (ValuesOperandPredicate_BoolOperand (eq_Values (FMFailure Omission)) SMon_OutMon)"
+
+lemma "
+  BoolOperand_eval (
+    ValuesOperandPredicate_BoolOperand (eq_Values (FMFailure Omission)) SMon_OutMon
+  ) vb
+  =
+  BoolOperand_eval (
+    VBBOrOp 
+    (
+      VBBAndOp (VBBVarOp FB1) (VBBVarOp FB2)
+    )
+    (
+      VBBAndOp 
+        (VBBVarOp FMon) 
+        (VBBOrOp (VBBVarOp FB1) (VBBVarOp FB2))
+    )
+  ) vb"
+apply (auto)
+apply (auto simp add: SMon_OutMon_def SMon_def SMon_Cs_def SMon_A_def Battery_def Monitor_def)
+apply (auto simp add: System_def SystemPortValuation_def SystemComponents_def fun_upd_fun_def)
+apply (auto simp add: normalise_expand_ValuesOperand_def)
+done
+
 (*TODO: predicates over output expressions *)
 
 end

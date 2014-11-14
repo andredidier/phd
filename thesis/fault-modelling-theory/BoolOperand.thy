@@ -19,15 +19,16 @@ notation (output) VBBVarOp ("\<lbrakk>_\<rbrakk>\<^sub>B\<^sub>O" 60)
 notation (latex) VBBVarOp ("\<lbrakk>_\<rbrakk>\<^raw:$_{\mathrm{BO}}$>" 61)
 notation (output) VBBNotOp ("\<not>\<^sub>B\<^sub>O _" 80)
 notation (latex) VBBNotOp ("\<^raw:$\overline{>_\<^raw:}$>" 81)
-notation (latex output) VBBAndOp ("_\<cdot>_" 70)
+notation (output) VBBAndOp ("_\<cdot>_" 75)
+notation (latex) VBBAndOp ("_\<cdot>_" 75)
 
 type_synonym 'vb VBBVarOpVal = "'vb \<Rightarrow> bool"
 
 abbreviation VBBOrOp :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
 where "VBBOrOp b1 b2 \<equiv> VBBNotOp (VBBAndOp (VBBNotOp b1) (VBBNotOp b2))"
 
-notation (output) VBBOrOp ("_+\<^sub>B\<^sub>O_" 75)
-notation (latex) VBBOrOp ("_+\<^raw:$_{\mathrm{BO}}$>_" 76)
+notation (output) VBBOrOp ("_\<or>\<^sub>B\<^sub>O_" 70)
+notation (latex) VBBOrOp ("_+\<^raw:$_{\mathrm{BO}}$>_" 70)
 
 (*>*)
 

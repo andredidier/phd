@@ -196,8 +196,7 @@ fun lte_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rig
 where
   "lte_Values (FMNominal a) (FMNominal b) = (a \<le> b)" |
   "lte_Values (FMFailure _) (FMNominal b) = (b > 0)" |
-  "lte_Values (FMFailure a) (FMFailure b) = (a = b)" |
-  "lte_Values _ _ = False"
+  "lte_Values a b = (a = b)"
 
 abbreviation gte_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool" (infix "\<ge>\<^sub>V" 50)
 where
