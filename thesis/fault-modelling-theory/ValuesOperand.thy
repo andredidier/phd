@@ -32,7 +32,6 @@ primrec
   ValuesOperand_bool_eval_VB :: "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" 
 where
   "ValuesOperand_bool_eval (VBVConstOp c) vb = True" |
-  ValuedTautology_VBVExpOp:
   "ValuesOperand_bool_eval (VBVExpOp Es) vb = (ValuesOperand_bool_eval_list Es vb)" |
   "ValuesOperand_bool_eval_list [] vb = False" |
   "ValuesOperand_bool_eval_list (E # Es) vb = 
@@ -101,7 +100,7 @@ where
 
 definition ValuedTautology :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool"
 where
-  "ValuedTautology Es vb \<equiv> ValuedTautology_values_list (ValuesOperand_values_eval Es vb)"
+  "ValuedTautology v vb \<equiv> ValuedTautology_values_list (ValuesOperand_values_eval v vb)"
 
 lemma [simp]: "(BoolOperand_eval A vb) \<or> (BoolOperand_eval (VBBNotOp A) vb)"
 apply (simp)
@@ -339,6 +338,22 @@ definition normalise_expand_ValuesOperand ::
   "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand"
 where
   "normalise_expand_ValuesOperand v \<equiv> normalise_ValuesOperand (expand_ValuesOperand v)"
+
+primrec 
+  isExpandedNormal_ValuesOperand :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> bool" and
+  isExpandedNormal_ValuesOperand_list :: "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> bool" and
+  isExpandedNormal_ValuesOperand_VB :: "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> bool" 
+where
+  "isExpandedNormal_ValuesOperand (VBVConstOp c) = True" |
+  "isExpandedNormal_ValuesOperand (VBVExpOp Es) = (isExpandedNormal_ValuesOperand_list Es)" |
+  "isExpandedNormal_ValuesOperand_list [] = True" |
+  "isExpandedNormal_ValuesOperand_list (E # Es) = 
+    ((isExpandedNormal_ValuesOperand_VB E) \<and> (isExpandedNormal_ValuesOperand_list Es))" |
+  "isExpandedNormal_ValuesOperand_VB (VB e v) = 
+    ((isNormal_BoolOperand e) \<and> (isExpandedNormal_ValuesOperand v))"
+
+theorem "(v = normalise_expand_ValuesOperand v) \<longleftrightarrow> (isExpandedNormal_ValuesOperand v)"
+sorry
 
 (*
 lemma 

@@ -106,10 +106,14 @@ where
   "isNormal_not_VBBConstOp (VBBAndOp BOp1 BOp2) = 
     ((BOp1 \<noteq> BOp2) \<and> (isNormal_not_VBBConstOp BOp1) \<and> (isNormal_not_VBBConstOp BOp2))"
 
-fun isNormal_BoolOperand :: "'vb BoolOperand \<Rightarrow> bool"
+definition isNormal_BoolOperand :: "'vb BoolOperand \<Rightarrow> bool"
 where
-  "isNormal_BoolOperand (VBBConstOp _) = True" |
-  "isNormal_BoolOperand BOp = isNormal_not_VBBConstOp BOp" 
+  "isNormal_BoolOperand BOp \<equiv> 
+  (
+    case BOp of
+      VBBConstOp _ \<Rightarrow> True |
+      _ \<Rightarrow> isNormal_not_VBBConstOp BOp
+  )" 
 
 primrec "BoolOperand_eval" :: "'vb BoolOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" where
   "BoolOperand_eval (VBBConstOp b) vb = b" |
