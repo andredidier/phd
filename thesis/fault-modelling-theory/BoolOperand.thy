@@ -1,7 +1,7 @@
 (*<*)
 theory BoolOperand
 
-imports Main 
+imports Main FaultModellingTypes
 
 begin
 (*>*)
@@ -86,13 +86,68 @@ where
   )" |
   "normalise_BoolOperandAnd b1 b2 = (if b1 = b2 then b1 else VBBAndOp b1 b2)"
 
-primrec normalise_BoolOperand :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
+primrec BoolOperand_Ands :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand list"
 where
-  "normalise_BoolOperand (VBBConstOp c) = VBBConstOp c" |
-  "normalise_BoolOperand (VBBVarOp v) = VBBVarOp v" |
-  "normalise_BoolOperand (VBBNotOp b) = normalise_BoolOperandNot (normalise_BoolOperand b)" |
-  "normalise_BoolOperand (VBBAndOp b1 b2) = 
-    normalise_BoolOperandAnd (normalise_BoolOperand b1) (normalise_BoolOperand b2)"
+  "BoolOperand_Ands (VBBConstOp c) = [ (VBBConstOp c) ]" |
+  "BoolOperand_Ands (VBBVarOp v) = [ (VBBVarOp v) ]" |
+  "BoolOperand_Ands (VBBNotOp b) = 
+    apply_f_list 
+      (BoolOperand_Ands b) 
+      (\<lambda> nb. case nb of VBBNotOp nnb \<Rightarrow> nnb | _ \<Rightarrow> VBBNotOp nb)" |
+  "BoolOperand_Ands (VBBAndOp b1 b2) = (BoolOperand_Ands b1) @ (BoolOperand_Ands b2)"
+
+
+(* Ajeitar aqui: se for (not VBBConstOp False)? *)
+primrec RemoveConsts_BoolOperands :: "'vb BoolOperand list \<Rightarrow> 'vb BoolOperand list"
+where
+  "RemoveConsts_BoolOperands [] = []" |
+  "RemoveConsts_BoolOperands (b # bs) = 
+    (
+      case b of
+        VBBConstOp c \<Rightarrow> if c then (RemoveConsts_BoolOperands bs) else [VBBConstOp False] |
+        _ \<Rightarrow> (b # (RemoveConsts_BoolOperands bs))
+    )"
+
+
+primrec RemoveSame_BoolOperands :: "'vb BoolOperand list \<Rightarrow> 'vb BoolOperand list"
+where
+  "RemoveSame_BoolOperands [] = []" |
+  "RemoveSame_BoolOperands (b # bs) = 
+    (
+      b # (filter (\<lambda> b2. b \<noteq> b2) (RemoveSame_BoolOperands bs))
+    )"
+
+primrec RemoveSimmetric_BoolOperands :: 
+  "'vb BoolOperand set \<Rightarrow> 'vb BoolOperand list \<Rightarrow> 'vb BoolOperand list"
+where
+  "RemoveSimmetric_BoolOperands R [] = []" |
+  "RemoveSimmetric_BoolOperands R (b # bs) = 
+    (
+      if (b \<notin> R) \<and> (List.find (\<lambda> x. b = VBBNotOp x \<or> VBBNotOp b = x) bs) = None 
+      then (b # (RemoveSimmetric_BoolOperands R bs))
+      else (RemoveSimmetric_BoolOperands (R \<union> {b}) bs)
+    )"
+
+primrec BoolOperands_Ands_to_And :: "'vb BoolOperand list \<Rightarrow> 'vb BoolOperand"
+where
+  "BoolOperands_Ands_to_And [] = (VBBConstOp True)" |
+  "BoolOperands_Ands_to_And (b # bs) = 
+  (
+    if bs = [] 
+    then b 
+    else (VBBAndOp b (BoolOperands_Ands_to_And bs))
+  )"
+
+definition normalise_BoolOperand :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
+where
+  "normalise_BoolOperand b = 
+    (
+    BoolOperands_Ands_to_And \<circ> 
+    (RemoveSimmetric_BoolOperands {}) \<circ> 
+    RemoveSame_BoolOperands \<circ>
+    RemoveConsts_BoolOperands \<circ> 
+    BoolOperand_Ands
+    ) b"
 
 primrec isNormal_not_VBBConstOp :: "'vb BoolOperand \<Rightarrow> bool"
 where
@@ -126,49 +181,69 @@ primrec "BoolOperand_eval" :: "'vb BoolOperand \<Rightarrow> ('vb \<Rightarrow> 
 text {* True \<or> False = True *}
 
 lemma "normalise_BoolOperand (VBBOrOp (VBBConstOp True) (VBBConstOp False)) = VBBConstOp True"
-apply (simp)
+apply (simp add: normalise_BoolOperand_def)
 done
 
 text {* False \<and> True = False *}
 
 lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp False) (VBBConstOp True)) = VBBConstOp False"
-apply (simp)
+apply (simp add: normalise_BoolOperand_def)
 done
 
 text {* False \<or> True = False *}
 
 lemma "normalise_BoolOperand (VBBOrOp (VBBConstOp False) (VBBConstOp True)) = VBBConstOp True"
-apply (simp)
+apply (simp add: normalise_BoolOperand_def)
 done
 
-text {* True \<and> False = True *}
+text {* True \<and> False = False *}
 
 lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp True) (VBBConstOp False)) = VBBConstOp False"
-apply (simp)
+apply (simp add: normalise_BoolOperand_def)
 done
 
 text {* \<not> False \<or> False = True *}
 
 lemma "normalise_BoolOperand (VBBOrOp (VBBNotOp (VBBConstOp False)) (VBBConstOp False)) = VBBConstOp True"
-apply (simp)
+apply (simp add: normalise_BoolOperand_def)
 done
 
 text {* \<not> True \<and> True = False *}
 
 lemma "normalise_BoolOperand (VBBAndOp (VBBNotOp (VBBConstOp True)) (VBBConstOp True)) = VBBConstOp False"
-apply (simp)
+apply (simp add: normalise_BoolOperand_def)
 done
 
 text {* \<not> True \<or> True = False *}
 
 lemma "normalise_BoolOperand (VBBOrOp (VBBNotOp (VBBConstOp True)) (VBBConstOp True)) = VBBConstOp True"
-apply (simp)
+apply (simp add: normalise_BoolOperand_def)
 done
 
-text {* True \<and> False = True *}
+text {* True \<and> False = False *}
 
 lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp True) (VBBConstOp False)) = VBBConstOp False"
-apply (simp)
+apply (simp add: normalise_BoolOperand_def)
+done
+
+lemma "\<lbrakk> A \<noteq> B \<rbrakk> \<Longrightarrow> normalise_BoolOperand 
+  (
+    VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))
+  ) = 
+  (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBVarOp B))"
+apply (simp add: normalise_BoolOperand_def)
+done
+
+lemma "normalise_BoolOperand 
+  (
+    VBBAndOp 
+      (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))) 
+      (VBBAndOp (VBBVarOp A) (VBBNotOp (VBBVarOp B)))
+  ) = 
+  (
+    VBBConstOp True
+  )"
+apply (simp add: normalise_BoolOperand_def)
 done
 
 (* Fim dos lemas de sanidade. *) (*>*)
@@ -193,6 +268,29 @@ apply (simp)
 apply (simp)
 apply (simp add: eval_norm_l1)
 apply (simp add: eval_norm_l2)
+done
+
+definition BoolOperand_Tautology :: "'vb BoolOperand \<Rightarrow> bool"
+where
+  "BoolOperand_Tautology b \<equiv> (RemoveSimmetric_BoolOperands (BoolOperand_Ands b) = {})"
+
+value "normalise_BoolOperand (
+      VBBAndOp 
+        (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))) 
+        (VBBAndOp (VBBVarOp A) (VBBNotOp (VBBVarOp B)))
+  )"
+value "normalise_BoolOperand (
+        (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))) 
+  )"
+
+lemma "\<lbrakk> A \<noteq> B \<rbrakk> \<Longrightarrow> 
+  BoolOperand_Tautology
+  (
+      VBBAndOp 
+        (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))) 
+        (VBBAndOp (VBBVarOp A) (VBBNotOp (VBBVarOp B)))
+  ) "
+apply (auto simp add: BoolOperand_Tautology_def RemoveSimmetric_BoolOperands_def)
 done
 
 end

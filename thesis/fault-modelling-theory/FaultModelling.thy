@@ -24,10 +24,6 @@ type_synonym ('vb, 'FMode, 'pin) PortValuation =
 type_synonym ('vb, 'FMode, 'pin, 'pout) Component = 
   "('vb, 'FMode, 'pin) PortValuation \<Rightarrow> ('pout \<rightharpoonup> ('vb, 'FMode, 'pin) ValuesOperand)"
 
-definition apply_map :: "('a \<rightharpoonup> 'b) \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> ('a \<rightharpoonup> 'c)"
-where
-  "apply_map m f \<equiv> (\<lambda> x. case (m x) of None \<Rightarrow> None | (Some mx) \<Rightarrow> Some (f mx))"
-
 primrec list_of_maps_to_map :: "('a \<rightharpoonup> 'b) list \<Rightarrow> ('a \<rightharpoonup> 'b)"
 where
   "list_of_maps_to_map [] = Map.empty" |

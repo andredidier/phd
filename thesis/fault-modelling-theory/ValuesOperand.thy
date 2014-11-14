@@ -64,26 +64,6 @@ where
   "ValuesOperand_values_eval_VB (VB e v) vb = 
     (if (BoolOperand_eval e vb) then (ValuesOperand_values_eval v vb) else [])"
 
-(*
-primrec
-  ValuesOperand_value_eval :: "('vb, 'FMode) ValuesOperand \<Rightarrow> 
-    ('vb \<Rightarrow> bool) \<Rightarrow> (('vv, 'FMode) VBVVarOpVal option) \<Rightarrow> 'FMode Values option" and
-  ValuesOperand_value_eval_list :: "('vb, 'FMode) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> 
-    (('vv, 'FMode) VBVVarOpVal option) \<Rightarrow> 'FMode Values option list" and
-  ValuesOperand_value_eval_VB :: "('vb, 'FMode) ValuedBool \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> 
-    (('vv, 'FMode) VBVVarOpVal option) \<Rightarrow> 'FMode Values option" 
-where
-  "ValuesOperand_value_eval (VBVConstOp c) vb vv = Some c" |
-  "ValuesOperand_value_eval (VBVVarOp v) vb vv = vv v" |
-  "ValuesOperand_value_eval (VBVExpOp Es) vb vv = 
-    (fold choose_value (ValuesOperand_value_eval_list Es vb vv) None)" |
-  "ValuesOperand_value_eval_list [] vb vv = []" |
-  "ValuesOperand_value_eval_list (E # Es) vb vv = 
-    (ValuesOperand_value_eval_VB E vb vv) # (ValuesOperand_value_eval_list Es vb vv)" |
-  "ValuesOperand_value_eval_VB (VB e v) vb vv = 
-    (if (BoolOperand_eval e vb) then (ValuesOperand_value_eval v vb vv) else None)"
-*)
-
 primrec ValuedTautology_values_nonemptylist :: 
   "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values list \<Rightarrow> bool"
 where
