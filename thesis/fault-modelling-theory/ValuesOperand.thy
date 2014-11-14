@@ -309,7 +309,6 @@ where
   "SingleOperand [] = None" |
   "SingleOperand (E # Es) = (SingleOperand_list Es (VBV E))"
 
-
 primrec 
   normalise_ValuesOperand :: 
     "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand" and

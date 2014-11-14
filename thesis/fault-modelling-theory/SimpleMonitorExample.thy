@@ -81,8 +81,14 @@ where
     System SMon_A SMon_Cs
   )"
 
-value "the (SMon (\<lambda> x. VBVConstOp (FMVar x)) OutMon)"
+definition SMon_OutMon :: "(FailureVarName, FMode, ComponentPortName) ValuesOperand"
+where
+  "SMon_OutMon \<equiv> the (SMon (\<lambda> x. VBVConstOp (FMVar x)) OutMon)"
 
+value "SMon_OutMon"
+
+value "normalise_BoolOperand 
+  (ValuesOperandPredicate_BoolOperand (eq_Values (FMFailure Omission)) SMon_OutMon)"
 (*TODO: predicates over output expressions *)
 
 end

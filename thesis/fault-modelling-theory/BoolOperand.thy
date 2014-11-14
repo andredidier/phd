@@ -58,6 +58,31 @@ fun normalise_BoolOperandAnd :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand \
 where
   "normalise_BoolOperandAnd (VBBConstOp c1) b2 = (if c1 then b2 else (VBBConstOp c1))" |
   "normalise_BoolOperandAnd b1 (VBBConstOp c2) = (if c2 then b1 else (VBBConstOp c2))" |
+  "normalise_BoolOperandAnd (VBBAndOp b1 b2) (VBBAndOp b3 b4) = (
+    if 
+      b1 = VBBNotOp b3 \<or> VBBNotOp b1 = b3 \<or> 
+      b1 = VBBNotOp b4 \<or> VBBNotOp b1 = b4 \<or> 
+      b2 = VBBNotOp b3 \<or> VBBNotOp b2 = b3 \<or> 
+      b2 = VBBNotOp b4 \<or> VBBNotOp b2 = b4
+    then (VBBConstOp False)
+    else VBBAndOp (VBBAndOp b1 b2) b3
+  )" |
+  "normalise_BoolOperandAnd (VBBAndOp b1 b2) b3 = (
+    if 
+      b1 = VBBNotOp b3 \<or> VBBNotOp b1 = b3 \<or> 
+      b2 = VBBNotOp b3 \<or> VBBNotOp b2 = b3
+    then (VBBConstOp False)
+    else if b1 = b3 \<or> b2 = b3 then VBBAndOp b1 b2
+    else VBBAndOp (VBBAndOp b1 b2) b3
+  )" |
+  "normalise_BoolOperandAnd b1 (VBBAndOp b2 b3) = (
+    if 
+      b1 = VBBNotOp b2 \<or> VBBNotOp b1 = b2 \<or> 
+      b2 = VBBNotOp b3 \<or> VBBNotOp b2 = b3
+    then (VBBConstOp False)
+    else if b1 = b2 \<or> b1 = b3 then VBBAndOp b2 b3
+    else VBBAndOp (VBBAndOp b1 b2) b3
+  )" |
   "normalise_BoolOperandAnd b1 b2 = (if b1 = b2 then b1 else VBBAndOp b1 b2)"
 
 primrec normalise_BoolOperand :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
