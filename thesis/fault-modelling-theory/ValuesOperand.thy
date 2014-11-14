@@ -19,6 +19,7 @@ datatype_new ('vb, 'FMode, 'vv) ValuesOperand =
 
 notation (output) FMNominal ("_\<^sub>N" 40)
 notation (output) FMFailure ("_\<^sub>F" 41)
+notation (output) FMVar ("\<lbrakk>_\<rbrakk>\<^sub>F\<^sub>M" 41)
 notation (output) VBVConstOp  ("_\<^sub>V" 50)
 notation (latex) VBVConstOp ("_\<^raw:$_{\mathrm{V}}$>" 51)
 notation (output) VBVExpOp ("Vs _" 80)

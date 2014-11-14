@@ -6,10 +6,10 @@ begin
 
 datatype FMode = Omission ("O\<^sub>M") | Commission ("C\<^sub>O\<^sub>m")
 
-datatype FailureVarName = FB1 | FB2 | FMon
-
-notation FB1 ("F\<^sub>B\<^sub>1" 50)
-notation FB2 ("F\<^sub>B\<^sub>2" 50)
+datatype FailureVarName = 
+  FB1 ("F\<^sub>B\<^sub>1" 50) 
+  | FB2 ("F\<^sub>B\<^sub>2" 50)
+  | FMon ("F\<^sub>M\<^sub>o\<^sub>n" 50)
 
 datatype ComponentPortName = 
   OutB1 ("out\<^sub>B\<^sub>1") 
@@ -18,12 +18,11 @@ datatype ComponentPortName =
   | In2Mon ("in\<^sub>M\<^sub>o\<^sub>n\<^sub>2")
   | OutMon ("out\<^sub>M\<^sub>o\<^sub>n")
 
-definition Battery :: "FailureVarName \<Rightarrow> 
-  (FailureVarName, FMode, ComponentPortName, ComponentPortName) PortValuation \<Rightarrow>
-  (FailureVarName, FMode, ComponentPortName) Component" where
-  "Battery FB inputs \<equiv> 
+definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarrow> 
+  (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
+  "Battery OutP FB \<equiv> \<lambda> m.
   [
-    OutB1 \<mapsto> 
+    OutP \<mapsto> 
       VBVExpOp [ 
         VB (VBBVarOp (FB)) (VBVConstOp (FMFailure Omission)),
         VB (VBBNotOp (VBBVarOp (FB))) (VBVConstOp (FMNominal 5))
@@ -32,72 +31,57 @@ definition Battery :: "FailureVarName \<Rightarrow>
 
 definition Monitor :: " 
   ((FailureVarName, FMode, ComponentPortName) ValuesOperand \<Rightarrow> FailureVarName BoolOperand) \<Rightarrow> 
-  (FailureVarName, FMode, ComponentPortName, ComponentPortName) PortValuation \<Rightarrow>
-  (FailureVarName, FMode, ComponentPortName) Component" where
-  "Monitor P inputs \<equiv>  
+  (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
+  "Monitor P \<equiv>  \<lambda> m.
   [ 
     OutMon \<mapsto>
       VBVExpOp [
         VB 
           (VBBAndOp 
             (VBBNotOp (VBBVarOp FMon))
-            (P (inputs In1Mon)))
-          (inputs In1Mon),
+            (P (m In1Mon)))
+          (m In1Mon),
         VB 
           (VBBAndOp 
             (VBBNotOp (VBBVarOp FMon))
-            (VBBNotOp (P (inputs In1Mon))))
-          (inputs In2Mon),
+            (VBBNotOp (P (m In1Mon))))
+          (m In2Mon),
         VB 
           (VBBAndOp 
             (VBBVarOp FMon)
-            (P (inputs In1Mon)))
-          (inputs In2Mon),
+            (P (m In1Mon)))
+          (m In2Mon),
         VB 
           (VBBAndOp 
             (VBBVarOp FMon)
-            (VBBNotOp (P (inputs In1Mon))))
-          (inputs In1Mon)
+            (VBBNotOp (P (m In1Mon))))
+          (m In1Mon)
       ]
   ]"
 
+definition SMon_A :: "(ComponentPortName, ComponentPortName) Connections"
+where
+  "SMon_A \<equiv> [ In1Mon \<mapsto> OutB1, In2Mon \<mapsto> OutB2 ] "
 
-definition SMon :: "(FailureVarName, FMode, ComponentPortName) Component" where
+definition SMon_Cs :: 
+  "(FailureVarName, FMode, ComponentPortName, ComponentPortName) Component list"
+where 
+  "SMon_Cs \<equiv> 
+  [ 
+    Battery OutB1 FB1, 
+    Battery OutB2 FB2, 
+    Monitor 
+      (ValuesOperandPredicate_BoolOperand (lte_Values (FMNominal 2)))
+  ]"
+
+definition SMon :: 
+  "(FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" 
+where
   "SMon \<equiv> (
-    System 
-    [ In1Mon \<mapsto> OutB1, In2Mon \<mapsto> OutB2 ] 
-    [ 
-      Battery FB1, 
-      Battery FB2, 
-      Monitor 
-        (ValuesOperandPredicate_BoolOperand (lte_Values (FMNominal 2)))
-    ]
+    System SMon_A SMon_Cs
   )"
 
-value "the (SMon OutMon)"
-
-definition Basic :: "(FailureVarName, FMode, ComponentPortName) Component" where
-  "Basic \<equiv> 
-  (
-    System
-    [ In1Mon \<mapsto> OutB1, In2Mon \<mapsto> OutB2 ]
-    [ 
-      (\<lambda> inputs. 
-        [ 
-          OutMon \<mapsto> 
-            VBVExpOp [ 
-              VB (VBBConstOp True) (inputs In1Mon),
-              VB (VBBConstOp False) (inputs In2Mon)
-            ]
-        ] ),
-      (\<lambda> inputs. [ OutB1 \<mapsto> VBVConstOp (FMNominal 1) ]),
-      (\<lambda> inputs. [ OutB2 \<mapsto> VBVConstOp (FMNominal 2) ])
-    ]
-  )"
-
-value "the (Basic OutMon)"
-
-
+value "the (SMon (\<lambda> x. VBVConstOp (FMVar x)) OutMon)"
 
 (*TODO: predicates over output expressions *)
 

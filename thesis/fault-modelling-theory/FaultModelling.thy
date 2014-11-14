@@ -17,19 +17,34 @@ type_synonym 'PortName COutput = 'PortName
 
 type_synonym  ('pin, 'pout) Connections = "'pin \<rightharpoonup> 'pout"
 
-type_synonym ('vb, 'FMode, 'pin, 'pout) PortValuation = 
-  "'pin \<Rightarrow> ('vb, 'FMode, 'pout) ValuesOperand"
+type_synonym ('vb, 'FMode, 'pin) PortValuation = 
+  "'pin \<Rightarrow> ('vb, 'FMode, 'pin) ValuesOperand"
 
 (* outputs -. ValuesOperand*)
 type_synonym ('vb, 'FMode, 'pin, 'pout) Component = 
-  "'pout \<rightharpoonup> 
-  ( ('pin \<Rightarrow> ('vb, 'FMode, 'pin) ValuesOperand) \<Rightarrow> ('vb, 'FMode, 'pin) ValuesOperand)"
+  "('vb, 'FMode, 'pin) PortValuation \<Rightarrow> ('pout \<rightharpoonup> ('vb, 'FMode, 'pin) ValuesOperand)"
 
 definition BasicComponent :: "('vb, 'FMode, nat, nat) Component"
 where
-  "BasicComponent \<equiv> [ 0 \<mapsto> (\<lambda> m. VBVExpOp [ VB (VBBConstOp True) (m 10)])  ]"
-value "(the (BasicComponent 0))
-  (\<lambda> x. if x = 10 then VBVConstOp (FMNominal 5) else VBVConstOp (FMNominal 2))"
+  "BasicComponent \<equiv> \<lambda> m. [ 0 \<mapsto>  
+    VBVExpOp [ 
+      VB (ValuesOperandPredicate_BoolOperand (lte_Values (FMNominal 2)) (m 10) ) (m 0)
+    ]
+  ]"
+
+value " 
+    the ((BasicComponent 
+      (\<lambda> x. if x = 10 then VBVConstOp (FMNominal 5) else VBVConstOp (FMVar x))
+    ) 0)
+  "
+(*TODO: Criar o Boolean Operand como um comparador para suporta a comparação com variáveis*)
+
+lemma "( the ((BasicComponent 
+      (\<lambda> x. if x = 10 then VBVConstOp (FMNominal 5) else VBVConstOp (FMVar x))
+    ) 0)) = 
+  (VBVExpOp [VB (VBBConstOp True) (VBVConstOp (FMVar 0))] )"
+apply (simp add: BasicComponent_def)
+done
 
 definition apply_map :: "('a \<rightharpoonup> 'b) \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> ('a \<rightharpoonup> 'c)"
 where
@@ -45,44 +60,61 @@ where
   "convert_elems [] _ = []" |
   "convert_elems (l # ls) f = (f l) # (convert_elems ls f)"
 
-primrec 
-  replace_io_ValuesOperand :: 
-    "('vb, 'FMode, 'pn) ValuesOperand \<Rightarrow> 
-    ('vb, 'FMode, 'pn, 'pn) PortValuation \<Rightarrow> 
-    ('vb, 'FMode, 'pn) ValuesOperand" 
-  and 
-  replace_io_ValuesOperand_list :: 
-    "('vb, 'FMode, 'pn) ValuedBool list \<Rightarrow> 
-    ('vb, 'FMode, 'pn, 'pn) PortValuation \<Rightarrow> 
-    ('vb, 'FMode, 'pn) ValuedBool list" 
-  and 
-  replace_io_ValuesOperand_VB :: 
-    "('vb, 'FMode, 'pn) ValuedBool \<Rightarrow> 
-    ('vb, 'FMode, 'pn, 'pn) PortValuation \<Rightarrow> 
-    ('vb, 'FMode, 'pn) ValuedBool" 
+definition SystemComponents :: "
+  (('vb, 'FMode, 'pin, 'pout) Component) list \<Rightarrow> ('vb, 'FMode, 'pin, 'pout) Component"
 where
-  "replace_io_ValuesOperand (VBVConstOp c) inputs = (
-    case c of
-      FMVar vvar \<Rightarrow> 
-        let vo = (inputs vvar)
-        in (replace_io_ValuesOperand vo inputs)|
-      _ \<Rightarrow> (VBVConstOp c)
-  )" |
-  "replace_io_ValuesOperand (VBVExpOp Es) inputs = 
-    VBVExpOp (replace_io_ValuesOperand_list Es inputs)" |
-  "replace_io_ValuesOperand_list [] _ = []" |
-  "replace_io_ValuesOperand_list (E # Es) inputs = 
-    (replace_io_ValuesOperand_VB E inputs) # (replace_io_ValuesOperand_list Es inputs)" |
-  "replace_io_ValuesOperand_VB (VB e v) inputs = (VB e (replace_io_ValuesOperand v inputs))"
-  
+  "SystemComponents cs \<equiv> \<lambda> pv. fold (\<lambda> c1 c2. (c1 pv) ++ c2) cs Map.empty"
+
+definition SystemPortValuation :: "
+  ('pin, 'pout) Connections \<Rightarrow> 
+  ('vb, 'FMode, 'pin, 'pout) Component \<Rightarrow> 
+  ('vb, 'FMode, 'pin) PortValuation
+  "
+where
+  "SystemPortValuation A c \<equiv> 
+  (
+    \<lambda> pin.
+    (
+      case (A pin) of
+        None \<Rightarrow> VBVConstOp (FMVar pin) |
+        (Some pout) \<Rightarrow> 
+        (
+          case (c (\<lambda> x. VBVConstOp (FMVar x))  pout) of
+            None \<Rightarrow> VBVConstOp (FMVar pin) |
+            (Some vo) \<Rightarrow> vo
+        )
+    )
+  )"
+
+definition fun_upd_fun :: "('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow> 'b) \<Rightarrow> ('b \<Rightarrow> 'b \<Rightarrow> bool)  \<Rightarrow> ('a \<Rightarrow> 'b)"
+where
+  "fun_upd_fun f1 f2 g \<equiv> \<lambda> a. let b1 = f1 a in let b2 = f2 a in if g b1 b2 then b1 else b2"
+
+fun is_ValuesVar :: "('vb, 'FMode, 'pin) ValuesOperand \<Rightarrow> bool"
+where
+  "is_ValuesVar (VBVConstOp (FMVar x)) = True" |
+  "is_ValuesVar _ = False"
 
 (* Lista de componentes e conexões*)
-definition System ::
-  "('pin, 'pout) Connections \<Rightarrow> 
-  (('vb, 'FMode, 'pin, 'pout) PortValuation \<Rightarrow> 
-    ('vb, 'FMode, 'pin, 'pout) Component) list \<Rightarrow> 
-    ('vb, 'FMode, 'pin, 'pout) Component"
+definition System :: "
+  ('pin, 'pout) Connections \<Rightarrow> 
+  ('vb, 'FMode, 'pin, 'pout) Component list \<Rightarrow> 
+  ('vb, 'FMode, 'pin, 'pout) Component"
 where
+  "System A cs \<equiv> 
+  (
+    let C = SystemComponents cs in
+    let pv = SystemPortValuation A C in
+    (\<lambda> xpv.  
+      let mpout = C (fun_upd_fun pv xpv (\<lambda> b1 b2. \<not> is_ValuesVar b1 )) in
+      (\<lambda> pout. 
+        let nvo = mpout pout in
+        case nvo of None \<Rightarrow> None | Some vo \<Rightarrow> Some (normalise_expand_ValuesOperand vo)
+      )
+    )
+  )"
+
+(*
   "System A vCs \<equiv> (
     let outputs = (\<lambda> f. 
       list_of_maps_to_map (convert_elems vCs (\<lambda> vC. vC (\<lambda> m. f m) ))
@@ -104,6 +136,7 @@ where
         nCs
       ) 
   )"
+*)
 
 
 (*
