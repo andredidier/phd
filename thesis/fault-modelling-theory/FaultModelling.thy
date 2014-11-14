@@ -24,28 +24,6 @@ type_synonym ('vb, 'FMode, 'pin) PortValuation =
 type_synonym ('vb, 'FMode, 'pin, 'pout) Component = 
   "('vb, 'FMode, 'pin) PortValuation \<Rightarrow> ('pout \<rightharpoonup> ('vb, 'FMode, 'pin) ValuesOperand)"
 
-definition BasicComponent :: "('vb, 'FMode, nat, nat) Component"
-where
-  "BasicComponent \<equiv> \<lambda> m. [ 0 \<mapsto>  
-    VBVExpOp [ 
-      VB (ValuesOperandPredicate_BoolOperand (lte_Values (FMNominal 2)) (m 10) ) (m 0)
-    ]
-  ]"
-
-value " 
-    the ((BasicComponent 
-      (\<lambda> x. if x = 10 then VBVConstOp (FMNominal 5) else VBVConstOp (FMVar x))
-    ) 0)
-  "
-(*TODO: Criar o Boolean Operand como um comparador para suporta a comparação com variáveis*)
-
-lemma "( the ((BasicComponent 
-      (\<lambda> x. if x = 10 then VBVConstOp (FMNominal 5) else VBVConstOp (FMVar x))
-    ) 0)) = 
-  (VBVExpOp [VB (VBBConstOp True) (VBVConstOp (FMVar 0))] )"
-apply (simp add: BasicComponent_def)
-done
-
 definition apply_map :: "('a \<rightharpoonup> 'b) \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> ('a \<rightharpoonup> 'c)"
 where
   "apply_map m f \<equiv> (\<lambda> x. case (m x) of None \<Rightarrow> None | (Some mx) \<Rightarrow> Some (f mx))"
@@ -114,45 +92,8 @@ where
     )
   )"
 
-(*
-  "System A vCs \<equiv> (
-    let outputs = (\<lambda> f. 
-      list_of_maps_to_map (convert_elems vCs (\<lambda> vC. vC (\<lambda> m. f m) ))
-    ) in
-    let input_to_out_exp = (
-      \<lambda> inp. let outp = A inp in 
-        if outp = None then (VBVConstOp (FMVar inp))
-        else (outputs (\<lambda> inp2. outp))
-    )  in 
-    let nCs = list_of_maps_to_map 
-      (convert_elems 
-        vCs 
-        (\<lambda> C. 
-          C (\<lambda> x. let r = input_to_out_exp x in if r = None then VBVConstOp (FMVar x) else the r)
-        ) 
-      ) in
-      (map_comp 
-        (\<lambda> x. Some ((*normalise_expand_ValuesOperand*) x)) 
-        nCs
-      ) 
-  )"
-*)
-
 
 (*
-
-definition SystemConnections :: "('vb, 'ComponentPort, 'FMode) System \<Rightarrow> 
-  'ComponentPort Connections"
-where
-  "SystemConnections S \<equiv> snd S"
-
-definition SystemComponentsInputs :: 
-  "('vb, 'ComponentPort, 'FMode) System \<Rightarrow> 'ComponentPort set" where
-  "SystemComponentsInputs S \<equiv> {  }"
-
-definition SystemComponentsOutputs :: 
-  "('vb, 'ComponentPort, 'FMode) System \<Rightarrow> 'ComponentPort set" where
-  "SystemComponentsOutputs S \<equiv> { (c,i). c \<in> {..<(length (SystemComponents S))} \<and> i \<in> ComponentOutputPortIndexes (SystemComponent S c)}"
 
 definition ValidConnections :: "('vb, 'FMode) System \<Rightarrow> bool"  where 
   "ValidConnections S \<equiv> 

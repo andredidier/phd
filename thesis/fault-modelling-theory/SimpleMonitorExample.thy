@@ -112,6 +112,4 @@ apply (auto simp add: System_def SystemPortValuation_def SystemComponents_def fu
 apply (auto simp add: normalise_expand_ValuesOperand_def)
 done
 
-(*TODO: predicates over output expressions *)
-
 end

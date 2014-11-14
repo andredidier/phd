@@ -340,10 +340,6 @@ definition normalise_expand_ValuesOperand ::
 where
   "normalise_expand_ValuesOperand v \<equiv> normalise_ValuesOperand (expand_ValuesOperand v)"
 
-value "normalise_ValuesOperand (VBVExpOp [
-  VB (VBBVarOp A) (VBVVarOp U), 
-  VB (VBBVarOp B) (VBVVarOp U)] )"
-
 (*
 lemma 
   "(normalise_ValuesOperand V) \<noteq> (normalise_ValuesOperand U) \<Longrightarrow>
