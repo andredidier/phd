@@ -58,30 +58,54 @@ where
   "buildenvif env (VIF v) = env ++ [v \<mapsto> True]" |
   "buildenvif env (IF b t e) = env"
 
-primrec simplifyif :: "('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 
-  ('vb ifex \<times> ('vb \<rightharpoonup> bool))"
+primrec simplifyif :: "('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex"
 where
-  "simplifyif env (CIF c) t e = (if c then t else e, env)" |
+  "simplifyif env (CIF c) t e = (if c then t else e)" |
   "simplifyif env (VIF v) t e = 
   (
     case (env v) of
-      None \<Rightarrow> (IF (VIF v) t e, env ++ [ v \<mapsto> True ]) |
-      Some c \<Rightarrow> (if c then t else e, env)
+      None \<Rightarrow> (IF (VIF v) t e) |
+      Some c \<Rightarrow> (if c then t else e)
   )" |
-  "simplifyif env (IF b t e) u f = 
+  "simplifyif env (IF b t e) u f =  
     (
       let
         nenv = buildenvif env b;
         positive = simplifyif nenv t u f;
         negative = simplifyif (apply_map nenv Not) e u f
-      in simplifyif nenv b (fst positive) (fst negative)
+      in simplifyif nenv b positive negative
     )"
 
 primrec simplifyifex :: "('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex \<Rightarrow> ('vb ifex \<times> ('vb \<rightharpoonup> bool))"
 where
   "simplifyifex env (CIF c) = (CIF c, env)" |
-  "simplifyifex env (VIF v) = (VIF v, env)" |
-  "simplifyifex env (IF b t e) = (IF b t e, env)"
+  "simplifyifex env (VIF v) = 
+  (
+    let
+      nv = case (env v) of None \<Rightarrow> (VIF v) | Some c \<Rightarrow> CIF c
+    in (nv, env)
+  )" |
+  "simplifyifex env (IF b t e) = 
+  (
+    let
+      nenv = buildenvif env b;
+      nt = simplifyifex nenv t;
+      ne = simplifyifex (apply_map nenv Not) e;
+      result = simplifyif nenv (IF b t e) (fst nt) (fst ne) 
+    in (result, nenv)
+  )"
+
+lemma "\<lbrakk> A \<noteq> C; A \<noteq> D; C \<noteq> D \<rbrakk> \<Longrightarrow> 
+  fst (simplifyifex Map.empty 
+    (norm (IF (VIF A) (IF (VIF A) (VIF C) (VIF D)) (CIF False)) )) 
+  = 
+  IF (VIF A) (VIF C) (CIF False)"
+quickcheck
+apply (auto)
+done
+
+value "fst (simplifyifex Map.empty 
+  (norm (IF (VIF A) (IF (VIF B) (VIF C) (VIF D)) (IF (VIF A) (VIF E) (VIF F))) ))"
 
 value "fst (simplifyifex Map.empty 
   (norm (bool2if (VBBAndOp (VBBVarOp A) (VBBOrOp (VBBVarOp B) (VBBVarOp A))))))"
