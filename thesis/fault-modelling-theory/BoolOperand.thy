@@ -48,6 +48,7 @@ For example, to express an @{term "(op \<or>) A B"}, we use the expression
 Following this idea, we introduce our datatype @{typ "'VarNames BoolOperand"}
   *}
 
+
 primrec normalise_BoolOperandNot :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
 where
   "normalise_BoolOperandNot (VBBConstOp c) = VBBConstOp (\<not> c)" |
@@ -188,16 +189,60 @@ lemma "
 apply (auto simp add: RemoveSame_BoolOperands_def Let_def)
 done
 
+datatype 'a FindVar = NormalVar 'a | NegatedVar 'a
+
+primrec FindVars_BoolOperands :: 
+  "'vb BoolOperand \<Rightarrow> ('vb FindVar \<rightharpoonup> bool) \<Rightarrow> ('vb FindVar \<rightharpoonup> bool)"
+where
+  "FindVars_BoolOperands (VBBConstOp _) m = m" |
+  "FindVars_BoolOperands (VBBVarOp v) m = 
+  (
+    m ++ [ NormalVar v \<mapsto> True, NegatedVar v \<mapsto> False ]
+  )" |
+  "FindVars_BoolOperands (VBBNotOp b) m = 
+  (
+    FindVars_BoolOperands b (apply_map m Not)
+  )" |
+  "FindVars_BoolOperands (VBBAndOp b1 b2) m = 
+  (
+    let 
+      nm1 = FindVars_BoolOperands b1 m;
+      nm2 = FindVars_BoolOperands b2 m
+    in
+      merge_map nm1 nm2 (op \<or>)
+  )
+  "
+
+primrec RemoveSimmetric_BoolOperandsFind :: "'vb BoolOperand \<Rightarrow> 'vb set \<Rightarrow> 'vb BoolOperand"
+where
+  "RemoveSimmetric_BoolOperandsFind (VBBConstOp c) _ = VBBConstOp c" |
+  "RemoveSimmetric_BoolOperandsFind (VBBVarOp v) S = 
+    (if v \<in> S then VBBConstOp True else VBBVarOp v)" |
+  "RemoveSimmetric_BoolOperandsFind (VBBNotOp b) S = 
+  (
+  VBBNotOp (RemoveSimmetric_BoolOperandsFind b S)
+  )" |
+  "RemoveSimmetric_BoolOperandsFind (VBBAndOp b1 b2) S =
+    VBBAndOp (RemoveSimmetric_BoolOperandsFind b1 S) (RemoveSimmetric_BoolOperandsFind b2 S)"
 
 definition RemoveSimmetric_BoolOperands :: 
   "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
 where
-  "RemoveSimmetric_BoolOperands b \<equiv> b"
+  "RemoveSimmetric_BoolOperands b \<equiv> 
+  (
+    let
+      fv = FindVars_BoolOperands b Map.empty;
+      contains = \<lambda> fvv. (case (fv fvv) of None \<Rightarrow> False | Some bv \<Rightarrow> bv);
+      contains_var = \<lambda> v. (contains (NormalVar v)) \<and> (contains (NegatedVar v))
+    in RemoveSimmetric_BoolOperandsFind b (Collect contains_var)
+  )"
 
 lemma "(RemoveSimmetric_BoolOperands 
   (VBBAndOp (VBBVarOp A) (VBBOrOp (VBBVarOp A) (VBBVarOp B)))) = 
   (VBBAndOp (VBBVarOp A) (VBBOrOp (VBBVarOp A) (VBBVarOp B)))"
-apply (simp add: RemoveSimmetric_BoolOperands_def Case_def)
+apply (simp add: RemoveSimmetric_BoolOperands_def)
+apply (simp add: merge_map_def)
+apply (simp add: apply_map_def)
 done
 
 lemma "
@@ -211,7 +256,8 @@ lemma "
       (VBBAndOp (VBBConstOp True) (VBBConstOp True))
   \<rbrakk> \<Longrightarrow> 
   RemoveSimmetric_BoolOperands b = r"
-apply (auto simp add: RemoveSimmetric_BoolOperands_def Case_def)
+apply (auto simp add: RemoveSimmetric_BoolOperands_def )
+apply (simp add: merge_map_def)
 done
 
 definition normalise_BoolOperand :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
