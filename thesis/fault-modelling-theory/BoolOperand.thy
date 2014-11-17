@@ -52,40 +52,43 @@ where
   "norm (VIF v) = (VIF v)" |
   "norm (IF b t e) = normif b (norm t) (norm e)"
 
-primrec simplifyif :: "'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex"
+primrec buildenvif :: "('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex \<Rightarrow> ('vb \<rightharpoonup> bool)"
 where
-  "simplifyif (CIF c) t e = (if c then t else e)" |
-  "simplifyif (VIF v) t e = IF (VIF v) t e" |
-  "simplifyif (IF b t e) u f = simplifyif b (simplifyif t u f) (simplifyif e u f)"
+  "buildenvif env (CIF c) = env" |
+  "buildenvif env (VIF v) = env ++ [v \<mapsto> True]" |
+  "buildenvif env (IF b t e) = env"
 
-primrec simplifyifex :: "'vb ifex \<Rightarrow> 'vb ifex"
+primrec simplifyif :: "('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 
+  ('vb ifex \<times> ('vb \<rightharpoonup> bool))"
 where
-  "simplifyifex (CIF c) = (CIF c)" |
-  "simplifyifex (VIF v) = (VIF v)" |
-  "simplifyifex (IF b t e) = 
+  "simplifyif env (CIF c) t e = (if c then t else e, env)" |
+  "simplifyif env (VIF v) t e = 
   (
-    let 
-      nt = simplifyifex t;
-      ne = simplifyifex e;
-      nif = simplifyif b nt ne
-    in
-      case nt of
-        CIF ntc \<Rightarrow> 
-        (
-          case ne of
-            CIF nec \<Rightarrow> 
-            (
-              if (ntc \<and> \<not> nec) then b else nif
-            ) |
-            _ \<Rightarrow> nif
-        ) |
-        _ \<Rightarrow> nif
-  )"
+    case (env v) of
+      None \<Rightarrow> (IF (VIF v) t e, env ++ [ v \<mapsto> True ]) |
+      Some c \<Rightarrow> (if c then t else e, env)
+  )" |
+  "simplifyif env (IF b t e) u f = 
+    (
+      let
+        nenv = buildenvif env b;
+        positive = simplifyif nenv t u f;
+        negative = simplifyif (apply_map nenv Not) e u f
+      in simplifyif nenv b (fst positive) (fst negative)
+    )"
 
-value "simplifyifex (norm (bool2if (VBBAndOp (VBBVarOp A) (VBBOrOp (VBBVarOp B) (VBBVarOp A)))))"
+primrec simplifyifex :: "('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex \<Rightarrow> ('vb ifex \<times> ('vb \<rightharpoonup> bool))"
+where
+  "simplifyifex env (CIF c) = (CIF c, env)" |
+  "simplifyifex env (VIF v) = (VIF v, env)" |
+  "simplifyifex env (IF b t e) = (IF b t e, env)"
 
-value "simplifyifex (norm (bool2if (VBBAndOp (VBBNotOp (VBBVarOp A)) 
-  (VBBOrOp (VBBVarOp B) (VBBVarOp A)))))"
+value "fst (simplifyifex Map.empty 
+  (norm (bool2if (VBBAndOp (VBBVarOp A) (VBBOrOp (VBBVarOp B) (VBBVarOp A))))))"
+
+value "fst (simplifyifex Map.empty (norm (bool2if (VBBAndOp (VBBNotOp (VBBVarOp A)) 
+  (VBBOrOp (VBBVarOp B) (VBBVarOp A))))))"
+
 
 (*>*)
 
