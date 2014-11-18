@@ -161,7 +161,7 @@ primrec
 where
   "ValuesOperandPredicate_BoolOperand P (VBVConstOp c) = (VBBConstOp (P c))" |
   "ValuesOperandPredicate_BoolOperand P (VBVExpOp Es) = 
-    normalise_BoolOperand (ValuesOperandPredicate_BoolOperand_list P Es)" |
+    (ValuesOperandPredicate_BoolOperand_list P Es)" |
   "ValuesOperandPredicate_BoolOperand_list _ [] = (VBBConstOp False)" |
   "ValuesOperandPredicate_BoolOperand_list P (E # Es) = VBBOrOp  
     (ValuesOperandPredicate_BoolOperand_VB P E) 
@@ -295,8 +295,9 @@ primrec
 where
   "normalise_ValuesOperand (VBVConstOp c) = (VBVConstOp c)" |
   "normalise_ValuesOperand (VBVExpOp Es) =  (
-    let nEs = normalise_ValuesOperand_list Es
-    in let so = SingleOperand nEs
+    let 
+      nEs = normalise_ValuesOperand_list Es;
+      so = SingleOperand nEs
     in if so = None then VBVExpOp nEs else the so
   )" |
   "normalise_ValuesOperand_list [] = []" |
@@ -305,12 +306,11 @@ where
     in if nE = None then (normalise_ValuesOperand_list Es)
     else (the nE) # (normalise_ValuesOperand_list Es)
   )" |
-  "normalise_ValuesOperand_VB (VB e v) = (
-    let ne = (normalise_BoolOperand e)
-    in
-      if (ne = VBBConstOp False) then None
-      else Some (VB ne (normalise_ValuesOperand v))
-    )"
+  "normalise_ValuesOperand_VB (VB e v) = 
+  (
+    if (\<not> BoolOperand_Sat e) then None
+    else Some (VB e (normalise_ValuesOperand v))
+  )"
 
 definition normalise_expand_ValuesOperand ::
   "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand"
@@ -328,20 +328,10 @@ where
   "isExpandedNormal_ValuesOperand_list (E # Es) = 
     ((isExpandedNormal_ValuesOperand_VB E) \<and> (isExpandedNormal_ValuesOperand_list Es))" |
   "isExpandedNormal_ValuesOperand_VB (VB e v) = 
-    ((isNormal_BoolOperand e) \<and> (isExpandedNormal_ValuesOperand v))"
+    ((BoolOperand_Sat e) \<and> (isExpandedNormal_ValuesOperand v))"
 
 theorem "(v = normalise_expand_ValuesOperand v) \<longleftrightarrow> (isExpandedNormal_ValuesOperand v)"
 sorry
-
-(*
-lemma 
-  "(normalise_ValuesOperand V) \<noteq> (normalise_ValuesOperand U) \<Longrightarrow>
-  BoolOperand_eval ((ValuesOperandPredicate_BoolOperand (VBVExpOp [VB A U, VB (VBBNotOp A) V]) 
-    (\<lambda> Es. ((normalise_ValuesOperand Es) = (normalise_ValuesOperand U))))) vb
-  = (BoolOperand_eval A vb)"
-apply (auto)
-done
-*)
 
 primrec choose_values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values option 
   \<Rightarrow> ('FMode, 'vv) Values option"
@@ -367,6 +357,7 @@ done
 
 lemma "(ValuedTautology (VBVExpOp Es) vb) \<Longrightarrow> 
   (ValuesOperand_value_eval (VBVExpOp Es) vb = Some v)"
+apply (induct Es)
 apply (auto simp add: ValuedTautology_def)
 apply (auto simp add: ValuesOperand_value_eval_def)
 apply (auto simp add: choose_values_def)
@@ -374,6 +365,7 @@ apply (auto simp add: ValuedTautology_values_list_def)
 apply (auto simp add: ValuedTautology_values_nonemptylist_def)
 apply (auto simp add: fold_def)
 apply (auto simp add: ValuesOperand_values_eval_list_def)
+apply (auto simp add: ValuesOperand_values_eval_VB_def)
 sorry
 
 lemma "(ValuesOperand_values_eval (VBVExpOp [VB (VBBNotOp A) V, VB A V]) vb) = 
