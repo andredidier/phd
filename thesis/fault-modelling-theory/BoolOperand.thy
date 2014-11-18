@@ -40,16 +40,6 @@ where "VBBXorOp b1 b2 \<equiv> (VBBAndOp (VBBNandOp b1 b2) (VBBOrOp b1 b2))"
 notation (output) VBBXorOp ("_\<otimes>\<^sub>B\<^sub>O_" 70)
 notation (latex) VBBXorOp ("_\<otimes>\<^raw:$_{\mathrm{BO}}$>_" 70)
 
-value "fst (simplifyifex Map.empty 
-  (norm (IF (VIF A) (IF (VIF B) (VIF C) (VIF D)) (IF (VIF A) (VIF E) (VIF F))) ))"
-
-value "fst (simplifyifex Map.empty 
-  (norm (bool2if (VBBAndOp (VBBVarOp A) (VBBOrOp (VBBVarOp B) (VBBVarOp A))))))"
-
-value "fst (simplifyifex Map.empty (norm (bool2if (VBBAndOp (VBBNotOp (VBBVarOp A)) 
-  (VBBOrOp (VBBVarOp B) (VBBVarOp A))))))"
-
-
 (*>*)
 
 text {* Before introducing our fault modelling formalisation, we define new datatypes and slight 
@@ -68,176 +58,184 @@ For example, to express an @{term "(op \<or>) A B"}, we use the expression
 Following this idea, we introduce our datatype @{typ "'VarNames BoolOperand"}
   *}
 
-definition normalise_BoolOperand :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
+datatype 'vb ifex = 
+  CIF bool ("_\<^sub>i\<^sub>f") 
+  | VIF 'vb ("\<lbrakk>_\<rbrakk>\<^sub>i\<^sub>f") 
+  | IF "'vb ifex" "'vb ifex" "'vb ifex" ("'(_')\<^sub>C '& '(_')\<^sub>T '(_')\<^sub>F")
+
+primrec bool2if :: "'vb BoolOperand \<Rightarrow> 'vb ifex"
 where
-  "normalise_BoolOperand b = b"
+  "bool2if (VBBConstOp c) = CIF c" |
+  "bool2if (VBBVarOp v) = VIF v" |
+  "bool2if (VBBNotOp b) = IF (bool2if b) (CIF False) (CIF True)" |
+  "bool2if (VBBAndOp b1 b2) = IF (bool2if b1) (bool2if b2) (CIF False)"
 
-definition isNormal_BoolOperand :: "'vb BoolOperand \<Rightarrow> bool"
+primrec normif :: "'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex"
 where
-  "isNormal_BoolOperand BOp \<equiv> False" 
+  "normif (CIF c) t e = IF (CIF c) t e" |
+  "normif (VIF v) t e = IF (VIF v) t e" |
+  "normif (IF b t e) u f = normif b (normif t u f) (normif e u f)"
 
-primrec "BoolOperand_eval" :: "'vb BoolOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" where
-  "BoolOperand_eval (VBBConstOp b) vb = b" |
-  "BoolOperand_eval (VBBVarOp a) vb = vb a" |
-  "BoolOperand_eval (VBBNotOp op1) vb = (\<not> (BoolOperand_eval op1 vb))" |
-  "BoolOperand_eval (VBBAndOp op1 op2) vb = 
-    ((BoolOperand_eval op1 vb) \<and> (BoolOperand_eval op2 vb))"
+primrec normifex :: "'vb ifex \<Rightarrow> 'vb ifex"
+where
+  "normifex (CIF c) = CIF c" |
+  "normifex (VIF v) = VIF v" |
+  "normifex (IF b t e) = normif b (normifex t) (normifex e)"
 
-(*<*) (* Lemas de sanidade *)
-text {* True \<or> False = True *}
-
-lemma "normalise_BoolOperand (VBBOrOp (VBBConstOp True) (VBBConstOp False)) = VBBConstOp True"
-apply (simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-done
-
-text {* False \<and> True = False *}
-
-lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp False) (VBBConstOp True)) = VBBConstOp False"
-apply (simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-done
-
-text {* False \<or> True = False *}
-
-lemma "normalise_BoolOperand (VBBOrOp (VBBConstOp False) (VBBConstOp True)) = VBBConstOp True"
-apply (auto simp add: normalise_BoolOperand_def )
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-done
-
-text {* True \<and> False = False *}
-
-lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp True) (VBBConstOp False)) = VBBConstOp False"
-apply (simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-done
-
-text {* \<not> False \<or> False = True *}
-
-lemma "normalise_BoolOperand (VBBOrOp (VBBNotOp (VBBConstOp False)) (VBBConstOp False)) = VBBConstOp True"
-apply (simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-done
-
-text {* \<not> True \<and> True = False *}
-
-lemma "normalise_BoolOperand (VBBAndOp (VBBNotOp (VBBConstOp True)) (VBBConstOp True)) = VBBConstOp False"
-apply (simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-done
-
-text {* \<not> True \<or> True = False *}
-
-lemma "normalise_BoolOperand (VBBOrOp (VBBNotOp (VBBConstOp True)) (VBBConstOp True)) = VBBConstOp True"
-apply (simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-done
-
-text {* True \<and> False = False *}
-
-lemma "normalise_BoolOperand (VBBAndOp (VBBConstOp True) (VBBConstOp False)) = VBBConstOp False"
-apply (simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-done
-
-lemma "(normalise_BoolOperand (VBBAndOp (VBBConstOp True) (VBBVarOp B))) = VBBVarOp B"
-apply (auto simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-done
-
-lemma "\<lbrakk> A \<noteq> B;b = VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBVarOp B) \<rbrakk> \<Longrightarrow>
-  normalise_BoolOperand b = b"
-apply (auto simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
-apply (auto simp add: RemoveConsts_BoolOperands_def)
-apply (auto simp add: Let_def)
-done
-
-lemma "\<lbrakk> A \<noteq> B \<rbrakk> \<Longrightarrow> normalise_BoolOperand 
+primrec simpif_env :: "
+  'vb ifex \<Rightarrow> ('vb \<rightharpoonup> bool) \<Rightarrow>
+  'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 
+  'vb ifex"
+where
+  "simpif_env (CIF c) env t e = (if c then t else e)" |
+  "simpif_env (VIF v) env t e = 
   (
-    VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))
-  ) = 
-  (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBVarOp B))"
-apply (simp add: normalise_BoolOperand_def)
-apply (simp add: RemoveSame_BoolOperands_def)
-apply (simp add: RemoveSimmetric_BoolOperands_def)
-apply (simp add: Let_def)
-done
+    case (env v) of
+      None \<Rightarrow> (IF (VIF v) t e) |
+      Some c \<Rightarrow> (if c then t else e)
+  )" |
+  "simpif_env (IF b t e) env u f = (IF (IF b t e) u f)"
 
+primrec buildifex_env :: "'vb ifex \<Rightarrow> ('vb \<rightharpoonup> bool) \<Rightarrow> ('vb \<rightharpoonup> bool)"
+where
+  "buildifex_env (CIF c) env = env" |
+  "buildifex_env (VIF v) env = (env (v \<mapsto> True))" |
+  "buildifex_env (IF b t e) env = env"
 
-lemma "\<lbrakk> A \<noteq> B \<rbrakk> \<Longrightarrow> normalise_BoolOperand 
+primrec simpifex_env :: "'vb ifex \<Rightarrow> ('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex"
+where
+  "simpifex_env (CIF c) env = CIF c" |
+  "simpifex_env (VIF v) env = 
   (
-    VBBAndOp 
-      (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))) 
-      (VBBAndOp (VBBVarOp A) (VBBNotOp (VBBVarOp B)))
-  ) = 
+    case (env v) of
+      None \<Rightarrow> VIF v |
+      Some c \<Rightarrow> CIF c
+  )" |
+  "simpifex_env (IF b t e) env = 
   (
-    VBBConstOp True
+    let
+      nenv = buildifex_env b env;
+      b_simp_env = simpifex_env b;
+      t_simp = simpifex_env t nenv;
+      e_simp = simpifex_env e (apply_map nenv Not);
+      r = simpif_env (b_simp_env env) env t_simp e_simp
+    in 
+      case t_simp of
+        CIF tc \<Rightarrow> 
+        (
+          case e_simp of
+            CIF ec \<Rightarrow> 
+              if tc \<and> \<not> ec 
+                then (b_simp_env env) 
+                else if (\<not> tc \<and> ec)
+                then (b_simp_env (apply_map env Not))
+                else if tc = ec then (CIF tc)
+                else r |
+            _ \<Rightarrow> r
+        ) |
+        VIF tv \<Rightarrow>
+        (
+          case e_simp of
+            VIF ev \<Rightarrow> if tv = ev then VIF tv else r |
+            _ \<Rightarrow> r
+        ) |
+        _ \<Rightarrow> r
   )"
-apply (auto simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def)
-apply (auto simp add: Let_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def)
+
+definition simpifex :: "'vb ifex \<Rightarrow> 'vb ifex"
+where
+  "simpifex b \<equiv> simpifex_env (normifex b) Map.empty"
+
+lemma "\<lbrakk> A \<noteq> B \<rbrakk> \<Longrightarrow>
+  simpifex (IF (VIF A) (IF (VIF B) (CIF True) (CIF False)) (IF (VIF A) (CIF True) (CIF False))) 
+  = IF (VIF A) (VIF B) (CIF False)"
+apply (auto simp add: simpifex_def apply_map_def)
 done
 
-(* Fim dos lemas de sanidade. *) (*>*)
+definition BoolOperand_simplify :: 
+  "'vb BoolOperand \<Rightarrow> 'vb ifex"
+where
+  "BoolOperand_simplify b \<equiv> simpifex (bool2if b)"
 
-theorem normalise_isNormal: "(BOp = normalise_BoolOperand BOp) \<longleftrightarrow> (isNormal_BoolOperand BOp)"
-sorry
+lemma "\<lbrakk> A \<noteq> B \<rbrakk> \<Longrightarrow>
+  BoolOperand_simplify (VBBAndOp (VBBVarOp A) (VBBAndOp (VBBVarOp B) (VBBVarOp A))) = 
+  IF (VIF A) (VIF B) (CIF False)"
+apply (auto simp add: BoolOperand_simplify_def simpifex_def)
+done
 
-lemma eval_norm_l1: "
-  BoolOperand_eval (normalise_BoolOperandNot (normalise_BoolOperand BOp)) vb = 
-  (\<not> (BoolOperand_eval BOp vb))"
-sorry
-
-lemma eval_norm_l2: "BoolOperand_eval (normalise_BoolOperandAnd 
-  (normalise_BoolOperand BOp1) (normalise_BoolOperand BOp2)) vb = 
-  ((BoolOperand_eval BOp1 vb) \<and> (BoolOperand_eval BOp2 vb))"
-apply (auto)
-sorry
-
-theorem eval_norm: "BoolOperand_eval BOp vb = BoolOperand_eval (normalise_BoolOperand BOp) vb"
-apply (case_tac BOp)
-apply (auto simp add: normalise_BoolOperand_def)
-apply (auto simp add: RemoveSame_BoolOperands_def RemoveSame_BoolOperandsPair_def)
-apply (auto simp add: RemoveSimmetric_BoolOperands_def RemoveSimmetric_BoolOperandsPair_def)
-apply (auto simp add: RemoveConsts_BoolOperands_def)
-apply (auto simp add: BoolOperand_eval_def)
-(*apply (simp add: eval_norm_l1)
-apply (simp add: eval_norm_l2)*)
-sorry
+primrec BoolOperand_eval :: "'vb BoolOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool"
+where
+  "BoolOperand_eval (VBBConstOp c) _ = c" |
+  "BoolOperand_eval (VBBVarOp v) env = (env v)" |
+  "BoolOperand_eval (VBBNotOp b) env = (\<not> BoolOperand_eval b env)" |
+  "BoolOperand_eval (VBBAndOp b1 b2) env = 
+    ((BoolOperand_eval b1 env) \<and> (BoolOperand_eval b2 env))"
 
 definition BoolOperand_Tautology :: "'vb BoolOperand \<Rightarrow> bool"
-where
-  "BoolOperand_Tautology b \<equiv> (RemoveSimmetric_BoolOperands (BoolOperand_Ands b) = {})"
+where "BoolOperand_Tautology b \<equiv> (BoolOperand_simplify b = CIF True)"
 
-value "normalise_BoolOperand (
-      VBBAndOp 
-        (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))) 
-        (VBBAndOp (VBBVarOp A) (VBBNotOp (VBBVarOp B)))
-  )"
-value "normalise_BoolOperand (
-        (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))) 
-  )"
+value "simpifex (normifex (bool2if (VBBOrOp (VBBConstOp False) (VBBConstOp True))))"
 
-lemma "\<lbrakk> A \<noteq> B \<rbrakk> \<Longrightarrow> 
-  BoolOperand_Tautology
+lemma " 
+  (BoolOperand_simplify
+  (
+        VBBOrOp (VBBConstOp False) (VBBConstOp True)
+  )) = (CIF True)"
+quickcheck
+(*apply (auto simp add: BoolOperand_Tautology_def)*)
+apply (auto simp add: BoolOperand_simplify_def)
+apply (auto simp add: simpifex_def)
+done
+
+lemma " 
+  (BoolOperand_simplify
+  (
+        VBBOrOp (VBBNotOp (VBBVarOp A)) (VBBVarOp A)
+  )) = (CIF True)"
+(*apply (auto simp add: BoolOperand_Tautology_def)*)
+apply (auto simp add: BoolOperand_simplify_def)
+apply (auto simp add: simpifex_def)
+apply (auto simp add: apply_map_def)
+done
+
+lemma " 
+  (BoolOperand_simplify
+  (
+        VBBOrOp (VBBVarOp A) (VBBNotOp (VBBVarOp A))
+  )) = (CIF True)"
+quickcheck
+(*apply (auto simp add: BoolOperand_Tautology_def)*)
+apply (auto simp add: BoolOperand_simplify_def)
+apply (auto simp add: simpifex_def)
+apply (auto simp add: apply_map_def)
+done
+
+lemma " 
+  (BoolOperand_simplify
   (
       VBBAndOp 
-        (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBAndOp (VBBConstOp True) (VBBVarOp B))) 
-        (VBBAndOp (VBBVarOp A) (VBBNotOp (VBBVarOp B)))
-  ) "
-apply (auto simp add: BoolOperand_Tautology_def RemoveSimmetric_BoolOperands_def)
+        (VBBOrOp (VBBVarOp A) (VBBNotOp (VBBVarOp A)))
+        (VBBOrOp (VBBNotOp (VBBVarOp A)) (VBBVarOp A))
+  )) = (CIF True)"
+quickcheck
+(*apply (auto simp add: BoolOperand_Tautology_def)*)
+apply (auto simp add: BoolOperand_simplify_def)
+apply (auto simp add: simpifex_def)
+apply (auto simp add: apply_map_def)
+done
+
+lemma "\<lbrakk> A \<noteq> B \<rbrakk> \<Longrightarrow> 
+  (BoolOperand_simplify
+  (
+      VBBOrOp 
+        (VBBOrOp (VBBVarOp A) (VBBVarOp B)) 
+        (VBBAndOp (VBBNotOp (VBBVarOp A)) (VBBNotOp (VBBVarOp B)))
+  )) = (CIF True)"
+quickcheck
+(*apply (auto simp add: BoolOperand_Tautology_def)*)
+apply (auto simp add: BoolOperand_simplify_def)
+apply (auto simp add: simpifex_def)
+apply (auto simp add: apply_map_def)
 done
 
 end
