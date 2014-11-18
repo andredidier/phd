@@ -28,81 +28,17 @@ where "VBBOrOp b1 b2 \<equiv> VBBNotOp (VBBAndOp (VBBNotOp b1) (VBBNotOp b2))"
 notation (output) VBBOrOp ("_\<or>\<^sub>B\<^sub>O_" 70)
 notation (latex) VBBOrOp ("_+\<^raw:$_{\mathrm{BO}}$>_" 70)
 
-datatype_new 'vb ifex = 
-  CIF bool 
-  | VIF "'vb"
-  | IF "'vb ifex" "'vb ifex" "'vb ifex"
+abbreviation VBBNandOp :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
+where "VBBNandOp b1 b2 \<equiv> (VBBNotOp (VBBAndOp b1 b2))"
 
-primrec bool2if :: "'vb BoolOperand \<Rightarrow> 'vb ifex"
-where
-  "bool2if (VBBConstOp c) = CIF c" |
-  "bool2if (VBBVarOp v) = VIF v" |
-  "bool2if (VBBNotOp b) = IF (bool2if b) (CIF False) (CIF True)" |
-  "bool2if (VBBAndOp b1 b2) = IF (bool2if b1) (bool2if b2) (CIF False)"
+notation (output) VBBNandOp ("_\<^sup>\<not>\<and>\<^sub>B\<^sub>O_" 70)
+notation (latex) VBBNandOp ("_\<^sup>\<not>\<and>\<^raw:$_{\mathrm{BO}}$>_" 70)
 
-primrec normif :: "'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex"
-where
-  "normif (CIF c) t e = IF (CIF c) t e" |
-  "normif (VIF v) t e = IF (VIF v) t e" |
-  "normif (IF b t e) u f = normif b (normif t u f) (normif e u f)"
+abbreviation VBBXorOp :: "'vb BoolOperand \<Rightarrow> 'vb BoolOperand \<Rightarrow> 'vb BoolOperand"
+where "VBBXorOp b1 b2 \<equiv> (VBBAndOp (VBBNandOp b1 b2) (VBBOrOp b1 b2))"
 
-primrec norm :: "'vb ifex \<Rightarrow> 'vb ifex"
-where
-  "norm (CIF c) = (CIF c)" |
-  "norm (VIF v) = (VIF v)" |
-  "norm (IF b t e) = normif b (norm t) (norm e)"
-
-primrec buildenvif :: "('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex \<Rightarrow> ('vb \<rightharpoonup> bool)"
-where
-  "buildenvif env (CIF c) = env" |
-  "buildenvif env (VIF v) = env ++ [v \<mapsto> True]" |
-  "buildenvif env (IF b t e) = env"
-
-primrec simplifyif :: "('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex \<Rightarrow> 'vb ifex"
-where
-  "simplifyif env (CIF c) t e = (if c then t else e)" |
-  "simplifyif env (VIF v) t e = 
-  (
-    case (env v) of
-      None \<Rightarrow> (IF (VIF v) t e) |
-      Some c \<Rightarrow> (if c then t else e)
-  )" |
-  "simplifyif env (IF b t e) u f =  
-    (
-      let
-        nenv = buildenvif env b;
-        positive = simplifyif nenv t u f;
-        negative = simplifyif (apply_map nenv Not) e u f
-      in simplifyif nenv b positive negative
-    )"
-
-primrec simplifyifex :: "('vb \<rightharpoonup> bool) \<Rightarrow> 'vb ifex \<Rightarrow> ('vb ifex \<times> ('vb \<rightharpoonup> bool))"
-where
-  "simplifyifex env (CIF c) = (CIF c, env)" |
-  "simplifyifex env (VIF v) = 
-  (
-    let
-      nv = case (env v) of None \<Rightarrow> (VIF v) | Some c \<Rightarrow> CIF c
-    in (nv, env)
-  )" |
-  "simplifyifex env (IF b t e) = 
-  (
-    let
-      nenv = buildenvif env b;
-      nt = simplifyifex nenv t;
-      ne = simplifyifex (apply_map nenv Not) e;
-      result = simplifyif nenv (IF b t e) (fst nt) (fst ne) 
-    in (result, nenv)
-  )"
-
-lemma "\<lbrakk> A \<noteq> C; A \<noteq> D; C \<noteq> D \<rbrakk> \<Longrightarrow> 
-  fst (simplifyifex Map.empty 
-    (norm (IF (VIF A) (IF (VIF A) (VIF C) (VIF D)) (CIF False)) )) 
-  = 
-  IF (VIF A) (VIF C) (CIF False)"
-quickcheck
-apply (auto)
-done
+notation (output) VBBXorOp ("_\<otimes>\<^sub>B\<^sub>O_" 70)
+notation (latex) VBBXorOp ("_\<otimes>\<^raw:$_{\mathrm{BO}}$>_" 70)
 
 value "fst (simplifyifex Map.empty 
   (norm (IF (VIF A) (IF (VIF B) (VIF C) (VIF D)) (IF (VIF A) (VIF E) (VIF F))) ))"
