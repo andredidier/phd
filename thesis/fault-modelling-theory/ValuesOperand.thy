@@ -80,10 +80,6 @@ definition ValuedTautology :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('
 where
   "ValuedTautology v vb \<equiv> ValuedTautology_values_list (ValuesOperand_values_eval v vb)"
 
-lemma [simp]: "(BoolOperand_eval A vb) \<or> (BoolOperand_eval (VBBNotOp A) vb)"
-apply (simp)
-done
-
 lemma  [simp]: "
   \<lbrakk>
     ValuesOperand_values_eval U vb \<noteq> [];
