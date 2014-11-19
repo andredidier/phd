@@ -1,6 +1,6 @@
 theory ValuesOperand
 
-imports BoolOperand Complex_Main FaultModellingTypes
+imports ValueCondition Complex_Main FaultModellingTypes
 
 begin
 
@@ -13,7 +13,7 @@ datatype_new ('vb, 'FMode, 'vv) ValuesOperand =
   VBVConstOp "('FMode, 'vv) Values"
   | VBVExpOp "('vb, 'FMode, 'vv) ValuedBool list" and
   ('vb, 'FMode, 'vv) ValuedBool = 
-    VB (VBE:"'vb BoolOperand") (VBV:"('vb, 'FMode, 'vv) ValuesOperand")
+    VB (VBE:"'vb ValueCondition") (VBV:"('vb, 'FMode, 'vv) ValuesOperand")
 
 notation (output) FMNominal ("_\<^sub>N" 40)
 notation (output) FMFailure ("_\<^sub>F" 41)
@@ -34,7 +34,7 @@ where
   "ValuesOperand_bool_eval_list [] vb = False" |
   "ValuesOperand_bool_eval_list (E # Es) vb = 
     ((ValuesOperand_bool_eval_VB E vb) \<or> (ValuesOperand_bool_eval_list Es vb))" |
-  "ValuesOperand_bool_eval_VB (VB e v) vb = (BoolOperand_eval e vb)"
+  "ValuesOperand_bool_eval_VB (VB e v) vb = (ValueCondition_eval e vb)"
 
 primrec choose_value :: "('FMode, 'vv) Values option binop" where
   "choose_value None vo = vo" |
@@ -62,7 +62,7 @@ where
   "ValuesOperand_values_eval_list (E # Es) vb = 
     (ValuesOperand_values_eval_VB E vb) @ (ValuesOperand_values_eval_list Es vb)" |
   "ValuesOperand_values_eval_VB (VB e v) vb = 
-    (if (BoolOperand_eval e vb) then (ValuesOperand_values_eval v vb) else [])"
+    (if (ValueCondition_eval e vb) then (ValuesOperand_values_eval v vb) else [])"
 
 primrec ValuedTautology_values_nonemptylist :: 
   "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values list \<Rightarrow> bool"
@@ -86,7 +86,7 @@ lemma  [simp]: "
     ValuesOperand_values_eval V vb \<noteq> []
   \<rbrakk> 
   \<Longrightarrow> 
-  (ValuesOperand_values_eval (VBVExpOp [VB A U, VB (VBBNotOp A) V]) vb) \<noteq> []"
+  (ValuesOperand_values_eval (VBVExpOp [VB A U, VB (VCNotOp A) V]) vb) \<noteq> []"
 apply (simp)
 done
 
@@ -96,7 +96,7 @@ theorem [simp]: "
     ValuedTautology V vb
   \<rbrakk> 
   \<Longrightarrow> 
-  ValuedTautology (VBVExpOp [VB A U, VB (VBBNotOp A) V]) vb"
+  ValuedTautology (VBVExpOp [VB A U, VB (VCNotOp A) V]) vb"
 apply (simp add: ValuedTautology_def)
 done
 
@@ -126,44 +126,44 @@ lemma valued_tautology_or :
     ValuedTautology U vb;
     ValuedTautology V vb;
     ValuedTautology Q vb;
-    ((BoolOperand_eval A vb \<and> BoolOperand_eval B vb) \<longrightarrow> U = V)
+    ((ValueCondition_eval A vb \<and> ValueCondition_eval B vb) \<longrightarrow> U = V)
    \<rbrakk>
    \<Longrightarrow> 
-   ValuedTautology (VBVExpOp [VB A U, VB B V, VB (VBBAndOp (VBBNotOp A) (VBBNotOp B)) Q]) vb"
+   ValuedTautology (VBVExpOp [VB A U, VB B V, VB (VCAndOp (VCNotOp A) (VCNotOp B)) Q]) vb"
 apply (simp add: ValuedTautology_def)
 done
 
 lemma not_valued_tautology1 : "
-(\<not> (BoolOperand_eval A vb)) \<Longrightarrow> 
+(\<not> (ValueCondition_eval A vb)) \<Longrightarrow> 
   (\<not> ValuedTautology (VBVExpOp [VB A U]) vb)"
 apply (auto)
 apply (auto simp add: ValuedTautology_def)
 done
 
 lemma not_valued_tautology2 : 
-  "(\<not> (BoolOperand_eval A vb) \<and> \<not> (BoolOperand_eval B vb)) \<Longrightarrow> 
+  "(\<not> (ValueCondition_eval A vb) \<and> \<not> (ValueCondition_eval B vb)) \<Longrightarrow> 
   \<not> ValuedTautology (VBVExpOp [VB A U, VB B V]) vb"
 apply (auto)
 apply (auto simp add: ValuedTautology_def)
 done
 
 primrec 
-  ValuesOperandPredicate_BoolOperand :: "(('FMode, 'vv) Values \<Rightarrow> bool) \<Rightarrow> 
-    ('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> 'vb BoolOperand" and
-  ValuesOperandPredicate_BoolOperand_list :: "(('FMode, 'vv) Values \<Rightarrow> bool) \<Rightarrow> 
-    ('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> 'vb BoolOperand" and
-  ValuesOperandPredicate_BoolOperand_VB :: "(('FMode, 'vv) Values \<Rightarrow> bool) \<Rightarrow> 
-    ('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> 'vb BoolOperand"
+  ValuesOperandPredicate_ValueCondition :: "(('FMode, 'vv) Values \<Rightarrow> bool) \<Rightarrow> 
+    ('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> 'vb ValueCondition" and
+  ValuesOperandPredicate_ValueCondition_list :: "(('FMode, 'vv) Values \<Rightarrow> bool) \<Rightarrow> 
+    ('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> 'vb ValueCondition" and
+  ValuesOperandPredicate_ValueCondition_VB :: "(('FMode, 'vv) Values \<Rightarrow> bool) \<Rightarrow> 
+    ('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> 'vb ValueCondition"
 where
-  "ValuesOperandPredicate_BoolOperand P (VBVConstOp c) = (VBBConstOp (P c))" |
-  "ValuesOperandPredicate_BoolOperand P (VBVExpOp Es) = 
-    (ValuesOperandPredicate_BoolOperand_list P Es)" |
-  "ValuesOperandPredicate_BoolOperand_list _ [] = (VBBConstOp False)" |
-  "ValuesOperandPredicate_BoolOperand_list P (E # Es) = VBBOrOp  
-    (ValuesOperandPredicate_BoolOperand_VB P E) 
-    (ValuesOperandPredicate_BoolOperand_list P Es)" |
-  "ValuesOperandPredicate_BoolOperand_VB P (VB e v) = 
-    VBBAndOp e (ValuesOperandPredicate_BoolOperand P v)"
+  "ValuesOperandPredicate_ValueCondition P (VBVConstOp c) = (VCConstOp (P c))" |
+  "ValuesOperandPredicate_ValueCondition P (VBVExpOp Es) = 
+    (ValuesOperandPredicate_ValueCondition_list P Es)" |
+  "ValuesOperandPredicate_ValueCondition_list _ [] = (VCConstOp False)" |
+  "ValuesOperandPredicate_ValueCondition_list P (E # Es) = VCOrOp  
+    (ValuesOperandPredicate_ValueCondition_VB P E) 
+    (ValuesOperandPredicate_ValueCondition_list P Es)" |
+  "ValuesOperandPredicate_ValueCondition_VB P (VB e v) = 
+    VCAndOp e (ValuesOperandPredicate_ValueCondition P v)"
 
 fun lte_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool" (infix "\<le>\<^sub>V" 50)
 where
@@ -187,29 +187,29 @@ abbreviation eq_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Valu
 where
   "eq_Values a b \<equiv> (lte_Values a b \<and> gte_Values a b)"
 
-value "ValuesOperandPredicate_BoolOperand 
+value "ValuesOperandPredicate_ValueCondition 
   (lte_Values (FMNominal 2))   (VBVExpOp [
-    VB (VBBVarOp A) (VBVConstOp (FMFailure F1)),
-    VB (VBBNotOp (VBBVarOp A)) (VBVConstOp (FMNominal 5))
+    VB (VCVarOp A) (VBVConstOp (FMFailure F1)),
+    VB (VCNotOp (VCVarOp A)) (VBVConstOp (FMNominal 5))
   ]) 
   "
 
 primrec 
-  apply_BoolOperand :: 
-    "'vb BoolOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool list" and
-  apply_BoolOperand_list :: 
-    "'vb BoolOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> 
+  apply_ValueCondition :: 
+    "'vb ValueCondition \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool list" and
+  apply_ValueCondition_list :: 
+    "'vb ValueCondition \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> 
       ('vb, 'FMode, 'vv) ValuedBool list" and
-  apply_BoolOperand_VB :: 
-    "'vb BoolOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool"
+  apply_ValueCondition_VB :: 
+    "'vb ValueCondition \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool"
 where
-  "apply_BoolOperand e (VBVConstOp c) = (VB e (VBVConstOp c)) # []" |
-  expand_BoolOperand_ValuesOperand_VBExpOp:
-  "apply_BoolOperand e (VBVExpOp Es) = apply_BoolOperand_list e Es" |
-  "apply_BoolOperand_list e [] = []" |
-  "apply_BoolOperand_list e (E # Es) = 
-    (apply_BoolOperand_VB e E) # (apply_BoolOperand_list e Es)" |
-  "apply_BoolOperand_VB e1 (VB e2 v2) = VB (VBBAndOp e1 e2) v2"
+  "apply_ValueCondition e (VBVConstOp c) = (VB e (VBVConstOp c)) # []" |
+  expand_ValueCondition_ValuesOperand_VBExpOp:
+  "apply_ValueCondition e (VBVExpOp Es) = apply_ValueCondition_list e Es" |
+  "apply_ValueCondition_list e [] = []" |
+  "apply_ValueCondition_list e (E # Es) = 
+    (apply_ValueCondition_VB e E) # (apply_ValueCondition_list e Es)" |
+  "apply_ValueCondition_VB e1 (VB e2 v2) = VB (VCAndOp e1 e2) v2"
 
 
 primrec 
@@ -228,32 +228,32 @@ where
     (expand_ValuesOperand_VB e) @ (expand_ValuesOperand_list E)" |
   "expand_ValuesOperand_VB (VB e v) = (
     case v of
-      (VBVExpOp E2) \<Rightarrow> (apply_BoolOperand e (expand_ValuesOperand v)) |
+      (VBVExpOp E2) \<Rightarrow> (apply_ValueCondition e (expand_ValuesOperand v)) |
       _ \<Rightarrow> [VB e (expand_ValuesOperand v)]
   )"
 
 value "expand_ValuesOperand (
-  VBVExpOp [VB (VBBVarOp v1) (
+  VBVExpOp [VB (VCVarOp v1) (
       VBVExpOp [
-        VB (VBBVarOp v2) (VBVExpOp [
-          VB (VBBVarOp v3) (VBVVarOp v4)
+        VB (VCVarOp v2) (VBVExpOp [
+          VB (VCVarOp v3) (VBVVarOp v4)
         ])
       ]
     )]
   )"
 
 lemma "expand_ValuesOperand (
-  VBVExpOp [VB (VBBVarOp v1) (
+  VBVExpOp [VB (VCVarOp v1) (
       VBVExpOp [
-        VB (VBBVarOp v2) (VBVExpOp [
-          VB (VBBVarOp v3) (VBVConstOp v4)
+        VB (VCVarOp v2) (VBVExpOp [
+          VB (VCVarOp v3) (VBVConstOp v4)
         ])
       ]
     )]
   ) = 
   (VBVExpOp [
     VB 
-      (VBBAndOp (VBBVarOp v1) (VBBAndOp (VBBVarOp v2) (VBBVarOp v3)))
+      (VCAndOp (VCVarOp v1) (VCAndOp (VCVarOp v2) (VCVarOp v3)))
       (VBVConstOp v4)
   ])"
 apply (auto)
@@ -304,7 +304,7 @@ where
   )" |
   "normalise_ValuesOperand_VB (VB e v) = 
   (
-    if (\<not> BoolOperand_Sat e) then None
+    if (\<not> ValueCondition_Sat e) then None
     else Some (VB e (normalise_ValuesOperand v))
   )"
 
@@ -324,7 +324,7 @@ where
   "isExpandedNormal_ValuesOperand_list (E # Es) = 
     ((isExpandedNormal_ValuesOperand_VB E) \<and> (isExpandedNormal_ValuesOperand_list Es))" |
   "isExpandedNormal_ValuesOperand_VB (VB e v) = 
-    ((BoolOperand_Sat e) \<and> (isExpandedNormal_ValuesOperand v))"
+    ((ValueCondition_Sat e) \<and> (isExpandedNormal_ValuesOperand v))"
 
 theorem "(v = normalise_expand_ValuesOperand v) \<longleftrightarrow> (isExpandedNormal_ValuesOperand v)"
 sorry
@@ -342,8 +342,8 @@ where
     fold choose_values (ValuesOperand_values_eval Es vb) None"
 
 value "ValuesOperand_value_eval (VBVExpOp [
-  VB (VBBVarOp A) (VBVConstOp U), 
-  VB (VBBVarOp B) (VBVConstOp U)] ) vb"
+  VB (VCVarOp A) (VBVConstOp U), 
+  VB (VCVarOp B) (VBVConstOp U)] ) vb"
 
 lemma [simp]: "(ValuedTautology (VBVExpOp Es) vb) \<Longrightarrow> 
   (length (ValuesOperand_values_eval (VBVExpOp Es) vb) > 0)"
@@ -364,7 +364,7 @@ apply (auto simp add: ValuesOperand_values_eval_list_def)
 apply (auto simp add: ValuesOperand_values_eval_VB_def)
 sorry
 
-lemma "(ValuesOperand_values_eval (VBVExpOp [VB (VBBNotOp A) V, VB A V]) vb) = 
+lemma "(ValuesOperand_values_eval (VBVExpOp [VB (VCNotOp A) V, VB A V]) vb) = 
   ValuesOperand_values_eval V vb"
 apply (auto)
 done

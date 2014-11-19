@@ -1,7 +1,7 @@
 (*<*)
 theory FaultModelling
 
-imports BoolOperand ValuesOperand
+imports ValueCondition ValuesOperand
 
 begin
 (*>*)
@@ -9,7 +9,7 @@ begin
 isabelle mkroot -d fault-modelling-theory/ 
 e
 isabelle build -D fault-modelling-theory/
-text {* First test: @{term "VBBVarOp v\<^sub>1"} and @{term "VBBNotOp (VBBVarOp A)"} *}
+text {* First test: @{term "VCVarOp v\<^sub>1"} and @{term "VCNotOp (VCVarOp A)"} *}
 *)
 
 type_synonym 'PortName CInput = 'PortName

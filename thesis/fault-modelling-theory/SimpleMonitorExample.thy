@@ -24,37 +24,37 @@ definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarr
   [
     OutP \<mapsto> 
       VBVExpOp [ 
-        VB (VBBVarOp (FB)) (VBVConstOp (FMFailure Omission)),
-        VB (VBBNotOp (VBBVarOp (FB))) (VBVConstOp (FMNominal 5))
+        VB (VCVarOp (FB)) (VBVConstOp (FMFailure Omission)),
+        VB (VCNotOp (VCVarOp (FB))) (VBVConstOp (FMNominal 5))
       ]
   ]"
 
 definition Monitor :: " 
-  ((FailureVarName, FMode, ComponentPortName) ValuesOperand \<Rightarrow> FailureVarName BoolOperand) \<Rightarrow> 
+  ((FailureVarName, FMode, ComponentPortName) ValuesOperand \<Rightarrow> FailureVarName ValueCondition) \<Rightarrow> 
   (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
   "Monitor P \<equiv>  \<lambda> m.
   [ 
     OutMon \<mapsto>
       VBVExpOp [
         VB 
-          (VBBAndOp 
-            (VBBNotOp (VBBVarOp FMon))
+          (VCAndOp 
+            (VCNotOp (VCVarOp FMon))
             (P (m In1Mon)))
           (m In1Mon),
         VB 
-          (VBBAndOp 
-            (VBBNotOp (VBBVarOp FMon))
-            (VBBNotOp (P (m In1Mon))))
+          (VCAndOp 
+            (VCNotOp (VCVarOp FMon))
+            (VCNotOp (P (m In1Mon))))
           (m In2Mon),
         VB 
-          (VBBAndOp 
-            (VBBVarOp FMon)
+          (VCAndOp 
+            (VCVarOp FMon)
             (P (m In1Mon)))
           (m In2Mon),
         VB 
-          (VBBAndOp 
-            (VBBVarOp FMon)
-            (VBBNotOp (P (m In1Mon))))
+          (VCAndOp 
+            (VCVarOp FMon)
+            (VCNotOp (P (m In1Mon))))
           (m In1Mon)
       ]
   ]"
@@ -71,7 +71,7 @@ where
     Battery OutB1 FB1, 
     Battery OutB2 FB2, 
     Monitor 
-      (ValuesOperandPredicate_BoolOperand (lte_Values (FMNominal 2)))
+      (ValuesOperandPredicate_ValueCondition (lte_Values (FMNominal 2)))
   ]"
 
 definition SMon :: 
@@ -87,23 +87,23 @@ where
 
 value "SMon_OutMon"
 
-value "normalise_BoolOperand 
-  (ValuesOperandPredicate_BoolOperand (eq_Values (FMFailure Omission)) SMon_OutMon)"
+value "normalise_ValueCondition 
+  (ValuesOperandPredicate_ValueCondition (eq_Values (FMFailure Omission)) SMon_OutMon)"
 
 lemma "
-  BoolOperand_eval (
-    ValuesOperandPredicate_BoolOperand (eq_Values (FMFailure Omission)) SMon_OutMon
+  ValueCondition_eval (
+    ValuesOperandPredicate_ValueCondition (eq_Values (FMFailure Omission)) SMon_OutMon
   ) vb
   =
-  BoolOperand_eval (
-    VBBOrOp 
+  ValueCondition_eval (
+    VCOrOp 
     (
-      VBBAndOp (VBBVarOp FB1) (VBBVarOp FB2)
+      VCAndOp (VCVarOp FB1) (VCVarOp FB2)
     )
     (
-      VBBAndOp 
-        (VBBVarOp FMon) 
-        (VBBOrOp (VBBVarOp FB1) (VBBVarOp FB2))
+      VCAndOp 
+        (VCVarOp FMon) 
+        (VCOrOp (VCVarOp FB1) (VCVarOp FB2))
     )
   ) vb"
 apply (auto)
