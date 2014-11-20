@@ -9,11 +9,15 @@ datatype_new ('FMode, 'vv) Values =
   | FMFailure "'FMode"
   | FMVar (var: 'vv)
 
+
 datatype_new ('vb, 'FMode, 'vv) ValuesOperand =
   VBVConst "('FMode, 'vv) Values"
   | VBVExp "('vb, 'FMode, 'vv) ValuedBool list" and
   ('vb, 'FMode, 'vv) ValuedBool = 
     VB (VBE:"'vb ValueCondition") (VBV:"('vb, 'FMode, 'vv) ValuesOperand")
+
+type_synonym ('vb, 'FMode, 'vv) ConditionValue = 
+  "('vb ValueCondition \<times> ('FMode, 'vv) Values)"
 
 notation (output) FMNominal ("N\<langle>_\<rangle>" 40)
 notation (output) FMFailure ("F\<langle>_\<rangle>" 41)
@@ -22,36 +26,86 @@ notation (output) VBVConst  ("_" 50)
 notation (output) VBVExp ("VT _" 80)
 notation (output) VB (infix "\<surd>" 80)
 
+primrec expand_VO2CV :: "'vb ValueCondition \<Rightarrow> 
+  ('vb, 'FMode, 'vv) ConditionValue list \<Rightarrow>
+  ('vb, 'FMode, 'vv) ConditionValue list"
+where
+  "expand_VO2CV e [] = []" |
+  "expand_VO2CV e (v # vs) = (VCAnd e (fst v), snd v) # (expand_VO2CV e vs)"
+
 primrec 
-  ValuesOperand_bool_eval :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" and
-  ValuesOperand_bool_eval_list :: "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" and
-  ValuesOperand_bool_eval_VB :: "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool" 
+  VO2CV :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ConditionValue list" and
+  VO2CV_list :: "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> ('vb, 'FMode, 'vv) ConditionValue list" and
+  VO2CV_VB :: "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> ('vb, 'FMode, 'vv) ConditionValue list" 
 where
-  "ValuesOperand_bool_eval (VBVConst c) vb = True" |
-  "ValuesOperand_bool_eval (VBVExp Es) vb = (ValuesOperand_bool_eval_list Es vb)" |
-  "ValuesOperand_bool_eval_list [] vb = False" |
-  "ValuesOperand_bool_eval_list (E # Es) vb = 
-    ((ValuesOperand_bool_eval_VB E vb) \<or> (ValuesOperand_bool_eval_list Es vb))" |
-  "ValuesOperand_bool_eval_VB (VB e v) vb = (ValueCondition_eval e vb)"
+  "VO2CV (VBVConst c) = [ (VCConst True, c) ]" |
+  "VO2CV (VBVExp v) = VO2CV_list v" |
+  "VO2CV_list [] = []" |
+  "VO2CV_list (E # Es) = (VO2CV_VB E) @ (VO2CV_list Es)" |
+  "VO2CV_VB (VB e v) = expand_VO2CV e (VO2CV v)"
 
-primrec choose_value :: "('FMode, 'vv) Values option binop" where
-  "choose_value None vo = vo" |
-  "choose_value (Some v) vo = (if (Some v) = vo then vo else None)"
-
-primrec single_value :: "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> 
-  ('vb, 'FMode, 'vv) ValuedBool \<Rightarrow>
-  ('vb, 'FMode, 'vv) ValuedBool option"
+fun mkVO :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> 
+  ('vb, 'FMode, 'vv) ValuesOperand"
 where
-  "single_value [] E = (Some E)" |
-  "single_value (E1 # Es) E2 = 
-    (if (VBV E1) = (VBV E2) then (single_value Es E2) else None)" 
+  "mkVO (VBVConst c1) (VBVConst c2) = VBVConst c1" |
+  "mkVO (VBVConst c1) (VBVExp Es) = (VBVExp ((VB (VCConst True) (VBVConst c1)) # Es))" |
+  "mkVO (VBVExp Es1) (VBVExp Es2) = VBVExp (Es1 @ Es2)" |
+  "mkVO (VBVExp Es) (VBVConst c1) = (VBVExp (Es @ [VB (VCConst True) (VBVConst c1)]))" 
 
+fun CV2VO :: "('vb, 'FMode, 'vv) ConditionValue list \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand"
+where
+  "CV2VO [] = VBVExp []" |
+  "CV2VO [ cv ] = 
+  (
+    if ValueCondition_Tautology (fst cv) 
+      then VBVConst (snd cv) 
+      else VBVExp [ VB (fst cv) (VBVConst (snd cv)) ]
+  )" |
+  "CV2VO (cv # cvs) = mkVO (CV2VO [cv]) (CV2VO cvs)"
+
+definition CVList_condition :: "('vb, 'FMode, 'vv) ConditionValue list \<Rightarrow> 'vb ValueCondition"
+where
+  "CVList_condition cvs \<equiv> fold (\<lambda> a b. VCOr (fst a) b) cvs (VCConst False)"
+
+definition ValuedTautology_CVList :: "('vb, 'FMode, 'vv) ConditionValue list \<Rightarrow> bool"
+where
+  "ValuedTautology_CVList cvs \<equiv> cvs \<noteq> [] \<and>
+    ((ValueCondition_Tautology \<circ> CVList_condition) cvs) \<and>
+    (\<forall> i j. 
+      (i < length cvs) \<and> (j < length cvs) \<and>
+      (
+        let ei = fst (cvs!i); ej = fst (cvs!j); vi = snd (cvs!i); vj = snd (cvs!j)
+        in ValueCondition_Sat (VCAnd ei ej) \<longrightarrow> vi = vj
+      )
+    )"
+
+definition CVList_eval_values :: 
+  "('vb, 'FMode, 'vv) ConditionValue list \<Rightarrow> 
+  'vb VCEnv \<Rightarrow> 
+  ('FMode, 'vv) Values list"
+where
+  "CVList_eval_values cvs s \<equiv> 
+  (
+    let 
+      filtercvs = filter (\<lambda> cv. ValueCondition_eval (fst cv) s);
+      getvalue = map snd;
+      filterValue = (\<lambda> vs. if vs = [] then [] else (filter (\<lambda> v. v = hd vs) vs))
+    in (filterValue \<circ> getvalue \<circ> filtercvs) cvs
+  )"
+
+lemma [simp]: "ValuedTautology_CVList cvs \<Longrightarrow> length (CVList_eval_values cvs s) = 1"
+apply (induct cvs)
+apply (auto simp add: ValuedTautology_CVList_def)
+done
+
+
+(*
 primrec
   ValuesOperand_values_eval :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> 
-    ('vb \<Rightarrow> bool) \<Rightarrow> ('FMode, 'vv) Values list" and
-  ValuesOperand_values_eval_list :: "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> 
+    'vb VCEnv \<Rightarrow> ('FMode, 'vv) Values list" and
+  ValuesOperand_values_eval_list :: "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> 'vb VCEnv \<Rightarrow> 
     ('FMode, 'vv) Values list" and
-  ValuesOperand_values_eval_VB :: "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> 
+  ValuesOperand_values_eval_VB :: "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> 'vb VCEnv \<Rightarrow> 
     ('FMode, 'vv) Values list" 
 where
   "ValuesOperand_values_eval (VBVConst c) vb = c # []" |
@@ -63,90 +117,67 @@ where
     (if (ValueCondition_eval e vb) then (ValuesOperand_values_eval v vb) else [])"
 
 notation (output) ValuesOperand_values_eval ("\<lbrakk>_\<rbrakk> \<langle>_\<rangle>")
+*)
 
-primrec ValuedTautology_values_nonemptylist :: 
-  "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values list \<Rightarrow> bool"
+primrec  
+  VO2VC :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> 'vb ValueCondition" and
+  VO2VC_list :: 
+    "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> 'vb ValueCondition" and
+  VO2VC_VB :: "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> 'vb ValueCondition"
 where
-  "ValuedTautology_values_nonemptylist vref [] = True" |
-  "ValuedTautology_values_nonemptylist vref (v # vs) = 
-    ((vref = v) \<and> (ValuedTautology_values_nonemptylist vref vs))"
+  "VO2VC (VBVConst _) = (VCConst True)" |
+  "VO2VC (VBVExp Es) = VO2VC_list Es" |
+  "VO2VC_list [] = (VCConst False)" |
+  "VO2VC_list (E # Es) = VCOr (VO2VC_VB E) (VO2VC_list Es)" |
+  "VO2VC_VB (VB e _) = e"
 
-primrec ValuedTautology_values_list :: "('FMode, 'vv) Values list \<Rightarrow> bool"
+definition ValuedTautology :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> bool"
 where
-  "ValuedTautology_values_list [] = False" |
-  "ValuedTautology_values_list (v # vs) = ValuedTautology_values_nonemptylist v vs"
+  "ValuedTautology v \<equiv> (ValuedTautology_CVList \<circ> VO2CV) v"
 
-definition ValuedTautology :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool"
-where
-  "ValuedTautology v vb \<equiv> ValuedTautology_values_list (ValuesOperand_values_eval v vb)"
+notation (output) ValuedTautology ("\<TT> _")
 
-notation (output) ValuedTautology ("_/ \<Gamma>/ \<langle>_\<rangle>")
-
-lemma  [simp]: "
+lemma [simp]: "
   \<lbrakk>
-    ValuesOperand_values_eval U vb \<noteq> [];
-    ValuesOperand_values_eval V vb \<noteq> []
+    ValuedTautology U;
+    ValuedTautology V
+  \<rbrakk> 
+  \<Longrightarrow> ValuedTautology (VBVExp [VB (VCConst True) U, VB (VCNot (VCConst True)) V])"
+apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
+done
+
+lemma [simp]: "
+  \<lbrakk>
+    ValuedTautology U;
+    ValuedTautology V
   \<rbrakk> 
   \<Longrightarrow> 
-  (ValuesOperand_values_eval (VBVExp [VB A U, VB (VCNot A) V]) vb) \<noteq> []"
-apply (simp)
-done
-
-theorem [simp]: "
-  \<lbrakk>
-    ValuedTautology U vb;
-    ValuedTautology V vb
-  \<rbrakk> 
-  \<Longrightarrow> 
-  ValuedTautology (VBVExp [VB A U, VB (VCNot A) V]) vb"
-apply (simp add: ValuedTautology_def)
-done
-
-lemma [simp]: "ValuedTautology V vb \<Longrightarrow> ValuesOperand_values_eval V vb \<noteq> []"
-apply (auto simp add: ValuedTautology_def ValuesOperand_values_eval_def)
-done
-
-lemma [simp]: "ValuedTautology V vb \<Longrightarrow> ValuedTautology_values_list (
-    ValuesOperand_values_eval V vb )"
-apply (simp add: ValuedTautology_def ValuesOperand_values_eval_def)
-done
-
-lemma [simp]: "ValuedTautology_values_list xs \<longrightarrow> ValuedTautology_values_list (xs @ xs)"
-apply (induct_tac xs)
-apply (simp)
-apply (simp add: ValuedTautology_values_list_def)
-apply (simp add: ValuedTautology_values_nonemptylist_def)
-sorry
-
-lemma [simp]: "ValuedTautology V vb \<Longrightarrow> ValuedTautology_values_list (
-    (ValuesOperand_values_eval V vb) @ (ValuesOperand_values_eval V vb))"
-apply (auto simp add: ValuedTautology_def ValuesOperand_values_eval_def)
+  ValuedTautology (VBVExp [VB A U, VB (VCNot A) V])"
+apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
 done
 
 lemma valued_tautology_or : 
   "\<lbrakk>
-    ValuedTautology U vb;
-    ValuedTautology V vb;
-    ValuedTautology Q vb;
-    ((ValueCondition_eval A vb \<and> ValueCondition_eval B vb) \<longrightarrow> U = V)
+    ValuedTautology U;
+    ValuedTautology V;
+    ValuedTautology Q;
+    (ValueCondition_Sat (VCAnd A B) \<longrightarrow> U = V)
    \<rbrakk>
    \<Longrightarrow> 
-   ValuedTautology (VBVExp [VB A U, VB B V, VB (VCAnd (VCNot A) (VCNot B)) Q]) vb"
-apply (simp add: ValuedTautology_def)
+   ValuedTautology (VBVExp [VB A U, VB B V, VB (VCAnd (VCNot A) (VCNot B)) Q])"
+apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
 done
 
 lemma not_valued_tautology1 : "
-(\<not> (ValueCondition_eval A vb)) \<Longrightarrow> 
-  (\<not> ValuedTautology (VBVExp [VB A U]) vb)"
-apply (auto)
-apply (auto simp add: ValuedTautology_def)
+(\<not> (ValueCondition_Sat A)) \<Longrightarrow> 
+  (\<not> ValuedTautology (VBVExp [VB A U]))"
+apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
 done
 
 lemma not_valued_tautology2 : 
-  "(\<not> (ValueCondition_eval A vb) \<and> \<not> (ValueCondition_eval B vb)) \<Longrightarrow> 
-  \<not> ValuedTautology (VBVExp [VB A U, VB B V]) vb"
-apply (auto)
-apply (auto simp add: ValuedTautology_def)
+  "(\<not> (ValueCondition_Sat (VCOr A B))) \<Longrightarrow> 
+  \<not> ValuedTautology (VBVExp [VB A U, VB B V])"
+apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
 done
 
 primrec 
@@ -167,27 +198,41 @@ where
   "ValuesOperandPredicate_ValueCondition_VB P (VB e v) = 
     VCAnd e (ValuesOperandPredicate_ValueCondition P v)"
 
-fun lte_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool" (infix "\<le>\<^sub>V" 50)
+fun nominal_op :: 
+  "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> 
+  (real \<Rightarrow> real \<Rightarrow> bool) \<Rightarrow>
+  (('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool) \<Rightarrow> bool" 
 where
-  "lte_Values (FMNominal a) (FMNominal b) = (a \<le> b)" |
-  "lte_Values (FMFailure _) (FMNominal b) = (b > 0)" |
-  "lte_Values a b = (a = b)"
+  "nominal_op (FMNominal a) (FMNominal b) f _ = (f a b)" |
+  "nominal_op (FMFailure _) (FMNominal _) _ _ = False" |
+  "nominal_op (FMNominal _) (FMFailure _) _ _ = False" |
+  "nominal_op a b _ g = (g a b)"
 
-abbreviation gte_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool" (infix "\<ge>\<^sub>V" 50)
+definition lte_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool"
+where
+  "lte_Values a b \<equiv> nominal_op a b (op \<le>) (op =)"
+
+abbreviation gte_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool" 
 where
   "gte_Values a b \<equiv> lte_Values b a"
 
-abbreviation gt_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool" (infix ">\<^sub>V" 50)
+definition lt_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool"
 where
-  "gt_Values a b \<equiv> \<not> (lte_Values a b)"
+  "lt_Values a b \<equiv> nominal_op a b (op <) (\<lambda> _ _. False)"
 
-abbreviation lt_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool" (infix "<\<^sub>V" 50)
+abbreviation gt_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool"
 where
-  "lt_Values a b \<equiv> gt_Values b a"
+  "gt_Values a b \<equiv> lt_Values b a"
 
-abbreviation eq_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool" (infix "=\<^sub>V" 50)
+abbreviation eq_Values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values \<Rightarrow> bool"
 where
-  "eq_Values a b \<equiv> (lte_Values a b \<and> gte_Values a b)"
+  "eq_Values a b \<equiv> (a = b)"
+
+notation (output) lte_Values  (infix "\<le>" 50)
+notation (output) gte_Values  (infix "\<ge>" 50)
+notation (output) lt_Values  (infix "<" 50)
+notation (output) gt_Values  (infix ">" 50)
+notation (output) eq_Values  (infix "=" 50)
 
 value "ValuesOperandPredicate_ValueCondition 
   (lte_Values (FMNominal 2))   (VBVExp [
@@ -213,122 +258,69 @@ where
     (apply_ValueCondition_VB e E) # (apply_ValueCondition_list e Es)" |
   "apply_ValueCondition_VB e1 (VB e2 v2) = VB (VCAnd e1 e2) v2"
 
-
-primrec 
-  expand_ValuesOperand :: 
-    "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand" and
-  expand_ValuesOperand_list :: 
-    "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool list" and
-  expand_ValuesOperand_VB :: 
-    "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool list" 
+definition ValuesOperand_eval_values :: 
+  "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> 'vb VCEnv \<Rightarrow> ('FMode, 'vv) Values list"
 where
-  "expand_ValuesOperand (VBVConst c) = VBVConst c" |
-  expand_ValuesOperand_VBVExp:
-  "expand_ValuesOperand (VBVExp E) = VBVExp (expand_ValuesOperand_list E)" |
-  "expand_ValuesOperand_list [] = []" |
-  "expand_ValuesOperand_list (e # E) = 
-    (expand_ValuesOperand_VB e) @ (expand_ValuesOperand_list E)" |
-  "expand_ValuesOperand_VB (VB e v) = (
-    case v of
-      (VBVExp E2) \<Rightarrow> (apply_ValueCondition e (expand_ValuesOperand v)) |
-      _ \<Rightarrow> [VB e (expand_ValuesOperand v)]
-  )"
+  "ValuesOperand_eval_values v s \<equiv> CVList_eval_values (VO2CV v) s"
 
-value "expand_ValuesOperand (
-  VBVExp [VB (VCVar v1) (
-      VBVExp [
-        VB (VCVar v2) (VBVExp [
-          VB (VCVar v3) (VBVVarOp v4)
-        ])
-      ]
-    )]
-  )"
-
-lemma "expand_ValuesOperand (
-  VBVExp [VB (VCVar v1) (
-      VBVExp [
-        VB (VCVar v2) (VBVExp [
-          VB (VCVar v3) (VBVConst v4)
-        ])
-      ]
-    )]
-  ) = 
-  (VBVExp [
-    VB 
-      (VCAnd (VCVar v1) (VCAnd (VCVar v2) (VCVar v3)))
-      (VBVConst v4)
-  ])"
-apply (auto)
+theorem [simp]: "ValuedTautology v \<Longrightarrow> length (ValuesOperand_eval_values v s) = 1"
+apply (induct v)
+apply (auto simp add: ValuedTautology_def)
+apply (auto simp add: ValuesOperand_eval_values_def)
 done
 
-primrec 
-  SingleOperand_list :: 
-    "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> 
-      ('vb, 'FMode, 'vv) ValuesOperand option" and
-  SingleOperand_VB :: 
-    "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow>
-      ('vb, 'FMode, 'vv) ValuesOperand option"
+definition normalise_ConditionValue_filter :: 
+  "('vb, 'FMode, 'vv) ConditionValue \<Rightarrow> ('vb, 'FMode, 'vv) ConditionValue list \<Rightarrow> bool"
 where
-  "SingleOperand_list [] E = Some E" |
-  "SingleOperand_list (E1 # Es) E = (
-    let nE1 = (SingleOperand_VB E1 E)
-    in let nEs = (SingleOperand_list Es E)
-    in if nE1 = nEs then nE1 else None
-  )" |
-  "SingleOperand_VB (VB e v) E = (if v = E then (Some v) else None)"
+  "normalise_ConditionValue_filter cv cvs \<equiv> 
+    ValueCondition_Sat (fst cv) \<and> 
+    (cvs \<noteq> [] \<longrightarrow> \<not> (\<exists> i. snd cv = snd (cvs!i) \<and> ValueCondition_Equiv (fst cv) (fst (cvs!i))))"
 
-primrec SingleOperand :: "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> 
-  ('vb, 'FMode, 'vv) ValuesOperand option"
-where 
-  "SingleOperand [] = None" |
-  "SingleOperand (E # Es) = (SingleOperand_list Es (VBV E))"
-
-primrec 
-  normalise_ValuesOperand :: 
-    "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand" and
-  normalise_ValuesOperand_list :: 
-    "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool list" and
-  normalise_ValuesOperand_VB :: 
-    "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> ('vb, 'FMode, 'vv) ValuedBool option" 
+primrec normalise_ConditionValue :: "
+  ('vb, 'FMode, 'vv) ConditionValue list \<Rightarrow> ('vb, 'FMode, 'vv) ConditionValue list"
 where
-  "normalise_ValuesOperand (VBVConst c) = (VBVConst c)" |
-  "normalise_ValuesOperand (VBVExp Es) =  (
-    let 
-      nEs = normalise_ValuesOperand_list Es;
-      so = SingleOperand nEs
-    in if so = None then VBVExp nEs else the so
-  )" |
-  "normalise_ValuesOperand_list [] = []" |
-  "normalise_ValuesOperand_list (E # Es) = (
-    let nE = normalise_ValuesOperand_VB E
-    in if nE = None then (normalise_ValuesOperand_list Es)
-    else (the nE) # (normalise_ValuesOperand_list Es)
-  )" |
-  "normalise_ValuesOperand_VB (VB e v) = 
-  (
-    if (\<not> ValueCondition_Sat e) then None
-    else Some (VB e (normalise_ValuesOperand v))
+  "normalise_ConditionValue [] = []" |
+  "normalise_ConditionValue (cv # cvs) = (
+    if (normalise_ConditionValue_filter cv cvs) 
+      then cv # (normalise_ConditionValue cvs)
+      else (normalise_ConditionValue cvs)
   )"
 
-definition normalise_expand_ValuesOperand ::
-  "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand"
+definition
+  normalise_ValuesOperand :: 
+    "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> ('vb, 'FMode, 'vv) ValuesOperand" 
 where
-  "normalise_expand_ValuesOperand v \<equiv> normalise_ValuesOperand (expand_ValuesOperand v)"
+  "normalise_ValuesOperand \<equiv> CV2VO \<circ> normalise_ConditionValue \<circ> VO2CV" 
 
 primrec 
-  isExpandedNormal_ValuesOperand :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> bool" and
-  isExpandedNormal_ValuesOperand_list :: "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> bool" and
-  isExpandedNormal_ValuesOperand_VB :: "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> bool" 
+  isNormal_ValuesOperand :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> bool" and
+  isNormal_ValuesOperand_list :: "('vb, 'FMode, 'vv) ValuedBool list \<Rightarrow> bool" and
+  isNormal_ValuesOperand_VB :: "('vb, 'FMode, 'vv) ValuedBool \<Rightarrow> bool" 
 where
-  "isExpandedNormal_ValuesOperand (VBVConst c) = True" |
-  "isExpandedNormal_ValuesOperand (VBVExp Es) = (isExpandedNormal_ValuesOperand_list Es)" |
-  "isExpandedNormal_ValuesOperand_list [] = True" |
-  "isExpandedNormal_ValuesOperand_list (E # Es) = 
-    ((isExpandedNormal_ValuesOperand_VB E) \<and> (isExpandedNormal_ValuesOperand_list Es))" |
-  "isExpandedNormal_ValuesOperand_VB (VB e v) = 
-    ((ValueCondition_Sat e) \<and> (isExpandedNormal_ValuesOperand v))"
+  "isNormal_ValuesOperand (VBVConst c) = True" |
+  "isNormal_ValuesOperand (VBVExp Es) = (isNormal_ValuesOperand_list Es)" |
+  "isNormal_ValuesOperand_list [] = True" |
+  "isNormal_ValuesOperand_list (E # Es) = 
+    ((isNormal_ValuesOperand_VB E) \<and> (isNormal_ValuesOperand_list Es))" |
+  "isNormal_ValuesOperand_VB (VB e v) = 
+    ((ValueCondition_Sat e) \<and> (isNormal_ValuesOperand v))"
 
-theorem "(v = normalise_expand_ValuesOperand v) \<longleftrightarrow> (isExpandedNormal_ValuesOperand v)"
+lemma [simp]: "(isNormal_ValuesOperand \<circ> normalise_ValuesOperand) v"
+apply (induct v)
+apply (auto simp add: normalise_ValuesOperand_def isNormal_ValuesOperand_def)
+apply (auto simp add: ValueCondition_Tautology_def)
+apply (auto simp add: taut_test_def)
+apply (auto simp add: normalise_ConditionValue_filter_def)
+apply (auto simp add: ValueCondition_Sat_def)
+apply (auto simp add: sat_test_def)
+apply (auto simp add: ValueCondition_to_bool_expr_def)
+sorry
+
+theorem "\<lbrakk> v \<noteq> VBVExp [] \<rbrakk> \<Longrightarrow> (v = normalise_ValuesOperand v) \<longleftrightarrow> (isNormal_ValuesOperand v)"
+apply (induct v)
+apply (auto simp add: normalise_ValuesOperand_def normalise_ConditionValue_filter_def)
+apply (auto simp add: ValueCondition_Tautology_def ValueCondition_Sat_def)
+apply (auto simp add: taut_test_def sat_test_def)
 sorry
 
 primrec choose_values :: "('FMode, 'vv) Values \<Rightarrow> ('FMode, 'vv) Values option 
@@ -338,37 +330,26 @@ where
   "choose_values v1 (Some v2) = (if (v1 = v2) then (Some v1) else None)"
 
 definition ValuesOperand_value_eval :: "('vb, 'FMode, 'vv) ValuesOperand \<Rightarrow> 
-  ('vb \<Rightarrow> bool) \<Rightarrow> ('FMode, 'vv) Values option"
+  'vb VCEnv \<Rightarrow> ('FMode, 'vv) Values option"
 where
   "ValuesOperand_value_eval Es vb \<equiv> 
-    fold choose_values (ValuesOperand_values_eval Es vb) None"
+    fold choose_values (ValuesOperand_eval_values Es vb) None"
 
-value "ValuesOperand_value_eval (VBVExp [
-  VB (VCVar A) (VBVConst U), 
-  VB (VCVar B) (VBVConst U)] ) vb"
 
-lemma [simp]: "(ValuedTautology (VBVExp Es) vb) \<Longrightarrow> 
-  (length (ValuesOperand_values_eval (VBVExp Es) vb) > 0)"
+lemma [simp]: "(ValuedTautology (VBVExp Es)) \<Longrightarrow> 
+  (length (ValuesOperand_eval_values (VBVExp Es) vb) = 1)"
 apply (auto)
-apply (auto simp add: ValuedTautology_def)
 done
 
-lemma "(ValuedTautology (VBVExp Es) vb) \<Longrightarrow> 
+lemma "(ValuedTautology (VBVExp Es)) \<Longrightarrow> 
   (ValuesOperand_value_eval (VBVExp Es) vb = Some v)"
 apply (induct Es)
-apply (auto simp add: ValuedTautology_def)
 apply (auto simp add: ValuesOperand_value_eval_def)
-apply (auto simp add: choose_values_def)
-apply (auto simp add: ValuedTautology_values_list_def)
-apply (auto simp add: ValuedTautology_values_nonemptylist_def)
-apply (auto simp add: fold_def)
-apply (auto simp add: ValuesOperand_values_eval_list_def)
-apply (auto simp add: ValuesOperand_values_eval_VB_def)
-sorry
-
-lemma "(ValuesOperand_values_eval (VBVExp [VB (VCNot A) V, VB A V]) vb) = 
-  ValuesOperand_values_eval V vb"
-apply (auto)
+apply (auto simp add: ValuesOperand_eval_values_def)
+apply (auto simp add: CVList_eval_values_def)
+apply (auto simp add: ValuedTautology_def)
+apply (auto simp add: ValuedTautology_CVList_def)
 done
+
 
 end

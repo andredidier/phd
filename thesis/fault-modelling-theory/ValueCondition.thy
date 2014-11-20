@@ -16,26 +16,28 @@ datatype 'vb ValueCondition =
 notation (output) VCConst  ("_" 60)
 notation (output) VCVar ("_" 60)
 notation (output) VCNot ("\<not>_" 80)
-notation (output) VCAnd (infixr "\<and>" 75)
+notation (output) VCAnd (infix "\<and>" 75)
 
 abbreviation VCOr :: "'vb ValueCondition \<Rightarrow> 'vb ValueCondition \<Rightarrow> 'vb ValueCondition"
 where "VCOr b1 b2 \<equiv> VCNot (VCAnd (VCNot b1) (VCNot b2))"
 
-notation (output) VCOr (infixr "\<or>" 70)
+notation (output) VCOr (infix "\<or>" 70)
 
 abbreviation VCNand :: "'vb ValueCondition \<Rightarrow> 'vb ValueCondition \<Rightarrow> 'vb ValueCondition"
 where "VCNand b1 b2 \<equiv> (VCNot (VCAnd b1 b2))"
 
-notation (output) VCNand (infixr "\<^sup>\<not>\<and>" 70)
+notation (output) VCNand (infix "\<^sup>\<not>\<and>" 73)
 
 abbreviation VCXor :: "'vb ValueCondition \<Rightarrow> 'vb ValueCondition \<Rightarrow> 'vb ValueCondition"
 where "VCXor b1 b2 \<equiv> (VCAnd (VCNand b1 b2) (VCOr b1 b2))"
 
-notation (output) VCXor (infixr "\<otimes>" 70)
+notation (output) VCXor (infix "\<otimes>" 70)
+
+type_synonym 'vb VCEnv = "'vb \<Rightarrow> bool"
 
 (*>*)
 
-primrec ValueCondition_eval :: "'vb ValueCondition \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool"
+primrec ValueCondition_eval :: "'vb ValueCondition \<Rightarrow> 'vb VCEnv \<Rightarrow> bool"
 where
   "ValueCondition_eval (VCConst c) _ = c" |
   "ValueCondition_eval (VCVar v) env = (env v)" |
@@ -69,6 +71,16 @@ where "ValueCondition_Sat \<equiv> sat_test \<circ> ValueCondition_to_bool_expr"
 
 corollary Sat_eval: "ValueCondition_Sat b = (\<exists> env. ValueCondition_eval b env)"
 apply (simp add: ValueCondition_Sat_def value_preservation sat_test)
+done
+
+definition ValueCondition_Equiv :: "'vb ValueCondition \<Rightarrow> 'vb ValueCondition \<Rightarrow> bool"
+where
+  "ValueCondition_Equiv c1 c2 \<equiv> 
+    equiv_test (ValueCondition_to_bool_expr c1) (ValueCondition_to_bool_expr c2)"
+
+corollary Equiv_eval: 
+  "ValueCondition_Equiv c1 c2 = (\<forall> env. ValueCondition_eval c1 env = ValueCondition_eval c2 env)"
+apply (auto simp add: ValueCondition_Equiv_def value_preservation equiv_test_def taut_test)
 done
 
 end
