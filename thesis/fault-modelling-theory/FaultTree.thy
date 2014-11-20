@@ -10,21 +10,21 @@ datatype 'vb FaultTree =
 
 fun FT_BO_equiv :: "'vb FaultTree \<Rightarrow> 'vb ValueCondition \<Rightarrow> bool"
 where
-  "FT_BO_equiv (BasicEvent v1) (VCVarOp v2) = (v1 = v2)" |
-  "FT_BO_equiv (IntermediaryEvent FTGAnd t1 t2) (VCAndOp b1 b2) = 
+  "FT_BO_equiv (BasicEvent v1) (VCVar v2) = (v1 = v2)" |
+  "FT_BO_equiv (IntermediaryEvent FTGAnd t1 t2) (VCAnd b1 b2) = 
     ((FT_BO_equiv t1 b1) \<and> (FT_BO_equiv t2 b2))" |
-  "FT_BO_equiv (IntermediaryEvent FTGOr t1 t2) (VCOrOp b1 b2) = 
+  "FT_BO_equiv (IntermediaryEvent FTGOr t1 t2) (VCOr b1 b2) = 
     ((FT_BO_equiv t1 b1) \<and> (FT_BO_equiv t2 b2))" |
   "FT_BO_equiv T B = False"
 
 primrec GateToOp :: "FaultTreeGate \<Rightarrow> ('vb ValueCondition binop)"
 where
-  "GateToOp FTGAnd = (\<lambda> a b. VCAndOp a b)" |
-  "GateToOp FTGOr = (\<lambda> a b. VCOrOp a b)"
+  "GateToOp FTGAnd = (\<lambda> a b. VCAnd a b)" |
+  "GateToOp FTGOr = (\<lambda> a b. VCOr a b)"
 
 primrec FT_to_BO :: "'vb FaultTree \<Rightarrow> 'vb ValueCondition"
 where
-  "FT_to_BO (BasicEvent v) = VCVarOp v" |
+  "FT_to_BO (BasicEvent v) = VCVar v" |
   "FT_to_BO (IntermediaryEvent g t1 t2) = (GateToOp g) (FT_to_BO t1) (FT_to_BO t2)"
 
 definition FaultTree_eval :: "'vb FaultTree \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool"

@@ -23,9 +23,9 @@ definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarr
   "Battery OutP FB \<equiv> \<lambda> m.
   [
     OutP \<mapsto> 
-      VBVExpOp [ 
-        VB (VCVarOp (FB)) (VBVConstOp (FMFailure Omission)),
-        VB (VCNotOp (VCVarOp (FB))) (VBVConstOp (FMNominal 5))
+      VBVExp [ 
+        VB (VCVar (FB)) (VBVConst (FMFailure Omission)),
+        VB (VCNot (VCVar (FB))) (VBVConst (FMNominal 5))
       ]
   ]"
 
@@ -35,26 +35,26 @@ definition Monitor :: "
   "Monitor P \<equiv>  \<lambda> m.
   [ 
     OutMon \<mapsto>
-      VBVExpOp [
+      VBVExp [
         VB 
-          (VCAndOp 
-            (VCNotOp (VCVarOp FMon))
+          (VCAnd 
+            (VCNot (VCVar FMon))
             (P (m In1Mon)))
           (m In1Mon),
         VB 
-          (VCAndOp 
-            (VCNotOp (VCVarOp FMon))
-            (VCNotOp (P (m In1Mon))))
+          (VCAnd 
+            (VCNot (VCVar FMon))
+            (VCNot (P (m In1Mon))))
           (m In2Mon),
         VB 
-          (VCAndOp 
-            (VCVarOp FMon)
+          (VCAnd 
+            (VCVar FMon)
             (P (m In1Mon)))
           (m In2Mon),
         VB 
-          (VCAndOp 
-            (VCVarOp FMon)
-            (VCNotOp (P (m In1Mon))))
+          (VCAnd 
+            (VCVar FMon)
+            (VCNot (P (m In1Mon))))
           (m In1Mon)
       ]
   ]"
@@ -83,7 +83,7 @@ where
 
 definition SMon_OutMon :: "(FailureVarName, FMode, ComponentPortName) ValuesOperand"
 where
-  "SMon_OutMon \<equiv> the (SMon (\<lambda> x. VBVConstOp (FMVar x)) OutMon)"
+  "SMon_OutMon \<equiv> the (SMon (\<lambda> x. VBVConst (FMVar x)) OutMon)"
 
 value "SMon_OutMon"
 
@@ -96,20 +96,21 @@ lemma "
   ) vb
   =
   ValueCondition_eval (
-    VCOrOp 
+    VCOr 
     (
-      VCAndOp (VCVarOp FB1) (VCVarOp FB2)
+      VCAnd (VCVar FB1) (VCVar FB2)
     )
     (
-      VCAndOp 
-        (VCVarOp FMon) 
-        (VCOrOp (VCVarOp FB1) (VCVarOp FB2))
+      VCAnd 
+        (VCVar FMon) 
+        (VCOr (VCVar FB1) (VCVar FB2))
     )
   ) vb"
 apply (auto)
 apply (auto simp add: SMon_OutMon_def SMon_def SMon_Cs_def SMon_A_def Battery_def Monitor_def)
 apply (auto simp add: System_def SystemPortValuation_def SystemComponents_def fun_upd_fun_def)
 apply (auto simp add: normalise_expand_ValuesOperand_def)
+apply (auto simp add: ValueCondition_Sat_def)
 done
 
 end

@@ -9,7 +9,7 @@ begin
 isabelle mkroot -d fault-modelling-theory/ 
 e
 isabelle build -D fault-modelling-theory/
-text {* First test: @{term "VCVarOp v\<^sub>1"} and @{term "VCNotOp (VCVarOp A)"} *}
+text {* First test: @{term "VCVar v\<^sub>1"} and @{term "VCNot (VCVar A)"} *}
 *)
 
 type_synonym 'PortName CInput = 'PortName
@@ -50,11 +50,11 @@ where
     \<lambda> pin.
     (
       case (A pin) of
-        None \<Rightarrow> VBVConstOp (FMVar pin) |
+        None \<Rightarrow> VBVConst (FMVar pin) |
         (Some pout) \<Rightarrow> 
         (
-          case (c (\<lambda> x. VBVConstOp (FMVar x))  pout) of
-            None \<Rightarrow> VBVConstOp (FMVar pin) |
+          case (c (\<lambda> x. VBVConst (FMVar x))  pout) of
+            None \<Rightarrow> VBVConst (FMVar pin) |
             (Some vo) \<Rightarrow> vo
         )
     )
@@ -66,7 +66,7 @@ where
 
 fun is_ValuesVar :: "('vb, 'FMode, 'pin) ValuesOperand \<Rightarrow> bool"
 where
-  "is_ValuesVar (VBVConstOp (FMVar x)) = True" |
+  "is_ValuesVar (VBVConst (FMVar x)) = True" |
   "is_ValuesVar _ = False"
 
 (* Lista de componentes e conexões*)
