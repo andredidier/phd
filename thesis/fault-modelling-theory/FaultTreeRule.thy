@@ -27,22 +27,28 @@ definition verifyFaultTree :: "'vb FaultTree \<Rightarrow> FaultTreeRule set \<R
 where
   "verifyFaultTree ft rules P \<equiv> let unsats = unsatisfiedRules ft rules P in (unsats = {}, unsats)"
 
-value "verifyFaultTree 
-  (IntermediaryEvent FTGAnd 
-    (IntermediaryEvent FTGAnd (BasicEvent A) (BasicEvent B)) 
-    (IntermediaryEvent FTGAnd (BasicEvent C) (BasicEvent D))
-  ) 
-  ({ BasicEventMinLevel 2  }) 
-  (\<lambda> v. if v = A then 0.1 else if v = B then 0.01 else 0)"
 
-value "verifyFaultTree 
-  (IntermediaryEvent FTGAnd (BasicEvent A) (BasicEvent B)) 
-  ({ BasicEventMinLevel 2, RootProbability 0.11  }) 
-  (\<lambda> v. if v = A then 0.1 else if v = B then 0.01 else 0)"
+lemma [simp]: "\<lbrakk> FT_probability ft P \<le> p  \<rbrakk> \<Longrightarrow> 
+  (verifyFaultTree ft {RootProbability p} P) = (True, {})"
+apply (induct ft)
+apply (auto simp add: min_basicEventLevel_def verifyFaultTree_def)
+apply (auto simp add: unsatisfiedRules_def)
+done
 
-value "evaluateRules 
-  (IntermediaryEvent FTGAnd (BasicEvent A) (BasicEvent B)) 
-  ({ BasicEventMinLevel 2, RootProbability 0.11  }) 
-  (\<lambda> v. if v = A then 0.1 else if v = B then 0.01 else 0)"
+lemma [simp]: "\<lbrakk> min_basicEventLevel ft > n  \<rbrakk> \<Longrightarrow> 
+  (verifyFaultTree ft {BasicEventMinLevel n} P) = (True, {})"
+apply (induct ft)
+apply (auto simp add: min_basicEventLevel_def verifyFaultTree_def)
+apply (auto simp add: unsatisfiedRules_def)
+apply (auto simp add: min_basicEventLevel_def)
+done
+
+lemma [simp]: "\<lbrakk> FT_probability ft P \<le> p; min_basicEventLevel ft > n  \<rbrakk> \<Longrightarrow> 
+  (verifyFaultTree ft {BasicEventMinLevel n, RootProbability p} P) = (True, {})"
+apply (induct ft)
+apply (auto simp add: min_basicEventLevel_def verifyFaultTree_def)
+apply (auto simp add: unsatisfiedRules_def)
+apply (auto simp add: min_basicEventLevel_def)
+done
 
 end
