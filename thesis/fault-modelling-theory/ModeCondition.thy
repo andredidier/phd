@@ -53,7 +53,7 @@ where
   "ModeCondition_to_bool_expr (MCAnd b1 b2) = 
     And_bool_expr (ModeCondition_to_bool_expr b1) (ModeCondition_to_bool_expr b2)"
 
-lemma value_preservation: 
+lemma value_preservation [simp]: 
   "val_bool_expr (ModeCondition_to_bool_expr b) s = ModeCondition_eval b s"
 apply (induction b)
 apply (auto)
@@ -63,14 +63,14 @@ definition ModeCondition_Tautology :: "'vb ModeCondition \<Rightarrow> bool"
 where "ModeCondition_Tautology \<equiv> taut_test \<circ> ModeCondition_to_bool_expr"
 
 corollary Tautology_eval: "ModeCondition_Tautology b = (\<forall> env. ModeCondition_eval b env)"
-apply (simp add: ModeCondition_Tautology_def value_preservation taut_test)
+apply (simp add: ModeCondition_Tautology_def taut_test)
 done
 
 definition ModeCondition_Sat :: "'vb ModeCondition \<Rightarrow> bool"
 where "ModeCondition_Sat \<equiv> sat_test \<circ> ModeCondition_to_bool_expr"
 
 corollary Sat_eval: "ModeCondition_Sat b = (\<exists> env. ModeCondition_eval b env)"
-apply (simp add: ModeCondition_Sat_def value_preservation sat_test)
+apply (simp add: ModeCondition_Sat_def sat_test)
 done
 
 definition ModeCondition_Equiv :: "'vb ModeCondition \<Rightarrow> 'vb ModeCondition \<Rightarrow> bool"
@@ -80,7 +80,7 @@ where
 
 corollary Equiv_eval: 
   "ModeCondition_Equiv c1 c2 = (\<forall> env. ModeCondition_eval c1 env = ModeCondition_eval c2 env)"
-apply (auto simp add: ModeCondition_Equiv_def value_preservation equiv_test_def taut_test)
+apply (auto simp add: ModeCondition_Equiv_def equiv_test_def taut_test)
 done
 
 definition ModeCondition_Absorb :: "'vb ModeCondition \<Rightarrow> 'vb ModeCondition \<Rightarrow> bool"
@@ -99,7 +99,11 @@ corollary Absorb_eval:
     (\<forall> env. (ModeCondition_eval c1 env \<longrightarrow> ModeCondition_eval c2 env) \<or>
       (ModeCondition_eval c2 env \<longrightarrow> ModeCondition_eval c1 env)
     )"
-apply (auto simp add: ModeCondition_Absorb_def value_preservation equiv_test_def taut_test)
+apply (auto simp add: ModeCondition_Absorb_def equiv_test_def taut_test)
+done
+
+lemma "\<lbrakk> A \<noteq> B \<rbrakk> \<Longrightarrow> ModeCondition_Absorb (MCVar A) (MCAnd (MCVar A) (MCVar B))"
+apply (auto simp add: ModeCondition_Absorb_def taut_test)
 done
 
 end
