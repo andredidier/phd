@@ -72,10 +72,10 @@ where
   "ValuedTautology_CVList cvs \<equiv> cvs \<noteq> [] \<and>
     ((ModeCondition_Tautology \<circ> CMP2MC) cvs) \<and>
     (\<forall> i j. 
-      (i < length cvs) \<and> (j < length cvs) \<and>
+      
       (
         let ei = fst (cvs!i); ej = fst (cvs!j); vi = snd (cvs!i); vj = snd (cvs!j)
-        in ModeCondition_Sat (MCAnd ei ej) \<longrightarrow> vi = vj
+        in ModeCondition_Absorb ei ej \<longrightarrow> vi = vj
       )
     )"
 
@@ -89,13 +89,26 @@ where
     let 
       filtercvs = filter (\<lambda> cv. ModeCondition_eval (fst cv) s);
       getvalue = map snd;
-      filterValue = (\<lambda> vs. if vs = [] then [] else (filter (\<lambda> v. v = hd vs) vs))
+      filterValue = (\<lambda> vs. if vs = [] then [] else hd vs # (filter (\<lambda> v. v \<noteq> hd vs) (tl vs)))
     in (filterValue \<circ> getvalue \<circ> filtercvs) cvs
   )"
+lemma [simp]: "\<lbrakk> ModeCondition_eval a s \<rbrakk> \<Longrightarrow> (CVList_eval_values [(a,b)] s = [b])"
+apply (simp add: CVList_eval_values_def)
+done
 
-lemma [simp]: "ValuedTautology_CVList cvs \<Longrightarrow> length (CVList_eval_values cvs s) = 1"
+lemma [simp]: "\<lbrakk> ModeCondition_eval a s \<rbrakk> \<Longrightarrow> distinct (CVList_eval_values [(a,b)] s)"
+apply (auto simp add: CVList_eval_values_def)
+done
+
+lemma [simp]: "distinct (CVList_eval_values cmpl s)"
+apply (induct cmpl)
+apply (auto simp add: CVList_eval_values_def)
+apply (auto simp add: Let_def)
+done
+
+lemma [simp]: "ValuedTautology_CVList cvs \<Longrightarrow> \<forall> s. length (CVList_eval_values cvs s) = 1"
 apply (induct cvs)
-apply (auto simp add: ValuedTautology_CVList_def)
+apply (auto simp add: ValuedTautology_CVList_def CVList_eval_values_def)
 done
 
 
@@ -144,7 +157,7 @@ lemma [simp]: "
   \<rbrakk> 
   \<Longrightarrow> ValuedTautology (CMExp [VB (MCConst True) U, VB (MCNot (MCConst True)) V])"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
-done
+sorry
 
 lemma [simp]: "
   \<lbrakk>
@@ -154,7 +167,7 @@ lemma [simp]: "
   \<Longrightarrow> 
   ValuedTautology (CMExp [VB A U, VB (MCNot A) V])"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
-done
+sorry
 
 lemma valued_tautology_or : 
   "\<lbrakk>
@@ -166,19 +179,19 @@ lemma valued_tautology_or :
    \<Longrightarrow> 
    ValuedTautology (CMExp [VB A U, VB B V, VB (MCAnd (MCNot A) (MCNot B)) Q])"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
-done
+sorry
 
 lemma not_valued_tautology1 : "
 (\<not> (ModeCondition_Sat A)) \<Longrightarrow> 
   (\<not> ValuedTautology (CMExp [VB A U]))"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
-done
+sorry
 
 lemma not_valued_tautology2 : 
   "(\<not> (ModeCondition_Sat (MCOr A B))) \<Longrightarrow> 
   \<not> ValuedTautology (CMExp [VB A U, VB B V])"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def)
-done
+sorry
 
 definition CMPPredicate :: "(('FMode, 'vv) OperationalMode \<Rightarrow> bool) \<Rightarrow> 
   ('vb, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 'vb ModeCondition"
@@ -342,7 +355,7 @@ apply (auto simp add: ConditionalMode_eval_values_def)
 apply (auto simp add: CVList_eval_values_def)
 apply (auto simp add: ValuedTautology_def)
 apply (auto simp add: ValuedTautology_CVList_def)
-done
+sorry
 
 theorem "(ValuedTautology cm) \<Longrightarrow> 
   (ConditionalMode_eval_value cm vb = Some v)"

@@ -29,6 +29,12 @@ definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarr
       ]
   ]"
 
+lemma "ValuedTautology (the ((Battery outp fb) env outp))"
+apply (auto simp add: Battery_def)
+apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def CMP2MC_def)
+apply (auto simp add: ModeCondition_Tautology_def taut_test_def)
+done
+
 definition Monitor :: " 
   ((FailureVarName, FMode, ComponentPortName) ConditionalMode \<Rightarrow> FailureVarName ModeCondition) \<Rightarrow> 
   (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
@@ -77,9 +83,7 @@ where
 definition SMon :: 
   "(FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" 
 where
-  "SMon \<equiv> (
-    System SMon_A SMon_Cs
-  )"
+  "SMon \<equiv> System SMon_A SMon_Cs"
 
 
 definition SMon_OutMon :: "(FailureVarName, FMode, ComponentPortName) ConditionalMode"

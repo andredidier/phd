@@ -83,4 +83,23 @@ corollary Equiv_eval:
 apply (auto simp add: ModeCondition_Equiv_def value_preservation equiv_test_def taut_test)
 done
 
+definition ModeCondition_Absorb :: "'vb ModeCondition \<Rightarrow> 'vb ModeCondition \<Rightarrow> bool"
+where
+  "ModeCondition_Absorb c1 c2 \<equiv> 
+    (
+      let                           
+        absorb_test = 
+          \<lambda> a b. taut_test (Or_bool_expr (Imp_bool_expr a b) (Imp_bool_expr b a))
+      in
+        absorb_test (ModeCondition_to_bool_expr c1) (ModeCondition_to_bool_expr c2)
+    )"
+
+corollary Absorb_eval: 
+  "ModeCondition_Absorb c1 c2 = 
+    (\<forall> env. (ModeCondition_eval c1 env \<longrightarrow> ModeCondition_eval c2 env) \<or>
+      (ModeCondition_eval c2 env \<longrightarrow> ModeCondition_eval c1 env)
+    )"
+apply (auto simp add: ModeCondition_Absorb_def value_preservation equiv_test_def taut_test)
+done
+
 end
