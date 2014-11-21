@@ -23,38 +23,38 @@ definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarr
   "Battery OutP FB \<equiv> \<lambda> m.
   [
     OutP \<mapsto> 
-      VBVExp [ 
-        VB (VCVar (FB)) (VBVConst (FMFailure Omission)),
-        VB (VCNot (VCVar (FB))) (VBVConst (FMNominal 5))
+      CMExp [ 
+        CM (MCVar (FB)) (CMConst (FailureMode Omission)),
+        CM (MCNot (MCVar (FB))) (CMConst (NominalMode 5))
       ]
   ]"
 
 definition Monitor :: " 
-  ((FailureVarName, FMode, ComponentPortName) ValuesOperand \<Rightarrow> FailureVarName ValueCondition) \<Rightarrow> 
+  ((FailureVarName, FMode, ComponentPortName) ConditionalMode \<Rightarrow> FailureVarName ModeCondition) \<Rightarrow> 
   (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
   "Monitor P \<equiv>  \<lambda> m.
   [ 
     OutMon \<mapsto>
-      VBVExp [
-        VB 
-          (VCAnd 
-            (VCNot (VCVar FMon))
+      CMExp [
+        CM 
+          (MCAnd 
+            (MCNot (MCVar FMon))
             (P (m In1Mon)))
           (m In1Mon),
-        VB 
-          (VCAnd 
-            (VCNot (VCVar FMon))
-            (VCNot (P (m In1Mon))))
+        CM 
+          (MCAnd 
+            (MCNot (MCVar FMon))
+            (MCNot (P (m In1Mon))))
           (m In2Mon),
-        VB 
-          (VCAnd 
-            (VCVar FMon)
+        CM 
+          (MCAnd 
+            (MCVar FMon)
             (P (m In1Mon)))
           (m In2Mon),
-        VB 
-          (VCAnd 
-            (VCVar FMon)
-            (VCNot (P (m In1Mon))))
+        CM 
+          (MCAnd 
+            (MCVar FMon)
+            (MCNot (P (m In1Mon))))
           (m In1Mon)
       ]
   ]"
@@ -71,7 +71,7 @@ where
     Battery OutB1 FB1, 
     Battery OutB2 FB2, 
     Monitor 
-      (ValuesOperandPredicate_ValueCondition (lte_Values (FMNominal 2)))
+      (ConditionalModePredicate_ModeCondition (lte_Values (NominalMode 2)))
   ]"
 
 definition SMon :: 
@@ -81,36 +81,36 @@ where
     System SMon_A SMon_Cs
   )"
 
-definition SMon_OutMon :: "(FailureVarName, FMode, ComponentPortName) ValuesOperand"
+definition SMon_OutMon :: "(FailureVarName, FMode, ComponentPortName) ConditionalMode"
 where
-  "SMon_OutMon \<equiv> the (SMon (\<lambda> x. VBVConst (FMVar x)) OutMon)"
+  "SMon_OutMon \<equiv> the (SMon (\<lambda> x. CMConst (VarMode x)) OutMon)"
 
 value "SMon_OutMon"
 
-value "normalise_ValueCondition 
-  (ValuesOperandPredicate_ValueCondition (eq_Values (FMFailure Omission)) SMon_OutMon)"
+value "normalise_ModeCondition 
+  (ConditionalModePredicate_ModeCondition (eq_Values (FMFailure Omission)) SMon_OutMon)"
 
 lemma "
-  ValueCondition_eval (
-    ValuesOperandPredicate_ValueCondition (eq_Values (FMFailure Omission)) SMon_OutMon
+  ModeCondition_eval (
+    ConditionalModePredicate_ModeCondition (eq_Values (FailureMode Omission)) SMon_OutMon
   ) vb
   =
-  ValueCondition_eval (
-    VCOr 
+  ModeCondition_eval (
+    MCOr 
     (
-      VCAnd (VCVar FB1) (VCVar FB2)
+      MCAnd (MCVar FB1) (MCVar FB2)
     )
     (
-      VCAnd 
-        (VCVar FMon) 
-        (VCOr (VCVar FB1) (VCVar FB2))
+      MCAnd 
+        (MCVar FMon) 
+        (MCOr (MCVar FB1) (MCVar FB2))
     )
   ) vb"
 apply (auto)
 apply (auto simp add: SMon_OutMon_def SMon_def SMon_Cs_def SMon_A_def Battery_def Monitor_def)
 apply (auto simp add: System_def SystemPortValuation_def SystemComponents_def fun_upd_fun_def)
-apply (auto simp add: normalise_expand_ValuesOperand_def)
-apply (auto simp add: ValueCondition_Sat_def)
+apply (auto simp add: normalise_ConditionalMode_def)
+apply (auto simp add: ModeCondition_Sat_def)
 done
 
 end

@@ -1,5 +1,5 @@
 theory FaultTree
-imports Main FaultModellingTypes ValueCondition Complex_Main
+imports Main FaultModellingTypes ModeCondition Complex_Main
 begin
 
 datatype FaultTreeGate = FTGAnd | FTGOr
@@ -8,43 +8,43 @@ datatype 'vb FaultTree =
   BasicEvent "'vb"
   | IntermediaryEvent FaultTreeGate "'vb FaultTree" "'vb FaultTree" 
 
-fun FT_BO_equiv :: "'vb FaultTree \<Rightarrow> 'vb ValueCondition \<Rightarrow> bool"
+fun FT_BO_equiv :: "'vb FaultTree \<Rightarrow> 'vb ModeCondition \<Rightarrow> bool"
 where
-  "FT_BO_equiv (BasicEvent v1) (VCVar v2) = (v1 = v2)" |
-  "FT_BO_equiv (IntermediaryEvent FTGAnd t1 t2) (VCAnd b1 b2) = 
+  "FT_BO_equiv (BasicEvent v1) (MCVar v2) = (v1 = v2)" |
+  "FT_BO_equiv (IntermediaryEvent FTGAnd t1 t2) (MCAnd b1 b2) = 
     ((FT_BO_equiv t1 b1) \<and> (FT_BO_equiv t2 b2))" |
-  "FT_BO_equiv (IntermediaryEvent FTGOr t1 t2) (VCOr b1 b2) = 
+  "FT_BO_equiv (IntermediaryEvent FTGOr t1 t2) (MCOr b1 b2) = 
     ((FT_BO_equiv t1 b1) \<and> (FT_BO_equiv t2 b2))" |
   "FT_BO_equiv T B = False"
 
-primrec GateToOp :: "FaultTreeGate \<Rightarrow> ('vb ValueCondition binop)"
+primrec GateToOp :: "FaultTreeGate \<Rightarrow> ('vb ModeCondition binop)"
 where
-  "GateToOp FTGAnd = (\<lambda> a b. VCAnd a b)" |
-  "GateToOp FTGOr = (\<lambda> a b. VCOr a b)"
+  "GateToOp FTGAnd = (\<lambda> a b. MCAnd a b)" |
+  "GateToOp FTGOr = (\<lambda> a b. MCOr a b)"
 
-primrec FT_to_BO :: "'vb FaultTree \<Rightarrow> 'vb ValueCondition"
+primrec FT_to_BO :: "'vb FaultTree \<Rightarrow> 'vb ModeCondition"
 where
-  "FT_to_BO (BasicEvent v) = VCVar v" |
+  "FT_to_BO (BasicEvent v) = MCVar v" |
   "FT_to_BO (IntermediaryEvent g t1 t2) = (GateToOp g) (FT_to_BO t1) (FT_to_BO t2)"
 
 definition FaultTree_eval :: "'vb FaultTree \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool"
-where "FaultTree_eval T vb = ValueCondition_eval (FT_to_BO T) vb"
+where "FaultTree_eval T vb = ModeCondition_eval (FT_to_BO T) vb"
 
 (*
-theorem "FaultTree_eval T vb \<longrightarrow> ValueCondition_eval (FT_to_BO T) vb"
+theorem "FaultTree_eval T vb \<longrightarrow> ModeCondition_eval (FT_to_BO T) vb"
 apply (auto)
 apply (auto simp add: FT_to_BO_def)
 apply (auto simp add: FaultTree_eval_def)
-apply (auto simp add: ValueCondition_eval_def)
+apply (auto simp add: ModeCondition_eval_def)
 done*)
 
 (*
-theorem "(ValueCondition_eval (FT_to_BO T) = (ValueCondition_eval B)) \<longrightarrow> 
-  (FaultTree_eval T vb = ValueCondition_eval B vb)"
+theorem "(ModeCondition_eval (FT_to_BO T) = (ModeCondition_eval B)) \<longrightarrow> 
+  (FaultTree_eval T vb = ModeCondition_eval B vb)"
 apply (auto)
 apply (auto simp add: FT_to_BO_def)
 apply (auto simp add: FaultTree_eval_def)
-apply (auto simp add: ValueCondition_eval_def)
+apply (auto simp add: ModeCondition_eval_def)
 done*)
 
 (*Returns the minimum basic event level, related to the root event*)

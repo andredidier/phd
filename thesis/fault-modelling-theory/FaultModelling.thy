@@ -1,7 +1,7 @@
 (*<*)
 theory FaultModelling
 
-imports ValueCondition ValuesOperand
+imports ModeCondition ConditionalMode
 
 begin
 (*>*)
@@ -9,7 +9,7 @@ begin
 isabelle mkroot -d fault-modelling-theory/ 
 e
 isabelle build -D fault-modelling-theory/
-text {* First test: @{term "VCVar v\<^sub>1"} and @{term "VCNot (VCVar A)"} *}
+text {* First test: @{term "MCVar v\<^sub>1"} and @{term "MCNot (MCVar A)"} *}
 *)
 
 type_synonym 'PortName CInput = 'PortName
@@ -18,11 +18,11 @@ type_synonym 'PortName COutput = 'PortName
 type_synonym  ('pin, 'pout) Connections = "'pin \<rightharpoonup> 'pout"
 
 type_synonym ('vb, 'FMode, 'pin) PortValuation = 
-  "'pin \<Rightarrow> ('vb, 'FMode, 'pin) ValuesOperand"
+  "'pin \<Rightarrow> ('vb, 'FMode, 'pin) ConditionalMode"
 
-(* outputs -. ValuesOperand*)
+(* outputs -. ConditionalMode*)
 type_synonym ('vb, 'FMode, 'pin, 'pout) Component = 
-  "('vb, 'FMode, 'pin) PortValuation \<Rightarrow> ('pout \<rightharpoonup> ('vb, 'FMode, 'pin) ValuesOperand)"
+  "('vb, 'FMode, 'pin) PortValuation \<Rightarrow> ('pout \<rightharpoonup> ('vb, 'FMode, 'pin) ConditionalMode)"
 
 primrec list_of_maps_to_map :: "('a \<rightharpoonup> 'b) list \<Rightarrow> ('a \<rightharpoonup> 'b)"
 where
@@ -50,11 +50,11 @@ where
     \<lambda> pin.
     (
       case (A pin) of
-        None \<Rightarrow> VBVConst (FMVar pin) |
+        None \<Rightarrow> CMConst (VarMode pin) |
         (Some pout) \<Rightarrow> 
         (
-          case (c (\<lambda> x. VBVConst (FMVar x))  pout) of
-            None \<Rightarrow> VBVConst (FMVar pin) |
+          case (c (\<lambda> x. CMConst (VarMode x))  pout) of
+            None \<Rightarrow> CMConst (VarMode pin) |
             (Some vo) \<Rightarrow> vo
         )
     )
@@ -64,9 +64,9 @@ definition fun_upd_fun :: "('a \<Rightarrow> 'b) \<Rightarrow> ('a \<Rightarrow>
 where
   "fun_upd_fun f1 f2 g \<equiv> \<lambda> a. let b1 = f1 a in let b2 = f2 a in if g b1 b2 then b1 else b2"
 
-fun is_ValuesVar :: "('vb, 'FMode, 'pin) ValuesOperand \<Rightarrow> bool"
+fun is_ValuesVar :: "('vb, 'FMode, 'pin) ConditionalMode \<Rightarrow> bool"
 where
-  "is_ValuesVar (VBVConst (FMVar x)) = True" |
+  "is_ValuesVar (CMConst (VarMode x)) = True" |
   "is_ValuesVar _ = False"
 
 (* Lista de componentes e conexões*)
@@ -83,7 +83,7 @@ where
       let mpout = C (fun_upd_fun pv xpv (\<lambda> b1 b2. \<not> is_ValuesVar b1 )) in
       (\<lambda> pout. 
         let nvo = mpout pout in
-        case nvo of None \<Rightarrow> None | Some vo \<Rightarrow> Some (normalise_expand_ValuesOperand vo)
+        case nvo of None \<Rightarrow> None | Some vo \<Rightarrow> Some (normalise_ConditionalMode vo)
       )
     )
   )"
