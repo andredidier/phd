@@ -81,36 +81,38 @@ where
     System SMon_A SMon_Cs
   )"
 
+
 definition SMon_OutMon :: "(FailureVarName, FMode, ComponentPortName) ConditionalMode"
 where
   "SMon_OutMon \<equiv> the (SMon (\<lambda> x. CMConst (VarMode x)) OutMon)"
 
-value "SMon_OutMon"
 
-value "normalise_ModeCondition 
-  (ConditionalModePredicate_ModeCondition (eq_Values (FMFailure Omission)) SMon_OutMon)"
+theorem "ValuedTautology SMon_OutMon"
+apply (auto simp add: ValuedTautology_def)
+apply (auto simp add: SMon_OutMon_def SMon_def SMon_A_def SMon_Cs_def)
+sorry
 
 lemma "
-  ModeCondition_eval (
-    ConditionalModePredicate_ModeCondition (eq_Values (FailureMode Omission)) SMon_OutMon
-  ) vb
-  =
-  ModeCondition_eval (
-    MCOr 
+  ModeCondition_Equiv
+    (ConditionalModePredicate_ModeCondition (eq_Values (FailureMode Omission)) SMon_OutMon)
     (
-      MCAnd (MCVar FB1) (MCVar FB2)
-    )
-    (
-      MCAnd 
-        (MCVar FMon) 
-        (MCOr (MCVar FB1) (MCVar FB2))
-    )
-  ) vb"
-apply (auto)
+      MCOr 
+      (
+        MCAnd (MCVar FB1) (MCVar FB2)
+      )
+      (
+        MCAnd 
+          (MCVar FMon) 
+          (MCOr (MCVar FB1) (MCVar FB2))
+      )
+    )"
 apply (auto simp add: SMon_OutMon_def SMon_def SMon_Cs_def SMon_A_def Battery_def Monitor_def)
 apply (auto simp add: System_def SystemPortValuation_def SystemComponents_def fun_upd_fun_def)
+apply (auto simp add: ConditionalModePredicate_ModeCondition_def CMPPredicate_def)
+apply (auto simp add: lte_Values_def)
+apply (auto simp add: CMP2MC_def fold_def)
+apply (auto simp add: ModeCondition_Equiv_def equiv_test_def taut_test_def Let_def)
 apply (auto simp add: normalise_ConditionalMode_def)
-apply (auto simp add: ModeCondition_Sat_def)
 done
 
 end
