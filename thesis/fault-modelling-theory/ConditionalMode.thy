@@ -9,7 +9,6 @@ datatype_new ('FMode, 'vv) OperationalMode =
   | FailureMode "'FMode"
   | VarMode (var: 'vv)
 
-
 datatype_new ('vb, 'FMode, 'vv) ConditionalMode =
   CMConst "('FMode, 'vv) OperationalMode"
   | CMExp "('vb, 'FMode, 'vv) CMPair list" and
