@@ -8,7 +8,7 @@ datatype 'vb FaultTree =
   BasicEvent "'vb"
   | IntermediaryEvent FaultTreeGate "'vb FaultTree" "'vb FaultTree" 
 
-fun FT_BO_equiv :: "'vb FaultTree \<Rightarrow> 'vb ModeCondition \<Rightarrow> bool"
+fun FT_BO_equiv :: "'vb FaultTree \<Rightarrow> 'vb BoolEx \<Rightarrow> bool"
 where
   "FT_BO_equiv (BasicEvent v1) (MCVar v2) = (v1 = v2)" |
   "FT_BO_equiv (IntermediaryEvent FTGAnd t1 t2) (MCAnd b1 b2) = 
@@ -17,18 +17,18 @@ where
     ((FT_BO_equiv t1 b1) \<and> (FT_BO_equiv t2 b2))" |
   "FT_BO_equiv T B = False"
 
-primrec GateToOp :: "FaultTreeGate \<Rightarrow> ('vb ModeCondition binop)"
+primrec GateToOp :: "FaultTreeGate \<Rightarrow> ('vb BoolEx binop)"
 where
   "GateToOp FTGAnd = (\<lambda> a b. MCAnd a b)" |
   "GateToOp FTGOr = (\<lambda> a b. MCOr a b)"
 
-primrec FT_to_BO :: "'vb FaultTree \<Rightarrow> 'vb ModeCondition"
+primrec FT_to_BO :: "'vb FaultTree \<Rightarrow> 'vb BoolEx"
 where
   "FT_to_BO (BasicEvent v) = MCVar v" |
   "FT_to_BO (IntermediaryEvent g t1 t2) = (GateToOp g) (FT_to_BO t1) (FT_to_BO t2)"
 
 definition FaultTree_eval :: "'vb FaultTree \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool"
-where "FaultTree_eval T vb = ModeCondition_eval (FT_to_BO T) vb"
+where "FaultTree_eval T vb = Eval BoolCondition (FT_to_BO T) vb"
 
 (*
 theorem "FaultTree_eval T vb \<longrightarrow> ModeCondition_eval (FT_to_BO T) vb"

@@ -17,12 +17,12 @@ type_synonym 'PortName COutput = 'PortName
 
 type_synonym  ('pin, 'pout) Connections = "'pin \<rightharpoonup> 'pout"
 
-type_synonym ('vb, 'FMode, 'pin) PortValuation = 
-  "'pin \<Rightarrow> ('vb, 'FMode, 'pin) ConditionalMode"
+type_synonym ('a, 'FMode, 'pin) PortValuation = 
+  "'pin \<Rightarrow> ('a, 'FMode, 'pin) ConditionalMode"
 
 (* outputs -. ConditionalMode*)
-type_synonym ('vb, 'FMode, 'pin, 'pout) Component = 
-  "('vb, 'FMode, 'pin) PortValuation \<Rightarrow> ('pout \<rightharpoonup> ('vb, 'FMode, 'pin) ConditionalMode)"
+type_synonym ('a, 'FMode, 'pin, 'pout) Component = 
+  "('a, 'FMode, 'pin) PortValuation \<Rightarrow> ('pout \<rightharpoonup> ('a, 'FMode, 'pin) ConditionalMode)"
 
 primrec list_of_maps_to_map :: "('a \<rightharpoonup> 'b) list \<Rightarrow> ('a \<rightharpoonup> 'b)"
 where
@@ -72,8 +72,8 @@ where
 (* Lista de componentes e conexões*)
 definition System :: "
   ('pin, 'pout) Connections \<Rightarrow> 
-  ('vb, 'FMode, 'pin, 'pout) Component list \<Rightarrow> 
-  ('vb, 'FMode, 'pin, 'pout) Component"
+  ('a, 'FMode, 'pin, 'pout) Component list \<Rightarrow> 
+  ('a, 'FMode, 'pin, 'pout) Component"
 where
   "System A cs \<equiv> 
   (
@@ -81,10 +81,7 @@ where
     let pv = SystemPortValuation A C in
     (\<lambda> xpv.  
       let mpout = C (fun_upd_fun pv xpv (\<lambda> b1 b2. \<not> is_ValuesVar b1 )) in
-      (\<lambda> pout. 
-        let nvo = mpout pout in
-        case nvo of None \<Rightarrow> None | Some vo \<Rightarrow> Some (normalise_ConditionalMode vo)
-      )
+      (\<lambda> pout. mpout pout)
     )
   )"
 

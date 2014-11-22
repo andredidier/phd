@@ -19,7 +19,7 @@ datatype ComponentPortName =
   | OutMon ("out\<^sub>M\<^sub>o\<^sub>n")
 
 definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarrow> 
-  (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
+  (FailureVarName BoolEx, FMode, ComponentPortName, ComponentPortName) Component" where
   "Battery OutP FB \<equiv> \<lambda> m.
   [
     OutP \<mapsto> 
@@ -29,15 +29,16 @@ definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarr
       ]
   ]"
 
-lemma "ValuedTautology (the ((Battery outp fb) env outp))"
+lemma "ValuedTautology BoolCondition (the ((Battery outp fb) env outp))"
 apply (auto simp add: Battery_def)
-apply (auto simp add: ValuedTautology_def ValuedTautology_CVList_def CMP2MC_def)
-apply (auto simp add: ModeCondition_Tautology_def taut_test_def)
-done
+apply (auto simp add: ValuedTautology_def ValuedTautology_CMPList_def CMP2MC_def)
+apply (auto simp add: taut_test_def)
+apply (auto simp add: BoolEx_Absorb_def)
+sorry
 
 definition Monitor :: " 
-  ((FailureVarName, FMode, ComponentPortName) ConditionalMode \<Rightarrow> FailureVarName ModeCondition) \<Rightarrow> 
-  (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
+  ((FailureVarName BoolEx, FMode, ComponentPortName) ConditionalMode \<Rightarrow> FailureVarName BoolEx) \<Rightarrow> 
+  (FailureVarName BoolEx, FMode, ComponentPortName, ComponentPortName) Component" where
   "Monitor P \<equiv>  \<lambda> m.
   [ 
     OutMon \<mapsto>
@@ -70,35 +71,36 @@ where
   "SMon_A \<equiv> [ In1Mon \<mapsto> OutB1, In2Mon \<mapsto> OutB2 ] "
 
 definition SMon_Cs :: 
-  "(FailureVarName, FMode, ComponentPortName, ComponentPortName) Component list"
+  "(FailureVarName BoolEx, FMode, ComponentPortName, ComponentPortName) Component list"
 where 
   "SMon_Cs \<equiv> 
   [ 
     Battery OutB1 FB1, 
     Battery OutB2 FB2, 
     Monitor 
-      (ConditionalModePredicate_ModeCondition (lte_Values (NominalMode 2)))
+      (ConditionalModePredicate_ModeCondition BoolCondition (lte_Values (NominalMode 2)))
   ]"
 
 definition SMon :: 
-  "(FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" 
+  "(FailureVarName BoolEx, FMode, ComponentPortName, ComponentPortName) Component" 
 where
   "SMon \<equiv> System SMon_A SMon_Cs"
 
 
-definition SMon_OutMon :: "(FailureVarName, FMode, ComponentPortName) ConditionalMode"
+definition SMon_OutMon :: "(FailureVarName BoolEx, FMode, ComponentPortName) ConditionalMode"
 where
   "SMon_OutMon \<equiv> the (SMon (\<lambda> x. CMConst (VarMode x)) OutMon)"
 
 
-theorem "ValuedTautology SMon_OutMon"
+theorem "ValuedTautology BoolCondition SMon_OutMon"
 apply (auto simp add: ValuedTautology_def)
 apply (auto simp add: SMon_OutMon_def SMon_def SMon_A_def SMon_Cs_def)
 sorry
 
 lemma "
-  ModeCondition_Equiv
-    (ConditionalModePredicate_ModeCondition (eq_Values (FailureMode Omission)) SMon_OutMon)
+  Equiv BoolCondition
+    (ConditionalModePredicate_ModeCondition BoolCondition 
+      (eq_Values (FailureMode Omission)) SMon_OutMon)
     (
       MCOr 
       (
@@ -115,8 +117,7 @@ apply (auto simp add: System_def SystemPortValuation_def SystemComponents_def fu
 apply (auto simp add: ConditionalModePredicate_ModeCondition_def CMPPredicate_def)
 apply (auto simp add: lte_Values_def)
 apply (auto simp add: CMP2MC_def fold_def)
-apply (auto simp add: ModeCondition_Equiv_def equiv_test_def taut_test_def Let_def)
-apply (auto simp add: normalise_ConditionalMode_def)
-done
+apply (auto simp add: equiv_test_def taut_test_def Let_def )
+sorry
 
 end
