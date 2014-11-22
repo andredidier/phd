@@ -9,14 +9,14 @@ datatype_new ('FMode, 'vv) OperationalMode =
   | FailureMode "'FMode"
   | VarMode (var: 'vv)
 
-datatype_new ('vb, 'FMode, 'vv) ConditionalMode =
+datatype_new ('a, 'FMode, 'vv) ConditionalMode =
   CMConst "('FMode, 'vv) OperationalMode"
-  | CMExp "('vb, 'FMode, 'vv) CMPair list" and
-  ('vb, 'FMode, 'vv) CMPair = 
-    CM (CMC:"'vb ModeCondition") (CMM:"('vb, 'FMode, 'vv) ConditionalMode")
+  | CMExp "('a, 'FMode, 'vv) CMPair list" and
+  ('a, 'FMode, 'vv) CMPair = 
+    CM (CMC:"'a") (CMM:"('a, 'FMode, 'vv) ConditionalMode")
 
-type_synonym ('vb, 'FMode, 'vv) ConditionalModePair = 
-  "('vb ModeCondition \<times> ('FMode, 'vv) OperationalMode)"
+type_synonym ('a, 'FMode, 'vv) ConditionalModePair = 
+  "('a \<times> ('FMode, 'vv) OperationalMode)"
 
 notation (output) NominalMode ("N\<langle>_\<rangle>" 40)
 notation (output) FailureMode ("F\<langle>_\<rangle>" 41)
@@ -25,92 +25,98 @@ notation (output) CMConst  ("_" 50)
 notation (output) CMExp ("VT _" 80)
 notation (output) CM (infix "\<surd>" 80)
 
-primrec expand_CM2CMP :: "'vb ModeCondition \<Rightarrow> 
-  ('vb, 'FMode, 'vv) ConditionalModePair list \<Rightarrow>
-  ('vb, 'FMode, 'vv) ConditionalModePair list"
+primrec expand_CM2CMP :: "('a, 'b, 'c) Condition \<Rightarrow> 'a \<Rightarrow>
+  ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow>
+  ('a, 'FMode, 'vv) ConditionalModePair list"
 where
-  "expand_CM2CMP e [] = []" |
-  "expand_CM2CMP e (v # vs) = (MCAnd e (fst v), snd v) # (expand_CM2CMP e vs)"
+  "expand_CM2CMP c e [] = []" |
+  "expand_CM2CMP c e (v # vs) = 
+    (Both c e (fst v), snd v) # (expand_CM2CMP c e vs)"
 
 primrec 
-  CM2CMP :: "('vb, 'FMode, 'vv) ConditionalMode \<Rightarrow> ('vb, 'FMode, 'vv) ConditionalModePair list" and
-  CM2CMP_list :: "('vb, 'FMode, 'vv) CMPair list \<Rightarrow> ('vb, 'FMode, 'vv) ConditionalModePair list" and
-  CM2CMP_CM :: "('vb, 'FMode, 'vv) CMPair \<Rightarrow> ('vb, 'FMode, 'vv) ConditionalModePair list" 
+  CM2CMP :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> 
+    ('a, 'FMode, 'vv) ConditionalModePair list" and
+  CM2CMP_list :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) CMPair list \<Rightarrow> 
+    ('a, 'FMode, 'vv) ConditionalModePair list" and
+  CM2CMP_CM :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) CMPair \<Rightarrow> 
+    ('a, 'FMode, 'vv) ConditionalModePair list" 
 where
-  "CM2CMP (CMConst c) = [ (MCConst True, c) ]" |
-  "CM2CMP (CMExp v) = CM2CMP_list v" |
-  "CM2CMP_list [] = []" |
-  "CM2CMP_list (E # Es) = (CM2CMP_CM E) @ (CM2CMP_list Es)" |
-  "CM2CMP_CM (CM e v) = expand_CM2CMP e (CM2CMP v)"
+  "CM2CMP cond (CMConst c) = [ (Top cond, c) ]" |
+  "CM2CMP cond (CMExp v) = CM2CMP_list cond v" |
+  "CM2CMP_list cond [] = []" |
+  "CM2CMP_list cond (E # Es) = (CM2CMP_CM cond E) @ (CM2CMP_list cond Es)" |
+  "CM2CMP_CM cond (CM e v) = expand_CM2CMP cond e (CM2CMP cond v)"
 
-fun mkVO :: "('vb, 'FMode, 'vv) ConditionalMode \<Rightarrow> ('vb, 'FMode, 'vv) ConditionalMode \<Rightarrow> 
-  ('vb, 'FMode, 'vv) ConditionalMode"
+fun mkVO :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> 
+  ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode"
 where
-  "mkVO (CMConst c1) (CMConst c2) = CMConst c1" |
-  "mkVO (CMConst c1) (CMExp Es) = (CMExp ((CM (MCConst True) (CMConst c1)) # Es))" |
-  "mkVO (CMExp Es1) (CMExp Es2) = CMExp (Es1 @ Es2)" |
-  "mkVO (CMExp Es) (CMConst c1) = (CMExp (Es @ [CM (MCConst True) (CMConst c1)]))" 
+  "mkVO cond (CMConst c1) (CMConst c2) = CMConst c1" |
+  "mkVO cond (CMConst c1) (CMExp Es) = (CMExp ((CM (Top cond) (CMConst c1)) # Es))" |
+  "mkVO cond (CMExp Es1) (CMExp Es2) = CMExp (Es1 @ Es2)" |
+  "mkVO cond (CMExp Es) (CMConst c1) = (CMExp (Es @ [CM (Top cond) (CMConst c1)]))" 
 
-fun CMP2CM :: "('vb, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> ('vb, 'FMode, 'vv) ConditionalMode"
+fun CMP2CM :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 
+  ('a, 'FMode, 'vv) ConditionalMode"
 where
-  "CMP2CM [] = CMExp []" |
-  "CMP2CM [ cv ] = 
+  "CMP2CM _ [] = CMExp []" |
+  "CMP2CM cond [ cv ] = 
   (
-    if ModeCondition_Tautology (fst cv) 
+    if Tautology cond (fst cv) 
       then CMConst (snd cv) 
       else CMExp [ CM (fst cv) (CMConst (snd cv)) ]
   )" |
-  "CMP2CM (cv # cvs) = mkVO (CMP2CM [cv]) (CMP2CM cvs)"
+  "CMP2CM cond (cv # cvs) = mkVO cond (CMP2CM cond [cv]) (CMP2CM cond cvs)"
 
-definition CMP2MC :: "('vb, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 'vb ModeCondition"
+definition CMP2MC :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 'a"
 where
-  "CMP2MC cvs \<equiv> fold (\<lambda> a b. MCOr (fst a) b) cvs (MCConst False)"
+  "CMP2MC cond cmpl \<equiv> fold (\<lambda> a b. Any cond (fst a) b) cmpl (Bot cond)"
 
-definition ValuedTautology_CMPList :: "('vb, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
+definition ValuedTautology_CMPList :: "('a, 'b, 'c) Condition \<Rightarrow> 
+  ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
 where
-  "ValuedTautology_CMPList cmpl \<equiv> cmpl \<noteq> [] \<and>
-    ((ModeCondition_Tautology \<circ> CMP2MC) cmpl) \<and>
+  "ValuedTautology_CMPList cond cmpl \<equiv> cmpl \<noteq> [] \<and>
+    (((Tautology cond) \<circ> (CMP2MC cond)) cmpl) \<and>
     (\<forall> i j. 
       (
         let ei = fst (cmpl!i); ej = fst (cmpl!j); vi = snd (cmpl!i); vj = snd (cmpl!j)
-        in ModeCondition_Absorb ei ej \<longrightarrow> vi = vj
+        in Absorb cond ei ej \<longrightarrow> vi = vj
       )
     )"
 
 definition CMPList_eval_values :: 
-  "('vb, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 
-  'vb MCEnv \<Rightarrow> 
+  "('a, 'b, 'c) Condition \<Rightarrow> 
+  ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 
+  ('b \<Rightarrow> 'c) \<Rightarrow> 
   ('FMode, 'vv) OperationalMode list"
 where
-  "CMPList_eval_values cvs s \<equiv> 
+  "CMPList_eval_values cond cmpl s \<equiv> 
   (
     let 
-      filtercvs = filter (\<lambda> cv. ModeCondition_eval (fst cv) s);
+      filtercvs = filter (\<lambda> cv. Eval cond (fst cv) s);
       getvalue = map snd;
       filterValue = (\<lambda> vs. if vs = [] then [] else hd vs # (filter (\<lambda> v. v \<noteq> hd vs) (tl vs)))
-    in (filterValue \<circ> getvalue \<circ> filtercvs) cvs
+    in (filterValue \<circ> getvalue \<circ> filtercvs) cmpl
   )"
+
 lemma CMPList_eval_values_single: 
-  "\<lbrakk> ModeCondition_eval a s \<rbrakk> \<Longrightarrow> (CMPList_eval_values [(a,x)] s = [x])"
+  "\<lbrakk> Eval cond a s \<rbrakk> \<Longrightarrow> (CMPList_eval_values cond [(a,x)] s = [x])"
 apply (simp add: CMPList_eval_values_def)
 done
 
 corollary CMPList_eval_values_not_empty: "
-  \<lbrakk> ModeCondition_eval a s \<rbrakk> \<Longrightarrow> 
-  (CMPList_eval_values [(a,x)] s) \<noteq> []"
+  \<lbrakk> Eval cond a s \<rbrakk> \<Longrightarrow> 
+  (CMPList_eval_values cond [(a,x)] s) \<noteq> []"
 apply (simp add: CMPList_eval_values_single)
 done
 
-
 theorem UniqueValue_ValuedTautology: 
-  "ValuedTautology_CMPList cmpl \<longrightarrow> (\<forall> s. length (CMPList_eval_values cmpl s) = 1)"
+  "ValuedTautology_CMPList cond cmpl \<longrightarrow> (\<forall> s. length (CMPList_eval_values cond cmpl s) = 1)"
 using [[simp_trace=true]]
 apply (induct cmpl)
 apply (simp add: ValuedTautology_CMPList_def)
 apply (simp)
 apply (auto)
-apply (auto simp add: t1)
-done
+sorry
 
 
 (*
@@ -134,92 +140,101 @@ notation (output) ConditionalMode_values_eval ("\<lbrakk>_\<rbrakk> \<langle>_\<
 *)
 
 primrec  
-  CM2MC :: "('vb, 'FMode, 'vv) ConditionalMode \<Rightarrow> 'vb ModeCondition" and
+  CM2MC :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> 'a" and
   CM2MC_list :: 
-    "('vb, 'FMode, 'vv) CMPair list \<Rightarrow> 'vb ModeCondition" and
-  CM2MC_VB :: "('vb, 'FMode, 'vv) CMPair \<Rightarrow> 'vb ModeCondition"
+    "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) CMPair list \<Rightarrow> 'a" and
+  CM2MC_VB :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) CMPair \<Rightarrow> 'a"
 where
-  "CM2MC (CMConst _) = (MCConst True)" |
-  "CM2MC (CMExp Es) = CM2MC_list Es" |
-  "CM2MC_list [] = (MCConst False)" |
-  "CM2MC_list (E # Es) = MCOr (CM2MC_VB E) (CM2MC_list Es)" |
-  "CM2MC_VB (CM e _) = e"
+  "CM2MC cond (CMConst _) = (Top cond)" |
+  "CM2MC cond (CMExp Es) = CM2MC_list cond Es" |
+  "CM2MC_list cond [] = (Bot cond)" |
+  "CM2MC_list cond (E # Es) = Any cond (CM2MC_VB cond E) (CM2MC_list cond Es)" |
+  "CM2MC_VB cond (CM e _) = e"
 
-definition ValuedTautology :: "('vb, 'FMode, 'vv) ConditionalMode \<Rightarrow> bool"
+definition ValuedTautology :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> bool"
 where
-  "ValuedTautology v \<equiv> (ValuedTautology_CMPList \<circ> CM2CMP) v"
+  "ValuedTautology cond v \<equiv> ((ValuedTautology_CMPList cond) \<circ> (CM2CMP cond)) v"
 
-notation (output) ValuedTautology ("\<TT> _")
+notation (output) ValuedTautology ("\<VV>\<TT> _")
 
 lemma [simp]: "
   \<lbrakk>
-    ValuedTautology U;
-    ValuedTautology V
+    cond = BoolCondition;
+    ValuedTautology cond U;
+    ValuedTautology cond V
   \<rbrakk> 
-  \<Longrightarrow> ValuedTautology (CMExp [VB (MCConst True) U, VB (MCNot (MCConst True)) V])"
+  \<Longrightarrow> ValuedTautology cond (CMExp [VB (MCConst True) U, VB (MCNot (MCConst True)) V])"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CMPList_def)
 sorry
 
 lemma [simp]: "
   \<lbrakk>
-    ValuedTautology U;
-    ValuedTautology V
+    cond = BoolCondition;
+    ValuedTautology cond U;
+    ValuedTautology cond V
   \<rbrakk> 
   \<Longrightarrow> 
-  ValuedTautology (CMExp [VB A U, VB (MCNot A) V])"
+  ValuedTautology cond (CMExp [VB A U, VB (MCNot A) V])"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CMPList_def)
 sorry
 
 lemma valued_tautology_or : 
   "\<lbrakk>
-    ValuedTautology U;
-    ValuedTautology V;
-    ValuedTautology Q;
-    (ModeCondition_Sat (MCAnd A B) \<longrightarrow> U = V)
+    cond = BoolCondition;
+    ValuedTautology cond U;
+    ValuedTautology cond V;
+    ValuedTautology cond Q;
+    (Sat cond (MCAnd A B) \<longrightarrow> U = V)
    \<rbrakk>
    \<Longrightarrow> 
-   ValuedTautology (CMExp [VB A U, VB B V, VB (MCAnd (MCNot A) (MCNot B)) Q])"
+   ValuedTautology cond (CMExp [VB A U, VB B V, VB (MCAnd (MCNot A) (MCNot B)) Q])"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CMPList_def)
 sorry
 
-lemma not_valued_tautology1 : "
-(\<not> (ModeCondition_Sat A)) \<Longrightarrow> 
-  (\<not> ValuedTautology (CMExp [VB A U]))"
+lemma not_valued_tautology1 : "cond = BoolCondition \<Longrightarrow>
+  (\<not> (Sat cond A)) \<Longrightarrow> 
+  (\<not> ValuedTautology cond (CMExp [VB A U]))"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CMPList_def)
 sorry
 
 lemma not_valued_tautology2 : 
-  "(\<not> (ModeCondition_Sat (MCOr A B))) \<Longrightarrow> 
-  \<not> ValuedTautology (CMExp [VB A U, VB B V])"
+  "cond = BoolCondition \<Longrightarrow> (\<not> (Sat cond (MCOr A B))) \<Longrightarrow> 
+  \<not> ValuedTautology cond (CMExp [VB A U, VB B V])"
 apply (auto simp add: ValuedTautology_def ValuedTautology_CMPList_def)
 sorry
 
-definition CMPPredicate :: "(('FMode, 'vv) OperationalMode \<Rightarrow> bool) \<Rightarrow> 
-  ('vb, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 'vb ModeCondition"
+definition CMPPredicate :: "('a, 'b, 'c) Condition \<Rightarrow> (('FMode, 'vv) OperationalMode \<Rightarrow> bool) \<Rightarrow> 
+  ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 'a"
 where
-  "CMPPredicate P cmps = 
+  "CMPPredicate cond P cmps = 
   (
     let 
       select = filter (\<lambda> cmp. P (snd cmp));
-      transform = CMP2MC
+      transform = CMP2MC cond
     in (transform \<circ> select) cmps
   )"
 
-lemma "(CMPPredicate (\<lambda> _. True) cmpl) = (CMP2MC cmpl)"
+lemma "cond = BoolCondition \<Longrightarrow> (CMPPredicate cond (\<lambda> _. True) cmpl) = (CMP2MC cond cmpl)"
 apply (induct cmpl)
 apply (auto simp add: CMPPredicate_def)
 done
 
-lemma "(CMPPredicate (\<lambda> _. False) cmpl) = MCConst False"
+lemma "cond = BoolCondition \<Longrightarrow> (CMPPredicate cond (\<lambda> _. True) cmpl) = (CMP2MC cond cmpl)"
+apply (induct cmpl)
+apply (auto simp add: CMPPredicate_def)
+done
+
+lemma "cond = BoolCondition \<Longrightarrow> (CMPPredicate cond (\<lambda> _. False) cmpl) = MCConst False"
 apply (induct cmpl)
 apply (auto simp add: CMPPredicate_def CMP2MC_def)
 done
 
 definition 
-  ConditionalModePredicate_ModeCondition :: "(('FMode, 'vv) OperationalMode \<Rightarrow> bool) \<Rightarrow> 
-    ('vb, 'FMode, 'vv) ConditionalMode \<Rightarrow> 'vb ModeCondition"
+  ConditionalModePredicate_ModeCondition :: "('a, 'b, 'c) Condition \<Rightarrow> 
+    (('FMode, 'vv) OperationalMode \<Rightarrow> bool) \<Rightarrow> 
+    ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> 'a"
 where
-  "ConditionalModePredicate_ModeCondition P cm \<equiv> CMPPredicate P (CM2CMP cm)"
+  "ConditionalModePredicate_ModeCondition cond P cm \<equiv> CMPPredicate cond P (CM2CMP cond cm)"
 
 fun nominal_op :: 
   "('FMode, 'vv) OperationalMode \<Rightarrow> ('FMode, 'vv) OperationalMode \<Rightarrow> 
@@ -257,46 +272,50 @@ notation (output) lt_Values  (infix "<" 50)
 notation (output) gt_Values  (infix ">" 50)
 notation (output) eq_Values  (infix "=" 50)
 
-value "ConditionalModePredicate_ModeCondition 
-  (lte_Values (NominalMode 2))   (CMExp [
-    VB (MCVar A) (CMConst (FailureMode F1)),
-    VB (MCNot (MCVar A)) (CMConst (NominalMode 5))
-  ]) 
-  "
-
 definition ConditionalMode_eval_values :: 
-  "('vb, 'FMode, 'vv) ConditionalMode \<Rightarrow> 'vb MCEnv \<Rightarrow> ('FMode, 'vv) OperationalMode list"
+  "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> 
+  ('FMode, 'vv) OperationalMode list"
 where
-  "ConditionalMode_eval_values v s \<equiv> CMPList_eval_values (CM2CMP v) s"
+  "ConditionalMode_eval_values cond v s \<equiv> CMPList_eval_values cond (CM2CMP cond v) s"
 
-theorem [simp]: "ValuedTautology v \<Longrightarrow> length (ConditionalMode_eval_values v s) = 1"
+lemma "cond = BoolCondition \<Longrightarrow>
+  ValuedTautology cond v \<Longrightarrow> length (ConditionalMode_eval_values cond v s) = 1"
 apply (induct v)
 apply (auto simp add: ValuedTautology_def)
 apply (auto simp add: ConditionalMode_eval_values_def)
-done
+sorry
+
+theorem "ValuedTautology cond v \<Longrightarrow> length (ConditionalMode_eval_values cond v s) = 1"
+apply (induct v)
+apply (auto simp add: ValuedTautology_def)
+apply (auto simp add: ConditionalMode_eval_values_def)
+sorry
 
 definition normalise_ConditionalModePair_filter :: 
-  "('vb, 'FMode, 'vv) ConditionalModePair \<Rightarrow> ('vb, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
+  "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalModePair \<Rightarrow> 
+    ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
 where
-  "normalise_ConditionalModePair_filter cv cvs \<equiv> 
-    ModeCondition_Sat (fst cv) \<and> 
-    (filter (\<lambda> cv2. snd cv = snd (cv2) \<and> ModeCondition_Equiv (fst cv) (fst (cv2))) cvs = [])"
+  "normalise_ConditionalModePair_filter cond cv cvs \<equiv> 
+    Sat cond (fst cv) \<and> 
+    (filter (\<lambda> cv2. snd cv = snd (cv2) \<and> Equiv cond (fst cv) (fst (cv2))) cvs = [])"
 
-primrec normalise_ConditionalModePair :: "
-  ('vb, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> ('vb, 'FMode, 'vv) ConditionalModePair list"
+primrec normalise_ConditionalModePair :: "('a, 'b, 'c) Condition \<Rightarrow> 
+  ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> ('a, 'FMode, 'vv) ConditionalModePair list"
 where
-  "normalise_ConditionalModePair [] = []" |
-  "normalise_ConditionalModePair (cv # cvs) = (
-    if (normalise_ConditionalModePair_filter cv cvs) 
-      then cv # (normalise_ConditionalModePair cvs)
-      else (normalise_ConditionalModePair cvs)
+  "normalise_ConditionalModePair _ [] = []" |
+  "normalise_ConditionalModePair cond (cv # cvs) = (
+    if (normalise_ConditionalModePair_filter cond cv cvs) 
+      then cv # (normalise_ConditionalModePair cond cvs)
+      else (normalise_ConditionalModePair cond cvs)
   )"
 
 definition
   normalise_ConditionalMode :: 
-    "('vb, 'FMode, 'vv) ConditionalMode \<Rightarrow> ('vb, 'FMode, 'vv) ConditionalMode" 
+    "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> 
+    ('a, 'FMode, 'vv) ConditionalMode" 
 where
-  "normalise_ConditionalMode \<equiv> CMP2CM \<circ> normalise_ConditionalModePair \<circ> CM2CMP" 
+  "normalise_ConditionalMode cond \<equiv> 
+    (CMP2CM cond) \<circ> (normalise_ConditionalModePair cond) \<circ> (CM2CMP cond)" 
 
 (*
 primrec 
@@ -336,20 +355,21 @@ where
   "choose_values _ None = None" |
   "choose_values v1 (Some v2) = (if (v1 = v2) then (Some v1) else None)"
 
-definition ConditionalMode_eval_value :: "('vb, 'FMode, 'vv) ConditionalMode \<Rightarrow> 
-  'vb MCEnv \<Rightarrow> ('FMode, 'vv) OperationalMode option"
+definition ConditionalMode_eval_value :: "('a, 'b, 'c) Condition \<Rightarrow> 
+  ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> 
+  ('b \<Rightarrow> 'c) \<Rightarrow> ('FMode, 'vv) OperationalMode option"
 where
-  "ConditionalMode_eval_value Es vb \<equiv> 
-    fold choose_values (ConditionalMode_eval_values Es vb) None"
+  "ConditionalMode_eval_value cond Es vb \<equiv> 
+    fold choose_values (ConditionalMode_eval_values cond Es vb) None"
 
 
-lemma [simp]: "(ValuedTautology (CMExp Es)) \<Longrightarrow> 
-  (length (ConditionalMode_eval_values (CMExp Es) vb) = 1)"
+lemma "cond = BoolCondition \<Longrightarrow> (ValuedTautology cond (CMExp Es)) \<Longrightarrow> 
+  (length (ConditionalMode_eval_values cond (CMExp Es) vb) = 1)"
 apply (auto)
-done
+sorry
 
-lemma "(ValuedTautology (CMExp Es)) \<Longrightarrow> 
-  (ConditionalMode_eval_value (CMExp Es) vb = Some v)"
+lemma "cond = BoolCondition \<Longrightarrow> (ValuedTautology cond (CMExp Es)) \<Longrightarrow> 
+  (ConditionalMode_eval_value cond (CMExp Es) vb = Some v)"
 apply (induct Es)
 apply (auto simp add: ConditionalMode_eval_value_def)
 apply (auto simp add: ConditionalMode_eval_values_def)
@@ -358,14 +378,14 @@ apply (auto simp add: ValuedTautology_def)
 apply (auto simp add: ValuedTautology_CMPList_def)
 sorry
 
-theorem "(ValuedTautology cm) \<Longrightarrow> 
-  (ConditionalMode_eval_value cm vb = Some v)"
+theorem "cond = BoolCondition \<Longrightarrow> (ValuedTautology cond cm) \<Longrightarrow> 
+  (ConditionalMode_eval_value cond cm vb = Some v)"
 apply (induct cm)
 apply (auto simp add: ConditionalMode_eval_value_def)
 apply (auto simp add: ConditionalMode_eval_values_def)
 apply (auto simp add: CMPList_eval_values_def)
 apply (auto simp add: ValuedTautology_def)
 apply (auto simp add: ValuedTautology_CMPList_def)
-done
+sorry
 
 end

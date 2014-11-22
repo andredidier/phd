@@ -14,12 +14,21 @@ datatype_new ('a, 'b, 'c) Condition =
     (Sat: "'a \<Rightarrow> bool") 
     (Equiv: "'a \<Rightarrow> 'a \<Rightarrow> bool")
     (Absorb: "'a \<Rightarrow> 'a \<Rightarrow> bool")
-    (Eval:"'a \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> bool")
+    (Eval: "'a \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> bool")
+    (Top: "'a")
+    (Bot: "'a")
+    (Both: "'a binop")
+    (Any: "'a binop")
 
-  (*fixes tautology :: "'a \<Rightarrow> bool" ("\<TT> _" 70) 
-  fixes sat :: "'a \<Rightarrow> bool" ("\<SS> _" 70)
-  fixes equiv :: "'a \<Rightarrow> 'a \<Rightarrow> bool" (infixr "\<EE>" 70)
-  fixes absorb :: "'a \<Rightarrow> 'a \<Rightarrow> bool" (infixr "\<AA>" 70)*)
+notation (output) Tautology ("\<TT>\<index> _" 70) 
+notation (output) Sat ("\<SS>\<index> _" 70)
+notation (output) Equiv (infixr "\<EE>\<index>" 70)
+notation (output) Absorb (infixr "\<AA>\<index>" 70)
+notation (output) Eval ("\<lbrakk>_\<rbrakk>\<index>\<Colon>_" 70)
+notation (output) Top ("\<top>")
+notation (output) Bot ("\<bottom>")
+notation (output) Both (infixr "\<and>\<index>" 50)
+notation (output) Any (infixr "\<or>\<index>" 50)
 
 datatype 'vb BoolEx = 
   MCConst bool
@@ -29,8 +38,8 @@ datatype 'vb BoolEx =
 
 notation (output) MCConst  ("_" 60)
 notation (output) MCVar ("_" 60)
-notation (output) MCNot ("\<not>_" 80)
-notation (output) MCAnd (infix "\<and>" 75)
+notation (output) MCNot ("\<not>_" 64)
+notation (output) MCAnd (infix "\<and>" 65)
 
 abbreviation MCOr :: "'vb BoolEx \<Rightarrow> 'vb BoolEx \<Rightarrow> 'vb BoolEx"
 where "MCOr b1 b2 \<equiv> MCNot (MCAnd (MCNot b1) (MCNot b2))"
@@ -82,7 +91,7 @@ where
         absorb_test (BoolEx_to_bool_expr c1) (BoolEx_to_bool_expr c2)
     )"
 
-definition BoolCondition :: "('vb BoolEx, 'vb, bool) Condition"
+definition BoolCondition :: "('vb BoolEx, 'vb, bool) Condition" ("\<^sub>B")
 where
   "BoolCondition \<equiv> 
   Operations 
@@ -90,7 +99,11 @@ where
     (sat_test \<circ> BoolEx_to_bool_expr) 
     (\<lambda> c1 c2. equiv_test (BoolEx_to_bool_expr c1) (BoolEx_to_bool_expr c2)) 
     (BoolEx_Absorb)
-    (BoolEx_eval)"
+    (BoolEx_eval)
+    (MCConst True)
+    (MCConst False)
+    (MCAnd)
+    (MCOr)"
 
 declare BoolCondition_def [simp]
 
