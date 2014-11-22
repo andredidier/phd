@@ -19,6 +19,7 @@ datatype_new ('a, 'b, 'c) Condition =
     (Bot: "'a")
     (Both: "'a binop")
     (Any: "'a binop")
+    (Not: "'a \<Rightarrow> 'a")
 
 notation (output) Tautology ("\<TT>\<index> _" 70) 
 notation (output) Sat ("\<SS>\<index> _" 70)
@@ -29,6 +30,7 @@ notation (output) Top ("\<top>")
 notation (output) Bot ("\<bottom>")
 notation (output) Both (infixr "\<and>\<index>" 50)
 notation (output) Any (infixr "\<or>\<index>" 50)
+notation (output) Not ("\<not>\<index>_" 50)
 
 datatype 'vb BoolEx = 
   MCConst bool
@@ -103,7 +105,8 @@ where
     (MCConst True)
     (MCConst False)
     (MCAnd)
-    (MCOr)"
+    (MCOr)
+    (MCNot)"
 
 declare BoolCondition_def [simp]
 
@@ -116,18 +119,42 @@ where
     (Equiv condition a b = (\<forall> s. Eval condition a s = Eval condition b s))
   )"
 
+definition ValidLattice :: "('a, 'b, 'c) Condition \<Rightarrow> bool"
+where
+  "ValidLattice C \<equiv> 
+    (Tautology C (Top C)) \<and>
+    (\<not> (Sat C (Bot C))
+  )"
+
+definition ValidOps :: "('a, 'b, 'c) Condition \<Rightarrow> bool"
+where
+  "ValidOps cond \<equiv> (\<forall> a b.
+    (Equiv cond (Any cond a (Bot cond)) a) \<and>
+    (Equiv cond (Any cond a (Top cond)) (Top cond)) \<and>
+    (Equiv cond (Both cond a (Bot cond)) (Bot cond)) \<and>
+    (Equiv cond (Both cond a (Top cond)) a) \<and>
+    (Equiv cond (Any cond a b) (Any cond b a)) \<and>
+    (Equiv cond (Both cond a b) (Both cond b a)) \<and>
+    (Equiv cond (Bot cond) (Not cond (Top cond))) \<and>
+    (Equiv cond (Top cond) (Not cond (Bot cond)))
+  )"
+
 lemma ValuePreservation_BoolEx: 
   "val_bool_expr (BoolEx_to_bool_expr b) s = BoolEx_eval b s"
 apply (induction b)
 apply (auto)
 done
 
-corollary ValuePreservation_BoolCondition: "ValuePreservation BoolCondition"
+theorem ValuePreservation_BoolCondition: "ValuePreservation BoolCondition"
 apply (auto simp add: ValuePreservation_def)
 apply (auto simp add: taut_test ValuePreservation_BoolEx)
 apply (auto simp add: sat_test ValuePreservation_BoolEx)
 apply (auto simp add: absorb_rule_def BoolEx_Absorb_def taut_test ValuePreservation_BoolEx)
 apply (auto simp add: equiv_test ValuePreservation_BoolEx)
+done
+
+theorem ValidOps_BoolCondition: "ValidOps BoolCondition"
+apply (auto simp add: ValidOps_def equiv_test )
 done
 
 end

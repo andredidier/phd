@@ -87,36 +87,50 @@ definition CMPList_eval_values ::
   "('a, 'b, 'c) Condition \<Rightarrow> 
   ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 
   ('b \<Rightarrow> 'c) \<Rightarrow> 
-  ('FMode, 'vv) OperationalMode list"
+  ('FMode, 'vv) OperationalMode set"
 where
   "CMPList_eval_values cond cmpl s \<equiv> 
   (
     let 
       filtercvs = filter (\<lambda> cv. Eval cond (fst cv) s);
-      getvalue = map snd;
-      filterValue = (\<lambda> vs. if vs = [] then [] else hd vs # (filter (\<lambda> v. v \<noteq> hd vs) (tl vs)))
-    in (filterValue \<circ> getvalue \<circ> filtercvs) cmpl
+      getvalue = map snd
+    in (set \<circ> getvalue \<circ> filtercvs) cmpl
   )"
 
 lemma CMPList_eval_values_single: 
-  "\<lbrakk> Eval cond a s \<rbrakk> \<Longrightarrow> (CMPList_eval_values cond [(a,x)] s = [x])"
+  "\<lbrakk> Eval cond a s \<rbrakk> \<Longrightarrow> (CMPList_eval_values cond [(a,x)] s = {x})"
 apply (simp add: CMPList_eval_values_def)
 done
 
 corollary CMPList_eval_values_not_empty: "
   \<lbrakk> Eval cond a s \<rbrakk> \<Longrightarrow> 
-  (CMPList_eval_values cond [(a,x)] s) \<noteq> []"
+  (CMPList_eval_values cond [(a,x)] s) \<noteq> {}"
 apply (simp add: CMPList_eval_values_single)
 done
 
-theorem UniqueValue_ValuedTautology: 
-  "ValuedTautology_CMPList cond cmpl \<longrightarrow> (\<forall> s. length (CMPList_eval_values cond cmpl s) = 1)"
-using [[simp_trace=true]]
+lemma t1:
+  "\<lbrakk> ValuePreservation cond; ValidOps cond; ValidLattice cond \<rbrakk> \<Longrightarrow>
+  ValuedTautology_CMPList cond cmpl \<longrightarrow> (\<forall> s. card (CMPList_eval_values cond cmpl s) > 0)"
 apply (induct cmpl)
 apply (simp add: ValuedTautology_CMPList_def)
 apply (simp)
 apply (auto)
 sorry
+
+theorem UniqueValue_ValuedTautology: 
+  "\<lbrakk> ValuePreservation cond; ValidOps cond \<rbrakk> \<Longrightarrow>
+  ValuedTautology_CMPList cond cmpl \<longrightarrow> (\<forall> s. card (CMPList_eval_values cond cmpl s) = 1)"
+(*using [[simp_trace=true]]*)
+apply (induct cmpl)
+apply (simp add: ValuedTautology_CMPList_def)
+apply (simp)
+apply (auto)
+apply (auto simp add: t1)
+(*
+apply (auto simp add: CMPList_eval_values_def ValuedTautology_CMPList_def CMP2MC_def)
+apply (auto simp add: ValuePreservation_def ValidBinops_def)
+*)
+done
 
 
 (*
