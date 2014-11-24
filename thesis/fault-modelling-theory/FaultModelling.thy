@@ -1,7 +1,7 @@
 (*<*)
 theory FaultModelling
 
-imports ModeCondition ConditionalMode
+imports ModeCondition ConditionalMode ConditionalModePredicate
 
 begin
 (*>*)
