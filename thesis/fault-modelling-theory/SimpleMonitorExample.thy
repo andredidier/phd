@@ -33,7 +33,6 @@ lemma "ValuedTautology BoolCondition (the ((Battery outp fb) env outp))"
 apply (auto simp add: Battery_def)
 apply (auto simp add: ValuedTautology_def ValuedTautology_CMPList_def CMP2MC_def)
 apply (auto simp add: taut_test_def)
-apply (auto simp add: BoolEx_Absorb_def)
 sorry
 
 definition Monitor :: " 

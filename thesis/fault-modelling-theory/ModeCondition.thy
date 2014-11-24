@@ -14,7 +14,7 @@ datatype_new ('a, 'b, 'c) Condition =
     (Sat: "'a \<Rightarrow> bool") 
     (Equiv: "'a \<Rightarrow> 'a \<Rightarrow> bool")
     (Absorb: "'a \<Rightarrow> 'a \<Rightarrow> bool")
-    (Eval: "'a \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> bool")
+    (Eval: "('b \<Rightarrow> 'c) \<Rightarrow>'a \<Rightarrow>  bool")
     (Top: "'a")
     (Bot: "'a")
     (Both: "'a binop")
@@ -25,9 +25,9 @@ notation (output) Tautology ("\<TT>\<index> _" 70)
 notation (output) Sat ("\<SS>\<index> _" 70)
 notation (output) Equiv (infixr "\<EE>\<index>" 70)
 notation (output) Absorb (infixr "\<AA>\<index>" 70)
-notation (output) Eval ("\<lbrakk>_\<rbrakk>\<index>\<Colon>_" 70)
-notation (output) Top ("\<top>")
-notation (output) Bot ("\<bottom>")
+notation (output) Eval ("_\<Colon>\<lbrakk>_\<rbrakk>\<index>" 70)
+notation (output) Top ("\<top>\<index>")
+notation (output) Bot ("\<bottom>\<index>")
 notation (output) Both (infixr "\<and>\<index>" 50)
 notation (output) Any (infixr "\<or>\<index>" 50)
 notation (output) Not ("\<not>\<index>_" 50)
@@ -38,8 +38,8 @@ datatype 'vb BoolEx =
   | MCNot "'vb BoolEx" 
   | MCAnd "'vb BoolEx" "'vb BoolEx" 
 
-notation (output) MCConst  ("_" 60)
-notation (output) MCVar ("_" 60)
+notation (output) MCConst  ("_\<^sub>B" 60)
+notation (output) MCVar ("_\<^sub>B" 60)
 notation (output) MCNot ("\<not>_" 64)
 notation (output) MCAnd (infix "\<and>" 65)
 
@@ -70,13 +70,14 @@ where
 
 (*>*)
 
-primrec BoolEx_eval :: "'vb BoolEx \<Rightarrow> 'vb MCEnv \<Rightarrow> bool"
+primrec BoolEx_eval :: "'vb MCEnv \<Rightarrow> 'vb BoolEx \<Rightarrow> bool"
 where
-  "BoolEx_eval (MCConst c) _ = c" |
-  "BoolEx_eval (MCVar v) env = (env v)" |
-  "BoolEx_eval (MCNot b) env = (\<not> BoolEx_eval b env)" |
-  "BoolEx_eval (MCAnd b1 b2) env = 
-    ((BoolEx_eval b1 env) \<and> (BoolEx_eval b2 env))"
+  "BoolEx_eval _ (MCConst c) = c" |
+  "BoolEx_eval s (MCVar v) = (s v)" |
+  "BoolEx_eval s (MCNot b) = (\<not> BoolEx_eval s b)" |
+  "BoolEx_eval s (MCAnd b1 b2) = 
+    ((BoolEx_eval s b1) \<and> (BoolEx_eval s b2))"
+
 
 definition absorb_rule :: "bool \<Rightarrow> bool \<Rightarrow> bool"
 where
@@ -113,10 +114,10 @@ declare BoolCondition_def [simp]
 definition ValuePreservation :: "('a, 'b, 'c) Condition \<Rightarrow> bool"
 where
   "ValuePreservation condition \<equiv> (\<forall> a b.
-    (Tautology condition a = (\<forall> s. Eval condition a s)) \<and>
-    (Sat condition a = (\<exists> s. Eval condition a s)) \<and>
-    (Absorb condition a b = (\<forall> s. absorb_rule (Eval condition a s) (Eval condition b s))) \<and>
-    (Equiv condition a b = (\<forall> s. Eval condition a s = Eval condition b s))
+    (Tautology condition a = (\<forall> s. Eval condition s a)) \<and>
+    (Sat condition a = (\<exists> s. Eval condition s a)) \<and>
+    (Absorb condition a b = (\<forall> s. absorb_rule (Eval condition s a) (Eval condition s b))) \<and>
+    (Equiv condition a b = (\<forall> s. Eval condition s a = Eval condition s b))
   )"
 
 definition ValidLattice :: "('a, 'b, 'c) Condition \<Rightarrow> bool"
@@ -139,13 +140,37 @@ where
     (Equiv cond (Top cond) (Not cond (Bot cond)))
   )"
 
+definition ValidCondition :: "('a, 'b, 'c) Condition \<Rightarrow> bool"
+where
+  "ValidCondition C \<equiv> ValuePreservation C \<and> ValidLattice C \<and> ValidOps C"
+
+lemma "\<lbrakk> ValuePreservation C \<rbrakk> \<Longrightarrow> 
+  Tautology C a \<Longrightarrow> ((\<forall> s. \<not> Eval C s a)) \<Longrightarrow> False"
+apply (simp add: ValuePreservation_def)
+done
+
+(*
+definition TautologyProperty :: "('a, 'b, 'c) Condition \<Rightarrow> bool"
+where
+  "TautologyProperty cond \<equiv> \<forall> a. Tautology cond a \<longrightarrow> 
+    (\<exists> b c. Equiv cond b (Not cond c) \<and> (Equiv cond a (Any cond b c)))"
+
+lemma "\<lbrakk> C = BoolCondition; ValidOps C; ValidLattice C; ValuePreservation C \<rbrakk> \<Longrightarrow> 
+  TautologyProperty C"
+apply (auto)
+apply (auto simp add: ValidOps_def TautologyProperty_def ValidLattice_def ValuePreservation_def)
+apply (auto simp add: BoolEx_eval_def BoolEx_Absorb_def)
+apply (auto simp add: taut_test equiv_test sat_test BoolEx_to_bool_expr_def)
+done
+*)
+
 lemma ValuePreservation_BoolEx: 
-  "val_bool_expr (BoolEx_to_bool_expr b) s = BoolEx_eval b s"
+  "val_bool_expr (BoolEx_to_bool_expr b) s = BoolEx_eval s b"
 apply (induction b)
 apply (auto)
 done
 
-theorem ValuePreservation_BoolCondition: "ValuePreservation BoolCondition"
+lemma ValuePreservation_BoolCondition: "ValuePreservation BoolCondition"
 apply (auto simp add: ValuePreservation_def)
 apply (auto simp add: taut_test ValuePreservation_BoolEx)
 apply (auto simp add: sat_test ValuePreservation_BoolEx)
@@ -153,8 +178,43 @@ apply (auto simp add: absorb_rule_def BoolEx_Absorb_def taut_test ValuePreservat
 apply (auto simp add: equiv_test ValuePreservation_BoolEx)
 done
 
-theorem ValidOps_BoolCondition: "ValidOps BoolCondition"
-apply (auto simp add: ValidOps_def equiv_test )
+lemma ValidOps_BoolCondition: "ValidOps BoolCondition"
+apply (auto simp add: ValidOps_def equiv_test)
 done
+
+lemma ValidLattice_BoolCondition: "ValidLattice BoolCondition"
+apply (auto simp add: ValidLattice_def taut_test sat_test)
+done
+
+theorem ValidCondition_BoolCondition: "ValidCondition BoolCondition"
+apply (auto simp add: ValidCondition_def)
+(*apply (auto simp add: ValuePreservation_BoolCondition)*)
+apply (auto simp add: ValuePreservation_def)
+apply (auto simp add: taut_test ValuePreservation_BoolEx)
+apply (auto simp add: sat_test ValuePreservation_BoolEx)
+apply (auto simp add: absorb_rule_def BoolEx_Absorb_def taut_test ValuePreservation_BoolEx)
+apply (auto simp add: equiv_test ValuePreservation_BoolEx)
+apply (auto simp add: ValidOps_def equiv_test)
+apply (auto simp add: ValidLattice_def taut_test sat_test)
+done
+
+definition DNF_to_exp :: "('a, 'b, 'c) Condition \<Rightarrow> 'a list \<Rightarrow> 'a"
+where
+  "DNF_to_exp C ls \<equiv> fold (Any C) ls (Bot C)"
+
+lemma DNFTautology_BoolCondition: "
+  C = BoolCondition \<Longrightarrow> ls \<noteq> [] \<Longrightarrow> b = DNF_to_exp C ls \<Longrightarrow> \<exists> a. Equiv C a b
+  "
+apply (induct ls)
+apply (auto simp add: DNF_to_exp_def)
+apply (auto simp add: equiv_test)
+done
+
+theorem DNFTautology: "
+  ls \<noteq> [] \<Longrightarrow> b = DNF_to_exp C ls \<Longrightarrow> \<exists> a. Equiv C a b
+  "
+apply (induct ls)
+apply (auto simp add: DNF_to_exp_def)
+sorry
 
 end

@@ -4,6 +4,125 @@ imports ModeCondition Complex_Main FaultModellingTypes
 
 begin
 
+definition AbstractValuedTautology1 :: "(bool \<times> 'a) list \<Rightarrow> bool"
+where
+  "AbstractValuedTautology1 ls = (ls \<noteq> [] \<and> fold (op \<or>) (map fst ls) False)"
+
+type_synonym ('a, 'b) EvaluableEval = "(('b \<Rightarrow> bool) \<Rightarrow> 'a \<Rightarrow> bool)"
+
+definition EvaluableValuedTautology1 :: "('a \<Rightarrow> bool) \<Rightarrow> ('a binop) \<Rightarrow> 'a \<Rightarrow> 
+  ('a \<times> 'c) list \<Rightarrow> bool"
+where
+  "EvaluableValuedTautology1 taut any bottom ls = taut (fold any (map (fst) ls) bottom)"
+
+definition AbstractValuedTautology2 :: "(bool \<times> 'a) list \<Rightarrow> bool"
+where
+  "AbstractValuedTautology2 ls = (ls \<noteq> [] \<and> 
+    (\<forall> i j . (fst (ls!i) \<and> (fst (ls!j))) \<longrightarrow> (snd (ls!i) = (snd (ls!j)))))"
+
+definition EvaluableValuedTautology2 :: "('a, 'b) EvaluableEval \<Rightarrow> ('a \<times> 'c) list \<Rightarrow> bool"
+where
+  "EvaluableValuedTautology2 eval ls = (ls \<noteq> [] \<and> 
+    (\<forall> i j s . (eval s (fst (ls!i)) \<and> eval s (fst (ls!j))) \<longrightarrow> (snd (ls!i) = (snd (ls!j)))))"
+
+
+definition AbstractValuedTautology :: "(bool \<times> 'a) list \<Rightarrow> bool"
+where
+  "AbstractValuedTautology l \<equiv> AbstractValuedTautology1 l \<and> AbstractValuedTautology2 l"
+
+definition EvaluableValuedTautology :: "('a \<Rightarrow> bool) \<Rightarrow> 'a binop \<Rightarrow> 'a \<Rightarrow> ('a, 'b) EvaluableEval \<Rightarrow> 
+  ('a \<times> 'c) list \<Rightarrow> bool"
+where
+  "EvaluableValuedTautology taut any bottom eval ls \<equiv> (\<forall> s. taut = (eval s)) \<longrightarrow>
+    (EvaluableValuedTautology1 taut any bottom ls \<and> EvaluableValuedTautology2 eval ls)"
+
+definition AbstractValuedTautologyValues :: "(bool \<times> 'a) list \<Rightarrow> 'a list"
+where
+  "AbstractValuedTautologyValues ls = remdups (map snd (filter fst ls))"
+
+definition EvaluableValuedTautologyValues :: 
+  "('a, 'b) EvaluableEval \<Rightarrow> ('b \<Rightarrow> bool) \<Rightarrow> ('a \<times> 'c) list \<Rightarrow> 'c list"
+where
+  "EvaluableValuedTautologyValues eval s ls = 
+    remdups (map snd (filter ((eval s) \<circ> fst) ls))"
+
+lemma AVT1: "AbstractValuedTautology1 ls \<Longrightarrow> AbstractValuedTautologyValues ls \<noteq> []"
+apply (induct ls)
+apply (auto simp add: AbstractValuedTautology1_def AbstractValuedTautologyValues_def)
+sorry
+
+lemma "\<lbrakk> (fold (op \<or>) ls a) \<rbrakk> \<Longrightarrow> (fold (op \<or>) ls False) \<or> a"
+apply (auto)
+done
+
+lemma EVT0: "
+  \<lbrakk>
+    \<forall> s. taut = (eval s); 
+    EvaluableValuedTautology1 taut any bottom (a # ls)
+  \<rbrakk> \<Longrightarrow> (taut (fst a)) \<or> (EvaluableValuedTautology1 taut any bottom ls)"
+apply (auto simp add: EvaluableValuedTautology1_def)
+sorry
+
+lemma EVT1: "
+  \<lbrakk> 
+    \<forall> s. taut = (eval s); 
+    EvaluableValuedTautology1 taut any abot ls 
+  \<rbrakk> \<Longrightarrow> 
+  \<forall> s. EvaluableValuedTautologyValues eval s ls \<noteq> []"
+apply (induct ls)
+apply (auto simp add: AbstractValuedTautology1_def AbstractValuedTautologyValues_def)
+sorry
+
+lemma AVT2: "
+  \<lbrakk>
+    AbstractValuedTautology1 ls
+  \<rbrakk> \<Longrightarrow> length (AbstractValuedTautologyValues ls) > 0"
+apply (induct ls)
+apply (simp)
+apply (auto simp add: AbstractValuedTautology1_def AbstractValuedTautologyValues_def )
+sorry
+
+lemma EVT2: "
+  \<lbrakk>
+    \<forall> s. taut = (eval s); 
+    EvaluableValuedTautology1 taut any abot ls
+  \<rbrakk> \<Longrightarrow> \<forall> s . length (EvaluableValuedTautologyValues eval s ls) > 0"
+apply (induct ls)
+apply (simp)
+apply (auto simp add: AbstractValuedTautology1_def AbstractValuedTautologyValues_def )
+sorry
+
+lemma AVT3: "AbstractValuedTautology2 ls \<Longrightarrow> length (AbstractValuedTautologyValues ls) \<le> (Suc 0)"
+apply (induct ls)
+apply (simp add: AbstractValuedTautologyValues_def)
+sorry
+
+lemma EVT3: "EvaluableValuedTautology2 eval ls \<Longrightarrow> 
+  \<forall> s. length (EvaluableValuedTautologyValues eval s ls) \<le> (Suc 0)"
+apply (induct ls)
+apply (simp add: EvaluableValuedTautologyValues_def)
+sorry
+
+theorem AVT: "
+  \<lbrakk>  
+    AbstractValuedTautology ls; f = length (AbstractValuedTautologyValues ls)
+  \<rbrakk> \<Longrightarrow> f = (Suc 0)"
+apply (subgoal_tac "(f > 0 \<and> f \<le> (Suc 0))")
+apply (arith)
+apply (simp add: AbstractValuedTautology_def AVT1 AVT2 AVT3)
+done
+
+theorem EVT: "
+  \<lbrakk> 
+    \<forall> s. taut = (eval s);
+    EvaluableValuedTautology taut any bottom eval ls; 
+    f = (\<lambda> s . length (EvaluableValuedTautologyValues eval s ls))
+  \<rbrakk> \<Longrightarrow> f s = (Suc 0)"
+apply (subgoal_tac "(f s > 0 \<and> f s \<le> (Suc 0))")
+apply (arith)
+apply (simp add: EvaluableValuedTautology_def EVT0 EVT1 EVT2 EVT3)
+sorry
+
 datatype_new ('FMode, 'vv) OperationalMode = 
   NominalMode real 
   | FailureMode "'FMode"
@@ -50,7 +169,8 @@ where
 fun mkVO :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> 
   ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode"
 where
-  "mkVO cond (CMConst c1) (CMConst c2) = CMConst c1" |
+  "mkVO cond (CMConst c1) (CMConst c2) = 
+    CMExp (CM (Top cond) (CMConst c1) # CM (Top cond) (CMConst c2) # [])" |
   "mkVO cond (CMConst c1) (CMExp Es) = (CMExp ((CM (Top cond) (CMConst c1)) # Es))" |
   "mkVO cond (CMExp Es1) (CMExp Es2) = CMExp (Es1 @ Es2)" |
   "mkVO cond (CMExp Es) (CMConst c1) = (CMExp (Es @ [CM (Top cond) (CMConst c1)]))" 
@@ -71,67 +191,68 @@ definition CMP2MC :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) Con
 where
   "CMP2MC cond cmpl \<equiv> fold (\<lambda> a b. Any cond (fst a) b) cmpl (Bot cond)"
 
+definition ValuedTautology_CMPList1 :: "('a, 'b, 'c) Condition \<Rightarrow> 
+  ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
+where
+  "ValuedTautology_CMPList1 C ls \<equiv> ls \<noteq> [] \<and>(((Tautology C) \<circ> (CMP2MC C)) ls)"
+
+definition ValuedTautology_CMPList2 :: "('a, 'b, 'c) Condition \<Rightarrow> 
+  ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
+where
+  "ValuedTautology_CMPList2 C ls \<equiv> 
+  (ls \<noteq> [] \<and>
+    (\<forall> i j s. 
+      (
+        let ei = fst (ls!i); ej = fst (ls!j); vi = snd (ls!i); vj = snd (ls!j)
+        in ((Eval C s ei) \<and> (Eval C s ej)) \<longrightarrow> vi = vj
+      )
+    )
+  )"
+
 definition ValuedTautology_CMPList :: "('a, 'b, 'c) Condition \<Rightarrow> 
   ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
 where
-  "ValuedTautology_CMPList cond cmpl \<equiv> cmpl \<noteq> [] \<and>
-    (((Tautology cond) \<circ> (CMP2MC cond)) cmpl) \<and>
-    (\<forall> i j. 
-      (
-        let ei = fst (cmpl!i); ej = fst (cmpl!j); vi = snd (cmpl!i); vj = snd (cmpl!j)
-        in Absorb cond ei ej \<longrightarrow> vi = vj
-      )
-    )"
+  "ValuedTautology_CMPList C ls \<equiv> (ValuedTautology_CMPList1 C ls \<and> ValuedTautology_CMPList2 C ls)"
 
 definition CMPList_eval_values :: 
   "('a, 'b, 'c) Condition \<Rightarrow> 
   ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 
   ('b \<Rightarrow> 'c) \<Rightarrow> 
-  ('FMode, 'vv) OperationalMode set"
+  ('FMode, 'vv) OperationalMode list"
 where
   "CMPList_eval_values cond cmpl s \<equiv> 
   (
     let 
-      filtercvs = filter (\<lambda> cv. Eval cond (fst cv) s);
+      filtercvs = filter ((Eval cond s) \<circ> fst);
       getvalue = map snd
-    in (set \<circ> getvalue \<circ> filtercvs) cmpl
+    in (remdups \<circ> getvalue \<circ> filtercvs) cmpl
   )"
 
-lemma CMPList_eval_values_single: 
-  "\<lbrakk> Eval cond a s \<rbrakk> \<Longrightarrow> (CMPList_eval_values cond [(a,x)] s = {x})"
-apply (simp add: CMPList_eval_values_def)
-done
-
-corollary CMPList_eval_values_not_empty: "
-  \<lbrakk> Eval cond a s \<rbrakk> \<Longrightarrow> 
-  (CMPList_eval_values cond [(a,x)] s) \<noteq> {}"
-apply (simp add: CMPList_eval_values_single)
-done
-
-lemma t1:
-  "\<lbrakk> ValuePreservation cond; ValidOps cond; ValidLattice cond \<rbrakk> \<Longrightarrow>
-  ValuedTautology_CMPList cond cmpl \<longrightarrow> (\<forall> s. card (CMPList_eval_values cond cmpl s) > 0)"
-apply (induct cmpl)
-apply (simp add: ValuedTautology_CMPList_def)
-apply (simp)
-apply (auto)
+lemma VTL1: "ValuedTautology_CMPList1 C ls \<Longrightarrow> \<forall> s. CMPList_eval_values C ls s \<noteq> []"
+apply (induct ls)
+apply (auto simp add: ValuedTautology_CMPList1_def CMPList_eval_values_def)
 sorry
 
-theorem UniqueValue_ValuedTautology: 
-  "\<lbrakk> ValuePreservation cond; ValidOps cond \<rbrakk> \<Longrightarrow>
-  ValuedTautology_CMPList cond cmpl \<longrightarrow> (\<forall> s. card (CMPList_eval_values cond cmpl s) = 1)"
-(*using [[simp_trace=true]]*)
-apply (induct cmpl)
-apply (simp add: ValuedTautology_CMPList_def)
+lemma VTL2: "\<lbrakk> ValuedTautology_CMPList1 C ls \<rbrakk> \<Longrightarrow> \<forall> s. length (CMPList_eval_values C ls s) > 0"
+apply (induct ls)
 apply (simp)
-apply (auto)
-apply (auto simp add: t1)
-(*
-apply (auto simp add: CMPList_eval_values_def ValuedTautology_CMPList_def CMP2MC_def)
-apply (auto simp add: ValuePreservation_def ValidBinops_def)
-*)
-done
+apply (auto simp add: ValuedTautology_CMPList1_def CMPList_eval_values_def)
+sorry
 
+lemma VTL3: "ValuedTautology_CMPList2 C ls \<Longrightarrow> \<forall> s. length (CMPList_eval_values C ls s) \<le> (Suc 0)"
+apply (induct ls)
+apply (simp add: CMPList_eval_values_def)
+sorry
+
+theorem VTL: "
+  \<lbrakk> 
+    ValuedTautology_CMPList C ls; 
+    f = (\<lambda> s. length (CMPList_eval_values C ls s))
+  \<rbrakk> \<Longrightarrow> f s = (Suc 0)"
+apply (subgoal_tac "(f s > 0 \<and> f s \<le> (Suc 0))")
+apply (arith)
+apply (simp add: ValuedTautology_CMPList_def VTL1 VTL2 VTL3)
+done
 
 (*
 primrec
@@ -163,7 +284,7 @@ where
   "CM2MC cond (CMExp Es) = CM2MC_list cond Es" |
   "CM2MC_list cond [] = (Bot cond)" |
   "CM2MC_list cond (E # Es) = Any cond (CM2MC_VB cond E) (CM2MC_list cond Es)" |
-  "CM2MC_VB cond (CM e _) = e"
+  "CM2MC_VB cond (CM e v) = Both cond e (CM2MC cond v)"
 
 definition ValuedTautology :: "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> bool"
 where
@@ -392,8 +513,8 @@ apply (auto simp add: ValuedTautology_def)
 apply (auto simp add: ValuedTautology_CMPList_def)
 sorry
 
-theorem "cond = BoolCondition \<Longrightarrow> (ValuedTautology cond cm) \<Longrightarrow> 
-  (ConditionalMode_eval_value cond cm vb = Some v)"
+theorem "C = BoolCondition \<Longrightarrow> (ValuedTautology C cm) \<Longrightarrow> 
+  (ConditionalMode_eval_value C cm vb = Some v)"
 apply (induct cm)
 apply (auto simp add: ConditionalMode_eval_value_def)
 apply (auto simp add: ConditionalMode_eval_values_def)

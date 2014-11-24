@@ -41,8 +41,8 @@ where
 
 definition SystemPortValuation :: "
   ('pin, 'pout) Connections \<Rightarrow> 
-  ('vb, 'FMode, 'pin, 'pout) Component \<Rightarrow> 
-  ('vb, 'FMode, 'pin) PortValuation
+  ('a, 'FMode, 'pin, 'pout) Component \<Rightarrow> 
+  ('a, 'FMode, 'pin) PortValuation
   "
 where
   "SystemPortValuation A c \<equiv> 
