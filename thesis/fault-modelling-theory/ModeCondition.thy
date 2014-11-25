@@ -1,12 +1,27 @@
 (*<*)
 theory ModeCondition
 
-imports Main FaultModellingTypes Boolean_Expression_Checkers
+imports Main FaultModellingTypes Boolean_Expression_Checkers 
 
 begin
 (*>*)
 
 (*<*)
+
+class GenericLogic =
+  fixes 
+    GLTop :: "'a" and
+    GLBot :: "'a"
+
+instantiation bool :: GenericLogic
+begin
+  definition GLTop_bool_def: "GLTop_bool_def \<equiv> True"
+  definition GLBot_bool_def: "GLBot_bool_def \<equiv> False"
+
+  instance proof 
+  qed
+end
+  
 
 datatype_new ('a, 'b, 'c) Condition = 
   Operations 
@@ -110,6 +125,21 @@ where
     (MCAnd)
     (MCOr)
     (MCNot)"
+
+definition SeqCondition:: "('a SeqEx, nat, 'a SeqEx) Condition"
+where
+  "SeqCondition \<equiv> Operations
+    (\<lambda> x . x = {})
+    (\<lambda> x . x = {})
+    (\<lambda> x y . x = y)
+    (\<lambda> x y . x = y)
+    (\<lambda> x s . True)
+    (UNIV)
+    ({})
+    (\<lambda> x y . x \<inter> y)
+    (\<lambda> x y . x \<union> y)
+    (\<lambda> x . UNIV - x)
+  "
 
 declare BoolCondition_def [simp]
 

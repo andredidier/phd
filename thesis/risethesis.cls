@@ -504,14 +504,14 @@ requirements for the degree of \@degree\ in \@majorfielden.
     \begin{center}
       \Large \@author
       \vskip4\baselineskip
-      %{\large\bfseries{\MakeUppercase{\@title}}}
+      {\large\bfseries{\MakeUppercase{\@title}}}
       \vskip2\baselineskip
       {{\large \@texttype}}\\
     \end{center}
   \vspace{1.4cm}
   \includegraphics[width=1cm]{ufpelogo} \\
   \if\@language0
-    {\fontfamily{times}\selectfont \tiny \@universitypt\\} %TODo report issue fallback to cmr
+    {\fontfamily{times}\selectfont \tiny \@universitypt\\}
   \else
     {\fontfamily{times}\selectfont \tiny \@universityen\\}
   \fi
@@ -546,28 +546,24 @@ requirements for the degree of \@degree\ in \@majorfielden.
     		  \@universitypt
     		  \vskip 0.1cm
     		  \if\@showinstitute1
-    		    \\
     		    \@institutept
     		    \vskip 0.1cm
     		  \fi
     		  \if\@showdepartment1
-    		    \\
     		    \@departmentpt
     		    \vskip 0.1cm
     		  \fi
-    		  \\
     		  \@programpt
     	  \else
     	      \sf\Large
               \@universityen
               \vskip 0.1cm
               \if\@showinstitute1
-                \\
+                \vskip \baselineskip
                 \@instituteen
                 \vskip 0.1cm
               \fi
               \if\@showdepartment1
-                %\\ TODO: open issue on risethesis
                 \@departmenten
                 \vskip 0.1cm
               \fi
@@ -852,8 +848,8 @@ requirements for the degree of \@degree\ in \@majorfielden.
 % %% now reset the headers and footers
  \fancyhead{}
  \fancyfoot{}
-% 
-% %% put the page numbers on the bottom in a nice box
+ 
+% %% put the page numbers on the top in a nice box
 % %% even side pages
  \fancyhead[LE]{%
  	\rule{0cm}{4mm}\color{black}{\thepage}\hfill\leftmark
@@ -862,7 +858,7 @@ requirements for the degree of \@degree\ in \@majorfielden.
 % 
 % %% odd side pages
  \fancyhead[RO]{
- 	\rule{0cm}{4mm}\color{black}{\thepage}\hfill\rightmark
+ 	\rule{0cm}{4mm}\color{black}{\rightmark}\hfill\thepage
  }
 
 % Header style of the chapter page
