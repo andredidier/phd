@@ -75,7 +75,7 @@ where
 definition ValuedTautology_CMPList1 :: "('a, 'b, 'c) Condition \<Rightarrow> 
   ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
 where
-  "ValuedTautology_CMPList1 C ls \<equiv> ls \<noteq> [] \<and>(((Tautology C) \<circ> (CMP2MC C)) ls)"
+  "ValuedTautology_CMPList1 C ls \<equiv> ls \<noteq> [] \<and> (((Tautology C) \<circ> (CMP2MC C)) ls)"
 
 definition ValuedTautology_CMPList2 :: "('a, 'b, 'c) Condition \<Rightarrow> 
   ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
@@ -109,9 +109,9 @@ where
     in (remdups \<circ> getvalue \<circ> filtercvs) cmpl
   )"
 
-lemma VTL1: "ValuedTautology_CMPList1 C ls \<Longrightarrow> \<forall> s. CMPList_eval_values C ls s \<noteq> []"
-apply (induct ls)
-apply (auto simp add: ValuedTautology_CMPList1_def CMPList_eval_values_def)
+lemma VTL1: "\<lbrakk> ValuedTautology_CMPList1 C as \<rbrakk> \<Longrightarrow> CMPList_eval_values C as s \<noteq> []"
+apply (induct as)
+apply (auto simp add: ValuedTautology_CMPList1_def CMPList_eval_values_def )
 sorry
 
 lemma VTL2: "\<lbrakk> ValuedTautology_CMPList1 C ls \<rbrakk> \<Longrightarrow> \<forall> s. length (CMPList_eval_values C ls s) > 0"
@@ -122,7 +122,9 @@ sorry
 
 lemma VTL3: "ValuedTautology_CMPList2 C ls \<Longrightarrow> \<forall> s. length (CMPList_eval_values C ls s) \<le> (Suc 0)"
 apply (induct ls)
-apply (simp add: CMPList_eval_values_def)
+apply (simp add: CMPList_eval_values_def )
+apply (auto simp add: ValuedTautology_CMPList2_def )
+
 sorry
 
 theorem VTL: "
@@ -159,13 +161,6 @@ definition ConditionalMode_eval_values ::
 where
   "ConditionalMode_eval_values cond v s \<equiv> CMPList_eval_values cond (CM2CMP cond v) s"
 
-lemma "cond = BoolCondition \<Longrightarrow>
-  ValuedTautology cond v \<Longrightarrow> length (ConditionalMode_eval_values cond v s) = 1"
-apply (induct v)
-apply (auto simp add: ValuedTautology_def)
-apply (auto simp add: ConditionalMode_eval_values_def)
-sorry
-
 lemma ValuedTautologyUniqueness1: "
   \<lbrakk> 
     ValuedTautology C v;
@@ -182,35 +177,6 @@ apply (insert ValuedTautologyUniqueness1)
 apply (auto)
 done
 
-(*
-definition normalise_ConditionalModePair_filter :: 
-  "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalModePair \<Rightarrow> 
-    ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> bool"
-where
-  "normalise_ConditionalModePair_filter cond cv cvs \<equiv> 
-    Sat cond (fst cv) \<and> 
-    (filter (\<lambda> cv2. snd cv = snd (cv2) \<and> Equiv cond (fst cv) (fst (cv2))) cvs = [])"
-
-primrec normalise_ConditionalModePair :: "('a, 'b, 'c) Condition \<Rightarrow> 
-  ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> ('a, 'FMode, 'vv) ConditionalModePair list"
-where
-  "normalise_ConditionalModePair _ [] = []" |
-  "normalise_ConditionalModePair cond (cv # cvs) = (
-    if (normalise_ConditionalModePair_filter cond cv cvs) 
-      then cv # (normalise_ConditionalModePair cond cvs)
-      else (normalise_ConditionalModePair cond cvs)
-  )"
-
-
-definition
-  normalise_ConditionalMode :: 
-    "('a, 'b, 'c) Condition \<Rightarrow> ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> 
-    ('a, 'FMode, 'vv) ConditionalMode" 
-where
-  "normalise_ConditionalMode cond \<equiv> 
-    (CMP2CM cond) \<circ> (normalise_ConditionalModePair cond) \<circ> (CM2CMP cond)" 
-*)
-
 primrec choose_values :: "('FMode, 'vv) OperationalMode \<Rightarrow> ('FMode, 'vv) OperationalMode option 
   \<Rightarrow> ('FMode, 'vv) OperationalMode option"
 where
@@ -224,38 +190,12 @@ where
   "ConditionalMode_eval_value cond Es vb \<equiv> 
     fold choose_values (ConditionalMode_eval_values cond Es vb) None"
 
-
-lemma "cond = BoolCondition \<Longrightarrow> (ValuedTautology cond (CMExp Es)) \<Longrightarrow> 
-  (length (ConditionalMode_eval_values cond (CMExp Es) vb) = 1)"
-apply (auto)
-sorry
-
-lemma "cond = BoolCondition \<Longrightarrow> (ValuedTautology cond (CMExp Es)) \<Longrightarrow> 
-  (ConditionalMode_eval_value cond (CMExp Es) vb = Some v)"
-apply (induct Es)
-apply (auto simp add: ConditionalMode_eval_value_def)
-apply (auto simp add: ConditionalMode_eval_values_def)
-apply (auto simp add: CMPList_eval_values_def)
-apply (auto simp add: ValuedTautology_def)
-apply (auto simp add: ValuedTautology_CMPList_def)
-sorry
-
-theorem "C = BoolCondition \<Longrightarrow> (ValuedTautology C a) \<Longrightarrow> 
-  (ConditionalMode_eval_value C a s = Some v)"
-apply (induct a)
-apply (auto simp add: ConditionalMode_eval_value_def)
-apply (auto simp add: ConditionalMode_eval_values_def)
-apply (auto simp add: CMPList_eval_values_def)
-apply (auto simp add: ValuedTautology_def)
-apply (auto simp add: ValuedTautology_CMPList_def)
-sorry
-
 lemma length_choose_values: "\<lbrakk> length ls = 1 \<rbrakk> \<Longrightarrow> \<exists> x . fold choose_values ls None = Some x"
 apply (insert length_Suc_conv [of ls 0])
 apply (auto)
 done
 
-theorem "ValuedTautology C v \<Longrightarrow> 
+theorem ValuedTautologyUniqueValue: "ValuedTautology C v \<Longrightarrow> 
   \<exists> x . (ConditionalMode_eval_value C v s = Some x)"
 apply (insert ValuedTautologyUniqueness [of C v s])
 apply (auto simp add: ConditionalMode_eval_value_def)

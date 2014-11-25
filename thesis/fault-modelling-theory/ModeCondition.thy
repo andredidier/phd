@@ -38,6 +38,8 @@ datatype 'vb BoolEx =
   | MCNot "'vb BoolEx" 
   | MCAnd "'vb BoolEx" "'vb BoolEx" 
 
+type_synonym 'a SeqEx = "'a list set"
+
 notation (output) MCConst  ("_\<^sub>B" 60)
 notation (output) MCVar ("_\<^sub>B" 60)
 notation (output) MCNot ("\<not>_" 64)
@@ -83,14 +85,14 @@ definition absorb_rule :: "bool \<Rightarrow> bool \<Rightarrow> bool"
 where
   "absorb_rule a b \<equiv> (a \<longrightarrow> b) \<or> (b \<longrightarrow> a)"
 
+definition absorb_test :: "'a bool_expr \<Rightarrow> 'a bool_expr \<Rightarrow> bool"
+where
+  "absorb_test a b \<equiv> taut_test (Or_bool_expr (Imp_bool_expr a b) (Imp_bool_expr b a))"
+
 definition BoolEx_Absorb :: "'vb BoolEx \<Rightarrow> 'vb BoolEx \<Rightarrow> bool"
 where
   "BoolEx_Absorb c1 c2 \<equiv> 
     (
-      let                           
-        absorb_test = 
-          \<lambda> a b. taut_test (Or_bool_expr (Imp_bool_expr a b) (Imp_bool_expr b a))
-      in
         absorb_test (BoolEx_to_bool_expr c1) (BoolEx_to_bool_expr c2)
     )"
 
@@ -111,13 +113,16 @@ where
 
 declare BoolCondition_def [simp]
 
+definition Tautology_Eval_s :: "('a, 'b, 'c) Condition \<Rightarrow> ('b \<Rightarrow> 'c) \<Rightarrow> 'a \<Rightarrow> bool"
+where "Tautology_Eval_s C s a \<equiv> (Tautology C a = Eval C s a)"
+
 definition ValuePreservation :: "('a, 'b, 'c) Condition \<Rightarrow> bool"
 where
-  "ValuePreservation condition \<equiv> (\<forall> a b.
-    (Tautology condition a = (\<forall> s. Eval condition s a)) \<and>
-    (Sat condition a = (\<exists> s. Eval condition s a)) \<and>
-    (Absorb condition a b = (\<forall> s. absorb_rule (Eval condition s a) (Eval condition s b))) \<and>
-    (Equiv condition a b = (\<forall> s. Eval condition s a = Eval condition s b))
+  "ValuePreservation C \<equiv> (\<forall> a b.
+    (Tautology C a = (\<forall> s. Eval C s a)) \<and>
+    (Sat C a = (\<exists> s. Eval C s a)) \<and>
+    (Absorb C a b = (\<forall> s. absorb_rule (Eval C s a) (Eval C s b))) \<and>
+    (Equiv C a b = (\<forall> s. Eval C s a = Eval C s b))
   )"
 
 definition ValidLattice :: "('a, 'b, 'c) Condition \<Rightarrow> bool"
@@ -172,9 +177,10 @@ done
 
 lemma ValuePreservation_BoolCondition: "ValuePreservation BoolCondition"
 apply (auto simp add: ValuePreservation_def)
-apply (auto simp add: taut_test ValuePreservation_BoolEx)
+apply (auto simp add: taut_test ValuePreservation_BoolEx )
 apply (auto simp add: sat_test ValuePreservation_BoolEx)
-apply (auto simp add: absorb_rule_def BoolEx_Absorb_def taut_test ValuePreservation_BoolEx)
+apply (auto simp add: absorb_rule_def BoolEx_Absorb_def absorb_test_def taut_test 
+  ValuePreservation_BoolEx)
 apply (auto simp add: equiv_test ValuePreservation_BoolEx)
 done
 
@@ -192,29 +198,11 @@ apply (auto simp add: ValidCondition_def)
 apply (auto simp add: ValuePreservation_def)
 apply (auto simp add: taut_test ValuePreservation_BoolEx)
 apply (auto simp add: sat_test ValuePreservation_BoolEx)
-apply (auto simp add: absorb_rule_def BoolEx_Absorb_def taut_test ValuePreservation_BoolEx)
+apply (auto simp add: absorb_rule_def absorb_test_def BoolEx_Absorb_def taut_test 
+  ValuePreservation_BoolEx)
 apply (auto simp add: equiv_test ValuePreservation_BoolEx)
 apply (auto simp add: ValidOps_def equiv_test)
 apply (auto simp add: ValidLattice_def taut_test sat_test)
 done
-
-definition DNF_to_exp :: "('a, 'b, 'c) Condition \<Rightarrow> 'a list \<Rightarrow> 'a"
-where
-  "DNF_to_exp C ls \<equiv> fold (Any C) ls (Bot C)"
-
-lemma DNFTautology_BoolCondition: "
-  C = BoolCondition \<Longrightarrow> ls \<noteq> [] \<Longrightarrow> b = DNF_to_exp C ls \<Longrightarrow> \<exists> a. Equiv C a b
-  "
-apply (induct ls)
-apply (auto simp add: DNF_to_exp_def)
-apply (auto simp add: equiv_test)
-done
-
-theorem DNFTautology: "
-  ls \<noteq> [] \<Longrightarrow> b = DNF_to_exp C ls \<Longrightarrow> \<exists> a. Equiv C a b
-  "
-apply (induct ls)
-apply (auto simp add: DNF_to_exp_def)
-sorry
 
 end
