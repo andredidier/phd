@@ -18,17 +18,20 @@ datatype ComponentPortName =
   | In2Mon ("in\<^sub>M\<^sub>o\<^sub>n\<^sub>2")
   | OutMon ("out\<^sub>M\<^sub>o\<^sub>n")
 
-definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarrow> 
-  (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
+type_synonym SMComponent =
+"(FailureVarName, FMode, ComponentPortName, ComponentPortName) Component"
+
+type_synonym SMValue = "(FMode, ComponentPortName) OperationalMode"
+
+definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarrow> SMComponent" where
   "Battery OutP FB \<equiv> \<lambda> m.
   [
     OutP \<mapsto> CVIF FB (CVC (FailureMode Omission)) (CVC (NominalMode 5))
   ]"
 
-definition Monitor :: " 
-  ((FMode, ComponentPortName) OperationalMode \<Rightarrow> bool) \<Rightarrow> 
-  (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
-  "Monitor P \<equiv>  \<lambda> m.
+definition Monitor :: "(SMValue \<Rightarrow> bool) \<Rightarrow> SMComponent" where
+  "Monitor P \<equiv> CVIF FMon (ConditionalValuePredicate P) ()
+(*\<lambda> m.
   [ 
     OutMon \<mapsto>
       CMExp [
@@ -53,7 +56,7 @@ definition Monitor :: "
             (MCNot (P (m In1Mon))))
           (m In1Mon)
       ]
-  ]"
+  ]*)"
 
 definition SMon_A :: "(ComponentPortName, ComponentPortName) Connections"
 where
