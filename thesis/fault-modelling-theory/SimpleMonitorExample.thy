@@ -23,6 +23,8 @@ type_synonym SMComponent =
 
 type_synonym SMValue = "(FMode, ComponentPortName) OperationalMode"
 
+type_synonym SMConditionalMode = "(FailureVarName, FMode, ComponentPortName) ConditionalMode"
+
 definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarrow> SMComponent" where
   "Battery OutP FB \<equiv> \<lambda> m.
   [
@@ -30,86 +32,56 @@ definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarr
   ]"
 
 definition Monitor :: "(SMValue \<Rightarrow> bool) \<Rightarrow> SMComponent" where
-  "Monitor P \<equiv> CVIF FMon (ConditionalValuePredicate P) ()
-(*\<lambda> m.
-  [ 
+  "Monitor P \<equiv> \<lambda> m . 
+  [
     OutMon \<mapsto>
-      CMExp [
-        CM 
-          (MCAnd 
-            (MCNot (MCVar FMon))
-            (P (m In1Mon)))
-          (m In1Mon),
-        CM 
-          (MCAnd 
-            (MCNot (MCVar FMon))
-            (MCNot (P (m In1Mon))))
-          (m In2Mon),
-        CM 
-          (MCAnd 
-            (MCVar FMon)
-            (P (m In1Mon)))
-          (m In2Mon),
-        CM 
-          (MCAnd 
-            (MCVar FMon)
-            (MCNot (P (m In1Mon))))
-          (m In1Mon)
-      ]
-  ]*)"
+      CVIF FMon 
+        (ConditionalValuePredicate P (m In1Mon) (m In1Mon) (m In2Mon)) 
+        (ConditionalValuePredicate P (m In1Mon) (m In2Mon) (m In1Mon)) 
+  ]"
 
 definition SMon_A :: "(ComponentPortName, ComponentPortName) Connections"
 where
   "SMon_A \<equiv> [ In1Mon \<mapsto> OutB1, In2Mon \<mapsto> OutB2 ] "
 
-definition SMon_Cs :: 
-  "(FailureVarName BoolEx, FMode, ComponentPortName, ComponentPortName) Component list"
+definition SMon_Cs :: "SMComponent list"
 where 
   "SMon_Cs \<equiv> 
   [ 
     Battery OutB1 FB1, 
     Battery OutB2 FB2, 
-    Monitor 
-      (ConditionalModePredicate_ModeCondition BoolCondition (lte_Values (NominalMode 2)))
+    Monitor (\<lambda> b . (eq_Values (FailureMode Omission) b) \<or> (gt_Values (NominalMode 2) b))
   ]"
 
-definition SMon :: 
-  "(FailureVarName BoolEx, FMode, ComponentPortName, ComponentPortName) Component" 
+definition SMon :: "SMComponent" 
 where
   "SMon \<equiv> System SMon_A SMon_Cs"
 
 
-definition SMon_OutMon :: "(FailureVarName BoolEx, FMode, ComponentPortName) ConditionalMode"
+definition SMon_OutMon :: "SMConditionalMode"
 where
-  "SMon_OutMon \<equiv> the (SMon (\<lambda> x. CMConst (VarMode x)) OutMon)"
+  "SMon_OutMon \<equiv> the (SMon (\<lambda> x. CVC (VarMode x)) OutMon)"
 
+lemma "equiv_test 
+  (CVP2BE 
+    (\<lambda> b . b = (FailureMode Omission)) 
+    (the ((Battery OutB1 FB1) (\<lambda> x. CVC (VarMode x)) OutB1)))
+  (Atom_bool_expr FB1)"
+apply (auto simp add: Battery_def equiv_test)
+done
 
-theorem "ValuedTautology BoolCondition SMon_OutMon"
-apply (auto simp add: ValuedTautology_def)
-apply (auto simp add: SMon_OutMon_def SMon_def SMon_A_def SMon_Cs_def)
-sorry
-
-lemma "
-  Equiv BoolCondition
-    (ConditionalModePredicate_ModeCondition BoolCondition 
-      (eq_Values (FailureMode Omission)) SMon_OutMon)
-    (
-      MCOr 
-      (
-        MCAnd (MCVar FB1) (MCVar FB2)
-      )
-      (
-        MCAnd 
-          (MCVar FMon) 
-          (MCOr (MCVar FB1) (MCVar FB2))
-      )
-    )"
-apply (auto simp add: SMon_OutMon_def SMon_def SMon_Cs_def SMon_A_def Battery_def Monitor_def)
-apply (auto simp add: System_def SystemPortValuation_def SystemComponents_def fun_upd_fun_def)
-apply (auto simp add: ConditionalModePredicate_ModeCondition_def CMPPredicate_def)
-apply (auto simp add: lte_Values_def)
-apply (auto simp add: CMP2MC_def fold_def)
-apply (auto simp add: equiv_test_def taut_test_def Let_def )
-sorry
+lemma "equiv_test 
+    (CVP2BE (\<lambda> b . b = (FailureMode Omission)) SMon_OutMon)
+    (Or_bool_expr 
+      (And_bool_expr (Atom_bool_expr FB1) (Atom_bool_expr FB2)) 
+      (And_bool_expr 
+        (Atom_bool_expr FMon) 
+        (Or_bool_expr (Atom_bool_expr FB1) (Atom_bool_expr FB2))))"
+apply (simp add: SMon_OutMon_def SMon_def SMon_Cs_def SMon_A_def Battery_def Monitor_def)
+apply (simp add: System_def SystemComponents_def SystemPortValuation_def )
+apply (simp add: fun_upd_fun_def)
+apply (simp add: lt_Values_def)
+apply (auto simp add: equiv_test)
+done
 
 end

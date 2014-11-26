@@ -1,39 +1,23 @@
 theory ConditionalModePredicate
-imports ConditionalMode
+imports ConditionalMode Boolean_Expression_Checkers
 begin
 
-definition CMPPredicate :: "('a, 'b, 'c) Condition \<Rightarrow> (('FMode, 'vv) OperationalMode \<Rightarrow> bool) \<Rightarrow> 
-  ('a, 'FMode, 'vv) ConditionalModePair list \<Rightarrow> 'a"
+primrec ConditionalValuePredicate :: "('b \<Rightarrow> bool) \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> 
+  ('a, 'b) ConditionalValue \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> ('a, 'b) ConditionalValue"
 where
-  "CMPPredicate cond P cmps = 
-  (
-    let 
-      select = filter (\<lambda> cmp. P (snd cmp));
-      transform = CMP2MC cond
-    in (transform \<circ> select) cmps
-  )"
+  "ConditionalValuePredicate P (CVC b) t1 t2 = (if P b then t1 else t2)" |
+  "ConditionalValuePredicate P (CVIF a t1 t2) t3 t4 = 
+    CVIF a (ConditionalValuePredicate P t1 t3 t4) (ConditionalValuePredicate P t2 t3 t4)"
 
-lemma "cond = BoolCondition \<Longrightarrow> (CMPPredicate cond (\<lambda> _. True) cmpl) = (CMP2MC cond cmpl)"
-apply (induct cmpl)
-apply (auto simp add: CMPPredicate_def)
-done
-
-lemma "cond = BoolCondition \<Longrightarrow> (CMPPredicate cond (\<lambda> _. True) cmpl) = (CMP2MC cond cmpl)"
-apply (induct cmpl)
-apply (auto simp add: CMPPredicate_def)
-done
-
-lemma "cond = BoolCondition \<Longrightarrow> (CMPPredicate cond (\<lambda> _. False) cmpl) = MCConst False"
-apply (induct cmpl)
-apply (auto simp add: CMPPredicate_def CMP2MC_def)
-done
-
-definition 
-  ConditionalModePredicate_ModeCondition :: "('a, 'b, 'c) Condition \<Rightarrow> 
-    (('FMode, 'vv) OperationalMode \<Rightarrow> bool) \<Rightarrow> 
-    ('a, 'FMode, 'vv) ConditionalMode \<Rightarrow> 'a"
+primrec CVP2BE :: "('b \<Rightarrow> bool) \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> 'a bool_expr"
 where
-  "ConditionalModePredicate_ModeCondition cond P cm \<equiv> CMPPredicate cond P (CM2CMP cond cm)"
+  "CVP2BE P (CVC b) = Const_bool_expr (P b)" |
+  "CVP2BE P (CVIF a t1 t2) = 
+    Or_bool_expr 
+      (And_bool_expr (Atom_bool_expr a) (CVP2BE P t1)) 
+      (And_bool_expr (Neg_bool_expr (Atom_bool_expr a)) (CVP2BE P t2))"
+
+notation (output) ConditionalValuePredicate ("_\<^sub>P \<surd> _ \<oslash> _" 80)
 
 fun nominal_op :: 
   "('FMode, 'vv) OperationalMode \<Rightarrow> ('FMode, 'vv) OperationalMode \<Rightarrow> 

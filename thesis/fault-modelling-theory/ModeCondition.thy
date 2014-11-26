@@ -8,20 +8,6 @@ begin
 
 (*<*)
 
-class GenericLogic =
-  fixes 
-    GLTop :: "'a" and
-    GLBot :: "'a"
-
-instantiation bool :: GenericLogic
-begin
-  definition GLTop_bool_def: "GLTop_bool_def \<equiv> True"
-  definition GLBot_bool_def: "GLBot_bool_def \<equiv> False"
-
-  instance proof 
-  qed
-end
-  
 
 datatype_new ('a, 'b, 'c) Condition = 
   Operations 
@@ -47,11 +33,11 @@ notation (output) Both (infixr "\<and>\<index>" 50)
 notation (output) Any (infixr "\<or>\<index>" 50)
 notation (output) Not ("\<not>\<index>_" 50)
 
-datatype 'vb BoolEx = 
+datatype_new 'a BoolEx = 
   MCConst bool
-  | MCVar 'vb 
-  | MCNot "'vb BoolEx" 
-  | MCAnd "'vb BoolEx" "'vb BoolEx" 
+  | MCVar 'a 
+  | MCNot "'a BoolEx" 
+  | MCAnd "'a BoolEx" "'a BoolEx" 
 
 type_synonym 'a SeqEx = "'a list set"
 

@@ -1,6 +1,6 @@
 theory ConditionalMode
 
-imports ModeCondition Complex_Main FaultModellingTypes
+imports  Complex_Main FaultModellingTypes
 
 begin
 
@@ -128,13 +128,5 @@ datatype 'a ConditionalValuePredicateEvaluation =
   CVPTrue | CVPFalse | CVPVar 'a | CVPNotVar 'a 
   | CVPAnd "'a ConditionalValuePredicateEvaluation" "'a ConditionalValuePredicateEvaluation"
 *)
-
-primrec ConditionalValuePredicate :: "('b \<Rightarrow> bool) \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> 
-  ('a, 'b) ConditionalValue \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> ('a, 'b) ConditionalValue"
-where
-  "ConditionalValuePredicate P (CVC b) t1 t2 = (if P b then t1 else t2)" |
-  "ConditionalValuePredicate P (CVIF a t1 t2) t3 t4 = 
-    CVIF a (ConditionalValuePredicate P t1 t3 t4) (ConditionalValuePredicate P t2 t3 t4)" 
-
 
 end
