@@ -1,6 +1,6 @@
 theory SimpleMonitorExample
 
-imports FaultModelling
+imports FaultModelling FaultTree
 
 begin
 

@@ -1,51 +1,26 @@
 theory FaultTree
-imports Main FaultModellingTypes ModeCondition Complex_Main
+imports Main FaultModellingTypes ModeCondition ConditionalMode Complex_Main
 begin
 
-datatype FaultTreeGate = FTGAnd | FTGOr
+datatype_new FaultTreeGate = FTGAnd | FTGOr
 
-datatype 'vb FaultTree =
-  BasicEvent "'vb"
-  | IntermediaryEvent FaultTreeGate "'vb FaultTree" "'vb FaultTree" 
+datatype_new 'a FaultTree =
+  BasicEvent "'a"
+  | IntermediaryEvent FaultTreeGate "'a FaultTree" "'a FaultTree" 
 
-fun FT_BO_equiv :: "'vb FaultTree \<Rightarrow> 'vb BoolEx \<Rightarrow> bool"
+primrec FTG2BE :: "FaultTreeGate \<Rightarrow> 'a bool_expr \<Rightarrow> 'a bool_expr \<Rightarrow> 'a bool_expr"
 where
-  "FT_BO_equiv (BasicEvent v1) (MCVar v2) = (v1 = v2)" |
-  "FT_BO_equiv (IntermediaryEvent FTGAnd t1 t2) (MCAnd b1 b2) = 
-    ((FT_BO_equiv t1 b1) \<and> (FT_BO_equiv t2 b2))" |
-  "FT_BO_equiv (IntermediaryEvent FTGOr t1 t2) (MCOr b1 b2) = 
-    ((FT_BO_equiv t1 b1) \<and> (FT_BO_equiv t2 b2))" |
-  "FT_BO_equiv T B = False"
+  "FTG2BE FTGAnd b1 b2 = And_bool_expr b1 b2" |
+  "FTG2BE FTGOr b1 b2 = Or_bool_expr b1 b2"
 
-primrec GateToOp :: "FaultTreeGate \<Rightarrow> ('vb BoolEx binop)"
+primrec FT2BE :: "'a FaultTree \<Rightarrow> 'a bool_expr"
 where
-  "GateToOp FTGAnd = (\<lambda> a b. MCAnd a b)" |
-  "GateToOp FTGOr = (\<lambda> a b. MCOr a b)"
+  "FT2BE (BasicEvent a) = Atom_bool_expr a" |
+  "FT2BE (IntermediaryEvent g t1 t2) = FTG2BE g (FT2BE t1) (FT2BE t2)"
 
-primrec FT_to_BO :: "'vb FaultTree \<Rightarrow> 'vb BoolEx"
-where
-  "FT_to_BO (BasicEvent v) = MCVar v" |
-  "FT_to_BO (IntermediaryEvent g t1 t2) = (GateToOp g) (FT_to_BO t1) (FT_to_BO t2)"
 
-definition FaultTree_eval :: "'vb FaultTree \<Rightarrow> ('vb \<Rightarrow> bool) \<Rightarrow> bool"
-where "FaultTree_eval T vb = Eval BoolCondition (FT_to_BO T) vb"
-
-(*
-theorem "FaultTree_eval T vb \<longrightarrow> ModeCondition_eval (FT_to_BO T) vb"
-apply (auto)
-apply (auto simp add: FT_to_BO_def)
-apply (auto simp add: FaultTree_eval_def)
-apply (auto simp add: ModeCondition_eval_def)
-done*)
-
-(*
-theorem "(ModeCondition_eval (FT_to_BO T) = (ModeCondition_eval B)) \<longrightarrow> 
-  (FaultTree_eval T vb = ModeCondition_eval B vb)"
-apply (auto)
-apply (auto simp add: FT_to_BO_def)
-apply (auto simp add: FaultTree_eval_def)
-apply (auto simp add: ModeCondition_eval_def)
-done*)
+definition FaultTree_eval :: "'a FaultTree \<Rightarrow> ('a \<Rightarrow> bool) \<Rightarrow> bool"
+where "FaultTree_eval t s = val_bool_expr (FT2BE t) s"
 
 (*Returns the minimum basic event level, related to the root event*)
 primrec min_basicEventLevel :: "'vb FaultTree \<Rightarrow> nat" 
@@ -59,7 +34,7 @@ where
   "Gate_probability FTGAnd a b = a * b" |
   "Gate_probability FTGOr a b = (a + b) - (a * b)" 
 
-primrec FT_probability :: "'vb FaultTree \<Rightarrow> ('vb \<Rightarrow> real) \<Rightarrow> real"
+primrec FT_probability :: "'a FaultTree \<Rightarrow> ('a \<Rightarrow> real) \<Rightarrow> real"
 where
   "FT_probability (BasicEvent v1) P = P v1" |
   "FT_probability (IntermediaryEvent g l r) P = 
