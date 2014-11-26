@@ -8,18 +8,6 @@ datatype_new ('a, 'b) ConditionalValue =
   CVC (V: 'b)
   | CVIF 'a "('a, 'b) ConditionalValue" "('a, 'b) ConditionalValue" 
 
-datatype_new ('a, 'b) ConditionalAlgebra =
-  CATrue  
-  | CAFalse
-  | CAC 'a
-  | CAV "('a, 'b) ConditionalAlgebra" 'b
-  | CANot "('a, 'b) ConditionalAlgebra"
-  | CAOr "('a, 'b) ConditionalAlgebra" "('a, 'b) ConditionalAlgebra" 
-
-datatype_new ('a, 'b) CVPredicate = 
-  CVPVar 'a
-  | CVPEQ "('a, 'b) ConditionalValue" "'b"
-
 datatype_new ('FMode, 'vv) OperationalMode = 
   NominalMode real 
   | FailureMode "'FMode"
