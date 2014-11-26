@@ -114,7 +114,11 @@ lemma same_val_if_reduced:
   "reduced t X \<Longrightarrow> \<forall>x. x \<notin> X \<longrightarrow> s1 x = s2 x \<Longrightarrow> 
   val_ConditionalValue s1 t = val_ConditionalValue s2 t"
 by(induction t arbitrary: X) auto
-
-
-
+(*
+primrec ConditionalValuePredicate :: "('b \<Rightarrow> 'b \<Rightarrow> bool) \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> 'b \<Rightarrow>
+  ('a, 'b) ConditionalValue \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> ('a, 'b) ConditionalValue"
+where
+  "ConditionalValuePredicate P\<^sub>b (CVC b1) b2 t1 t2 = (if P\<^sub>b b1 b2 then t1 else t2)" |
+  "ConditionalValuePredicate P\<^sub>b (CVIF a t1 t2) b t3 t4 = "
+*)
 end
