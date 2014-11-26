@@ -50,11 +50,11 @@ where
     \<lambda> pin.
     (
       case (A pin) of
-        None \<Rightarrow> CMConst (VarMode pin) |
+        None \<Rightarrow> CVC (VarMode pin) |
         (Some pout) \<Rightarrow> 
         (
-          case (c (\<lambda> x. CMConst (VarMode x))  pout) of
-            None \<Rightarrow> CMConst (VarMode pin) |
+          case (c (\<lambda> x. CVC (VarMode x))  pout) of
+            None \<Rightarrow> CVC (VarMode pin) |
             (Some vo) \<Rightarrow> vo
         )
     )
@@ -66,7 +66,7 @@ where
 
 fun is_ValuesVar :: "('vb, 'FMode, 'pin) ConditionalMode \<Rightarrow> bool"
 where
-  "is_ValuesVar (CMConst (VarMode x)) = True" |
+  "is_ValuesVar (CVC (VarMode x)) = True" |
   "is_ValuesVar _ = False"
 
 (* Lista de componentes e conexões*)

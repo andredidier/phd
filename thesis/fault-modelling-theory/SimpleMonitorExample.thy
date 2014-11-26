@@ -19,25 +19,15 @@ datatype ComponentPortName =
   | OutMon ("out\<^sub>M\<^sub>o\<^sub>n")
 
 definition Battery :: "ComponentPortName \<Rightarrow> FailureVarName \<Rightarrow> 
-  (FailureVarName BoolEx, FMode, ComponentPortName, ComponentPortName) Component" where
+  (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
   "Battery OutP FB \<equiv> \<lambda> m.
   [
-    OutP \<mapsto> 
-      CMExp [ 
-        CM (MCVar (FB)) (CMConst (FailureMode Omission)),
-        CM (MCNot (MCVar (FB))) (CMConst (NominalMode 5))
-      ]
+    OutP \<mapsto> CVIF FB (CVC (FailureMode Omission)) (CVC (NominalMode 5))
   ]"
 
-lemma "ValuedTautology BoolCondition (the ((Battery outp fb) env outp))"
-apply (auto simp add: Battery_def)
-apply (auto simp add: ValuedTautology_def ValuedTautology_CMPList_def CMP2MC_def)
-apply (auto simp add: taut_test_def)
-sorry
-
 definition Monitor :: " 
-  ((FailureVarName BoolEx, FMode, ComponentPortName) ConditionalMode \<Rightarrow> FailureVarName BoolEx) \<Rightarrow> 
-  (FailureVarName BoolEx, FMode, ComponentPortName, ComponentPortName) Component" where
+  ((FMode, ComponentPortName) OperationalMode \<Rightarrow> bool) \<Rightarrow> 
+  (FailureVarName, FMode, ComponentPortName, ComponentPortName) Component" where
   "Monitor P \<equiv>  \<lambda> m.
   [ 
     OutMon \<mapsto>

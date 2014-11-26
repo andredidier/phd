@@ -8,6 +8,14 @@ datatype_new ('a, 'b) ConditionalValue =
   CVC (V: 'b)
   | CVIF 'a "('a, 'b) ConditionalValue" "('a, 'b) ConditionalValue" 
 
+datatype_new ('a, 'b) ConditionalAlgebra =
+  CATrue  
+  | CAFalse
+  | CAC 'a
+  | CAV "('a, 'b) ConditionalAlgebra" 'b
+  | CANot "('a, 'b) ConditionalAlgebra"
+  | CAOr "('a, 'b) ConditionalAlgebra" "('a, 'b) ConditionalAlgebra" 
+
 datatype_new ('a, 'b) CVPredicate = 
   CVPVar 'a
   | CVPEQ "('a, 'b) ConditionalValue" "'b"
@@ -23,7 +31,7 @@ type_synonym ('a, 'FMode, 'vv) ConditionalMode =
 notation (output) NominalMode ("N\<langle>_\<rangle>" 40)
 notation (output) FailureMode ("F\<langle>_\<rangle>" 41)
 notation (output) VarMode ("_" 41)
-notation (output) CVC  ("_" 50)
+notation (output) CVC  ("\<guillemotleft>_\<guillemotright>" 50)
 notation (output) CVIF ("_ \<surd> _ \<oslash> _" 80)
 
 primrec val_ConditionalValue :: "('a \<Rightarrow> bool) \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> 'b" where
@@ -114,11 +122,19 @@ lemma same_val_if_reduced:
   "reduced t X \<Longrightarrow> \<forall>x. x \<notin> X \<longrightarrow> s1 x = s2 x \<Longrightarrow> 
   val_ConditionalValue s1 t = val_ConditionalValue s2 t"
 by(induction t arbitrary: X) auto
+
 (*
-primrec ConditionalValuePredicate :: "('b \<Rightarrow> 'b \<Rightarrow> bool) \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> 'b \<Rightarrow>
+datatype 'a ConditionalValuePredicateEvaluation =
+  CVPTrue | CVPFalse | CVPVar 'a | CVPNotVar 'a 
+  | CVPAnd "'a ConditionalValuePredicateEvaluation" "'a ConditionalValuePredicateEvaluation"
+*)
+
+primrec ConditionalValuePredicate :: "('b \<Rightarrow> bool) \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> 
   ('a, 'b) ConditionalValue \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> ('a, 'b) ConditionalValue"
 where
-  "ConditionalValuePredicate P\<^sub>b (CVC b1) b2 t1 t2 = (if P\<^sub>b b1 b2 then t1 else t2)" |
-  "ConditionalValuePredicate P\<^sub>b (CVIF a t1 t2) b t3 t4 = "
-*)
+  "ConditionalValuePredicate P (CVC b) t1 t2 = (if P b then t1 else t2)" |
+  "ConditionalValuePredicate P (CVIF a t1 t2) t3 t4 = 
+    CVIF a (ConditionalValuePredicate P t1 t3 t4) (ConditionalValuePredicate P t2 t3 t4)" 
+
+
 end
