@@ -1,5 +1,5 @@
 theory FaultTree
-imports Main FaultModellingTypes ModeCondition ConditionalMode Complex_Main
+imports Main FaultModellingTypes ModeCondition ConditionalModePredicate Complex_Main
 begin
 
 datatype_new FaultTreeGate = FTGAnd | FTGOr
@@ -17,6 +17,10 @@ primrec FT2BE :: "'a FaultTree \<Rightarrow> 'a bool_expr"
 where
   "FT2BE (BasicEvent a) = Atom_bool_expr a" |
   "FT2BE (IntermediaryEvent g t1 t2) = FTG2BE g (FT2BE t1) (FT2BE t2)"
+
+definition FT_equiv_CVP :: "'a FaultTree \<Rightarrow> ('b \<Rightarrow> bool) \<Rightarrow> ('a, 'b) ConditionalValue \<Rightarrow> bool"
+where
+  "FT_equiv_CVP t P v \<equiv> equiv_test (FT2BE t) (CVP2BE P v)"
 
 definition FaultTree_eval :: "'a FaultTree \<Rightarrow> ('a \<Rightarrow> bool) \<Rightarrow> bool"
 where "FaultTree_eval t s = val_bool_expr (FT2BE t) s"
