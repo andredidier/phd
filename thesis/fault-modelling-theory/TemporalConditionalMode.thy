@@ -29,31 +29,45 @@ where
   "unpile_temporal_exp ls A \<equiv> { t . t \<in> A \<and> is_ordered_sublist ls t} "
 
 inductive_set
-  ta :: "'a list set set"
+  ta :: "'a list set set set"
 where
-  var: "{ls. a \<in> set ls} \<in> ta"
+  var: "{L | L ls . ls \<in> L \<and> a \<in> set ls \<and> distinct ls} \<in> ta"
 | Compl: "S \<in> ta \<Longrightarrow> - S \<in> ta"
 | inter: "S \<in> ta \<Longrightarrow> T \<in> ta \<Longrightarrow> S \<inter> T \<in> ta"
 
-lemma ta_empty: "({} :: 'a list set) \<in> ta"
+lemma ta_empty: "({} :: 'a list set set) \<in> ta"
 proof -
-  obtain S :: "'a list set" where "S \<in> ta" by (fast intro: ta.var)
+  obtain S :: "'a list set set" where "S \<in> ta" by (fast intro: ta.var)
   hence "S \<inter> - S \<in> ta" by (intro ta.intros)
   thus ?thesis by simp
 qed
 
-typedef 'a temporal_formula = "ta :: 'a list set set"
+typedef 'a temporal_formula = "ta :: 'a list set set set"
 apply (auto intro: ta_empty)
 done
 
 definition var :: "'a \<Rightarrow> 'a temporal_formula"
-where "var a = Abs_temporal_formula {ls. a \<in> set ls}"
+where "var a = Abs_temporal_formula {L | L ls . ls \<in> L \<and> a \<in> set ls \<and> distinct ls}"
 
-lemma Rep_formula_var: "Rep_temporal_formula (var a) = {ls . a \<in> set ls}"
+lemma Rep_formula_var: "Rep_temporal_formula (var a) = 
+  { L | L ls . ls \<in> L \<and> a \<in> set ls \<and> distinct ls}"
 unfolding var_def using ta.var by (rule Abs_temporal_formula_inverse)
 
-instantiation temporal_formula :: (type) temporal_exp
+notation
+  bot ("\<bottom>") and
+  top ("\<top>") and
+  inf  (infixl "\<sqinter>" 70) and
+  sup  (infixl "\<squnion>" 65)
+
+instantiation temporal_formula :: (type) boolean_algebra
 begin
+
+definition
+  "x \<sqinter> y = Abs_temporal_formula (Rep_temporal_formula x \<inter> Rep_temporal_formula y)"
+
+instance proof
+qed (unfold Rep_temporal_formula_simps, auto)
+
 end
 
 primrec set_temporal_exp :: "'a temporal_exp \<Rightarrow> 'a list set"
