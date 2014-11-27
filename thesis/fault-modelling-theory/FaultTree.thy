@@ -18,7 +18,6 @@ where
   "FT2BE (BasicEvent a) = Atom_bool_expr a" |
   "FT2BE (IntermediaryEvent g t1 t2) = FTG2BE g (FT2BE t1) (FT2BE t2)"
 
-
 definition FaultTree_eval :: "'a FaultTree \<Rightarrow> ('a \<Rightarrow> bool) \<Rightarrow> bool"
 where "FaultTree_eval t s = val_bool_expr (FT2BE t) s"
 

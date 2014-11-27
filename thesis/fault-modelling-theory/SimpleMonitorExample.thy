@@ -70,13 +70,33 @@ lemma "equiv_test
 apply (auto simp add: Battery_def equiv_test)
 done
 
-lemma "equiv_test 
+corollary "equiv_test 
     (CVP2BE (\<lambda> b . b = (FailureMode Omission)) SMon_OutMon)
     (Or_bool_expr 
       (And_bool_expr (Atom_bool_expr FB1) (Atom_bool_expr FB2)) 
       (And_bool_expr 
         (Atom_bool_expr FMon) 
         (Or_bool_expr (Atom_bool_expr FB1) (Atom_bool_expr FB2))))"
+apply (simp add: SMon_OutMon_def SMon_def SMon_Cs_def SMon_A_def Battery_def Monitor_def)
+apply (simp add: System_def SystemComponents_def SystemPortValuation_def )
+apply (simp add: fun_upd_fun_def)
+apply (simp add: lt_Values_def)
+apply (auto simp add: equiv_test)
+done
+
+corollary "equiv_test 
+    (CVP2BE (\<lambda> b . b = (FailureMode Omission)) SMon_OutMon)
+    (FT2BE 
+      (
+        IntermediaryEvent FTGOr
+          (IntermediaryEvent FTGAnd (BasicEvent FB1) (BasicEvent FB2))
+          (
+            IntermediaryEvent FTGAnd
+              (BasicEvent FMon)
+              (IntermediaryEvent FTGOr (BasicEvent FB1) (BasicEvent FB2))
+          )
+      )
+    )"
 apply (simp add: SMon_OutMon_def SMon_def SMon_Cs_def SMon_A_def Battery_def Monitor_def)
 apply (simp add: System_def SystemComponents_def SystemPortValuation_def )
 apply (simp add: fun_upd_fun_def)
