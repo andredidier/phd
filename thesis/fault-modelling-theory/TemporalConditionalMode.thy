@@ -12,10 +12,14 @@ notation
 
 type_synonym 'a tval = "'a list set"
 
+definition var_condition :: "'a \<Rightarrow> 'a list \<Rightarrow> bool"
+where
+  "var_condition a ls \<equiv> distinct ls \<and> a \<in> set ls "
+
 inductive_set
   ta :: "'a tval set"
 where
-  var: "{ a # ls | ls . a \<notin> set ls \<and> distinct ls } \<in> ta" |
+  var: "{ ls . var_condition a ls } \<in> ta" |
   Compl: "S \<in> ta \<Longrightarrow> - S \<in> ta" |
   inter: "S \<in> ta \<Longrightarrow> T \<in> ta \<Longrightarrow> S \<inter> T \<in> ta"
 
@@ -48,9 +52,9 @@ qed
 typedef 'a tformula = "ta :: 'a tval set" by (auto intro: ta_empty)
 
 definition tvar :: "'a \<Rightarrow> 'a tformula"
-where "tvar a = Abs_tformula { a # ls | ls . a \<notin> set ls \<and> distinct ls }"
+where "tvar a = Abs_tformula { ls . var_condition a ls }"
 
-lemma Rep_tformula_tvar : "Rep_tformula (tvar a) = { a # ls | ls . a \<notin> set ls \<and> distinct ls }"
+lemma Rep_tformula_tvar : "Rep_tformula (tvar a) = { ls . var_condition a ls }"
 unfolding tvar_def using ta.var by (rule Abs_tformula_inverse)
 
 instantiation tformula :: (type) boolean_algebra
@@ -124,18 +128,20 @@ lemma top_neq_bot_tformula [simp]: "(\<top> :: 'a tformula) \<noteq> \<bottom>"
 unfolding Rep_tformula_simps by auto
 
 lemma var_le_tvar_simps [simp]:
-  "tvar i \<le> tvar j \<longleftrightarrow> i = j"
-  "\<not> tvar i \<le> - tvar j"
-  "\<not> - tvar i \<le> tvar j "
-unfolding Rep_tformula_simps 
-apply (auto)
+  "tvar x \<le> tvar y \<longleftrightarrow> x = y"
+  "\<not> tvar x \<le> - tvar y"
+  "\<not> - tvar x \<le> tvar y "
+apply (auto simp add: Rep_tformula_simps var_condition_def )
+apply (auto simp add: subset_eq)
+apply (auto simp add: distinct_conv_nth)
 done
 
 lemma var_eq_tvar_simps [simp]:
-  "tvar i = tvar j \<longleftrightarrow> i = j"
-  "tvar i \<noteq> - tvar j"
-  "- tvar i \<noteq> tvar j"
-apply (metis var_le_tvar_simps(1))
-done
+  "tvar x = tvar y \<longleftrightarrow> x = y"
+  "tvar x \<noteq> - tvar y"
+  "- tvar x \<noteq> tvar y"
+unfolding Rep_tformula_simps set_eq_subset 
+apply (auto)
+end
 
 end
