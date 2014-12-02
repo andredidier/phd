@@ -12,14 +12,10 @@ notation
 
 type_synonym 'a tval = "'a list set"
 
-definition var_condition :: "'a \<Rightarrow> 'a list \<Rightarrow> bool"
-where
-  "var_condition a ls \<equiv> distinct ls \<and> a \<in> set ls "
-
 inductive_set
   ta :: "'a tval set"
 where
-  var: "{ ls . var_condition a ls } \<in> ta" |
+  var: "{ ls . distinct ls \<and> a \<in> set ls \<and> finite (set ls) } \<in> ta" |
   Compl: "S \<in> ta \<Longrightarrow> - S \<in> ta" |
   inter: "S \<in> ta \<Longrightarrow> T \<in> ta \<Longrightarrow> S \<inter> T \<in> ta"
 
@@ -52,9 +48,9 @@ qed
 typedef 'a tformula = "ta :: 'a tval set" by (auto intro: ta_empty)
 
 definition tvar :: "'a \<Rightarrow> 'a tformula"
-where "tvar a = Abs_tformula { ls . var_condition a ls }"
+where "tvar a = Abs_tformula { ls . distinct ls \<and> a \<in> set ls \<and> finite (set ls) }"
 
-lemma Rep_tformula_tvar : "Rep_tformula (tvar a) = { ls . var_condition a ls }"
+lemma Rep_tformula_tvar : "Rep_tformula (tvar a) = { ls . distinct ls \<and> a \<in> set ls \<and> finite (set ls) }"
 unfolding tvar_def using ta.var by (rule Abs_tformula_inverse)
 
 instantiation tformula :: (type) boolean_algebra
@@ -131,10 +127,23 @@ lemma var_le_tvar_simps [simp]:
   "tvar x \<le> tvar y \<longleftrightarrow> x = y"
   "\<not> tvar x \<le> - tvar y"
   "\<not> - tvar x \<le> tvar y "
-apply (auto simp add: Rep_tformula_simps var_condition_def )
+apply (auto simp add: Rep_tformula_simps  )
 apply (auto simp add: subset_eq)
-apply (auto simp add: distinct_conv_nth)
-done
+apply (metis (no_types) distinct.simps(2) distinct_length_2_or_more distinct_singleton)
+apply (metis List.set_insert distinct_remdups insertCI set_remdups)
+proof -
+  assume "\<forall>x\<in>- {ls. distinct ls \<and> x \<in> set ls}. distinct x \<and> y \<in> set x"
+  assume a1: "\<forall>x\<in>- {ls. distinct ls \<and> x \<in> set ls}. distinct x \<and> y \<in> set x"
+  have "\<And>b_y w. \<not> b_y (w\<Colon>'a list) \<longrightarrow> w \<in> - Collect b_y" by (metis Collect_neg_eq mem_Collect_eq)
+  thus False using a1 by (metis (no_types) not_distinct_conv_prefix)
+qed
+
+(*
+apply (metis List.finite_set empty_iff finite_distinct_list insertCI list.set(1) set_ConsD set_simps(2))
+apply (metis List.finite_set distinct.simps(2) finite_distinct_list insertCI set_simps(2))
+by (metis (mono_tags) Collect_mem_eq Collect_neg_eq Compl_iff UnCI append_Nil distinct.simps(2) double_compl empty_iff insertCI list.set(1) mem_Collect_eq set_append set_simps(2) subsetI subset_antisym uminus_set_def)
+*)
+
 
 lemma var_eq_tvar_simps [simp]:
   "tvar x = tvar y \<longleftrightarrow> x = y"
