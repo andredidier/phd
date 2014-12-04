@@ -12,10 +12,13 @@ notation
 
 type_synonym 'a tval = "'a list set"
 
+
 inductive_set
   ta :: "'a tval set"
 where
-  tvar: "{ ls . distinct ls \<and> a \<in> set ls } \<in> ta" |
+  single: "{ [a] } \<in> ta" |
+  sublists: "\<lbrakk> S \<in> ta  \<rbrakk> \<Longrightarrow> \<forall> xs ys . (xs \<in> S \<and> ys \<in> (set (sublists xs))) \<longrightarrow> ys \<in> ta" |
+  var: "{ ls . a not } \<in> ta" |
   Compl: "S \<in> ta \<Longrightarrow> - S \<in> ta" |
   inter: "S \<in> ta \<Longrightarrow> T \<in> ta \<Longrightarrow> S \<inter> T \<in> ta"
 
@@ -48,9 +51,9 @@ qed
 typedef 'a tformula = "ta :: 'a tval set" by (auto intro: ta_empty)
 
 definition tvar :: "'a \<Rightarrow> 'a tformula"
-where "tvar a = Abs_tformula { ls . distinct ls \<and> a \<in> set ls }"
+where "tvar a = Abs_tformula { ls' | ls ls' . a \<notin> set ls \<and> ls' \<in> lists (insert a (set ls))  }"
 
-lemma Rep_tformula_tvar : "Rep_tformula (tvar a) = { ls . distinct ls \<and> a \<in> set ls }"
+lemma Rep_tformula_tvar : "Rep_tformula (tvar a) = { ls' | ls ls' . a \<notin> set ls \<and> ls' \<in> lists (insert a (set ls))  }"
 unfolding tvar_def using ta.tvar by (rule Abs_tformula_inverse)
 
 instantiation tformula :: (type) boolean_algebra
@@ -127,7 +130,10 @@ lemma var_le_tvar_simps [simp]:
   "tvar x \<le> tvar y \<longleftrightarrow> x = y"
   "\<not> tvar x \<le> - tvar y"
   "\<not> - tvar x \<le> tvar y "
-apply (auto simp add: Rep_tformula_simps  )
+unfolding Rep_tformula_simps
+apply (auto simp add: subset_eq)
+done
+(*
 apply (auto simp add: subset_eq)
 apply (metis (no_types) distinct.simps(2) distinct_length_2_or_more distinct_singleton)
 apply (metis List.set_insert distinct_remdups insertCI set_remdups)
@@ -137,6 +143,7 @@ proof -
   have "\<And>b_y w. \<not> b_y (w\<Colon>'a list) \<longrightarrow> w \<in> - Collect b_y" by (metis Collect_neg_eq mem_Collect_eq)
   thus False using a1 by (metis (no_types) not_distinct_conv_prefix)
 qed
+*)
 
 (*
 apply (metis List.finite_set empty_iff finite_distinct_list insertCI list.set(1) set_ConsD set_simps(2))
@@ -149,7 +156,7 @@ lemma var_eq_tvar_simps [simp]:
   "tvar x \<noteq> - tvar y"
   "- tvar x \<noteq> tvar y"
 unfolding Rep_tformula_simps set_eq_subset 
-sorry
+done
 
 
 lemma tformula_induct [case_names tvar compl inf, induct type: tformula]:
