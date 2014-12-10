@@ -196,18 +196,18 @@ definition
   tformulas :: "'a set \<Rightarrow> 'a tformula set"
 where
   "tformulas S =
-    {x. \<forall>as bs. (\<forall>i\<in>S. i \<in> set as \<longleftrightarrow> i \<in> set bs) \<longrightarrow>
+    {x. \<forall>as bs. (\<forall>i\<in>S. (distinct as \<and> i \<in> set as) \<longleftrightarrow> (distinct bs \<and> i \<in> set bs)) \<longrightarrow>
       as \<in> Rep_tformula x \<longleftrightarrow> bs \<in> Rep_tformula x}"
 
 lemma tformulasI:
-  assumes "\<And>as bs. \<forall>i\<in>S. i \<in> set as \<longleftrightarrow> i \<in> set bs
+  assumes "\<And>as bs. \<forall>i\<in>S. (distinct as \<and> i \<in> set as) \<longleftrightarrow> (distinct bs \<and> i \<in> set bs)
     \<Longrightarrow> as \<in> Rep_tformula x \<longleftrightarrow> bs \<in> Rep_tformula x"
   shows "x \<in> tformulas S"
 using assms unfolding tformulas_def by simp
 
 lemma tformulasD:
   assumes "x \<in> tformulas S"
-  assumes "\<forall>i\<in>S. i \<in> set as \<longleftrightarrow> i \<in> set bs"
+  assumes "\<forall>i\<in>S. (distinct as \<and> i \<in> set as) \<longleftrightarrow> (distinct bs \<and> i \<in> set bs)"
   shows "as \<in> Rep_tformula x \<longleftrightarrow> bs \<in> Rep_tformula x"
 using assms unfolding tformulas_def by simp
 
@@ -217,13 +217,24 @@ by (fast intro!: tformulasI elim!: tformulasD)
 lemma tformulas_insert: "x \<in> tformulas S \<Longrightarrow> x \<in> tformulas (insert a S)"
 unfolding tformulas_def by simp
 
+lemma tformulas_tvar: "i \<in> S \<Longrightarrow> tvar i \<in> tformulas S"
+unfolding tformulas_def 
+apply (auto simp add: Rep_tformula_simps)
+done
+
 (* TODO: Problema! *)
 
-lemma tformulas_tvar: "i \<in> set S \<Longrightarrow> tvar i \<in> tformulas S"
-unfolding tformulas_def by (simp add: Rep_tformula_simps)
+lemma tformulas_before: "a \<in> S \<Longrightarrow> before a \<in> tformulas S"
+unfolding tformulas_def 
+apply (auto simp add: Rep_tformula_simps)
+sledgehammer
+sorry
 
 lemma tformulas_tvar_iff: "tvar i \<in> tformulas S \<longleftrightarrow> i \<in> S"
-unfolding tformulas_def by (simp add: Rep_tformula_simps, fast)
+unfolding tformulas_def 
+apply (auto simp add: Rep_tformula_simps)
+apply (metis List.set_insert distinct.simps(1) distinct_insert empty_iff list.set(1) not_in_set_insert set_ConsD singletonI)
+done
 
 
 lemma tformulas_bot: "\<bottom> \<in> tformulas S"
@@ -254,11 +265,14 @@ lemma tformulas_ifte:
     ifte a x y \<in> tformulas S"
 unfolding ifte_def
 by (intro tformulas_sup tformulas_inf tformulas_compl)
-*)
 
 lemmas tformulas_intros =
   tformulas_tvar tformulas_bot tformulas_top tformulas_compl
   tformulas_inf tformulas_sup tformulas_diff tformulas_ifte
+*)
+lemmas tformulas_intros =
+  tformulas_tvar tformulas_bot tformulas_top tformulas_compl
+  tformulas_inf tformulas_sup tformulas_diff 
 
 fun prefix :: "'a list \<Rightarrow> 'a list \<Rightarrow> bool"
 where
