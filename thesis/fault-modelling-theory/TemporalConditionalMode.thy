@@ -196,18 +196,24 @@ definition
   tformulas :: "'a set \<Rightarrow> 'a tformula set"
 where
   "tformulas S =
-    {x. \<forall>as bs. (\<forall>i\<in>S. (distinct as \<and> i \<in> set as) \<longleftrightarrow> (distinct bs \<and> i \<in> set bs)) \<longrightarrow>
+    {x. \<forall>as bs. (\<forall>p\<in>S.
+      (distinct as \<and> p \<in> set as) \<longleftrightarrow> 
+      (distinct bs \<and> p \<in> set bs)) \<longrightarrow>
       as \<in> Rep_tformula x \<longleftrightarrow> bs \<in> Rep_tformula x}"
 
 lemma tformulasI:
-  assumes "\<And>as bs. \<forall>i\<in>S. (distinct as \<and> i \<in> set as) \<longleftrightarrow> (distinct bs \<and> i \<in> set bs)
+  assumes "\<And>as bs. \<forall>p\<in>S.
+    (distinct as \<and> p \<in> set as) \<longleftrightarrow> 
+    (distinct bs \<and> p \<in> set bs)
     \<Longrightarrow> as \<in> Rep_tformula x \<longleftrightarrow> bs \<in> Rep_tformula x"
   shows "x \<in> tformulas S"
 using assms unfolding tformulas_def by simp
 
 lemma tformulasD:
   assumes "x \<in> tformulas S"
-  assumes "\<forall>i\<in>S. (distinct as \<and> i \<in> set as) \<longleftrightarrow> (distinct bs \<and> i \<in> set bs)"
+  assumes "\<forall>p\<in>S.
+    (distinct as \<and> p \<in> set as) \<longleftrightarrow> 
+    (distinct bs \<and> p \<in> set bs)"
   shows "as \<in> Rep_tformula x \<longleftrightarrow> bs \<in> Rep_tformula x"
 using assms unfolding tformulas_def by simp
 
@@ -224,16 +230,15 @@ done
 
 (* TODO: Problema! *)
 
-lemma tformulas_before: "a \<in> S \<Longrightarrow> before a \<in> tformulas S"
+(*lemma tformulas_before: "a \<in> S \<Longrightarrow> before a \<in> tformulas S"
 unfolding tformulas_def 
 apply (auto simp add: Rep_tformula_simps)
-sledgehammer
-sorry
+done*)
 
 lemma tformulas_tvar_iff: "tvar i \<in> tformulas S \<longleftrightarrow> i \<in> S"
 unfolding tformulas_def 
 apply (auto simp add: Rep_tformula_simps)
-apply (metis List.set_insert distinct.simps(1) distinct_insert empty_iff list.set(1) not_in_set_insert set_ConsD singletonI)
+apply (metis distinct_singleton empty_iff insert_iff list.set(1) set_simps(2))
 done
 
 
@@ -282,7 +287,7 @@ where
 
 definition tprefix :: "'a tval \<Rightarrow> 'a tval \<Rightarrow> 'a tformula"
 where
-  "tprefix l r \<equiv> Abs_tformula { rs | ls rs . ls \<in> l \<and> rs \<in> r \<and> (prefix ls rs) }"
+  "tprefix l r \<equiv> Abs_tformula { rs . \<forall> ls . ls \<in> l \<and> rs \<in> r \<and> (prefix ls rs) }"
 
 datatype 'a TemporalFormula = 
   TTrue 
