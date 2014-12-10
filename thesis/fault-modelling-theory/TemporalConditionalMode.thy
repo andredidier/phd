@@ -12,13 +12,16 @@ notation
 
 type_synonym 'a tval = "'a list set"
 
+primrec before_op_list :: "'a \<Rightarrow> 'a \<Rightarrow> 'a list \<Rightarrow> bool"
+where
+  "before_op_list _ _ [] = False" |
+  "before_op_list a b (x # xs) = ((a = x \<and> b \<in> set xs) \<or> (before_op_list a b xs))"
 
 inductive_set
   ta :: "'a tval set"
 where
-  single: "{ [a] } \<in> ta" |
-  sublists: "\<lbrakk> S \<in> ta  \<rbrakk> \<Longrightarrow> \<forall> xs ys . (xs \<in> S \<and> ys \<in> (set (sublists xs))) \<longrightarrow> ys \<in> ta" |
-  var: "{ ls . a not } \<in> ta" |
+  tvar: "{ ls . distinct ls \<and> a \<in> set ls } \<in> ta" |
+  before: "{ ls | ls b . distinct ls \<and> before_op_list a b ls } \<in> ta" |
   Compl: "S \<in> ta \<Longrightarrow> - S \<in> ta" |
   inter: "S \<in> ta \<Longrightarrow> T \<in> ta \<Longrightarrow> S \<inter> T \<in> ta"
 
@@ -51,10 +54,17 @@ qed
 typedef 'a tformula = "ta :: 'a tval set" by (auto intro: ta_empty)
 
 definition tvar :: "'a \<Rightarrow> 'a tformula"
-where "tvar a = Abs_tformula { ls' | ls ls' . a \<notin> set ls \<and> ls' \<in> lists (insert a (set ls))  }"
+where "tvar a = Abs_tformula { ls . distinct ls \<and> a \<in> set ls }"
 
-lemma Rep_tformula_tvar : "Rep_tformula (tvar a) = { ls' | ls ls' . a \<notin> set ls \<and> ls' \<in> lists (insert a (set ls))  }"
+lemma Rep_tformula_tvar : "Rep_tformula (tvar a) = { ls . distinct ls \<and> a \<in> set ls }"
 unfolding tvar_def using ta.tvar by (rule Abs_tformula_inverse)
+
+definition before :: "'a \<Rightarrow> 'a tformula"
+where "before a = Abs_tformula { ls | ls b . distinct ls \<and> before_op_list a b ls }"
+
+lemma Rep_tformula_before : "Rep_tformula (before a) = 
+  { ls | ls b . distinct ls \<and> before_op_list a b ls}"
+unfolding before_def using ta.before by (rule Abs_tformula_inverse)
 
 instantiation tformula :: (type) boolean_algebra
 begin
@@ -131,39 +141,31 @@ lemma var_le_tvar_simps [simp]:
   "\<not> tvar x \<le> - tvar y"
   "\<not> - tvar x \<le> tvar y "
 unfolding Rep_tformula_simps
-apply (auto simp add: subset_eq)
+apply (auto)
+apply (auto simp add: subset_iff)
+apply (metis distinct_remdups empty_iff in_set_member list.set(1) member_rec(1) set_remdups)
+apply (metis distinct_remdups insertCI set_remdups set_simps(2))
+apply (metis distinct.simps(2))
 done
-(*
-apply (auto simp add: subset_eq)
-apply (metis (no_types) distinct.simps(2) distinct_length_2_or_more distinct_singleton)
-apply (metis List.set_insert distinct_remdups insertCI set_remdups)
-proof -
-  assume "\<forall>x\<in>- {ls. distinct ls \<and> x \<in> set ls}. distinct x \<and> y \<in> set x"
-  assume a1: "\<forall>x\<in>- {ls. distinct ls \<and> x \<in> set ls}. distinct x \<and> y \<in> set x"
-  have "\<And>b_y w. \<not> b_y (w\<Colon>'a list) \<longrightarrow> w \<in> - Collect b_y" by (metis Collect_neg_eq mem_Collect_eq)
-  thus False using a1 by (metis (no_types) not_distinct_conv_prefix)
-qed
-*)
-
-(*
-apply (metis List.finite_set empty_iff finite_distinct_list insertCI list.set(1) set_ConsD set_simps(2))
-apply (metis List.finite_set distinct.simps(2) finite_distinct_list insertCI set_simps(2))
-by (metis (mono_tags) Collect_mem_eq Collect_neg_eq Compl_iff UnCI append_Nil distinct.simps(2) double_compl empty_iff insertCI list.set(1) mem_Collect_eq set_append set_simps(2) subsetI subset_antisym uminus_set_def)
-*)
 
 lemma var_eq_tvar_simps [simp]:
   "tvar x = tvar y \<longleftrightarrow> x = y"
   "tvar x \<noteq> - tvar y"
   "- tvar x \<noteq> tvar y"
-unfolding Rep_tformula_simps set_eq_subset 
+unfolding Rep_tformula_simps
+apply (metis (full_types) tvar_def var_le_tvar_simps(1))
+apply (metis Rep_tformula_tvar tvar_def uminus_tformula_def var_le_tvar_simps(1) var_le_tvar_simps(3))
+apply (metis Rep_tformula_tvar tvar_def uminus_tformula_def var_le_tvar_simps(1) var_le_tvar_simps(3))
 done
 
-
-lemma tformula_induct [case_names tvar compl inf, induct type: tformula]:
+(*  before: "{ ls | ls b . distinct ls \<and> before a b ls } \<in> ta" |
+*)
+lemma tformula_induct [case_names tvar compl inf before , induct type: tformula]:
   fixes P :: "'a tformula \<Rightarrow> bool"
   assumes 1: "\<And>i. P (tvar i)"
   assumes 2: "\<And>x. P x \<Longrightarrow> P (- x)"
   assumes 3: "\<And>x y. P x \<Longrightarrow> P y \<Longrightarrow> P (x \<sqinter> y)"
+  assumes 4: "\<And>a. P (before a)"
   shows "P x"
 proof (induct x rule: Abs_tformula_induct)
   fix y :: "'a list set"
@@ -172,6 +174,10 @@ proof (induct x rule: Abs_tformula_induct)
     case (tvar i)
     have "P (tvar i)" by (rule 1)
     thus ?case unfolding tvar_def .
+  next
+    case (before a)
+    have "P (before a)" by (rule 4)
+    thus ?case unfolding before_def .
   next
     case (Compl S)
     from `P (Abs_tformula S)` have "P (- Abs_tformula S)" by (rule 2)
@@ -212,13 +218,13 @@ lemma tformulas_insert: "x \<in> tformulas S \<Longrightarrow> x \<in> tformulas
 unfolding tformulas_def by simp
 
 (* TODO: Problema! *)
-(*
+
 lemma tformulas_tvar: "i \<in> set S \<Longrightarrow> tvar i \<in> tformulas S"
 unfolding tformulas_def by (simp add: Rep_tformula_simps)
 
 lemma tformulas_tvar_iff: "tvar i \<in> tformulas S \<longleftrightarrow> i \<in> S"
 unfolding tformulas_def by (simp add: Rep_tformula_simps, fast)
-*)
+
 
 lemma tformulas_bot: "\<bottom> \<in> tformulas S"
 unfolding tformulas_def by (simp add: Rep_tformula_simps)
