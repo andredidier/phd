@@ -1,6 +1,6 @@
 theory TemporalConditionalMode
 
-imports Main
+imports Main Free_Boolean_Algebra
 
 begin
 
@@ -65,6 +65,8 @@ where "before a = Abs_tformula { ls | ls b . distinct ls \<and> before_op_list a
 lemma Rep_tformula_before : "Rep_tformula (before a) = 
   { ls | ls b . distinct ls \<and> before_op_list a b ls}"
 unfolding before_def using ta.before by (rule Abs_tformula_inverse)
+
+text {* @{term tformula } as a @{term boolean_algebra } *}
 
 instantiation tformula :: (type) boolean_algebra
 begin
@@ -263,21 +265,221 @@ lemma tformulas_diff:
   "x \<in> tformulas S \<Longrightarrow> y \<in> tformulas S \<Longrightarrow> x - y \<in> tformulas S"
 unfolding tformulas_def by (auto simp add: Rep_tformula_simps)
 
-(* TODO: implementar ifte *)
-(*
-lemma tformulas_ifte:
-  "a \<in> tformulas S \<Longrightarrow> x \<in> tformulas S \<Longrightarrow> y \<in> tformulas S \<Longrightarrow>
-    ifte a x y \<in> tformulas S"
-unfolding ifte_def
-by (intro tformulas_sup tformulas_inf tformulas_compl)
+lemmas tformulas_intros =
+  tformulas_tvar tformulas_bot tformulas_top tformulas_compl
+  tformulas_inf tformulas_sup tformulas_diff formulas_ifte
 
-lemmas tformulas_intros =
-  tformulas_tvar tformulas_bot tformulas_top tformulas_compl
-  tformulas_inf tformulas_sup tformulas_diff tformulas_ifte
-*)
-lemmas tformulas_intros =
-  tformulas_tvar tformulas_bot tformulas_top tformulas_compl
-  tformulas_inf tformulas_sup tformulas_diff 
+inductive
+  hom_graph_t ::
+    "('a \<Rightarrow> 'b::boolean_algebra) \<Rightarrow> 'a set \<Rightarrow> 'a tformula \<Rightarrow> 'b \<Rightarrow> bool"
+  for f :: "'a \<Rightarrow> 'b::boolean_algebra"
+where
+  bot: "hom_graph_t f {} bot bot"
+| top: "hom_graph_t f {} top top"
+| ifte: "i \<notin> S \<Longrightarrow> hom_graph_t f S x a \<Longrightarrow> hom_graph_t f S y b \<Longrightarrow>
+  hom_graph_t f (insert i S) (ifte (tvar i) x y) (ifte (f i) a b)"
+
+lemma hom_graph_t_dest:
+  "hom_graph_t f S x a \<Longrightarrow> k \<in> S \<Longrightarrow> \<exists>y z b c.
+    x = ifte (tvar k) y z \<and> a = ifte (f k) b c \<and>
+    hom_graph_t f (S - {k}) y b \<and> hom_graph_t f (S - {k}) z c"
+proof (induct set: hom_graph_t)
+  case (ifte i S x a y b) show ?case
+  proof (cases "i = k")
+    assume "i = k" with ifte(1,2,4) show ?case by auto
+  next
+    assume "i \<noteq> k"
+    with `k \<in> insert i S` have k: "k \<in> S" by simp
+    have *: "insert i S - {k} = insert i (S - {k})"
+      using `i \<noteq> k` by (simp add: insert_Diff_if)
+    have **: "i \<notin> S - {k}" using `i \<notin> S` by simp
+    from ifte(1) ifte(3) [OF k] ifte(5) [OF k]
+    show ?case
+      unfolding *
+      apply clarify
+      apply (simp only: ifte_ifte_distrib [of "tvar i"])
+      apply (simp only: ifte_ifte_distrib [of "f i"])
+      apply (fast intro: hom_graph_t.ifte [OF **])
+      done
+  qed
+qed simp_all
+
+lemma hom_graph_t_insert_elim:
+  assumes "hom_graph_t f (insert i S) x a" and "i \<notin> S"
+  obtains y z b c
+  where "x = ifte (tvar i) y z"
+    and "a = ifte (f i) b c"
+    and "hom_graph_t f S y b"
+    and "hom_graph_t f S z c"
+using hom_graph_t_dest [OF assms(1) insertI1]
+by (clarify, simp add: assms(2))
+
+lemma hom_graph_t_imp_formulas:
+  "hom_graph_t f S x a \<Longrightarrow> x \<in> tformulas S"
+by (induct set: hom_graph_t, simp_all add: tformulas_intros tformulas_insert)
+
+lemma hom_graph_t_unique:
+  "hom_graph_t f S x a \<Longrightarrow> hom_graph_t f S x a' \<Longrightarrow> a = a'"
+proof (induct arbitrary: a' set: hom_graph_t)
+  case (ifte i S y b z c a')
+  from ifte(6,1) obtain y' z' b' c'
+    where 1: "ifte (tvar i) y z = ifte (tvar i) y' z'"
+      and 2: "a' = ifte (f i) b' c'"
+      and 3: "hom_graph_t f S y' b'"
+      and 4: "hom_graph_t f S z' c'"
+    by (rule hom_graph_t_insert_elim)
+  from 1 3 4 ifte(1,2,4) have "y = y' \<and> z = z'"
+    by (intro ifte_inject hom_graph_t_imp_formulas)
+  with 2 3 4 ifte(3,5) show "ifte (f i) b c = a'"
+    by simp
+qed (erule hom_graph_t.cases, simp_all)+
+
+lemma hom_graph_t_insert:
+  assumes "hom_graph_t f S x a"
+  shows "hom_graph_t f (insert i S) x a"
+proof (cases "i \<in> S")
+  assume "i \<in> S" with assms show ?thesis by (simp add: insert_absorb)
+next
+  assume "i \<notin> S"
+  hence "hom_graph_t f (insert i S) (ifte (tvar i) x x) (ifte (f i) a a)"
+    by (intro hom_graph_t.ifte assms)
+  thus "hom_graph_t f (insert i S) x a"
+    by (simp only: ifte_same)
+qed
+
+lemma hom_graph_t_finite_superset:
+  assumes "hom_graph_t f S x a" and "finite T" and "S \<subseteq> T"
+  shows "hom_graph_t f T x a"
+proof -
+  from `finite T` have "hom_graph_t f (S \<union> T) x a"
+    by (induct set: finite, simp add: assms, simp add: hom_graph_t_insert)
+  with `S \<subseteq> T` show "hom_graph_t f T x a"
+    by (simp only: subset_Un_eq)
+qed
+
+lemma hom_graph_t_imp_finite:
+  "hom_graph_t f S x a \<Longrightarrow> finite S"
+by (induct set: hom_graph_t) simp_all
+
+lemma hom_graph_t_unique':
+  assumes "hom_graph_t f S x a" and "hom_graph_t f T x a'"
+  shows "a = a'"
+proof (rule hom_graph_t_unique)
+  have fin: "finite (S \<union> T)"
+    using assms by (intro finite_UnI hom_graph_t_imp_finite)
+  show "hom_graph_t f (S \<union> T) x a"
+    using assms(1) fin Un_upper1 by (rule hom_graph_t_finite_superset)
+  show "hom_graph_t f (S \<union> T) x a'"
+    using assms(2) fin Un_upper2 by (rule hom_graph_t_finite_superset)
+qed
+
+lemma hom_graph_t_tvar: "hom_graph_t f {i} (tvar i) (f i)"
+proof -
+  have "hom_graph_t f {i} (ifte (tvar i) top bot) (ifte (f i) top bot)"
+    by (simp add: hom_graph_t.intros)
+  thus "hom_graph_t f {i} (tvar i) (f i)"
+    unfolding ifte_def by simp
+qed
+
+lemma hom_graph_t_before: "hom_graph_t f {i} (tvar i) (f i)"
+done
+
+lemma hom_graph_t_compl:
+  "hom_graph_t f S x a \<Longrightarrow> hom_graph_t f S (- x) (- a)"
+by (induct set: hom_graph_t, simp_all add: hom_graph_t.intros compl_ifte)
+
+lemma hom_graph_t_inf:
+  "hom_graph_t f S x a \<Longrightarrow> hom_graph_t f S y b \<Longrightarrow>
+   hom_graph_t f S (x \<sqinter> y) (a \<sqinter> b)"
+ apply (induct arbitrary: y b set: hom_graph_t)
+   apply (simp add: hom_graph_t.bot)
+  apply simp
+ apply (erule (1) hom_graph_t_insert_elim)
+ apply (auto simp add: inf_ifte_distrib hom_graph_t.ifte)
+done
+
+lemma hom_graph_t_union_inf:
+  assumes "hom_graph_t f S x a" and "hom_graph_t f T y b"
+  shows "hom_graph_t f (S \<union> T) (x \<sqinter> y) (a \<sqinter> b)"
+proof (rule hom_graph_t_inf)
+  have fin: "finite (S \<union> T)"
+    using assms by (intro finite_UnI hom_graph_t_imp_finite)
+  show "hom_graph_t f (S \<union> T) x a"
+    using assms(1) fin Un_upper1 by (rule hom_graph_t_finite_superset)
+  show "hom_graph_t f (S \<union> T) y b"
+    using assms(2) fin Un_upper2 by (rule hom_graph_t_finite_superset)
+qed
+
+lemma hom_graph_t_exists: "\<exists>a S. hom_graph_t f S x a"
+by (induct x)
+   (auto intro: hom_graph_t_tvar hom_graph_t_compl hom_graph_t_union_inf)
+
+definition
+  hom_t :: "('a \<Rightarrow> 'b::boolean_algebra) \<Rightarrow> 'a tformula \<Rightarrow> 'b"
+where
+  "hom_t f x = (THE a. \<exists>S. hom_graph_t f S x a)"
+
+lemma hom_graph_t_hom_t: "\<exists>S. hom_graph_t f S x (hom_t f x)"
+unfolding hom_t_def
+apply (rule theI')
+apply (rule ex_ex1I)
+apply (rule hom_graph_t_exists)
+apply (fast elim: hom_graph_t_unique')
+done
+
+lemma hom_t_equality:
+  "hom_graph_t f S x a \<Longrightarrow> hom_t f x = a"
+unfolding hom_t_def
+apply (rule the_equality)
+apply (erule exI)
+apply (erule exE)
+apply (erule (1) hom_graph_t_unique')
+done
+
+lemma hom_t_var [simp]: "hom_t f (tvar i) = f i"
+by (rule hom_t_equality, rule hom_graph_t_tvar)
+
+lemma hom_t_bot [simp]: "hom_t f \<bottom> = \<bottom>"
+by (rule hom_t_equality, rule hom_graph_t.bot)
+
+lemma hom_t_top [simp]: "hom_t f \<top> = \<top>"
+by (rule hom_t_equality, rule hom_graph_t.top)
+
+lemma hom_t_compl [simp]: "hom_t f (- x) = - hom_t f x"
+proof -
+  obtain S where "hom_graph_t f S x (hom_t f x)"
+    using hom_graph_t_hom_t ..
+  hence "hom_graph_t f S (- x) (- hom_t f x)"
+    by (rule hom_graph_t_compl)
+  thus "hom_t f (- x) = - hom_t f x"
+    by (rule hom_t_equality)
+qed
+
+lemma hom_t_inf [simp]: "hom_t f (x \<sqinter> y) = hom_t f x \<sqinter> hom_t f y"
+proof -
+  obtain S where S: "hom_graph_t f S x (hom_t f x)"
+    using hom_graph_t_hom_t ..
+  obtain T where T: "hom_graph_t f T y (hom_t f y)"
+    using hom_graph_t_hom_t ..
+  have "hom_graph_t f (S \<union> T) (x \<sqinter> y) (hom_t f x \<sqinter> hom_t f y)"
+    using S T by (rule hom_graph_t_union_inf)
+  thus ?thesis by (rule hom_t_equality)
+qed
+
+lemma hom_t_sup [simp]: "hom_t f (x \<squnion> y) = hom_t f x \<squnion> hom_t f y"
+unfolding sup_conv_inf by (simp only: hom_t_compl hom_t_inf)
+
+lemma hom_t_diff [simp]: "hom_t f (x - y) = hom_t f x - hom_t f y"
+unfolding diff_eq by (simp only: hom_t_compl hom_t_inf)
+
+lemma hom_t_ifte [simp]:
+  "hom_t f (ifte x y z) = ifte (hom_t f x) (hom_t f y) (hom_t f z)"
+unfolding ifte_def by (simp only: hom_t_compl hom_t_inf hom_t_sup)
+
+lemmas hom_t_simps =
+  hom_t_var hom_t_bot hom_t_top hom_t_compl
+  hom_t_inf hom_t_sup hom_t_diff hom_t_ifte
+
 
 fun prefix :: "'a list \<Rightarrow> 'a list \<Rightarrow> bool"
 where
@@ -287,16 +489,16 @@ where
 
 definition tprefix :: "'a tval \<Rightarrow> 'a tval \<Rightarrow> 'a tformula"
 where
-  "tprefix l r \<equiv> Abs_tformula { rs . \<forall> ls . ls \<in> l \<and> rs \<in> r \<and> (prefix ls rs) }"
+  "tprefix L R \<equiv> Abs_tformula { rs | ls rs . ls \<in> L \<and> rs \<in> R \<and> (prefix ls rs) }"
 
 datatype 'a TemporalFormula = 
-  TTrue 
-  | TFalse
-  | TVar 'a
-  | TAnd "'a TemporalFormula" "'a TemporalFormula"
-  | TOr "'a TemporalFormula" "'a TemporalFormula"
-  | TNot "'a TemporalFormula"
-  | Before "'a TemporalFormula" "'a TemporalFormula"
+  TTrue ("True")
+  | TFalse ("False")
+  | TVar 'a ("[_]")
+  | TAnd "'a TemporalFormula" "'a TemporalFormula" (infixr "T\<and>" 40)
+  | TOr "'a TemporalFormula" "'a TemporalFormula" (infixr "T\<or>" 50)
+  | TNot "'a TemporalFormula" ("T\<not> _" 40)
+  | Before "'a TemporalFormula" "'a TemporalFormula" (infixr "T<" 40)
 
 primrec TF2tformula :: "'a TemporalFormula \<Rightarrow> 'a tformula"
 where
@@ -312,6 +514,11 @@ where
 lemma "\<lbrakk> a \<noteq> b \<rbrakk> \<Longrightarrow> 
   TF2tformula (Before (TVar a) (TVar b)) = Abs_tformula { [a,b] }"
 apply (auto simp add: tprefix_def Rep_tformula_simps)
-done
+sorry
+
+lemma "TF2tformula (T\<not> ((TVar a) T< (TVar a))) = \<top>"
+sorry
+
+lemma "TF2tformula
 
 end
