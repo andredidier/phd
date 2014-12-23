@@ -1,6 +1,6 @@
 theory TemporalConditionalMode
 
-imports Main Free_Boolean_Algebra
+imports Main Free_Boolean_Algebra 
 
 begin
 
@@ -523,6 +523,51 @@ lemmas hom_t_simps =
   hom_t_var hom_t_bot hom_t_top hom_t_compl
   hom_t_inf hom_t_sup hom_t_diff hom_t_ifte
 
+lemma hom_t_tvar_eq_id: "hom_t tvar x = x"
+by (induct x) simp_all
+
+lemma hom_t_hom_t: "hom_t f (hom_t g x) = hom_t (\<lambda>i. hom_t f (g i)) x"
+by (induct x) simp_all
+
+definition
+  fmap_t :: "('a \<Rightarrow> 'b) \<Rightarrow> 'a tformula \<Rightarrow> 'b tformula"
+where
+  "fmap_t f = hom_t (\<lambda>i. tvar (f i))"
+
+lemma fmap_t_tvar [simp]: "fmap_t f (tvar i) = tvar (f i)"
+unfolding fmap_t_def by simp
+
+lemma fmap_t_bot [simp]: "fmap_t f \<bottom> = \<bottom>"
+unfolding fmap_t_def by simp
+
+lemma fmap_t_top [simp]: "fmap_t f \<top> = \<top>"
+unfolding fmap_t_def by simp
+
+lemma fmap_t_compl [simp]: "fmap_t f (- x) = - fmap_t f x"
+unfolding fmap_t_def by simp
+
+lemma fmap_t_inf [simp]: "fmap_t f (x \<sqinter> y) = fmap_t f x \<sqinter> fmap_t f y"
+unfolding fmap_t_def by simp
+
+lemma fmap_t_sup [simp]: "fmap_t f (x \<squnion> y) = fmap_t f x \<squnion> fmap_t f y"
+unfolding fmap_t_def by simp
+
+lemma fmap_t_diff [simp]: "fmap_t f (x - y) = fmap_t f x - fmap_t f y"
+unfolding fmap_t_def by simp
+
+lemma fmap_t_ifte [simp]:
+  "fmap_t f (ifte x y z) = ifte (fmap_t f x) (fmap_t f y) (fmap_t f z)"
+unfolding fmap_t_def by simp
+
+lemmas fmap_t_simps =
+  fmap_t_tvar fmap_t_bot fmap_t_top fmap_t_compl
+  fmap_t_inf fmap_t_sup fmap_t_diff fmap_t_ifte
+
+lemma fmap_t_ident: "fmap_t (\<lambda>i. i) x = x"
+by (induct x) simp_all
+
+lemma fmap_t_fmap_t: "fmap_t f (fmap_t g x) = fmap_t (f \<circ> g) x"
+by (induct x) simp_all
 
 fun prefix :: "'a list \<Rightarrow> 'a list \<Rightarrow> bool"
 where
@@ -530,9 +575,33 @@ where
   "prefix [] rs = True" |
   "prefix (a # ls) (b # rs) = ((a = b) \<and> prefix ls rs)"
 
-definition tprefix :: "'a tval \<Rightarrow> 'a tval \<Rightarrow> 'a tformula"
+definition tprefix :: "'a tformula \<Rightarrow> 'a tformula \<Rightarrow> 'a tformula"
 where
-  "tprefix L R \<equiv> Abs_tformula { rs | ls rs . ls \<in> L \<and> rs \<in> R \<and> (prefix ls rs) }"
+  "tprefix L R \<equiv> Abs_tformula 
+    { rs | ls rs . ls \<in> Rep_tformula L \<and> rs \<in> Rep_tformula R \<and> (prefix ls rs) }"
+
+lemma "hom_t s (tvar A) \<or> hom_t s (- tvar A)"
+apply (auto)
+done
+
+lemma "hom_t s (tprefix (tvar A) (tvar B)) \<or> hom_t s (- tprefix (tvar A) (tvar B))"
+apply (auto)
+done
+
+lemma before_and: 
+  "hom_t s (tprefix (tvar A) (tvar B)) \<or> hom_t s (tprefix (tvar B) (tvar A)) = 
+  hom_t s (tvar A \<sqinter> tvar B)"
+apply (auto)
+done
+
+lemma and_neg: "hom_t s (tvar A \<sqinter> tvar B) \<or> hom_t s (- tvar A) \<or> hom_t s (- tvar B)"
+apply (auto)
+done
+
+lemma "hom_t s (tprefix (tvar A) (tvar B)) \<or> hom_t s (tprefix (tvar B) (tvar A)) \<or>
+  hom_t s (- tvar A) \<or> hom_t s (- tvar B) "
+apply (metis and_neg before_and)
+done
 
 datatype 'a TemporalFormula = 
   TTrue ("True")
@@ -552,7 +621,7 @@ where
   "TF2tformula (TOr l r) = TF2tformula l \<squnion> TF2tformula r" |
   "TF2tformula (TNot f) = - TF2tformula f" |
   "TF2tformula (Before l r) = 
-    tprefix (Rep_tformula (TF2tformula l)) (Rep_tformula (TF2tformula r))"
+    tprefix (TF2tformula l) (TF2tformula r)"
 
 lemma "\<lbrakk> a \<noteq> b \<rbrakk> \<Longrightarrow> 
   TF2tformula (Before (TVar a) (TVar b)) = Abs_tformula { [a,b] }"
