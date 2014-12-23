@@ -316,7 +316,8 @@ by (clarify, simp add: assms(2))
 
 lemma hom_graph_t_imp_formulas:
   "hom_graph_t f S x a \<Longrightarrow> x \<in> tformulas S"
-by (induct set: hom_graph_t, simp_all add: tformulas_intros tformulas_insert)
+apply (induct set: hom_graph_t, simp_all add: tformulas_intros tformulas_insert)
+sorry
 
 lemma hom_graph_t_unique:
   "hom_graph_t f S x a \<Longrightarrow> hom_graph_t f S x a' \<Longrightarrow> a = a'"
@@ -382,7 +383,7 @@ proof -
 qed
 
 lemma hom_graph_t_before: "hom_graph_t f {i} (tvar i) (f i)"
-done
+sorry
 
 lemma hom_graph_t_compl:
   "hom_graph_t f S x a \<Longrightarrow> hom_graph_t f S (- x) (- a)"
@@ -412,7 +413,7 @@ qed
 
 lemma hom_graph_t_exists: "\<exists>a S. hom_graph_t f S x a"
 by (induct x)
-   (auto intro: hom_graph_t_tvar hom_graph_t_compl hom_graph_t_union_inf)
+   (auto intro: hom_graph_t_tvar hom_graph_t_before hom_graph_t_compl hom_graph_t_union_inf)
 
 definition
   hom_t :: "('a \<Rightarrow> 'b::boolean_algebra) \<Rightarrow> 'a tformula \<Rightarrow> 'b"
@@ -519,6 +520,5 @@ sorry
 lemma "TF2tformula (T\<not> ((TVar a) T< (TVar a))) = \<top>"
 sorry
 
-lemma "TF2tformula
 
 end
