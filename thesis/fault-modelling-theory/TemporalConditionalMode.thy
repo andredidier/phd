@@ -21,7 +21,6 @@ inductive_set
   ta :: "'a tval set"
 where
   tvar: "{ ls . distinct ls \<and> a \<in> set ls } \<in> ta" |
-  before: "{ ls | ls b . distinct ls \<and> before_op_list a b ls } \<in> ta" |
   Compl: "S \<in> ta \<Longrightarrow> - S \<in> ta" |
   inter: "S \<in> ta \<Longrightarrow> T \<in> ta \<Longrightarrow> S \<inter> T \<in> ta"
 
@@ -61,10 +60,6 @@ unfolding tvar_def using ta.tvar by (rule Abs_tformula_inverse)
 
 definition before :: "'a \<Rightarrow> 'a tformula"
 where "before a = Abs_tformula { ls | ls b . distinct ls \<and> before_op_list a b ls }"
-
-lemma Rep_tformula_before : "Rep_tformula (before a) = 
-  { ls | ls b . distinct ls \<and> before_op_list a b ls}"
-unfolding before_def using ta.before by (rule Abs_tformula_inverse)
 
 text {* @{term tformula } as a @{term boolean_algebra } *}
 
@@ -162,12 +157,11 @@ done
 
 (*  before: "{ ls | ls b . distinct ls \<and> before a b ls } \<in> ta" |
 *)
-lemma tformula_induct [case_names tvar compl inf before , induct type: tformula]:
+lemma tformula_induct [case_names tvar compl inf , induct type: tformula]:
   fixes P :: "'a tformula \<Rightarrow> bool"
   assumes 1: "\<And>i. P (tvar i)"
   assumes 2: "\<And>x. P x \<Longrightarrow> P (- x)"
   assumes 3: "\<And>x y. P x \<Longrightarrow> P y \<Longrightarrow> P (x \<sqinter> y)"
-  assumes 4: "\<And>a. P (before a)"
   shows "P x"
 proof (induct x rule: Abs_tformula_induct)
   fix y :: "'a list set"
@@ -176,10 +170,6 @@ proof (induct x rule: Abs_tformula_induct)
     case (tvar i)
     have "P (tvar i)" by (rule 1)
     thus ?case unfolding tvar_def .
-  next
-    case (before a)
-    have "P (before a)" by (rule 4)
-    thus ?case unfolding before_def .
   next
     case (Compl S)
     from `P (Abs_tformula S)` have "P (- Abs_tformula S)" by (rule 2)
@@ -265,9 +255,65 @@ lemma tformulas_diff:
   "x \<in> tformulas S \<Longrightarrow> y \<in> tformulas S \<Longrightarrow> x - y \<in> tformulas S"
 unfolding tformulas_def by (auto simp add: Rep_tformula_simps)
 
+lemma tformulas_ifte:
+  "a \<in> tformulas S \<Longrightarrow> x \<in> tformulas S \<Longrightarrow> y \<in> tformulas S \<Longrightarrow>
+    ifte a x y \<in> tformulas S"
+unfolding ifte_def
+by (intro tformulas_sup tformulas_inf tformulas_compl)
+
 lemmas tformulas_intros =
   tformulas_tvar tformulas_bot tformulas_top tformulas_compl
-  tformulas_inf tformulas_sup tformulas_diff formulas_ifte
+  tformulas_inf tformulas_sup tformulas_diff tformulas_ifte
+
+definition tinsert :: "'a \<Rightarrow> 'a list \<Rightarrow> 'a list set"
+where
+  "tinsert i ls \<equiv> { xs . distinct xs \<and> i \<in> set xs \<and> (\<forall> j \<in> set ls . j \<in> set xs)  }"
+
+definition tdiff :: "'a \<Rightarrow> 'a list \<Rightarrow> 'a list set"
+where
+  "tdiff i ls \<equiv> { xs . distinct xs \<and> (\<forall> j \<in> set ls . j \<in> set xs \<and> j \<noteq> i)  }"
+
+lemma t_ifte_inject:
+  assumes "ifte (tvar i) x y = ifte (tvar i) x' y'" 
+  assumes "i \<notin> S"
+  assumes "x \<in> tformulas S" and "x' \<in> tformulas S"
+  assumes "y \<in> tformulas S" and "y' \<in> tformulas S"
+  shows "x = x' \<and> y = y'"
+proof
+  have 1: "\<And>ls. \<lbrakk> distinct ls \<and> i \<in> set ls \<rbrakk> \<Longrightarrow> ls \<in> Rep_tformula x \<longleftrightarrow> ls \<in> Rep_tformula x'"
+    using assms(1)
+    by (simp add: Rep_tformula_simps ifte_def set_eq_iff, fast)
+  have 2: "\<And>ls. \<lbrakk> distinct ls \<and> i \<notin> set ls \<rbrakk> \<Longrightarrow> ls \<in> Rep_tformula y \<longleftrightarrow> ls \<in> Rep_tformula y'"
+    using assms(1)
+    by (simp add: Rep_tformula_simps ifte_def set_eq_iff, fast)
+
+  show "x = x'"
+  unfolding Rep_tformula_simps
+  proof (rule set_eqI)
+    fix ls
+    have "ls \<in> Rep_tformula x \<longleftrightarrow> 
+        (\<forall> xs . xs \<in> tinsert i ls \<and> xs \<in> Rep_tformula x)"
+      using `x \<in> tformulas S` sorry (* by (rule formulasD, force simp add: `i \<notin> S`)*)
+    also have "\<dots> \<longleftrightarrow> 
+        (\<forall> xs . xs \<in> tinsert i ls \<and> xs \<in> Rep_tformula x')"
+      sorry (*by (rule 1, simp)*)
+    also have "\<dots> \<longleftrightarrow> ls \<in> Rep_tformula x'"
+      using `x' \<in> tformulas S` sorry (*by (rule tformulasD, force simp add: `i \<notin> S`) *)
+    finally show "ls \<in> Rep_tformula x \<longleftrightarrow> ls \<in> Rep_tformula x'" .
+  qed
+  show  "y = y'"
+  unfolding Rep_tformula_simps
+  proof (rule set_eqI)
+    fix ls
+    have "ls \<in> Rep_tformula y \<longleftrightarrow> (\<forall> xs . xs \<in> tdiff i ls \<and> xs \<in> Rep_tformula y)"
+      using `y \<in> tformulas S` sorry (*by (rule tformulasD, force simp add: `i \<notin> S`)*)
+    also have "\<dots> \<longleftrightarrow> (\<forall> xs . xs \<in> tdiff i ls \<and> xs \<in> Rep_tformula y')"
+      sorry (*by (rule 2, simp)*)
+    also have "\<dots> \<longleftrightarrow> ls \<in> Rep_tformula y'"
+      using `y' \<in> tformulas S` sorry (*by (rule tformulasD, force simp add: `i \<notin> S`)*)
+    finally show "ls \<in> Rep_tformula y \<longleftrightarrow> ls \<in> Rep_tformula y'" .
+  qed
+qed
 
 inductive
   hom_graph_t ::
@@ -314,10 +360,9 @@ lemma hom_graph_t_insert_elim:
 using hom_graph_t_dest [OF assms(1) insertI1]
 by (clarify, simp add: assms(2))
 
-lemma hom_graph_t_imp_formulas:
+lemma hom_graph_t_imp_tformulas:
   "hom_graph_t f S x a \<Longrightarrow> x \<in> tformulas S"
-apply (induct set: hom_graph_t, simp_all add: tformulas_intros tformulas_insert)
-sorry
+by (induct set: hom_graph_t, simp_all add: tformulas_intros tformulas_insert)
 
 lemma hom_graph_t_unique:
   "hom_graph_t f S x a \<Longrightarrow> hom_graph_t f S x a' \<Longrightarrow> a = a'"
@@ -330,7 +375,7 @@ proof (induct arbitrary: a' set: hom_graph_t)
       and 4: "hom_graph_t f S z' c'"
     by (rule hom_graph_t_insert_elim)
   from 1 3 4 ifte(1,2,4) have "y = y' \<and> z = z'"
-    by (intro ifte_inject hom_graph_t_imp_formulas)
+    by (intro t_ifte_inject hom_graph_t_imp_tformulas)
   with 2 3 4 ifte(3,5) show "ifte (f i) b c = a'"
     by simp
 qed (erule hom_graph_t.cases, simp_all)+
@@ -382,9 +427,6 @@ proof -
     unfolding ifte_def by simp
 qed
 
-lemma hom_graph_t_before: "hom_graph_t f {i} (tvar i) (f i)"
-sorry
-
 lemma hom_graph_t_compl:
   "hom_graph_t f S x a \<Longrightarrow> hom_graph_t f S (- x) (- a)"
 by (induct set: hom_graph_t, simp_all add: hom_graph_t.intros compl_ifte)
@@ -412,8 +454,8 @@ proof (rule hom_graph_t_inf)
 qed
 
 lemma hom_graph_t_exists: "\<exists>a S. hom_graph_t f S x a"
-by (induct x)
-   (auto intro: hom_graph_t_tvar hom_graph_t_before hom_graph_t_compl hom_graph_t_union_inf)
+by (induct x)                               
+   (auto intro: hom_graph_t_tvar hom_graph_t_compl hom_graph_t_union_inf)
 
 definition
   hom_t :: "('a \<Rightarrow> 'b::boolean_algebra) \<Rightarrow> 'a tformula \<Rightarrow> 'b"
