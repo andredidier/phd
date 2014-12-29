@@ -133,7 +133,7 @@ unfolding Rep_tformula_simps by auto
 lemma top_neq_bot_tformula [simp]: "(\<top> :: 'a tformula) \<noteq> \<bottom>"
 unfolding Rep_tformula_simps by auto
 
-lemma var_le_tvar_simps [simp]:
+lemma tvar_le_tvar_simps [simp]:
   "tvar x \<le> tvar y \<longleftrightarrow> x = y"
   "\<not> tvar x \<le> - tvar y"
   "\<not> - tvar x \<le> tvar y "
@@ -145,14 +145,14 @@ apply (metis distinct_remdups insertCI set_remdups set_simps(2))
 apply (metis distinct.simps(2))
 done
 
-lemma var_eq_tvar_simps [simp]:
+lemma tvar_eq_tvar_simps [simp]:
   "tvar x = tvar y \<longleftrightarrow> x = y"
   "tvar x \<noteq> - tvar y"
   "- tvar x \<noteq> tvar y"
 unfolding Rep_tformula_simps
-apply (metis (full_types) tvar_def var_le_tvar_simps(1))
-apply (metis Rep_tformula_tvar tvar_def uminus_tformula_def var_le_tvar_simps(1) var_le_tvar_simps(3))
-apply (metis Rep_tformula_tvar tvar_def uminus_tformula_def var_le_tvar_simps(1) var_le_tvar_simps(3))
+apply (metis (full_types) tvar_def tvar_le_tvar_simps(1))
+apply (metis Rep_tformula_tvar tvar_def uminus_tformula_def tvar_le_tvar_simps(1) tvar_le_tvar_simps(3))
+apply (metis Rep_tformula_tvar tvar_def uminus_tformula_def tvar_le_tvar_simps(1) tvar_le_tvar_simps(3))
 done
 
 (*  before: "{ ls | ls b . distinct ls \<and> before a b ls } \<in> ta" |
@@ -575,10 +575,14 @@ where
   "prefix [] rs = True" |
   "prefix (a # ls) (b # rs) = ((a = b) \<and> prefix ls rs)"
 
+definition safe_concat :: "'a list \<Rightarrow> 'a list \<Rightarrow> bool"
+where
+  "safe_concat ls rs \<equiv> (set ls \<inter> set rs = {})"
+
 definition tprefix :: "'a tformula \<Rightarrow> 'a tformula \<Rightarrow> 'a tformula"
 where
   "tprefix L R \<equiv> Abs_tformula 
-    { rs | ls rs . ls \<in> Rep_tformula L \<and> rs \<in> Rep_tformula R \<and> (prefix ls rs) }"
+    { ls @ rs | ls rs . ls \<in> Rep_tformula L \<and> rs \<in> Rep_tformula R \<and> (safe_concat ls rs) }"
 
 lemma "hom_t s (tvar A) \<or> hom_t s (- tvar A)"
 apply (auto)
@@ -588,13 +592,25 @@ lemma "hom_t s (tprefix (tvar A) (tvar B)) \<or> hom_t s (- tprefix (tvar A) (tv
 apply (auto)
 done
 
-lemma before_and: 
-  "hom_t s (tprefix (tvar A) (tvar B)) \<or> hom_t s (tprefix (tvar B) (tvar A)) = 
-  hom_t s (tvar A \<sqinter> tvar B)"
-apply (auto)
+lemma list_tvar: "(xs::'a list) \<in> Rep_tformula (tvar (A::'a)) = (distinct xs \<and> A \<in> set xs)"
+unfolding tvar_def 
+apply (metis  Rep_tformula_tvar mem_Collect_eq tvar_def)
 done
 
-lemma and_neg: "hom_t s (tvar A \<sqinter> tvar B) \<or> hom_t s (- tvar A) \<or> hom_t s (- tvar B)"
+lemma "tprefix (tvar A) (tvar A) = \<bottom>"
+apply (auto simp add: tprefix_def safe_concat_def list_tvar )
+apply (smt2 Collect_cong Collect_empty_eq Set.set_insert bot_set_def bot_tformula_def disjoint_insert(1))
+(*using bot_formula_def [symmetric]*)
+(*apply (intro Abs_tformula_inverse Rep_tformula)*)
+done
+
+lemma before_and: 
+  "((tprefix (tvar A) (tvar B)) \<squnion> (tprefix (tvar B) (tvar A))) = 
+  (tvar A \<sqinter> tvar B)"
+apply (auto simp add: tprefix_def safe_concat_def )
+done
+
+lemma and_neg: "hom_t s (tvar A \<sqinter> tvar B) \<squnion> (- tvar A) \<squnion> hom_t s (- tvar B)"
 apply (auto)
 done
 
