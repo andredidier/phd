@@ -50,6 +50,39 @@ proof -
   thus "UNIV \<in> ta" by simp
 qed
 
+(*definition value_prefix :: "'a \<Rightarrow> 'a tval \<Rightarrow> 'a tval"
+where
+  "value_prefix a R \<equiv> { a # rs | rs . rs \<in> R \<and> a \<notin> set rs  }"
+
+lemma "
+
+lemma "\<lbrakk> R \<in> (ta::'a tval set) \<rbrakk> \<Longrightarrow> value_prefix (a::'a) R \<in> ta"
+apply (auto simp add: value_prefix_def )
+apply (erule ta.induct)
+apply (auto simp add: CollectI)
+done
+*)
+
+definition safe_concat :: "'a list \<Rightarrow> 'a list \<Rightarrow> bool"
+where
+  "safe_concat ls rs \<equiv> (set ls \<inter> set rs = {})"
+
+definition tval_prefix :: "'a tval \<Rightarrow> 'a tval \<Rightarrow> 'a tval"
+where
+  "tval_prefix L R \<equiv> 
+    { ls @ rs | ls rs . ls \<in> L \<and> rs \<in> R \<and> (safe_concat ls rs) }"
+
+lemmas tval_prefix_defs = tval_prefix_def safe_concat_def
+
+lemma "\<lbrakk> L \<in> ta; R \<in> ta  \<rbrakk> \<Longrightarrow> tval_prefix L R \<in> ta"
+apply (auto simp add: tval_prefix_defs )
+apply (erule ta.induct)
+apply (erule ta.induct)
+apply ( simp add: CollectI)
+sledgehammer
+done
+
+
 typedef 'a tformula = "ta :: 'a tval set" by (auto intro: ta_empty)
 
 definition tvar :: "'a \<Rightarrow> 'a tformula"
@@ -569,6 +602,14 @@ by (induct x) simp_all
 lemma fmap_t_fmap_t: "fmap_t f (fmap_t g x) = fmap_t (f \<circ> g) x"
 by (induct x) simp_all
 
+lemma "hom_t s (tvar A) \<or> hom_t s (- tvar A)"
+apply (auto)
+done
+
+lemma "hom_t s (tprefix (tvar A) (tvar B)) \<or> hom_t s (- tprefix (tvar A) (tvar B))"
+apply (auto)
+done
+
 fun prefix :: "'a list \<Rightarrow> 'a list \<Rightarrow> bool"
 where
   "prefix ls [] = False" |
@@ -579,17 +620,20 @@ definition safe_concat :: "'a list \<Rightarrow> 'a list \<Rightarrow> bool"
 where
   "safe_concat ls rs \<equiv> (set ls \<inter> set rs = {})"
 
-definition tprefix :: "'a tformula \<Rightarrow> 'a tformula \<Rightarrow> 'a tformula"
+definition tprefix_base :: "'a tformula \<Rightarrow> 'a tformula \<Rightarrow> 'a tval"
 where
-  "tprefix L R \<equiv> Abs_tformula 
+  "tprefix_base L R \<equiv> 
     { ls @ rs | ls rs . ls \<in> Rep_tformula L \<and> rs \<in> Rep_tformula R \<and> (safe_concat ls rs) }"
 
-lemma "hom_t s (tvar A) \<or> hom_t s (- tvar A)"
-apply (auto)
-done
+definition tprefix :: "'a tformula \<Rightarrow> 'a tformula \<Rightarrow> 'a tformula"
+where
+  "tprefix L R \<equiv> Abs_tformula (tprefix_base L R)"
 
-lemma "hom_t s (tprefix (tvar A) (tvar B)) \<or> hom_t s (- tprefix (tvar A) (tvar B))"
-apply (auto)
+lemmas tprefix_defs = tprefix_def tprefix_base_def safe_concat_def
+
+lemma "tprefix_base L R \<in> ta"
+apply (auto simp add: tprefix_defs)
+
 done
 
 lemma list_tvar: "(xs::'a list) \<in> Rep_tformula (tvar (A::'a)) = (distinct xs \<and> A \<in> set xs)"
@@ -597,17 +641,30 @@ unfolding tvar_def
 apply (metis  Rep_tformula_tvar mem_Collect_eq tvar_def)
 done
 
+lemma tprefix_top_top: "tprefix \<top> \<top> = \<top>"
+apply (auto simp add: tprefix_defs)
+apply (auto simp add: Rep_tformula_top)
+done
+
 lemma "tprefix (tvar A) (tvar A) = \<bottom>"
-apply (auto simp add: tprefix_def safe_concat_def list_tvar )
+apply (auto simp add: tprefix_defs list_tvar )
 apply (smt2 Collect_cong Collect_empty_eq Set.set_insert bot_set_def bot_tformula_def disjoint_insert(1))
 (*using bot_formula_def [symmetric]*)
 (*apply (intro Abs_tformula_inverse Rep_tformula)*)
 done
 
+lemma "(tvar A \<sqinter> tvar B) = \<top> \<Longrightarrow> tprefix (tvar A) (tvar B) = \<top>"
+apply (auto simp add: tprefix_top_top)
+done
+
 lemma before_and: 
   "((tprefix (tvar A) (tvar B)) \<squnion> (tprefix (tvar B) (tvar A))) = 
   (tvar A \<sqinter> tvar B)"
-apply (auto simp add: tprefix_def safe_concat_def )
+apply (auto simp add: tprefix_defs )
+apply (auto simp add: tvar_def)
+
+apply (auto simp add: Rep_tformula_simps)
+
 done
 
 lemma and_neg: "hom_t s (tvar A \<sqinter> tvar B) \<squnion> (- tvar A) \<squnion> hom_t s (- tvar B)"
