@@ -306,6 +306,20 @@ definition tdiff :: "'a \<Rightarrow> 'a list \<Rightarrow> 'a list set"
 where
   "tdiff i ls \<equiv> { xs . distinct xs \<and> (\<forall> j \<in> set ls . j \<in> set xs \<and> j \<noteq> i)  }"
 
+lemma ifte_inject_t2 : 
+  "ifte (f i) x y = ifte (f i) x' y' \<Longrightarrow>
+  i \<notin> S \<Longrightarrow>
+  f i = {A. i \<in> A} \<Longrightarrow>
+  x \<in> g S \<Longrightarrow>  
+  x' \<in> g S \<Longrightarrow>
+  y \<in> g S \<Longrightarrow> 
+  y' \<in> g S \<Longrightarrow>
+  x = x' \<and> y = y'"
+apply (auto)
+done
+
+
+  
 lemma t_ifte_inject:
   assumes "ifte (tvar i) x y = ifte (tvar i) x' y'" 
   assumes "i \<notin> S"
