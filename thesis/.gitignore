@@ -5,6 +5,7 @@
 *.lol
 /*.aux
 /main.lof
+/main.pdf
 /main.log
 /main.lot
 /main.out
