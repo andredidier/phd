@@ -1,0 +1,142 @@
+\def\tikzoverlay{%
+   \tikz[baseline,overlay]\node[every overlay node]
+}
+
+\tikzstyle{every overlay node}=[draw=black,fill=white,rounded corners,anchor=north west]
+
+\tikzstyle{event text}=[text centered, 
+  execute at begin node={\begin{varwidth}{2cm}},
+  execute at end node={\end{varwidth}}
+  ]
+  
+\tikzstyle{event}=[event text, rectangle, draw=black, fill=yellow!20, anchor=north]
+%\tikzstyle{fault tree}=[edge from parent fork down, sibling distance=7cm, level distance=1.4cm, circuit logic US, growth parent anchor=south,nodes=event]
+\tikzstyle{fault tree}=[circuit logic US]
+
+\tikzstyle{level 1}=[sibling distance=7cm, level distance=1.4cm, growth parent anchor=south, nodes=event]
+\tikzstyle{level 2}=[sibling distance=5cm]
+\tikzstyle{level 3}=[sibling distance=5cm]
+\tikzstyle{level 4}=[sibling distance=3cm]
+
+\tikzstyle{gate}=[rotate=90, anchor=east, xshift=-1mm]
+\tikzstyle{or gate}=[gate, or gate US,fill=blue!60]
+\tikzstyle{and gate}=[gate, and gate US, fill=red!60]
+\tikzstyle{basic}=[circle, fill=green!60, anchor=north, minimum width=0.5cm]
+
+\tikzstyle{spare gate}=[shape=spare gate, fill=orange!40]
+  
+\tikzset{
+  >=stealth',
+  edge from parent path={(\tikzparentnode.south) -- ++(0,-0.95cm)
+      -| (\tikzchildnode.north)},
+  global scale/.style={
+    scale=#1,
+    every node/.style={scale=#1}
+  }
+}
+\makeatletter
+\pgfdeclareshape{spare gate}{
+  \inheritsavedanchors[from=circle]
+  \inheritanchor[from=circle]{center}
+  \inheritanchor[from=circle]{north}
+  \inheritanchor[from=circle]{south}
+  \inheritanchor[from=circle]{east}
+  \inheritanchor[from=circle]{west}
+  \backgroundpath{%
+      % Save radius to x
+      \pgf@x=\radius
+      % Radius is also containing the "minimum width" and "minimum height"
+      % This ensures that even with no text the shape will be drawn.
+      % Unless of course that min are set to 0pt
+      % So no need to check for that
+      % Save radius
+      \pgfutil@tempdima=\pgf@x%
+
+      % west triangle corner "b"
+      \pgf@xb=-3\pgf@x%
+      \pgf@yb=-4\pgf@x%
+      % east triangle corner "c"
+      \pgf@xc= 3\pgf@x%
+      \pgf@yc=-4\pgf@x%
+
+      % If text is present shift shape to center 
+      % You need to shift more, but to get the idea
+      \centerpoint
+      \advance\pgf@xb by\pgf@x
+      \advance\pgf@yb by\pgf@y
+      \advance\pgf@xc by\pgf@x
+      \advance\pgf@yc by\pgf@y
+
+      % Save centerpoint in "a" (top triangle point)
+      \pgf@xa=\pgf@x 
+      \pgf@ya=\pgf@y
+
+      % Below are good for debugging purposes.
+      %\message{^^JTop : \the\pgf@xa,\the\pgf@ya}
+      %\message{^^JWest: \the\pgf@xb,\the\pgf@yb}
+      %\message{^^JEast: \the\pgf@xc,\the\pgf@yc}
+      %\message{^^JCent: \the\pgf@x,\the\pgf@y}
+
+      % draw triangle..
+      \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}%
+      \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}%
+      \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}%
+      \pgfpathclose
+
+      % The radius of the small circles
+      % Read in from option TODO
+      \pgfutil@tempdimb=3pt
+
+      % Move top triangle to head circle
+      \advance\pgf@ya by.25\pgfutil@tempdimb
+      % Move west triangle corner to west circle center
+      \advance\pgf@xb by 1.5\pgfutil@tempdima
+      \advance\pgf@yb by -\pgfutil@tempdimb
+      % For handling line thickness if you wish "edge touch" and not "overlap"
+      %\advance\pgf@yb by -.5\pgflinewidth 
+      % Move east triangle corner to east circle center
+      \advance\pgf@xc by-1.5\pgfutil@tempdima
+      \advance\pgf@yc by -\pgfutil@tempdimb
+      % For handling line thickness if you wish "edge touch" and not "overlap"
+      %\advance\pgf@yc by -.5\pgflinewidth
+
+      % This saves underlying "stuff" when you have the explicit `\pgfqpoint` and is thus a little faster
+      \edef\pgf@marshal{%
+          \noexpand\pgfpathcircle{%
+              \noexpand\pgfqpoint{\the\pgf@xa}{\the\pgf@ya}}
+          {\the\pgfutil@tempdimb}%
+          \noexpand\pgfpathcircle{%
+              \noexpand\pgfqpoint{\the\pgf@xb}{\the\pgf@yb}}
+          {\the\pgfutil@tempdimb}%
+          \noexpand\pgfpathcircle{%
+              \noexpand\pgfqpoint{\the\pgf@xc}{\the\pgf@yc}}
+          {\the\pgfutil@tempdimb}%
+      }\pgf@marshal
+  }
+}
+\makeatother
+
+\def\CSPM{CSP$_M$\xspace}
+
+
+\newenvironment{snippetcspm}[1][2]
+{
+\ifthenelse{\equal{#1}{0}}
+    {\tiny}
+    {
+    \ifthenelse{\equal{#1}{1}}
+        {\scriptsize}
+        {
+        \ifthenelse{\equal{#1}{2}}
+            {\footnotesize}
+            {\small}
+        }
+    }
+%\begin{samepage}
+\verbatim
+}
+{
+\endverbatim
+%\end{samepage}
+}
+

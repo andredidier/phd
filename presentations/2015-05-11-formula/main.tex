@@ -10,7 +10,7 @@
 {
 \usetheme{CIn20131120}
 
-\setbeamercovered{transparent}
+%\setbeamercovered{transparent}
 }
 
 \usepackage[english]{babel}
@@ -22,6 +22,14 @@
 \usepackage{mathptmx}
 \usepackage[scaled=.90]{helvet}
 \usepackage{courier}
+\usepackage{tikz}
+\usepackage{varwidth}
+\usepackage{xspace}
+\usepackage{verbatim}
+\usepackage{environ}
+\usepackage{ifthen}
+
+\usetikzlibrary{arrows,trees,positioning,circuits.logic.US,shapes}
 
 \DeclareGraphicsExtensions{.png,.eps}
 %\DeclareGraphicsExtensions{.png}
@@ -29,6 +37,8 @@
 
 
 \usepackage[T1]{fontenc}
+
+\input{extensions}
 
 
 \title{Fault Tree Analysis with Temporal Faults Algebra}
@@ -85,97 +95,47 @@
 \end{frame}
 
 \begin{frame}
+\frametitle{A safety problem\ldots}
+\begin{enumerate}
+  \item Analyse \alert<4>{large} Dynamic Fault Trees (DFT)\\
+    \begin{minipage}[c]{4.60cm}
+        \begin{itemize}
+          \item Static Fault Tree (SFT) 
+          \item Temporal Fault Trees (TFT)
+          \item DFT analysis 
+        \end{itemize}
+    \end{minipage}
+    \begin{minipage}[c]{5.3cm}
+    \only<2->{$\implies$ Does the system meet safety requirements?}
+    \end{minipage}
+  \item Formalise DFT qualitative and quantitative analysis
+    \begin{itemize}
+      \item<3-> Is the analysis reliable?
+      \item<3-> Does the tree represent the system model?
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
 \frametitle{Concepts in this presentation}
 
 \begin{itemize}
-  \item Systems modelling with Simulink
-  \item Faults injection
-  \item Faults traces
-  \item Fault Trees -- Static, Temporal and Dynamic
+  \item \alert<2>{Systems modelling with Simulink}
+  \item \alert<2>{Faults injection}
+  \item \alert<2>{Faults traces}
+  \item Fault Trees -- \alert<2>{Static}, Temporal and Dynamic
   \item Free Boolean Algebra
   \item Lists lattice
   \item Temporal Faults Algebra
   \item Activation Algebra and Predicates
   \item Safety requirements and fault tree acceptance criteria
 \end{itemize}
+
+\onslide<2>{\tikzoverlay[text width=1.8cm] at (5cm,5cm) {Master dissertation};}
 \end{frame}
 
-\section{Master dissertation review}
+\input {fault-injection}
 
-\begin{frame}
-\frametitle{System modelling with Simulink}
-\includegraphics[width=\linewidth]{acsBlockDiagrams}
-\end{frame}
-
-\begin{frame}
-\frametitle{Fault Tolerance, Failure Logic}
-\includegraphics[height=0.4\textheight]{blockDiagramMonitorInternals}\par
-\includegraphics[width=\linewidth]{acsAnnotations}
-\end{frame}
-
-\section{Fault Trees}
-
-\begin{frame}
-\frametitle{Static Fault Tree}
-\includegraphics[height=0.7\textheight]{monitorFT.png}\par
-\hfill{\tiny\color{100PANTONECOOLGRAY10CV}
-\url{http://www.fault-tree-analysis-software.com}}\hspace{9mm}
-\end{frame}
-
-\subsection[Short First Subsection Name]{First Subsection Name}
-
-\begin{frame}
-\frametitle{}
-\framesubtitle{Subtitles are optional}
-
-\begin{itemize}
-  \item
-  \item
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{}
-
-% You can create overlays
-\begin{itemize}
-  \item using the \texttt{pause} command:
-  \begin{itemize}
-    \item First item.
-    \pause
-    \item Second item.
-  \end{itemize}
-  \item using overlay specifications:
-  \begin{itemize}
-    \item<3-> First item.
-    \item<4-> Second item.
-  \end{itemize}
-  \item using the general \texttt{uncover} command:
-  \begin{itemize}
-    \uncover<5->{\item First item.}
-    \uncover<6->{\item Second item.}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-\section*{Summary}
-
-\begin{frame}
-\frametitle<presentation>{Summary}
-
-\begin{itemize}
-  \item The \alert{first main message} of your talk in one or two lines.
-\end{itemize}
-
-% The following outlook is optional.
-\vskip0pt plus.5fill
-\begin{itemize}
-  \item Outlook
-  \begin{itemize}
-    \item Something you haven't solved.
-    \item Something else you haven't solved.
-  \end{itemize}
-\end{itemize}
-\end{frame}
+\input{fault-trees}
 
 \end{document}
