@@ -45,11 +45,14 @@ failure.Hardware.N04_MonIn2.1.EXP.I.5
 failure.Hardware.N04_MonIn2.1.ACT.OMISSION
 out.1.OMISSION
 \end{snippetcspm}
-
+\footnotesize
 \begin{itemize}
   \item Combine each trace with conjunctions: $B \land S$, $A \land B$, \ldots
-  \item <2-> Note that we ignore events order in each trace, because Boolean AND is commutative.
   \item Combine all traces with disjunctions: $(B \land S) \lor (A \land B) \lor \ldots$
-  \item The complete formula after simplification is exactly the supplied by Embraer: $(A \land B) \lor (S \land (A \lor B))$
+  \item The complete failure logic after simplification is exactly the supplied by Embraer: \alert<4>{$(A \land B) \lor (S \land (A \lor B))$}
+  \item <2-> Note that we ignore events order in each trace, because Boolean AND is commutative.
+  \item<3-> Some traces appear in a specific order: $A$ then $S$, but not $S$ then $A$.
 \end{itemize}
+
+\onslide<4>{\tikzoverlay[text width=3cm] at (3.8cm,2.7cm) {a.k.a structure function or structure expression};}
 \end{frame}

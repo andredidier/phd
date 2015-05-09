@@ -30,7 +30,14 @@
 \node [basic] at (b1.south) {};
 \node [basic] at (b2.south) {};
 
-\onslide<2->{
+\onslide<3>{
+\node [above=0.1cm of r] {$(A \land B) \lor (S \land (A \lor B))$};
+\node [above=0.3cm of both] {$A \land B$};
+\node [above=0.3cm of si] {$S \land (A \lor B)$};
+\node [above=0.3cm of oneinput] {$A \lor B$};
+}
+
+\onslide<2>{
 \node (rdescr) [above right=0.5cm and 0cm of r] {Root event};
 \draw (rdescr) edge[->] (r);
 
@@ -137,3 +144,138 @@
 \end{itemize}
 \end{frame}
 
+\subsection{TFT formalization}
+
+\begin{frame}
+\frametitle{TFT algebra}
+
+\begin{itemize}
+  \item Every event has a sequence number.
+  \item There aren't gaps between events' sequence numbers. Ex.: for events $A$ and $B$, if $A$ has sequence number $1$, then $B$ has sequence number $0$, $1$ or $2$. It cannot have sequence number $3$ or higher.
+  \item Sequence number $0$ means that the event hasn't occurred.
+  \item Temporal Truth Tables helps understand TFT operators:
+  {
+  \scriptsize
+  \begin{tabular}{c|c|c|c|c|c|c}
+  A & B & AND & OR & PAND & POR & SAND\\
+  \hline
+  0 & 0 & 0 & 0 & 0 & 0 & 0\\
+  \hline
+  0 & 1 & 0 & 1 & 0 & 0 & 0\\
+  \hline
+  1 & 0 & 0 & 1 & 0 & 1 & 0\\
+  \hline
+  1 & 1 & 1 & 1 & 0 & 0 & 1\\
+  \hline
+  1 & 2 & 2 & 1 & 1 & 1 & 0\\
+  \hline
+  2 & 1 & 2 & 1 & 0 & 0 & 0\\
+  \hline
+  \end{tabular}
+  }
+  \item Simultaneity is allowed.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{TFT operators}
+
+\begin{itemize}
+  \item PAND: 
+    \begin{itemize}
+      \item Symbol: $<$
+      \item Sequence value: $S(A<B) = S(B)$
+      \item Logic: $A$ and $B$ occur and $A$ occurs before $B$
+    \end{itemize}
+  \item SAND: 
+    \begin{itemize}
+      \item Symbol: $\&$
+      \item Sequence value: $S(A\&B) = S(A) = S(B)$
+      \item Logic: $A$ and $B$ occur at the same time
+    \end{itemize}
+  \item POR: 
+    \begin{itemize}
+      \item Symbol: $|$
+      \item Sequence value: $S(A|B) = S(A)$
+      \item Logic: either $A$ occurs and $B$ does not, or both occur and $A$ occurs first
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{TFT algebra issues}
+
+\begin{itemize}
+  \item A reduction algorithm uses dependency trees that makes it infeasible for trees with eight or more basic events.
+  \item Due to the use of sequence numbers, PAND is not associative: $X<Y<Z \ne X<(Y<Z) \ne (X<Y)<Z$ 
+  \item It redefines all traditional Boolean operators and laws using sequence numbers 
+  \item The algebra does not allow NOT gates
+    \begin{itemize}
+      \item<2-> There are cases where NOT gates may cause non-coherent analysis, and cases where it is necessary.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{DFT formalization}
+
+\begin{frame}
+\frametitle{DFT algebra}
+
+\begin{itemize}
+  \item Uses a continuous \emph{date-of-occurrence} function ($d(t)$) which is $0$ while its event hasn't occurred, or is $1$ if it has occurred
+  \includegraphics[height=1cm]{date-of-occurrence-merle}
+  \item All relevant DFT gates can be rewritten in terms of three operators: 
+    \begin{itemize}
+      \item non-inclusive before ($\nibefore$): similar to TFT algebra's POR gate.
+      \item simultaneous ($\simultaneous$): similar to TFT algebra's SAND gate.
+      \item inclusive before ($\ibefore$): a ``shortcut'' (all laws are proved) to \emph{non-inclusive before or simultaneous}.
+    \end{itemize}  
+  \item Simultaneity is allowed, but probabilistically impossible.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{DFT algebra operators}
+
+\begin{itemize}
+  \item Non-inclusive before:
+  $
+  \doo (a \nibefore b) =
+  \begin{cases}
+  \doo(a) & \doo(a) < \doo(b)\\
+  +\infty & \doo(a) = \doo(b)\\
+  +\infty & \doo(a) > \doo(b)\\
+  \end{cases}
+  $
+  \item Simultaneous:
+  $
+  \doo (a \simultaneous b) =
+  \begin{cases}
+  +\infty & \doo(a) < \doo(b)\\
+  \doo(a) & \doo(a) = \doo(b)\\
+  +\infty & \doo(a) > \doo(b)\\
+  \end{cases}
+  $
+  \item Inclusive before:
+  $
+  \doo (a \ibefore b) =
+  \begin{cases}
+  \doo(a) & \doo(a) < \doo(b)\\
+  \doo(a) & \doo(a) = \doo(b)\\
+  +\infty & \doo(a) > \doo(b)\\
+  \end{cases}
+  $
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{DFT algebra issues}
+
+\begin{itemize}
+  \item It redefines all traditional Boolean operators and laws using sequence numbers 
+  \item The algebra does not allow NOT gates
+  \item It is not clear how to reduce the structure function to obtain its minimal canonical form (all analysis are based on this form)
+\end{itemize}
+\end{frame}
