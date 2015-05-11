@@ -159,7 +159,7 @@ $Rep\_\tformulat :: a \tformulat \Rightarrow a \listt \sett \sett $%
 \end{frame}
 
 \begin{frame}
-\frametitle{Fault Tree Rule evaluation}
+\frametitle{Fault Tree Rule evaluation (or acceptance criteria)}
 
 
 Function $\evaluateRule$ is defined as:
@@ -182,4 +182,45 @@ Function $\ftProbability$ calculates the probability of an expression, given the
 \begin{frame}
 \frametitle{Fault modelling}
 
+\begin{itemize}
+  \item By component. Ex.: if fault $\failurevalue{A}{1}$ occurs in some component $\component{1}$, the output is $\outvalue{U}{1}$, if fault $\failurevalue{B}{1}$ occurs, the output is $\outvalue{V}{1}$, otherwise, the output is nominal.
+  \item Interface-focused. Ex.: if component $\component{2}$ is connected in its input port $1$ to component $\component{1}$, then if $\component{2}$ observes some fault $\failurevalue{A}{1}$ in input port $1$ caused by $\component{1}$, then $\component{2}$ output is $\outvalue{U}{2}$, otherwise the output is nominal.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Activation Algebra for fault modelling}
+\begin{itemize}
+  \item Faults are variables in some algebra ($\failurevalue{A}{1} = \failurevalue{Omission}{1}$, $\failurevalue{A}{2}=\failurevalue{Degraded}{2}$)
+  \item Each operand is a pair: (i) an expression in some algebra (Boolean or Temporal), and (ii) an output value.
+  \item Output values are identified by: (i) a failure mode and optionally a numerical value, or (ii) $N$ and a numerical value to express a nominal value. 
+  \item Ex.: $exp = \aaexp{\alert<2>{\failurevalue{A}{1}}}{\alert<4>{\outvalue{U}{1}}} \alert<2>{\lor} \aaexp{\alert<2>{\lnot \failurevalue{A}{1}}}{\nominalvalue{5}{1}}$
+  \item<2-> The expressions of the algebra when combined should give a tautology: $\failurevalue{A}{1} \lor \lnot \failurevalue{A}{1} = \top$
+  \item<3-> Predicate:
+  $P\left(exp\right) \defs \alert<4>{\outvalueof{exp}=\outvalue{U}{1}} \iff 
+  %
+  P\left(exp\right) = \failurevalue{A}{1}$
+  \item<4-> We then use the predicates in the given algebra to apply Fault Tree Rules
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Activation algebra for our example}
+
+\begin{itemize}
+  \item $\failurevalue{S}{1}$: SwitchFailure
+  \item $\failurevalue{A}{1}$: LowPower in input 1
+  \item $\failurevalue{B}{1}$: LowPower in input 2
+  \item $\failurevalue{L}{1}$: LowPower in $\component{1}$
+  \item $out_1 = 
+  \aaexp{\failurevalue{A}{1} \land \failurevalue{B}{1}}{\failurevalue{L}{1}} \lor
+  \aaexp{\failurevalue{S}{1} \land (\failurevalue{A}{1} \lor \failurevalue{B}{1})}{\failurevalue{L}{1}} \lor
+  \aaexp{\lnot A \land \lnot B}{\nominalvalue{12}{1}} \lor
+  \aaexp{\lnot S \land (\lnot A \lor \lnot B)}{\nominalvalue{12}{1}}
+  $
+  \item $P\left(out_1\right) \defs \outvalueof{out_1}=\failurevalue{L}{1}$
+  \item<2-> $P\left(out_1\right) = \left(\failurevalue{A}{1} \land \failurevalue{B}{1}\right) \lor 
+  \left(\failurevalue{S}{1} \land \left(\failurevalue{A}{1} \lor \failurevalue{B}{2}\right)\right)$
+\end{itemize}
 \end{frame}
