@@ -142,5 +142,44 @@ $Rep\_\tformulat :: a \tformulat \Rightarrow a \listt \sett \sett $%
 \begin{frame}
 \frametitle{Safety analysis using structure function}
 
+\begin{itemize}
+  \item Qualitative analysis:
+    \begin{itemize}
+      \item Obtaining minimal cut sets -- sets of events that cause the top fault event \onslide<2->{-- Rule: \alert<2>{$\BasicEventMinLevel$}}
+      \item Importance analysis -- cut sets with fewer events are more important
+      \item Minimal cut sets susceptible to common cause failures
+    \end{itemize}
+  \item Quantitative analysis:
+    \begin{itemize}
+      \item Absolute probability of the top event \onslide<2->{-- Rule: \alert<3>{$\RootProbability$}}
+      \item Quantitative component importance -- percentage of time that a system failure is caused by a particular minimal cut set
+      \item Effects of changing maintenance and checking time, implementing design modifications or changing component reliabilities
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Fault Tree Rule evaluation}
+
+
+Function $\evaluateRule$ is defined as:
+$\evaluateRule :: FaultTree \Rightarrow FaultTreeRule \Rightarrow Probability \Rightarrow bool$
+{
+\footnotesize 
+\begin{subequations}
+\begin{align}
+\evaluateRule ft \, (\BasicEventMinLevel n) P &= (\minBasicEventLevel ft \ge n)\\
+\evaluateRule ft \, (\RootProbability p) P &= (\ftProbability ft \, P) \le p
+\end{align}
+\end{subequations}
+}
+
+Function $\minBasicEventLevel$ is defined as $0$ if the structure expression is a variable or $1$ plus the minimum of $\minBasicEventLevel$ of the subexpressions.
+%
+Function $\ftProbability$ calculates the probability of an expression, given the probability of basic events (variables). Ex.: $\ftProbability (A \lor B) P = P(A) + P(B) - P(A) \times P(B)$
+\end{frame}
+
+\begin{frame}
+\frametitle{Fault modelling}
 
 \end{frame}
