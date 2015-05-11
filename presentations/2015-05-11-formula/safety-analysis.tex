@@ -1,0 +1,146 @@
+
+
+\begin{frame}
+\frametitle{Fault modelling and safety design patterns}
+\begin{itemize}
+  \item Faults injection to find failures---it's an important approach to discover hidden faults combination;
+  \item Fault modelling is a more detailed approach, to let a designer model nominal behaviour and erroneous behaviour at the same time.
+  \item Two approaches analyse system safety: fault injection and fault modelling 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Analyse system safety with fault injection}
+
+\begin{itemize}
+  \item From traces
+\begin{snippetcspm}[0]
+TRACE 1:
+failure.Hardware.N04_MonIn2.1.EXP.I.5
+failure.Hardware.N04_MonIn2.1.ACT.OMISSION
+failure.Hardware.N04_RelationalOperator.1.EXP.B.true
+failure.Hardware.N04_RelationalOperator.1.ACT.B.false
+out.1.OMISSION
+
+TRACE 2:
+failure.Hardware.N04_MonIn1.1.EXP.I.5
+failure.Hardware.N04_MonIn1.1.ACT.OMISSION
+failure.Hardware.N04_MonIn2.1.EXP.I.5
+failure.Hardware.N04_MonIn2.1.ACT.OMISSION
+out.1.OMISSION
+\end{snippetcspm}
+  \item We obtain \emph{lists} $[B,S]$, $[A,B]$---a finite set of lists
+  \item We need an algebra to reduce the set of lists 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Inspiration: Free Boolean Algebra}
+\begin{itemize}
+  \item Free variables: A, B, C, \ldots
+  \item Any Boolean formula in Free Boolean Algebra (FBA) is written as a set of sets
+    \begin{itemize}
+      \item For an algebra with three variables $\{A,B,C\}$
+      \item $A \lor B =_{\fba} \{ \{A\}, \{B\}, \{A,B\}  \}$
+      \item $\lnot A =_{\fba} \{ \{\,\}, \{B\},\{C\},\{B,C\}  \} $
+    \end{itemize}  
+  \item In Isabelle/HOL, the AFP has a theory to formalize FBAs
+  \item An inductive set ($\fba$) defines a set of all possible formulas
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Free Boolean Algebra}
+Given the inductive set $\fba$
+\begin{subequations}
+\begin{align}
+\{F | i \in F \} & \in \fba & \text{(Variable)}\\
+S \in \fba \implies -S & \in \fba & \text{(Complement)}\\
+S \in \fba \land T \in \fba \implies S \inter T & \in \fba & \text{(Intersection)}
+\end{align}
+\end{subequations}
+
+The Boolean algebra elements ($\top$, $\bot$) and operators ($\lor$, $\land$, $\lnot$) are defined:
+\begin{itemize}
+  \item $\top =_{\fba} UNIV$ (all sets of free variables combinations)
+  \item $\bot =_{\fba} \{\}$
+  \item $A =_{\fba} \{F | A \in F\} $
+  \item $A \land B =_{\fba} \{F | A \in F \} \inter \{F | B \in F\}$ 
+  \item $A \lor B =_{\fba} \{F | A \in F \} \union \{F | B \in F\}$
+  \item $\lnot A =_{\fba} - \{F | A \in F\}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Temporal Faults Algebra}
+
+\begin{itemize}
+  \item Free Variables
+  \item Any formula is written as a set of lists
+    \begin{itemize}
+      \item For an algebra with three variables $\{A,B,C\}$
+      \item $A \lor B =_{\tfa} \{ [A], [B], [A,B], [B,A], [A,B,C], [A,C,B], \ldots, [C,B,A]  \}$
+      \item $\lnot A =_{\tfa} \{ [\,], [B], [C], [B,C], [C,B] \} $
+      \item $A \xbefore B =_{\tfa} \{ [A,B] \}$
+    \end{itemize}  
+  \item An inductive set ($\tfa$) defines a set of all possible formulas
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Temporal Faults Algebra}
+
+$\tvar x = \{l | \distinct l \land x \in \set l\}$
+%
+\begin{subequations}
+\begin{align}
+%
+\tvar x &\in \tfa & \text{Variable}\\
+%
+S \in \tfa \implies \{ l | l \in -S \land \distinct l\} &\in \tfa & \text{Negation}\\
+%
+S \in \tfa \land T \in \tfa \implies 
+S \inter T &\in \tfa & \text{Intersection} \\
+%
+S \in \tfa \land T \in \tfa \implies 
+S \rightarrow T & \in \tfa & \text{Exclusive before }
+%
+\end{align} %
+%
+\end{subequations}%
+
+The Boolean algebra elements ($\top$, $\bot$) and operators ($\lor$, $\land$, $\lnot$) are defined:
+\begin{itemize}
+  \item $\top =_{\tfa} \{l | \distinct l\}$ (all sets of distinct lists)
+  \item $\bot =_{\tfa} \{\}$
+  \item $A =_{\tfa} \tvar A $
+  \item $A \land B =_{\tfa} \tvar A \inter \tvar B$
+  \item $A \lor B =_{\tfa} \tvar A \union \tvar B$
+  \item $\lnot A =_{\tfa} \{l | l \in - \tvar A \land \distinct l\}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Temporal Faults Algebra -- Isabelle/HOL}
+\includeautosizegraphics{tformula-01}
+
+\onslide<2>{%
+\tikzoverlay[text width=6.5cm] at (4.5cm,5.5cm) {%
+$a \tformulat = tfa :: a \listt \sett \sett $\\
+$Abs\_\tformulat :: a \listt \sett \sett \Rightarrow a \tformulat $\\ 
+$Rep\_\tformulat :: a \tformulat \Rightarrow a \listt \sett \sett $%
+};
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Temporal Faults Algebra -- Isabelle/HOL}
+\includeautosizegraphics{tformula-02}
+\end{frame}
+
+\begin{frame}
+\frametitle{Safety analysis using structure function}
+
+
+\end{frame}
