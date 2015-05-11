@@ -227,12 +227,15 @@
 \frametitle{TFT algebra issues}
 
 \begin{itemize}
-  \item A reduction algorithm uses dependency trees that makes the analysis infeasible for trees with eight or more basic events.
-  \item Due to the use of sequence numbers, PAND is not associative: $X<Y<Z \ne X<(Y<Z) \ne (X<Y)<Z$ 
-  \item It redefines all traditional Boolean operators and laws using sequence numbers 
-  \item The algebra does not allow NOT gates
+  \item A reduction algorithm uses dependency trees that makes the analysis infeasible for trees with \alert<2>{8} or more basic events.
     \begin{itemize}
-      \item<2-> There are cases where NOT gates may cause non-coherent analysis, and cases where it is necessary.
+      \item<2-> Real large system have \alert<2>{1000+} basic events
+    \end{itemize}
+  \item<3-> Due to the use of sequence numbers, PAND is not associative: $X<Y<Z \ne X<(Y<Z) \ne (X<Y)<Z$ 
+  \item<4-> It redefines all traditional Boolean operators and laws using sequence numbers 
+  \item<5-> The algebra does not allow NOT gates
+    \begin{itemize}
+      \item<6-> There are cases where NOT gates may cause non-coherent analysis, and cases where it is necessary.
     \end{itemize}
 \end{itemize}
 \end{frame}
