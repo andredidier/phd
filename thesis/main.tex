@@ -1,7 +1,7 @@
 %%This is a very basic article template.
 %%There is just one section and two subsections.
 \newif\ifdraft
-\drafttrue
+\draftfalse
 \documentclass[en,twoside,onehalfspacing,phd]{risethesis}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -9,6 +9,7 @@
 \usepackage{colortbl}
 \usepackage{color}
 \usepackage{graphicx}
+\usepackage{epstopdf}
 \usepackage{amsmath}
 \usepackage{cspsymb}
 \usepackage[table]{xcolor}
@@ -21,8 +22,6 @@
 \usepackage{pdfpages}
 \usepackage{caption}
 \usepackage{lipsum}
-\DeclareGraphicsExtensions{.png,.jpg,.eps}
-\graphicspath{{./figures},{./}}
 \def\mytitle{[TBD]}
 \def\me{Andr\'{e} Lu\'{i}s Ribeiro Didier}
 \usepackage[linkcolor=black,
@@ -39,6 +38,9 @@
 \usepackage{tikz}
 %\usepackage{fault-modelling-theory/generated/document/isabelle}
 %\usepackage{fault-modelling-theory/generated/document/isabellesym}
+
+\DeclareGraphicsExtensions{.pdf,.eps,.png}
+\graphicspath{{./figures/}{./}}
 
 \usetikzlibrary{positioning,arrows,shapes}
 \tikzset{>=stealth'}
