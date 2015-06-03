@@ -1,0 +1,95 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass[a5paper,portuges]{article}
+\usepackage{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{cleveref}
+\usepackage{plano-publicacoes}
+
+\title{Plano de publicações}
+
+\crefname{artigoi}{artigo}{artigos}
+\Crefname{artigoi}{Artigo}{Artigos}
+
+\begin{document}
+
+\maketitle
+
+\begin{artigo}
+\label{sec:msc-traces-tfa}
+\begin{objetivo}
+O objetivo deste artigo é modificar o artigo do SBMF sobre o mestrado e acrescentar a relação dos traces de falha com o reticulado de listas booleano. Mostrar a teoria fundamental para representação dos traces de falha em uma álgebra que estende a álgebra booleana, usando o mesmo conceito de FBA.
+\end{objetivo}
+\begin{fluxo}
+Mestrado $\rightarrow$ Traces de falha $\rightarrow$ Álgebra Temporal de Defeitos (TFA)
+\end{fluxo}
+
+\begin{paraconseguir}
+Artigo do SBMF + álgebra temporal de defeitos
+\end{paraconseguir}
+
+\begin{submissao}
+  \item FMi'2015 (submetido)
+\end{submissao}
+
+\end{artigo}
+
+\begin{artigo}
+\label{sec:criterios-aceitacao}
+\begin{objetivo}
+O objetivo deste artigo é modificar o \cref{sec:msc-traces-tfa} sobre o mestrado e a teoria fundamental dos traces de defeitos. A partir dos traces de defeito, utilizar a TFA para obter os predicados e verificar os critérios de aceitação de uma árvore de falha.
+\end{objetivo}
+\begin{fluxo}
+Mestrado => Traces de falha => TFA => Predicado => Critérios de aceitação
+\end{fluxo}
+\begin{paraconseguir}
+\Cref{sec:msc-traces-tfa} + Predicados e critérios de aceitação (20-25% a mais)
+\end{paraconseguir}
+\begin{submissao}
+  \item Special issue do FMi'2015 (aguardando convite)
+\end{submissao}
+\end{artigo}
+
+\begin{artigo}
+\label{sec:padroes-tolerancia}
+\begin{objetivo}
+O objetivo principal deste artigo é apresentar a etapa inicial do doutorado através da modelagem de falhas usando a álgebra de ativação e padrões de tolerância a falhas para obter os mesmos resultados do \cref{sec:criterios-aceitacao}. Um objetivo secundário do artigo é apresentar e mostrar que existe um homomorfismo do reticulado de listas booleano para qualquer álgebra booleana, assim como é definido em Isabelle/HOL.
+\end{objetivo}
+\begin{fluxo}
+Álgebra de ativação (F + O) através de padrões => Reticulado de listas booleano => Predicado => Critérios de aceitação
+
+Reticulado de listas booleano => Homomorfismo para qualquer álgebra booleana
+\end{fluxo}
+\begin{paraconseguir}
+\Cref{sec:criterios-aceitacao} + padrões de tolerância a falhas + homomorfismo para qualquer álgebra booleana 
+\end{paraconseguir}
+\end{artigo}
+
+\begin{artigo}
+\label{sec:algebra-merle}
+\begin{objetivo}
+O objetivo deste artigo é apresentar a ideia central do doutorado mostrando que o reticulado de listas atende aos teoremas da álgebra temporal de Merle. 
+
+Obs.: Convidar Sascha para a escrita.
+\end{objetivo}
+
+\begin{fluxo}
+Reticulado de listas temporal => Formalização de álgebra temporal de Merle => equivalência do reticulado de listas para a álgebra temporal de Merle
+\end{fluxo}
+
+\begin{paraconseguir}
+Teoria sobre álgebra temporal de Merle e teoria sobre o reticulado de listas temporal. 
+\end{paraconseguir}
+\begin{submissao}
+  \item Hindawi (falta escrever)
+\end{submissao}
+\end{artigo}
+
+\begin{artigo}
+\end{artigo}
+
+\begin{artigo}
+\end{artigo}
+
+\end{document}

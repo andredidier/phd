@@ -1,0 +1,44 @@
+\newcounter{artigoi}
+
+\renewcommand{\theartigoi}{\arabic{artigoi}}
+
+\newenvironment{artigo}%
+{%
+\refstepcounter{artigoi}%
+\vspace{0.5cm}
+\par\textbf{\LARGE Artigo \theartigoi}\par%
+}%
+{\pagebreak}
+
+\newenvironment{objetivo}%
+{}
+{}
+
+\newenvironment{fluxo}%
+{\vspace{0.5cm}\par\textbf{\Large Fluxo}\par}
+{}
+\newenvironment{paraconseguir}%
+{\vspace{0.5cm}\par\textbf{\Large Para conseguir}\par}
+{}
+\newenvironment{submissao}%
+{
+\vspace{0.5cm}\par\textbf{\Large Submissão}\par
+\begin{itemize}
+}%
+{%
+\end{itemize}
+}
+
+
+
+% \newcounter{phase}
+% \setcounter{phase}{0}
+% \newcounter{subphase}[phase]
+% \setcounter{subphase}{0}
+% \renewcommand{\thesubphase}{\thephase.\arabic{subphase}}
+% \newcommand{\phase}[1]{\noindent%
+%    \refstepcounter{phase}\textbf{Phase \thephase} --- \texttt{#1}\\%
+%    }
+% \newcommand{\subphase}[1]{\noindent%
+%    \dots\refstepcounter{subphase}\textbf{Phase \thesubphase} --- \texttt{#1}\\%
+%    }
