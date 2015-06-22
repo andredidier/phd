@@ -121,6 +121,22 @@ The Boolean algebra elements ($\top$, $\bot$) and operators ($\lor$, $\land$, $\
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Exclusive before definition}
+\begin{align*}
+S \rightarrow T = &\left\{ l \bullet \exists xs, ys | xs \in (S - T) \land ys \in (T - S) \land \right.
+%
+\\& \left. distinct (xs \concat ys) \land l = xs \concat ys \right\}
+\end{align*}
+
+Example:
+\begin{align*}
+\tvar a =& \left\{[a],[a,b],[b,a],[a,c],[c,a],[a,b,c],\ldots,[c,b,a]\right\} \\
+\tvar b =& \left\{[b],[a,b],[b,a],[b,c],[c,b],[a,b,c],\ldots,[c,b,a]\right\} \\
+\tvar a \rightarrow \tvar b =& \left\{[a,b],[a,b,c],[a,c,b],[c,a,b]\right\}
+\end{align*}
+
+\end{frame}
+
 \begin{frame}
 \frametitle{Temporal Faults Algebra -- Isabelle/HOL}
 \includeautosizegraphics{tformula-01}
@@ -192,9 +208,9 @@ Function $\ftProbability$ calculates the probability of an expression, given the
 \begin{frame}
 \frametitle{Activation Algebra for fault modelling}
 \begin{itemize}
-  \item Faults are variables in some algebra ($\failurevalue{A}{1} = \failurevalue{Omission}{1}$, $\failurevalue{A}{2}=\failurevalue{Degraded}{2}$)
+  \item Faults are variables in some algebra ($\failurevalue{A}{1} = \failurevalue{\text{Internal failure}}{1}$, $\failurevalue{A}{2}=\failurevalue{\text{Internal failure}}{2}$)
   \item Each operand is a pair: (i) an expression in some algebra (Boolean or Temporal), and (ii) an output value.
-  \item Output values are identified by: (i) a failure mode and optionally a numerical value, or (ii) $N$ and a numerical value to express a nominal value. 
+  \item Output values are identified by: (i) a failure mode and optionally a numerical value (ex.: $\outvalue{U}{1}$ = Omission), or (ii) $N$ and a numerical value to express a nominal value. 
   \item Ex.: $exp = \aaexp{\alert<2>{\failurevalue{A}{1}}}{\alert<4>{\outvalue{U}{1}}} \alert<2>{\lor} \aaexp{\alert<2>{\lnot \failurevalue{A}{1}}}{\nominalvalue{5}{1}}$
   \item<2-> The expressions of the algebra when combined should give a tautology: $\failurevalue{A}{1} \lor \lnot \failurevalue{A}{1} = \top$
   \item<3-> Predicate:
@@ -206,7 +222,7 @@ Function $\ftProbability$ calculates the probability of an expression, given the
 \end{frame}
 
 \begin{frame}
-\frametitle{Activation algebra for our example}
+\frametitle{Activation Algebra for our example}
 
 \begin{itemize}
   \item $\failurevalue{S}{1}$: SwitchFailure
@@ -216,11 +232,43 @@ Function $\ftProbability$ calculates the probability of an expression, given the
   \item $out_1 = 
   \aaexp{\failurevalue{A}{1} \land \failurevalue{B}{1}}{\failurevalue{L}{1}} \lor
   \aaexp{\failurevalue{S}{1} \land (\failurevalue{A}{1} \lor \failurevalue{B}{1})}{\failurevalue{L}{1}} \lor
-  \aaexp{\lnot A \land \lnot B}{\nominalvalue{12}{1}} \lor
-  \aaexp{\lnot S \land (\lnot A \lor \lnot B)}{\nominalvalue{12}{1}}
+  \aaexp{\lnot A \lor \lnot B}{\nominalvalue{12}{1}} \lor
+  \aaexp{\lnot S \lor (\lnot A \land \lnot B)}{\nominalvalue{12}{1}}
   $
-  \item $P\left(out_1\right) \defs \outvalueof{out_1}=\failurevalue{L}{1}$
-  \item<2-> $P\left(out_1\right) = \left(\failurevalue{A}{1} \land \failurevalue{B}{1}\right) \lor 
+  \item $P_1\left(out_1\right) \defs \outvalueof{out_1}=\failurevalue{L}{1}$
+  \item<2-> $P_1\left(out_1\right) = \left(\failurevalue{A}{1} \land \failurevalue{B}{1}\right) \lor 
   \left(\failurevalue{S}{1} \land \left(\failurevalue{A}{1} \lor \failurevalue{B}{2}\right)\right)$
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}{Progress analysis}
+\begin{columns}
+    \begin{column}{0.45\paperwidth}
+        \begin{itemize}
+          \item<1-> Connect to TFA
+          \item<2-> Write in activation algebra notation
+          \item<3-> Rewrite with new TFA definitions
+          \item<4-> TFA laws are only applied to variables on Merle's algebra
+          \item<5-> Reduce TFA automatically -- use of trees like in FBA
+          \item<6-> Verification of criteria in TFA expressions is still an issue and dependes on TFA's reduction
+          \item<7-> Suggest model changes after FT criteria verification \onslide<+->{\alert{0\%}}
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.45\paperwidth}
+        \includegraphics[width=\textwidth]{StrategyOverview}
+        \begin{tikzpicture}[overlay, progress/.style={font=\huge}]
+        \node<1->[progress] at (3.9,24) {90\%};
+        \node<2->[progress] at (15.5,19.2) {0\%};
+        \node<3->[progress] at (12.1,22.5) {75\%};
+        \node<4->[progress] at (4,10.5) {50\%};
+        \node<5->[progress] at (6.7,10.5) {50\%};
+        \node<6->[progress] at (3.5,1.8) {20\%};
+        \node<7->[progress] at (0,8.3) {0\%};
+        \end{tikzpicture}
+    \end{column}
+\end{columns}
+
+
+\end{frame}
+
