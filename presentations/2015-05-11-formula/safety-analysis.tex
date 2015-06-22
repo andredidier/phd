@@ -241,8 +241,8 @@ Function $\ftProbability$ calculates the probability of an expression, given the
 \end{itemize}
 \end{frame}
 
-
 \begin{frame}{Progress analysis}
+\tikzstyle{every picture}+=[remember picture]
 \begin{columns}
     \begin{column}{0.45\paperwidth}
         \begin{itemize}
@@ -252,19 +252,19 @@ Function $\ftProbability$ calculates the probability of an expression, given the
           \item<4-> TFA laws are only applied to variables on Merle's algebra
           \item<5-> Reduce TFA automatically -- use of trees like in FBA
           \item<6-> Verification of criteria in TFA expressions is still an issue and dependes on TFA's reduction
-          \item<7-> Suggest model changes after FT criteria verification \onslide<+->{\alert{0\%}}
+          \item<7-> Suggest model changes after FT criteria verification
         \end{itemize}
     \end{column}
     \begin{column}{0.45\paperwidth}
         \includegraphics[width=\textwidth]{StrategyOverview}
         \begin{tikzpicture}[overlay, progress/.style={font=\huge}]
-        \node<1->[progress] at (3.9,24) {90\%};
-        \node<2->[progress] at (15.5,19.2) {0\%};
-        \node<3->[progress] at (12.1,22.5) {75\%};
-        \node<4->[progress] at (4,10.5) {50\%};
-        \node<5->[progress] at (6.7,10.5) {50\%};
-        \node<6->[progress] at (3.5,1.8) {20\%};
-        \node<7->[progress] at (0,8.3) {0\%};
+        \node<1->[progress] (v1) at (-0.1,24) {90\%};
+        \node<2->[progress] (v2) at (9.6,18.2) {0\%};
+        \node<3->[progress] (v3) at (8.1,22.5) {75\%};
+        \node<4->[progress] (v4) at (0,10.5) {50\%};
+        \node<5->[progress] (v5) at (3.4,7.0) {20\%};
+        \node<6->[progress] (v6) at (3.5,1.4) {20\%};
+        \node<7->[progress] (v7) at (10.8,15.5) {0\%};
         \end{tikzpicture}
     \end{column}
 \end{columns}
