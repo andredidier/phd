@@ -1,0 +1,69 @@
+% ---
+% Pacotes de citações
+% ---
+{% if show_backref %}
+\usepackage[brazilian,hyperpageref]{backref}     % Paginas com as citações na bibl
+{% endif %}
+
+{% if opt_boolean_citacao_numerica %}
+\usepackage[num]{abntex2cite}   % Citações padrão ABNT
+{% else %}
+\usepackage[alf]{abntex2cite}   % Citações padrão ABNT
+{% endif %}
+
+% Adaptacao para os comando do Fastformat
+\newcommand{\citep}{\cite}
+\newcommand{\citet}{\citeonline}
+
+% --- 
+% CONFIGURAÇÕES DE PACOTES
+% --- 
+
+{% if show_backref %}
+% ---
+% Configurações do pacote backref
+% Usado sem a opção hyperpageref de backref
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+% Texto padrão antes do número das páginas
+\renewcommand{\backref}{}
+% Define os textos da citação
+\renewcommand*{\backrefalt}[4]{
+    \ifcase #1 %
+        Nenhuma citação no texto.%
+    \or
+        Citado na página #2.%
+    \else
+        Citado #1 vezes nas páginas #2.%
+    \fi}%
+% ---
+{% endif %}
+
+% ---
+% Configurações de aparência do PDF final
+
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+
+% informações do PDF
+\makeatletter
+\hypersetup{
+        %pagebackref=true,
+        pdftitle={\@title}, 
+        pdfauthor={\@author},
+        pdfsubject={\imprimirpreambulo},
+        pdfcreator={fastformat.co},
+        pdfkeywords={fastformat.co}, 
+        %{% if show_links %}
+        colorlinks=true,            % false: boxed links; true: colored links
+        linkcolor=blue,             % color of internal links
+        citecolor=blue,             % color of links to bibliography
+        filecolor=magenta,          % color of file links
+        urlcolor=blue,
+        %{% else %}
+        colorlinks=false,
+        hidelinks=true,
+        %{% endif %}
+        bookmarksdepth=4
+}
+\makeatother
+% --- 

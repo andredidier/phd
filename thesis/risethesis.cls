@@ -22,11 +22,11 @@
 %% OPTIONS 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\DeclareOption{pt}{%
+\DeclareOption{brazil}{%
   \let\@language=0%
   \PassOptionsToPackage{brazil}{babel}}
 
-\DeclareOption{en}{%
+\DeclareOption{english}{%
   \let\@language=1%
   \PassOptionsToPackage{brazil,english}{babel}}
 
@@ -68,7 +68,7 @@
   \let\@linespacing=2}
 
 % Default options
-\ExecuteOptions{pt,msc,print}
+\ExecuteOptions{brazil,msc,print}
 \ProcessOptions
 
 \LoadClass[12pt,a4paper]{book}
@@ -80,13 +80,13 @@
 \RequirePackage{amsmath,amsfonts,amssymb,amsthm}
 \RequirePackage{calc}
 \RequirePackage{ifthen}
+\RequirePackage[T1]{fontenc}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage{textcase}
 \RequirePackage{textcomp}
 \RequirePackage{url}
 \RequirePackage{colortbl}
 \RequirePackage{xspace}
-\RequirePackage[T1]{fontenc}
 \RequirePackage{mathptmx}
 \RequirePackage[scaled=0.92]{helvet}
 \RequirePackage{courier}
@@ -108,13 +108,6 @@
 \if\@scr0
   \RequirePackage{graphicx}
 \fi
-
-\if\@scr1
-  \RequirePackage[dvips]{graphicx}
-  \RequirePackage[dvips,usenames]{color}
-  \RequirePackage[dvipdfm,colorlinks,backref]{hyperref}
-\fi
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% GENERAL PURPOSE MACROS
@@ -150,6 +143,7 @@
 
 % Portuguese
 \if\@language0
+  \RequirePackage[portuguese]{babel}
   \gdef\@bachelordissertation{Trabalho de Graduação}
   \gdef\@mastersdissertation{Dissertação de Mestrado}
   \gdef\@phdqualifying{Monografia de Qualificação}
@@ -179,9 +173,13 @@
   \gdef\@textby{Por}
   \gdef\@sectionname{Seção}
   \gdef\@appendixname{Apêndice}
-  \newcommand\bibliographytocname{Referências Bibliográficas}
+  \gdef\@tocname{Sumário}
+  \newcommand\bibliographytocname{Referências}
+  \renewcommand{\bibname}{\bibliographytocname}
   \renewcommand{\appendixtocname}{Apêndice}
   \renewcommand{\appendixpagename}{Apêndice}
+  \gdef\@listoftablesname{Lista de Tabelas}
+  \gdef\@listoffiguresname{Lista de Figuras}
   \gdef\@pagename{página}
   \gdef\@listacronymname{Acrônimos}
   \gdef\@colophontext{%
@@ -193,6 +191,7 @@
   \fi}
 % English
   \else\if\@language1
+  \RequirePackage[english]{babel}
   \gdef\@bachelordissertation{B.Sc. Dissertation}
   \gdef\@mastersdissertation{M.Sc. Dissertation}
   \gdef\@phdqualifying{Ph.D. Thesis Qualification}
@@ -221,9 +220,13 @@
   \gdef\@equationame{equation}
   \gdef\@chaptername{Chapter}
   \gdef\@sectionname{Section}
+  \gdef\@tocname{Contents}
+  \gdef\@listoftablesname{List of Tables}
+  \gdef\@listoffiguresname{List of Figures}
   \renewcommand{\appendixtocname}{Appendix}
   \renewcommand{\appendixpagename}{Appendix}
   \newcommand\bibliographytocname{References}
+  \renewcommand{\bibname}{\bibliographytocname}
   \gdef\@pagename{page}
   \gdef\@listacronymname{Acronyms}
   \gdef\@colophontext{%
@@ -442,8 +445,7 @@ requirements for the degree of \@degree\ in \@majorfielden.
 
 %% Lists, enumerations, etc.
 \setlist[itemize]{leftmargin=\parindent+\labelwidth-\labelsep, label={\tiny$\blacksquare$}}
-\setlist[enumerate,1]{leftmargin=\parindent+\labelwidth-\labelsep,label=\alph*)}
-\setlist[enumerate,2]{leftmargin=\parindent+\labelwidth-\labelsep,label={--}}
+\setlist[enumerate]{leftmargin=\parindent+\labelwidth-\labelsep}
 
 %% Appendix
 
@@ -464,10 +466,10 @@ requirements for the degree of \@degree\ in \@majorfielden.
 	\backmatter
 	\bibliographystyle{abnt}
 	\setlength{\bibhang}{0pt}
-	\renewcommand{\bibname}{References}
 	\singlespacing % Change to singlespacing for the references
 	\begingroup
 	\raggedright
+	\renewcommand{\bibname}{\bibliographytocname}
 }
 {
 	\endgroup
@@ -767,6 +769,19 @@ requirements for the degree of \@degree\ in \@majorfielden.
 %% Quotations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newenvironment{citationblock}%
+  {%
+  \begin{spacing}{1.}
+   \small
+   \begin{list}{}{%
+       \setlength{\listparindent}{0cm}%
+       \setlength{\itemindent}{\listparindent}%
+       \setlength{\rightmargin}{0cm}%
+       \setlength{\leftmargin}{4cm}%
+       \setlength{\parsep}{0pt}}%
+    \item\relax}%
+  {\end{list}\end{spacing}}
+
 \def\epigraph{%
   \if@openright\cleardoublepage\else\clearpage\fi
   \thispagestyle{empty}
@@ -788,8 +803,8 @@ requirements for the degree of \@degree\ in \@majorfielden.
     \begin{minipage}{0.8\textwidth}
       \begin{flushright}\quotefonti}
 \def\endpquot@tion{%
-        \vskip.2\baselineskip%
-        \quotefont---\MakeTextUppercase{\@qauthor}
+        %\vskip.2\baselineskip%
+        %\quotefont---\MakeTextUppercase{\@qauthor}
         \if\@qnote\@empty
           \relax
         \else
@@ -808,20 +823,20 @@ requirements for the degree of \@degree\ in \@majorfielden.
 
 \renewcommand\tableofcontents{%
    \pagestyle{empty}
-   \chapter*{Summary}
+   \chapter*{\@tocname}
    \thispagestyle{empty}
    \@starttoc{toc}}
  
 
 \renewcommand\listoffigures{%
    \pagestyle{empty}
-   \chapter*{\listfigurename}
+   \chapter*{\@listoffiguresname}
    \thispagestyle{empty}
    \@starttoc{lof}}
 
 \renewcommand\listoftables{%
    \pagestyle{empty}
-   \chapter*{\listtablename}
+   \chapter*{\@listoftablesname}
    \thispagestyle{empty}
    \@starttoc{lot}}
 
