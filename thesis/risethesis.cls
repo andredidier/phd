@@ -22,11 +22,11 @@
 %% OPTIONS 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\DeclareOption{brazil}{%
+\DeclareOption{pt}{%
   \let\@language=0%
   \PassOptionsToPackage{brazil}{babel}}
 
-\DeclareOption{english}{%
+\DeclareOption{en}{%
   \let\@language=1%
   \PassOptionsToPackage{brazil,english}{babel}}
 
@@ -68,7 +68,7 @@
   \let\@linespacing=2}
 
 % Default options
-\ExecuteOptions{brazil,msc,print}
+\ExecuteOptions{pt,msc,print}
 \ProcessOptions
 
 \LoadClass[12pt,a4paper]{book}
@@ -80,13 +80,13 @@
 \RequirePackage{amsmath,amsfonts,amssymb,amsthm}
 \RequirePackage{calc}
 \RequirePackage{ifthen}
-\RequirePackage[T1]{fontenc}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage{textcase}
 \RequirePackage{textcomp}
 \RequirePackage{url}
 \RequirePackage{colortbl}
 \RequirePackage{xspace}
+\RequirePackage[T1]{fontenc}
 \RequirePackage{mathptmx}
 \RequirePackage[scaled=0.92]{helvet}
 \RequirePackage{courier}
@@ -108,6 +108,13 @@
 \if\@scr0
   \RequirePackage{graphicx}
 \fi
+
+\if\@scr1
+  \RequirePackage[dvips]{graphicx}
+  \RequirePackage[dvips,usenames]{color}
+  \RequirePackage[dvipdfm,colorlinks,backref]{hyperref}
+\fi
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% GENERAL PURPOSE MACROS
@@ -803,8 +810,8 @@ requirements for the degree of \@degree\ in \@majorfielden.
     \begin{minipage}{0.8\textwidth}
       \begin{flushright}\quotefonti}
 \def\endpquot@tion{%
-        %\vskip.2\baselineskip%
-        %\quotefont---\MakeTextUppercase{\@qauthor}
+        \vskip.2\baselineskip%
+        \quotefont---\MakeTextUppercase{\@qauthor}
         \if\@qnote\@empty
           \relax
         \else
@@ -822,10 +829,16 @@ requirements for the degree of \@degree\ in \@majorfielden.
 \setcounter{tocdepth}{4}
 
 \renewcommand\tableofcontents{%
+
    \pagestyle{empty}
+
    \chapter*{\@tocname}
+
    \thispagestyle{empty}
-   \@starttoc{toc}}
+
+   \@starttoc{toc}
+
+   \thispagestyle{empty}}
  
 
 \renewcommand\listoffigures{%
