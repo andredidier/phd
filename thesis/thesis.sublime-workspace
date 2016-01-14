@@ -1,0 +1,844 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"use",
+				"usepackage"
+			],
+			[
+				"hip",
+				"hiphops"
+			],
+			[
+				"isa",
+				"Isabelle"
+			],
+			[
+				"hight",
+				"highlightresult"
+			],
+			[
+				"high",
+				"highlightresult"
+			],
+			[
+				"indep",
+				"independentevents"
+			],
+			[
+				"tempo",
+				"def:tempo1"
+			],
+			[
+				"ve",
+				"VGR+1981: Fault Tree Handbook"
+			],
+			[
+				"mem",
+				"memoriaMB"
+			],
+			[
+				"quanti",
+				"quantidadeCompras"
+			],
+			[
+				"quani",
+				"quantidadeCompras"
+			],
+			[
+				"quan",
+				"quantidadeClientes"
+			],
+			[
+				"qu",
+				"quantidadeClientes"
+			],
+			[
+				"quant",
+				"quantidadeCompras"
+			],
+			[
+				"de",
+				"DescricaoProduto"
+			],
+			[
+				"vend",
+				"Venda"
+			],
+			[
+				"arq",
+				"arqClientes"
+			],
+			[
+				"Cod",
+				"CodCliente"
+			],
+			[
+				"para",
+				"paradaErro"
+			],
+			[
+				"most",
+				"mostrarVetor"
+			],
+			[
+				"ler",
+				"lerTabelamento"
+			],
+			[
+				"usar",
+				"usarExistente"
+			],
+			[
+				"tan",
+				"tanNumeroMaquina"
+			],
+			[
+				"sin",
+				"sinNumeroMaquina"
+			],
+			[
+				"form",
+				"formatado"
+			],
+			[
+				"nu",
+				"numero"
+			],
+			[
+				"taman",
+				"tamanhoSistemaUsu"
+			],
+			[
+				"tamanho",
+				"tamanhoSistemaUsu"
+			],
+			[
+				"q",
+				"quantidadeFuncoes"
+			],
+			[
+				"qa",
+				"quantidadeFuncoes"
+			],
+			[
+				"funca",
+				"funcaoEscolhida"
+			],
+			[
+				"foir",
+				"formatarNumeroMaquina"
+			],
+			[
+				"ta",
+				"tabelamento"
+			],
+			[
+				"mult",
+				"mult10"
+			],
+			[
+				"for",
+				"formatarNumeroMaquina"
+			],
+			[
+				"sis",
+				"sistemaEqLineares"
+			],
+			[
+				"tama",
+				"tamanhoSistema"
+			],
+			[
+				"Numero",
+				"NumeroMaquina"
+			],
+			[
+				"NUme",
+				"NumeroMaquina"
+			],
+			[
+				"valor",
+				"valorNumeroMaquina"
+			],
+			[
+				"usa",
+				"usarExistente"
+			],
+			[
+				"di",
+				"digitos"
+			],
+			[
+				"digito",
+				"digitoArred"
+			],
+			[
+				"numero",
+				"numeroUsuario"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"Exer",
+				"Exercício"
+			],
+			[
+				"Exec",
+				"Exercícios"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "main.tex",
+			"settings":
+			{
+				"buffer_size": 74456,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "banca.tex",
+			"settings":
+			{
+				"buffer_size": 1386,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "risethesis.cls",
+			"settings":
+			{
+				"buffer_size": 26855,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 104.0,
+		"last_filter": "remove",
+		"selected_items":
+		[
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"fr",
+				"File: Rename"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"enable",
+				"Package Control: Enable Package"
+			],
+			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: lat",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: LaTe",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"next_misspelling",
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)",
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/banca.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/main.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/intro.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
+		"/C/Users/andre/Desktop/Mesa/risethesis/appendix/mapping-study.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/chapters/introduction.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/agradecimentos.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/operating-and-support-hazard-analysis/replace-220v-electrical-outlet.csp",
+		"/C/Users/andre/Desktop/Mesa/2015-12-12 Concurso UFRPE/2016-01-11_resumos-ufrpe.tex",
+		"/C/Users/andre/Dropbox (Pessoal)/Doutorado/Prorrogação 2016.1 - novo.xml",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/suggested-reviewers.txt",
+		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/document/root.tex",
+		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/ROOT",
+		"/C/Users/andre/Desktop/nubank.csv",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/Todo.txt",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/.gitignore",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/svjour3.cls",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.output.txt",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.out",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.fdr.output.txt",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/AutoSpell.sublime-settings",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/AutoSpell/AutoSpell.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/conclusion.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/main.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/acknowledgements.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/caseStudy.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/output/document/Document.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/main.bbl",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/main.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/strategy.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/document/root.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/ROOT",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/output/document/root.log",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/document/root - Copia.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/Document.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.log",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/output/document/root.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/output/document/session.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/output/document/Document.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/extensions.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/background.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/document/before_theory.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/document/after_theory.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/Document.thy",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/MySession/ROOT",
+		"/C/Users/andre/Desktop/Mesa/Ata da turma S8.txt",
+		"/C/Users/andre/Dropbox/Organização/Documentos/Sync_Pro_Purchase_30610.btskey",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.out",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_ISF LaTeX.zip/template.tex",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/README.markdown",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/svjour3.cls",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.lyx",
+		"//webserver.cin.ufpe.br/alrd/public_html/index.html",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/q22-lista3-geracao-testes.c",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/q22-lista3.c",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/Dúvidas dos alunos/ARQUIVO_SMARTPHONE.c",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/Dúvidas dos alunos/cadastro.txt",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/CLIENTES.CAD",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/COMPRAS.CAD",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/VENDAS.CAD",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/tabelamento.txt",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/trapezios.c",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/Simpson.c",
+		"/C/Users/andre/Desktop/LaTeX/template.tex",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/2EE-q2.c",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/2EE-q1.c",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/makefile",
+		"/C/Discos virtuais/MontarTodos.txt",
+		"/C/Discos virtuais/MontarTodos.bat",
+		"/C/Users/andre/Desktop/ee2.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/.gitignore",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/interpolacao-adalberto/main.c",
+		"/C/Users/andre/Desktop/cpf_nome.txt",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/makefile",
+		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/metodos.c",
+		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/metodos.h",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/entrada.txt",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/output.txt",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/saida.txt",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/alrd.c",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes CN.csv",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/teste-andreia.c",
+		"/C/Users/andre/Desktop/10.1007%2Fs100090050035.bib",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes Est.csv",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/main.c",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/1EE/makefile",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Projetos de Programação/Correção-01/Rinaldo do Herval - 08842969460-01.c",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_Thiago Oliveira - 05967003428-cos-taylor.zip/cosseno.c",
+		"/C/Users/andre/Dropbox/Organização/Aulas/CNT7-líderes.txt",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Lìderes CN.csv",
+		"/C/Users/andre/Dropbox/Organização/Aulas/CNT7-líderes.csv",
+		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/makefile",
+		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/main.c",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo08.c",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo07.c",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo06.c",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo05.c",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo04.c",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo01.c",
+		"/C/Users/andre/Desktop/NumeroMaquina.cls",
+		"/C/Users/andre/Desktop/MaquinaPF.cls",
+		"/C/Users/andre/Dropbox/site-alrd/WebContent/index.html",
+		"/C/Users/andre/Dropbox/site-alrd/WebContent/clean.css",
+		"/C/Users/andre/Dropbox/site-alrd/WebContent/programa-de-aula.js",
+		"/C/Users/andre/Dropbox/site-alrd/build.xml",
+		"/C/Users/andre/Dropbox/site-alrd/WebContent/cronograma-2015-1.js",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Python/2015.1/Avaliador.py",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Python/2015.1/20150618 Alunos Atuariais",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Python/2015.1/20150629 Alunos Bacharelado Matemática",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Python/2015.1/20150626 Alunos LEG",
+		"/C/Users/andre/Dropbox/Organização/Default/index.html",
+		"/C/Apps/Isabelle2014/src/HOL/Tools/ATP/scripts/remote_atp",
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Citações sobre programação.txt",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/abstract.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/introduction.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/caseStudy.tex",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/conclusion.tex",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Package Control.sublime-settings",
+		"/C/Users/andre/Dropbox/Organização/Contabilidade/2015/06-Junho/contabilidade.js",
+		"/C/Users/andre/Dropbox/Organização/Contabilidade/2015/07-Julho/contabilidade.js",
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/ictac2015-alrd-acm-text/alrd.sty"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"\\\\iac",
+			"\\\\[i]?ac",
+			"\\ac",
+			"\\\\[i]?ac",
+			"bdd",
+			"\\\\[i]?ac",
+			"\\algebra",
+			"\\analgebra",
+			"\\SFT",
+			"\\fba",
+			"\\anfba",
+			"\\fbas",
+			"\\BDD",
+			"\\algebra",
+			"\\fdr",
+			"\\cspm",
+			"\\SFTs",
+			"\\DFT",
+			"\\TFT",
+			"\\TFTs",
+			"\\DFTs",
+			"\\BDDs",
+			"\\FTA",
+			"\\\\FTA",
+			"acr",
+			"spacefactor",
+			"\\\\subsubsection",
+			"\\\\subsection",
+			"\\subsection",
+			"\\\\chapter",
+			"\\set",
+			"\\Set",
+			"\\ACSEMBRAER",
+			"verb",
+			"verba",
+			"input",
+			"include",
+			"verba",
+			"ref",
+			"acknowledgements",
+			"\\\\usepackage",
+			"includegraphics",
+			"\\\\includegraph",
+			"\\include",
+			"\\\\begin",
+			"\\begin",
+			"sloppypar",
+			"%\\",
+			"sloppypar",
+			"%",
+			"||",
+			".",
+			"and $",
+			"LowPower",
+			"and \\$",
+			"The following expressions are sufficient to define",
+			"variable",
+			"generator",
+			"fba",
+			"\\\\todo",
+			"VGR\\+1981",
+			"VGR+1981",
+			"shannon",
+			"HW",
+			"\\\\hardware",
+			"HW",
+			"[0-9]\\)",
+			"1)",
+			"[0-9]\\)",
+			"1)",
+			"parsim",
+			"\\listset",
+			"s",
+			"S",
+			"s",
+			"S",
+			"s",
+			"S",
+			"B",
+			"b",
+			"B",
+			"snippetcspm",
+			"NOT",
+			"aligned",
+			"From",
+			"trace",
+			"failure trace",
+			"then the comp",
+			"fault trace",
+			"hiphops",
+			"structure[s]?",
+			"structure-functions",
+			"structure[s]?",
+			"(structure[s]?) function",
+			"structure[s?] function",
+			"failure event",
+			"\\\\intertion",
+			"\\\\cap",
+			"\\\\cup",
+			"\\cup",
+			"algebraalign",
+			"algebraeq",
+			"algebra",
+			"tracetotfa",
+			"}\n",
+			"tracetotfa",
+			"tracetofta",
+			"set[s]? of distinct",
+			"acsAnnotations",
+			"tackle",
+			"hops",
+			"line",
+			"\\\\pandora",
+			"pandora",
+			"gates",
+			"hiphops",
+			"static",
+			"\\\\fta",
+			"FTA",
+			"fta",
+			"\\\\tfa",
+			"listset",
+			"tfaset",
+			"a[n]? \\\\fba",
+			"failure",
+			"tracetolbba",
+			"lattice",
+			"\\\\tfa"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"\\\\section",
+			"structure-expressions",
+			"\\1 expression",
+			"\\\\caption",
+			"\\\\inter",
+			"\\\\union",
+			"sec",
+			"\\\\tempo[4]",
+			"\\\\tempo[3]",
+			"\\\\tempo[2]",
+			"\\\\tempo[1]",
+			"$\\1$",
+			"\\\\fdr",
+			"\\\\csp",
+			"\\\\cspm",
+			"\\cspm",
+			"",
+			"verificaVetor",
+			"printf",
+			"i",
+			"fabs(",
+			"n->",
+			"Acertos da questão"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "main.tex",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 74456,
+						"regions":
+						{
+							"bookmarks":
+							{
+								"flags": 144,
+								"icon": "bookmark",
+								"regions":
+								[
+									[
+										4658,
+										4658
+									],
+									[
+										11600,
+										11600
+									],
+									[
+										13215,
+										13215
+									],
+									[
+										16756,
+										16756
+									],
+									[
+										67037,
+										67037
+									]
+								],
+								"scope": "bookmarks"
+							}
+						},
+						"selection":
+						[
+							[
+								42589,
+								42593
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 15706.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "banca.tex",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1386,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1054,
+								953
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "risethesis.cls",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26855,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								17463,
+								17463
+							],
+							[
+								17479,
+								17479
+							],
+							[
+								17495,
+								17495
+							],
+							[
+								17513,
+								17513
+							],
+							[
+								17530,
+								17530
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LaTeX/TeX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 11980.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 155.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "thesis.sublime-project",
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 364.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
