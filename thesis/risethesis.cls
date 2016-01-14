@@ -663,6 +663,16 @@ requirements for the degree of \@degree\ in \@majorfielden.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Banca
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\ifbancaum
+\newif\ifbancadois
+\newif\ifbancatres
+\newif\ifbancaquarto
+\newif\ifbancacinco
+\bancaumfalse
+\bancadoisfalse
+\bancatresfalse
+\bancaquartofalse
+\bancacincofalse
 
 \def\banca{%
   \if@openright\cleardoublepage\else\clearpage\fi
@@ -677,29 +687,34 @@ requirements for the degree of \@degree\ in \@majorfielden.
   
   \begin{center}
   
+  \ifbancaum
   -----------------------------------------------------------------------\\
-  Prof. André Luis de Medeiros Santos\\
-  Centro de Informática/UFPE
+  \primeiromembrobanca
+  \fi
   
   \vspace{\baselineskip}
+  \ifbancadois
   -----------------------------------------------------------------------\\
-  Prof. Alexandre Marcos Lins de Vasconselos\\
-  Centro de Informática/UFPE
+  \segundomembrobanca
+  \fi
   
+  \ifbancatres
   \vspace{\baselineskip}
   -----------------------------------------------------------------------\\
-  Prof. Christina von Flach Garcia Chavez\\
-  Departamento de Ciência da Computação/UFBA
-  
+  \terceiromembrobanca
+  \fi
+
+  \ifbancaquarto  
   \vspace{\baselineskip}
   -----------------------------------------------------------------------\\
-  Prof. Leonardo Gresta Paulino Murta\\
-  Instituto de Computação/UFF
+  \quartomembrobanca
+  \fi
   
+  \ifbancacinco
   \vspace{\baselineskip}
   -----------------------------------------------------------------------\\
-  Prof. Jones Oliveira de Albuquerque\\
-  Departamento de Estatística e Informática/UFRPE
+  \quintomembrobanca
+  \fi
   
   \vfill
   \@address

@@ -5,3 +5,4 @@ thesis/fault-modelling-theory/output/*
 Thumbs.db
 *.bbl
 *.blg
+*.synctex.gz
