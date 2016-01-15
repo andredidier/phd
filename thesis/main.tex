@@ -271,7 +271,6 @@ I dedicate this thesis to Juliana, Luciana (pipoquinha), and Bianca (snowflake)
 \todo{Agradecimentos: Alexandre, Sascha, Augusto, Zoe, John Fitz.}
 
 \begin{epigraph}[]{Alan Turing}
-\todo{Epigrafe 1}
 % quotes from: http://www.brainyquote.com/quotes/authors/e/edsger_dijkstra.html
 % http://www.brainyquote.com/search_results.html?q=boole
 % http://www.azquotes.com/author/14856-Alan_Turing
@@ -301,38 +300,7 @@ We illustrate our work on a simple but real case study supplied by our industria
 % List of acronyms
 % Acronyms manual: http://linorg.usp.br/CTAN/macros/latex/contrib/acronym/acronym.pdf
 \listofacronyms
-\begin{acronym}
-	\acro{algebra}[ATF]{Algebra of Temporal Faults}
-	\acroindefinite{algebra}{an}{an}
-	\acro{BDD}{Binary Decision Diagram%
-		\acroextra{\protect~\cite{Akers1978,Boute1976}}%
-	}
-	\acro{csp}[CSP]{Communicating Sequential Processes%
-		\acroextra{\protect~\cite{Roscoe1997}}%
-	}
-	\acro{cspm}[CSP{$_M$}]{Communicating Sequential Processes%
-		\acroextra{\protect\footnote{This variant ``M'' is the machine-readable version of \acs{csp}.}}%
-	}
-	\acro{DFT}{Dynamic Fault Tree%
-		\acroextra{\protect~\cite{DBB1992}}%
-	}
-	\acro{fba}[FBA]{Free Boolean Algebra%
-		\acroextra{\protect~\cite[pp. 256-266]{GH2009}}%
-	}
-	\acroindefinite{fba}{an}{a}
-	\acro{fdr}[FDR]{Failures and Divergences Refinement}
-	\acroindefinite{fdr}{an}{a}
-	\acro{FTA}{Fault Tree Analysis}
-	\acroindefinite{FTA}{an}{a}
-	%\acroplural{BDD}[BDDs]{Binary Decision Diagrams}
-	\acro{SFT}{Static Fault Tree}
-	\acroindefinite{SFT}{an}{a}
-	%\acroplural{SFT}[SFTs]{Static Fault Trees}
-	\acro{TFT}{Temporal Fault Tree%
-		\acroextra{\protect~\cite{WP2008,WP2009}}%
-	}
-\end{acronym}
-
+\input{acronyms}
 
 
 % Summary (tables of contents)
@@ -340,8 +308,10 @@ We illustrate our work on a simple but real case study supplied by our industria
 
 \mainmatter
 
+%\part{Context}
+%\label{part:context}
 \chapter{Introduction}
-\label{sec:intro}
+%\label{chap:intro}
 
 The development process of critical control systems is based essentially on the rigorous execution of guides and regulations~\cite{ANAC2011,FAA1993,FAA2007,SAE1996b}.
 Specialized agencies (like FAA, EASA and ANAC in the aviation field) use these guides and regulations to certify such systems.
@@ -393,11 +363,11 @@ We inherited this view from our industrial partner (\EMBRAER), which assumes tha
 %
 We followed industry common practices using \simulink diagrams~\cite{Nise1992} as starting point.
 %
-The work~\cite{DM2012} was based on \ac{cspm} to allow an automatic analysis using the model checker \acs{fdr}.
+The work~\cite{DM2012} was based on \ac{cspm} to allow an automatic analysis using the model checker \acsu{fdr}.
 %
 Thus, our strategy required the translation from \simulink to \ac{cspm}~\cite{JMS+2011}.
 %
-It then runs \acs{fdr} to obtain several counter-examples (which are fault traces) ending in failures.
+It then runs \acsu{fdr} to obtain several counter-examples (which are fault traces) ending in failures.
 %
 For two case studies provided by our industrial partner, we showed that our automatically created failure logic matches with the engineer's provided one or is better (a weaker proposition).
 
@@ -422,13 +392,12 @@ We used Isabelle/HOL 2015\footnote{The 2002 tutorial is reported in~\cite{NPW200
 The tool and the tutorial are available on their website at http://isabelle.in.tum.de .}, theories in Isabelle's library, and a theory in the AFP library~\cite{JM2005} to prove all theorems presented in this work (Online Resource 1).
 %We omit the proofs in the paper, but they are available in Online Resource 1.\todo{publish theory files online: ``Specialized format such as .pdb (chemical), .wrl (VRML), .nb (Mathematica notebook), and .tex can also be supplied.''}
 
-This paper is organized as follows: in \cref{sec:background} we show the concepts and tools used as basis for this work.
+This paper is organized as follows: in \cref{chap:background} we show the concepts and tools used as basis for this work.
 \Cref{sec:strategy} presents our strategy, and \cref{sec:case-study} the case study and the application of the proposed strategy.
 Finally, present our conclusions and future work in \cref{sec:conclusion}.
 
-
 \chapter{Background}
-\label{sec:background}
+\label{chap:background}
 
 Faults modelling depends on which analyses we want to perform.
 For instance, in fault trees, even if a fault can be repaired, it is considered as a non-repairable fault.
@@ -633,7 +602,7 @@ In our previous work, reported in~\cite{DM2012}, we modified such a translation 
 %
 We designed a \ac{cspm} process to act as an observer, watching outputs of the nominal version and comparing to the outputs of the ``breakable'' version (with injected faults) of the system.
 %
-When the \ac{cspm} process of the model and the observer are loaded into the \acs{fdr} model-checker, counter-examples are generated for each output that differs from the nominal model, thus obtaining a \emph{sequence} of injected faults combinations that leads to the unexpected output, which are indeed \emph{fault traces}.
+When the \ac{cspm} process of the model and the observer are loaded into the \acsu{fdr} model-checker, counter-examples are generated for each output that differs from the nominal model, thus obtaining a \emph{sequence} of injected faults combinations that leads to the unexpected output, which are indeed \emph{fault traces}.
 
 In what follows, injected faults and the top-level failure have generic names based on the names of the \simulink model blocks.
 It is out of the scope of~\cite{DM2012} to define event names.
@@ -704,7 +673,7 @@ failure.Hardware.N04_RelationalOperator.1.ACT.B.true
 %
 where \verb$N04$ is the subsystem name of the monitor in the \simulink diagram, \verb$MonIn1$ (first input of the monitor), \verb$MonIn2$ (second input of the monitor), and \verb$RelationalOperator$ (switcher controller) are the names of the hardware components in the \simulink diagram.
 
-We only show eight counter-examples, but FDR generates a total of 64 counter-examples for this system.
+We only show eight counter-examples, but \acsu{fdr} generates a total of 64 counter-examples for this system.
 The other counter-examples are similar to the traces shown with different internal events.
 
 To reuse \hiphops, which is based on \acp{SFT}, each fault trace is abstracted as a conjunction (AND combination of the inner events), and the several conjunction-based fault events are combined using ORs (disjunctions).
@@ -1224,7 +1193,7 @@ It observes the value of this input port and compares it to a threshold.
 If the value is below the threshold, the monitor disconnects the output from the main input and connects to the secondary input.
 We present the \simulink model for this monitor in \cref{fg:blockDiagramMonitorInternals}.
 
-%As we mentioned in~\cref{sec:faults-injection} we translated the monitor to \ac{cspm} according to our strategy and modified the observer to make FDR generate more counter-examples.
+%As we mentioned in~\cref{sec:faults-injection} we translated the monitor to \ac{cspm} according to our strategy and modified the observer to make \acsu{fdr} generate more counter-examples.
 
 Now we show two contributions: (i) using only Boolean operators, thus ignoring ordering, we can obtain the same results obtained in~\cite{DM2012}, and (ii) we represent each of the fault traces reported in~\cite{DM2012} as a term in our proposed algebra of temporal faults.
 Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cref{sec:faults-injection}, we associate the fault events as:
@@ -1320,7 +1289,7 @@ M_A = & \parsin{\parsin{\xbefore{S}{B}} \inter -A} \union \parsin{\parsin{\xbefo
 
 The semantics of the above expression is: (i) fault $b$ ($\var{b}$) occurs and fault $a$ ($\var{a}$) or fault $s$ ($\var{s}$) occurs (but not both $a$ and $s$), or (ii) fault $a$ occurs before fault $s$, which is more precise than the expression found without considering order of events.
 
-\section{Conclusion}
+\chapter{Conclusion}
 \label{sec:conclusion}
 
 In this work we presented a foundational theory to support a more precise representation of fault events as compared to our previous strategy for injecting faults~\cite{DM2012}.

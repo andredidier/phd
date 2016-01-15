@@ -199,15 +199,15 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 74456,
+				"buffer_size": 73470,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "banca.tex",
+			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 1386,
+				"buffer_size": 1041,
 				"line_ending": "Windows"
 			}
 		},
@@ -303,6 +303,9 @@
 	},
 	"file_history":
 	[
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/LaTeXTools.sublime-settings",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/thesis.sublime-project",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/banca.tex",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/main.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
@@ -357,7 +360,6 @@
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.out",
 		"/C/Users/andre/AppData/Local/Temp/Temp1_ISF LaTeX.zip/template.tex",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/README.markdown",
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/svjour3.cls",
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.lyx",
@@ -428,9 +430,7 @@
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/conclusion.tex",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Package Control.sublime-settings",
-		"/C/Users/andre/Dropbox/Organização/Contabilidade/2015/06-Junho/contabilidade.js",
-		"/C/Users/andre/Dropbox/Organização/Contabilidade/2015/07-Julho/contabilidade.js",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/ictac2015-alrd-acm-text/alrd.sty"
+		"/C/Users/andre/Dropbox/Organização/Contabilidade/2015/06-Junho/contabilidade.js"
 	],
 	"find":
 	{
@@ -448,6 +448,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"simple",
+			"jump",
+			"sec:background",
+			"sec:intro",
+			"fdr",
 			"\\\\iac",
 			"\\\\[i]?ac",
 			"\\ac",
@@ -570,12 +575,7 @@
 			"fta",
 			"\\\\tfa",
 			"listset",
-			"tfaset",
-			"a[n]? \\\\fba",
-			"failure",
-			"tracetolbba",
-			"lattice",
-			"\\\\tfa"
+			"tfaset"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -625,7 +625,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 74456,
+						"buffer_size": 73470,
 						"regions":
 						{
 							"bookmarks":
@@ -639,20 +639,20 @@
 										4658
 									],
 									[
-										11600,
-										11600
+										10807,
+										10807
 									],
 									[
-										13215,
-										13215
+										12211,
+										12211
 									],
 									[
-										16756,
-										16756
+										15752,
+										15752
 									],
 									[
-										67037,
-										67037
+										66051,
+										66051
 									]
 								],
 								"scope": "bookmarks"
@@ -661,16 +661,19 @@
 						"selection":
 						[
 							[
-								42589,
-								42593
+								17842,
+								17842
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
+							"forward_sync": false,
+							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 15706.0,
+						"translation.y": 7345.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -678,26 +681,25 @@
 				},
 				{
 					"buffer": 1,
-					"file": "banca.tex",
+					"file": "acronyms.tex",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1386,
+						"buffer_size": 1041,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1054,
-								953
+								614,
+								614
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
