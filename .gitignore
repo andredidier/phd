@@ -6,3 +6,7 @@ Thumbs.db
 *.bbl
 *.blg
 *.synctex.gz
+*.idx
+*.ilg
+*.ind
+*.synctex.gz

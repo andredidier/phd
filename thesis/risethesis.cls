@@ -91,7 +91,7 @@
 \RequirePackage[scaled=0.92]{helvet}
 \RequirePackage{courier}
 \RequirePackage{appendix}
-\RequirePackage[printonlyused,withpage]{acronym}
+%\RequirePackage[printonlyused,withpage]{acronym}
 \RequirePackage{fancybox}
 \RequirePackage{fancyhdr}
 \RequirePackage{setspace}
@@ -142,7 +142,7 @@
 % \gdef\@mastersdegree{Mestre}
 % \gdef\@phddegree{Doutor}
 \gdef\resumoname{Resumo} \gdef\abstrname{Abstract}
-\gdef\acronimoname{Lista de Acrônimos} \gdef\acronymname{List of Acronyms}
+%\gdef\acronimoname{Lista de Acrônimos} \gdef\acronymname{List of Acronyms}
 \gdef\keywordsnamePT{Palavras-chave}
 \gdef\keywordsnameEN{Keywords}
 
@@ -188,7 +188,7 @@
   \gdef\@listoftablesname{Lista de Tabelas}
   \gdef\@listoffiguresname{Lista de Figuras}
   \gdef\@pagename{página}
-  \gdef\@listacronymname{Acrônimos}
+  %\gdef\@listacronymname{Acrônimos}
   \gdef\@colophontext{%
   \urlstyle{rm}%
   Este volume foi tipografado em \LaTeX\ na classe \textsf{RiSEThesis}
@@ -235,7 +235,7 @@
   \newcommand\bibliographytocname{References}
   \renewcommand{\bibname}{\bibliographytocname}
   \gdef\@pagename{page}
-  \gdef\@listacronymname{Acronyms}
+%  \gdef\@listacronymname{Acronyms}
   \gdef\@colophontext{%
   \urlstyle{rm}%
   This volume has been typeset in \LaTeX with the \textsf{UFPEThesis} class
@@ -426,7 +426,7 @@ requirements for the degree of \@degree\ in \@majorfielden.
 \renewcommand{\mainmatter}{
   \formatMainmatterChapter
   \pagestyle{fancy}
-  \acresetall % Reset all acronyms
+%  \acresetall % Reset all acronyms
 }
 
 \newcommand{\appendixmatter}{
@@ -868,15 +868,15 @@ requirements for the degree of \@degree\ in \@majorfielden.
    \thispagestyle{empty}
    \@starttoc{lot}}
 
-\newcommand{\listofacronyms}{%
-   \pagestyle{empty}
-   \if\@language1
-      \chapter*{\acronymname}
-      \thispagestyle{empty}
-   \else\if\@language0
-      \chapter*{\acronimoname}
-      \thispagestyle{empty}
-   \fi\fi}
+%\newcommand{\listofacronyms}{%
+%   \pagestyle{empty}
+%   \if\@language1
+%      \chapter*{\acronymname}
+%      \thispagestyle{empty}
+%   \else\if\@language0
+%      \chapter*{\acronimoname}
+%      \thispagestyle{empty}
+%   \fi\fi}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Some codes coming from phdthesis

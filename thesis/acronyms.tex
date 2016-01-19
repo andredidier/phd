@@ -1,31 +1,107 @@
-\begin{acronym}
-	\acro{algebra}[ATF]{Algebra of Temporal Faults}
-	\acroindefinite{algebra}{an}{an}
-	\acro{BDD}{Binary Decision Diagram%
-		\acroextra{\protect~\cite{Akers1978,Boute1976}}%
-	}
-	\acro{csp}[CSP]{Communicating Sequential Processes%
-		\acroextra{\protect~\cite{Roscoe1997}}%
-	}
-	\acro{cspm}[CSP{$_M$}]{Communicating Sequential Processes%
-		\acroextra{\protect\footnote{This variant ``M'' is the machine-readable version of \acs{csp}.}}%
-	}
-	\acro{DFT}{Dynamic Fault Tree%
-		\acroextra{\protect~\cite{DBB1992}}%
-	}
-	\acro{fba}[FBA]{Free Boolean Algebra%
-		\acroextra{\protect~\cite[pp. 256-266]{GH2009}}%
-	}
-	\acroindefinite{fba}{an}{a}
-	\acro{fdr}[FDR]{Failures and Divergences Refinement}
-	\acroindefinite{fdr}{an}{a}
-	\acro{FTA}{Fault Tree Analysis}
-	\acroindefinite{FTA}{an}{a}
-	%\acroplural{BDD}[BDDs]{Binary Decision Diagrams}
-	\acro{SFT}{Static Fault Tree}
-	\acroindefinite{SFT}{an}{a}
-	%\acroplural{SFT}[SFTs]{Static Fault Trees}
-	\acro{TFT}{Temporal Fault Tree%
-		\acroextra{\protect~\cite{WP2008,WP2009}}%
-	}
-\end{acronym}
+
+\ExplSyntaxOn
+% this now only works because I've use the same already in the preamble so
+% it does nothing here:
+\ProvideAcroEnding {possessive} {'s} {'s}
+\ProvideAcroCommand \acg
+{
+	\acro_possessive:
+	\acro_use:n {#1}
+}
+\NewAcroCommand \acgp
+{
+	\acro_possessive:
+	\acro_plural:
+	\acro_use:n {#1}
+}
+
+\NewAcroCommand \acsg
+{
+	\acro_possessive:
+	\acro_short:n {#1}
+}
+
+\ExplSyntaxOff
+
+\DeclareAcronym{algebra}{%
+	short=ATF,
+	long=Algebra of Temporal Faults
+}
+
+\DeclareAcronym{BDD}{%
+	short=BDD,
+	long=Binary Decision Diagram,
+	cite={{Akers1978,Boute1976}}
+}
+
+\DeclareAcronym{csp}{%
+	short=CSP,
+	long=Communicating Sequential Processes,
+	cite={Roscoe1997}
+}
+
+\DeclareAcronym{CSp}{%
+	short=CSp,
+	long=\acsg*{DFT} cold spare gate
+}
+
+\DeclareAcronym{cspm}{%
+	short=CSP{$_M$},
+	long=Communicating Sequential Processes
+}
+%\acropost{cspm}{\footnote{This variant ``M'' is the machine-readable version of \acs{csp}.}}
+
+\DeclareAcronym{DFT}{%
+	short=DFT,
+	long=Dynamic Fault Tree,
+	cite={DBB1992}
+}
+
+\DeclareAcronym{fba}{%
+	short=FBA,
+	long=Free Boolean Algebra,
+	cite={[pp. 256-266]{GH2009}}
+}
+
+\DeclareAcronym{FDEP}{%
+	short=FDEP,
+	long=\acsg*{DFT} functional dependency gate
+}
+
+\DeclareAcronym{fdr}{%
+	short=FDR,
+	long=Failures and Divergences Refinement,
+	short-indefinite=an
+}
+
+\DeclareAcronym{FTA}{%
+	short=FTA,
+	long=Fault Tree Analysis,
+	short-indefinite=an
+}
+
+\DeclareAcronym{SEQ}{%
+	short=SEQ,
+	long=\acsg*{DFT} sequence enforcing gate
+}
+
+\DeclareAcronym{SFT}{%
+	short=SFT,
+	long=Static Fault Tree,
+	short-indefinite=an
+}
+
+\DeclareAcronym{TFT}{%
+	short=TFT,
+	long=Temporal Fault Tree,
+	cite={WP2008,WP2009}
+}
+
+\DeclareAcronym{hiphops}{%
+	short=HiP-HOPS,
+	long=Hierarchically Performed Hazard Origin and Propagation Studies,
+	cite={PMS+2001}
+}
+
+%\acresetall
+%\end{acronym}
