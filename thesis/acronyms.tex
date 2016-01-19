@@ -3,6 +3,7 @@
 % this now only works because I've use the same already in the preamble so
 % it does nothing here:
 \ProvideAcroEnding {possessive} {'s} {'s}
+
 \ProvideAcroCommand \acg
 {
 	\acro_possessive:
@@ -21,11 +22,22 @@
 	\acro_short:n {#1}
 }
 
+\NewAcroCommand \theac
+{
+	\acro_if_acronym_used:nTF {#1}{}{the\xspace}
+	\acro_use:n {#1}
+}
+
 \ExplSyntaxOff
 
 \DeclareAcronym{algebra}{%
 	short=ATF,
 	long=Algebra of Temporal Faults
+}
+
+\DeclareAcronym{activation}{%
+	short=ActA,
+	long=Activation Algebra
 }
 
 \DeclareAcronym{BDD}{%

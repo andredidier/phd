@@ -404,6 +404,12 @@ For two case studies provided by our industrial partner, we showed that our auto
 
 In this work, we present a strategy to perform fault tree analysis on systems by: (i) injecting faults on its nominal model, and (ii) complement the injected faults by modelling faults in a formal method.
 \Cref{fig:strategy-overview} show the strategy overview.
+``Faults injection'' block is obtain from part of the work reported in~\cite{Didier2012}. 
+In some cases we allow fault names to be modified or complemented because they are obtained directly from components and subsystems in a Simulink model.
+We also allow reasoning about faults in \ac{activation} that were not modelled in Simulink as, for example, common cause or environmental faults.
+\Ac{activation} can be used to model faults formally, reasoning about basic fault events and top-events failures.
+A predicate in \ac{activation} generates an expression in \theac{algebra}.
+
 
 \begin{figure}[t]
   \centering
