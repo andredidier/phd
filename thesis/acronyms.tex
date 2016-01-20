@@ -3,7 +3,6 @@
 % this now only works because I've use the same already in the preamble so
 % it does nothing here:
 \ProvideAcroEnding {possessive} {'s} {'s}
-
 \ProvideAcroCommand \acg
 {
 	\acro_possessive:
@@ -28,16 +27,33 @@
 	\acro_use:n {#1}
 }
 
+\NewAcroCommand \Theac
+{
+	\acro_if_acronym_used:nTF {#1}{}{The\xspace}
+	\acro_use:n {#1}
+}
+
+\NewAcroCommand \workaroundac 
+{
+	##2
+	\todo{Issue-workaround-#1}
+}
+
+
 \ExplSyntaxOff
 
 \DeclareAcronym{algebra}{%
 	short=ATF,
-	long=Algebra of Temporal Faults
+	long=Algebra of Temporal Faults,
+	short-indefinite=an,
+	long-indefinite=an
 }
 
 \DeclareAcronym{activation}{%
 	short=ActA,
-	long=Activation Algebra
+	long=Activation Algebra,
+	short-indefinite=an,
+	long-indefinite=an
 }
 
 \DeclareAcronym{BDD}{%
@@ -46,7 +62,7 @@
 	cite={{Akers1978,Boute1976}}
 }
 
-\DeclareAcronym{csp}{%
+\DeclareAcronym{CSP}{%
 	short=CSP,
 	long=Communicating Sequential Processes,
 	cite={Roscoe1997}
@@ -57,11 +73,11 @@
 	long=\acsg*{DFT} cold spare gate
 }
 
-\DeclareAcronym{cspm}{%
+\DeclareAcronym{CSPm}{%
 	short=CSP{$_M$},
-	long=Communicating Sequential Processes
+	long=Communicating Sequential Processes,
+	long-post={\footnote{This variant ``M'' is the machine-readable version of \acs*{CSP}.}}
 }
-%\acropost{cspm}{\footnote{This variant ``M'' is the machine-readable version of \acs{csp}.}}
 
 \DeclareAcronym{DFT}{%
 	short=DFT,
@@ -69,15 +85,17 @@
 	cite={DBB1992}
 }
 
-\DeclareAcronym{fba}{%
+\DeclareAcronym{FBA}{%
 	short=FBA,
 	long=Free Boolean Algebra,
-	cite={[pp. 256-266]{GH2009}}
+	cite={[pp. 256-266]{GH2009}},
+	short-indefinite=an
 }
 
 \DeclareAcronym{FDEP}{%
 	short=FDEP,
-	long=\acsg*{DFT} functional dependency gate
+	long=\acsg*{DFT} functional dependency gate,
+	short-indefinite=an
 }
 
 \DeclareAcronym{fdr}{%
@@ -86,10 +104,22 @@
 	short-indefinite=an
 }
 
+\DeclareAcronym{FT}{%
+	short=FT,
+	long=fault tree,
+	short-indefinite=an
+}
+
 \DeclareAcronym{FTA}{%
 	short=FTA,
 	long=Fault Tree Analysis,
-	short-indefinite=an
+	short-indefinite=an,
+	long-plural-form={Fault Tree Analyses}
+}
+
+\DeclareAcronym{Isar}{%
+	short=Isar,
+	long=Intelligible semi-automated reasoning
 }
 
 \DeclareAcronym{SEQ}{%
@@ -113,6 +143,12 @@
 	short=HiP-HOPS,
 	long=Hierarchically Performed Hazard Origin and Propagation Studies,
 	cite={PMS+2001}
+}
+
+\DeclareAcronym{UTP}{%
+	short=UTP,
+	long=Unifying Theories of Programming,
+	cite={HH1998}
 }
 
 %\acresetall

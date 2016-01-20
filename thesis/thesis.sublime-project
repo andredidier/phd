@@ -1,6 +1,16 @@
 {
-	"settings" : {
-        "TEXroot": "main.tex",
-        "tex_file_exts": [".tex"],
-    }
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"TEXroot": "main.tex",
+		"tex_file_exts":
+		[
+			".tex"
+		]
+	}
 }

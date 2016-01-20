@@ -282,6 +282,10 @@ I dedicate this thesis to Juliana, Luciana (pipoquinha), and Bianca (snowflake)
 \end{dedicatory}
 
 \acknowledgements
+If I were afraid of the path, I wouldn't have gotten here.
+Two men helped me to build this path far before I started this journey: Roberto and J{\'u}nior. May God have them in his arms.
+
+
 \todo{Agradecimentos: Alexandre, Sascha, Augusto, Zoe, John Fitz.}
 
 \begin{epigraph}[]{Alan Turing}
@@ -355,16 +359,16 @@ In such trees, the premises are the leaves (basic events) and the conclusions ar
 Intermediary events use gates to combine basic events and each kind of gate has its own combination semantics definition.
 For example, the most traditional gates are OR and AND.
 They combine the events as \emph{at least one shall occur} and \emph{all shall occur}, respectively.
-To analyse fault trees, their structures are then abstracted as Boolean expressions called \emph{structure expressions}\index{structure expression}.
-The analysis with these two traditional gates uses a well-defined algorithm based on the Shannon's method---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain minimal cut sets\index{Minimal Cut!Sets} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
+To analyse \aclp{FT}, their structures are then abstracted as Boolean expressions called \emph{structure expressions}\index{structure expression}.
+The analysis with these two traditional gates uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method}---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain minimal cut sets\index{Minimal Cut!Sets} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
 
 Besides the traditional OR and AND gates, the \FThandbook defines other gates.
 For example the Priority-AND gate, which considers the order of occurrence of events.
 Although the work reported in~\cite{VGR+1981} defines these new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
-This motivated the introduction of two new kinds of fault trees: \acp{DFT} and \acp{TFT}.
+This motivated the introduction of two new kinds of \aclp{FT}: \acp{DFT} and \acp{TFT}.
 These variant trees can capture sequence dependencies of fault events in a system.
 The difference from \ac{TFT} to \ac{DFT} is that \acp{TFT} use temporal gates directly, while \ac{DFT} does not---\acp{DFT} gates are an abstraction of temporal gates.
-To differentiate traditional fault trees from the other two, we will call traditional fault trees as \acp{SFT}.
+To differentiate traditional \aclp{FT} from the other two, we will call traditional \aclp{FT} as \acp{SFT}.
 
 The work reported in~\cite{WP2009} aims at performing the full implementation of the \FThandbook, adding temporal gates to its \pandora methodology.
 This implementation created a new kind of tree: \acp{TFT}.
@@ -384,7 +388,7 @@ Our concern is that the decision of the relevance of its use should not be due t
 The algebra created in this work defines the NOT operator and allows its use, as we show in \cref{sec:strategy}.
 
 In previous work~\cite{Didier2012,DM2012}, we proposed a systematic hardware-based faults identification strategy to obtain failure expressions as defined in \acs{hiphops} for \acp{SFT}.
-We considered faults in components or subsystems, but if we obtain failure expressions of a whole system, they are in fact structure expressions\index{structure expression} of a fault tree.
+We considered faults in components or subsystems, but if we obtain failure expressions of a whole system, they are in fact structure expressions\index{structure expression} of \iacl{FT}.
 %
 %Using our strategy as input for \ac{hiphops} we obtain a failure expression of a fault tree.
 %
@@ -394,22 +398,25 @@ We inherited this view from our industrial partner (\EMBRAER), which assumes tha
 %
 We followed industry common practices using \simulink diagrams~\cite{Nise1992} as starting point.
 %
-The work~\cite{DM2012} was based on \ac{cspm} to allow an automatic analysis using the model checker \acs{fdr}.
+The work~\cite{DM2012} was based on \ac{CSPm} to allow an automatic analysis using the model checker \acs{fdr}.
 %
-Thus, our strategy required the translation from \simulink to \ac{cspm}~\cite{JMS+2011}.
+Thus, our strategy required the translation from \simulink to \ac{CSPm}~\cite{JMS+2011}.
 %
 It then runs \acs{fdr} to obtain several counter-examples (which are fault traces) ending in failures.
 %
 For two case studies provided by our industrial partner, we showed that our automatically created failure logic matches with the engineer's provided one or is better (a weaker proposition).
 
-In this work, we present a strategy to perform fault tree analysis on systems by: (i) injecting faults on its nominal model, and (ii) complement the injected faults by modelling faults in a formal method.
+In this work, we present a strategy to perform \aclp{FTA} on systems by: (i) injecting faults on its nominal model, and (ii) complement the injected faults by modelling faults in a formal method.
 \Cref{fig:strategy-overview} show the strategy overview.
-``Faults injection'' block is obtain from part of the work reported in~\cite{Didier2012}. 
-In some cases we allow fault names to be modified or complemented because they are obtained directly from components and subsystems in a Simulink model.
-We also allow reasoning about faults in \ac{activation} that were not modelled in Simulink as, for example, common cause or environmental faults.
+``Faults injection'' block is obtained from part of the work reported in~\cite{Didier2012}. 
+It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault events sequences.
+The fault events sequences are then mapped to \theac{algebra}.
+As fault names are obtained directly from components and subsystems in a Simulink model, \theac{activation} (``Faults Modelling'' block) allows them to be modified or complemented.
+\Theac{activation} also allows reasoning about faults that are not modelled in Simulink as, for example, common cause or environmental faults.
 \Ac{activation} can be used to model faults formally, reasoning about basic fault events and top-events failures.
-A predicate in \ac{activation} generates an expression in \theac{algebra}.
-
+Each predicate in \ac{activation} generates an expression in \theac{algebra}, which allows expressions reduction to obtain a canonical form that enables finding cut sequences and calculating top-events probability.
+\Theac{FTA} has associated system requirements which are in fact acceptance criteria.
+Once \acg{FT} acceptance criteria is modelled as expressions in \ac{algebra}, we formally check whether they are accepted by system models' expressions.
 
 \begin{figure}[t]
   \centering
@@ -418,52 +425,61 @@ A predicate in \ac{activation} generates an expression in \theac{algebra}.
   \label{fig:strategy-overview}
 \end{figure}
 
-The contributions of this work are:
+The main contributions of this work are:
 
-In our previous paper~\cite{DM2015} we:
 \begin{enumerate}
-  \item Defined a lists-based representation of order-sensitive failures;
-  \item Defined a new operator to express order explicitly and
-  \item Proved that the resulting algebra, the \ac{algebra}, is a conservative extension of the Boolean algebra;
+  \item Define a denotational and algebraic model to express fault events order (\ac{algebra}) and formally verify \ac{FT} acceptance;
+  \item Reusing \simulink models, obtaining fault event sequences and mapping to \ac{algebra};
+  \item Reasoning about faults modelling in \ac{activation}, obtaining formal expressions of top-events failures;
+  \item Illustrating the application of the laws on real case studies, two provided by our industrial partner.
 \end{enumerate}
 
-This paper extends the work reported in~\cite{DM2015} with the following contributions:
+Other contributions of this work are:
+
 \begin{enumerate}
-  \item Providing several laws on the \ac{algebra} to allow algebraic reduction of formulas;
-  \item Generalising the laws in terms of abstract properties;
-  \item Illustrating the application of the laws on a real case study provided by our industrial partner.
+  \item Defining a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean operators---is a conservative extensions of the Boolean algebra (also published in~\cite{DM2016});
+  \item Generalising laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}.
 \end{enumerate}
 
 We used Isabelle/HOL\index{Isabelle/HOL} 2015\footnote{The 2002 tutorial is reported in~\cite{NPW2002}, but there is a newer version published with the tool itself.
-The tool and the tutorial are available on their website at http://isabelle.in.tum.de .}, theories in Isabelle's library, and a theory in the AFP library~\cite{JM2005} to prove all theorems presented in this work (Online Resource 1).
+The tool and the tutorial are available on their website at http://isabelle.in.tum.de .}, theories in Isabelle's library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
 %We omit the proofs in the paper, but they are available in Online Resource 1.\todo{publish theory files online: ``Specialized format such as .pdb (chemical), .wrl (VRML), .nb (Mathematica notebook), and .tex can also be supplied.''}
 
-This paper is organized as follows: in \cref{chap:background} we show the concepts and tools used as basis for this work.
+This thesis is organized as follows: in \cref{chap:background} we show the concepts and tools used as basis for this work.
 \Cref{sec:strategy} presents our strategy, and \cref{sec:case-study} the case study and the application of the proposed strategy.
-Finally, present our conclusions and future work in \cref{sec:conclusion}.
+Finally, we present our conclusions and future work in \cref{sec:conclusion}.
 
 \chapter{Background}
 \label{chap:background}
 
 Faults modelling depends on which analyses we want to perform.
 For instance, in fault trees, even if a fault can be repaired, it is considered as a non-repairable fault.
-A fault tree is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this paper; we consider that, if it is possible that such failure occurs, then it will.} of a faults topology of a system, subsystem or component.
+A fault tree is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occurs, then it will.} of a faults topology of a system, subsystem or component.
 %\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
 The time relation on fault events in \acp{TFT} and \acp{DFT} allows the analysis of different configurations (or snapshots) of a system, subsystem or component.
 We discuss these time relations in \cref{sec:time-relations}.
 
-Structure expressions\index{structure expression} are used to analyse fault trees.
+Structure expressions\index{structure expression} are used to analyse \aclp{FT}.
 In general, a structure expression\index{structure expression} comes from gates semantics and basic events.
 Basic events become variables and gates become operators (a gate may become one or more operators).
-In \cref{sec:structure-expressions} we explain these structure expressions\index{structure expression} for \acp{SFT}, \acp{TFT} and \acp{DFT}.
+In \cref{sec:structure-expressions} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their respective structure expressions\index{structure expression}.
+
+\Acp{FBA} and \acp{BDD} are a basis to analyse structure expressions. 
+Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{sec:strategy}).
+We explain \acp{FBA} in \cref{sec:fba}, and \acp{BDD} in \cref{sec:bdd}.
+
+The use of the Boolean operator \emph{NOT}: (i) can be misleading, generating non-coherent \aclp{FT}, or (ii) can be essential in practical use.
+We discuss such cases in \cref{sec:not-operator}.
 
 To reuse a nominal model to analyse faults we need fault injection.
-In \cref{sec:faults-injection} we explain how we used \simulink and \ac{cspm} to inject faults and obtain failure logic from a nominal model.
+In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to inject faults and obtain failure logic from a nominal model.
+
+Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isabelle/HOL} and \ac{Isar}, which were essential to carry out the proofs presented in this thesis.
 
 \section{Time relation of fault events}
 \label{sec:time-relations}
 
-The most general case for time relations is to consider that each fault event has a continuous time duration.
+The most general case for time relations\index{time relations}\index{order!time relations} is to consider that each fault event has a continuous time duration.
 They are the basis on how fault events discretisation are defined.
 In \cref{fig:time-relations} we show all possibilities of events relations in a continuous time line (from A to B; the converse relation is similar):
 
@@ -490,9 +506,11 @@ In \cref{sec:strategy} we abstract events relation in continuous time as an \emp
   \label{fig:time-relations}
 \end{figure}
 
-\section{Structure expressions}
+\section{\Aclp{FT} and structure expressions}
 \label{sec:structure-expressions}
 \index{structure expression}
+
+\todo{Add fault trees}
 
 Structure expressions\index{structure expression} in \ac{FTA} are defined in terms of set theory, using symbols for fault events occurrence.
 %, using what is called of generative sets.
@@ -531,7 +549,7 @@ After obtaining structure expressions\index{structure expression}, the next step
 Minimal cut sets\index{Minimal Cut!Sets} are the sets that contain the minimum and sufficient events to activate the top-level failure.
 That is, minimal cut sets\index{Minimal Cut!Sets} are the smallest sets of fault event that, if all occur, cause the top-level failure to occur.
 Probabilistic analysis is then performed on these events to obtain the overall probability of occurrence of the top-level event.
-The \FThandbook shows an algorithm based on Shannon's method to reduce structure expressions\index{structure expression} to obtain minimal cut sets\index{Minimal Cut!Sets}.
+The \FThandbook shows an algorithm based on Shannon's method\index{Binary Decision Diagrams!Shannon's method} to reduce structure expressions\index{structure expression} to obtain minimal cut sets\index{Minimal Cut!Sets}.
 %BDDs are essentially the diagrams of Shannon's method.
 The Boolean expression of the tree shown in \cref{fig:ex-fault-tree1} is $TOP = A \wedge B$.
 
@@ -589,6 +607,19 @@ Such a simplified version, which is based on a modified \ac{BDD}\index{Binary De
 From the previous explanation, we can conclude that there is an omnipresence of order-based operators to analyse \acp{TFT} and \acp{DFT}.
 And that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a canonical form.
 
+\section[Free Boolean Algebras]{\Aclp*{FBA}}
+\label{sec:fba}
+
+
+
+\section[BDDs and Shannon's method]{\Aclp*{BDD} and Shannon's method\index{Binary Decision Diagrams!Shannon's method}}
+\label{sec:bdd}
+
+TODO...
+
+\section[Using NOT operator in FTs]{Using NOT operator in \aclp*{FT}}
+\label{sec:not-operator}
+
 \section{Systems' nominal model and faults injection}
 \label{sec:faults-injection}
 
@@ -638,17 +669,15 @@ The outputs of the hardware elements are annotated with \textsim{HW}, which are 
 %To create failure logic, we abstract the fault traces by not considering events ordering.
 
 
-
-
-To perform a formal verification in a \simulink system design model, the work reported in~\cite{JMS+2011} translates a \simulink model to the \ac{cspm} language.
+To perform a formal verification in a \simulink system design model, the work reported in~\cite{JMS+2011} translates a \simulink model to the \ac{CSPm} language.
 %
-The resulting \ac{cspm} code is then used to check if it meets functional requirements also encoded in \ac{cspm}.
+The resulting \ac{CSPm} code is then used to check if it meets functional requirements also encoded in \ac{CSPm}.
 
 In our previous work, reported in~\cite{DM2012}, we modified such a translation to perform fault injection using hardware annotations allowing a subsystem or part to ``break'' randomly.
 %
-We designed a \ac{cspm} process to act as an observer, watching outputs of the nominal version and comparing to the outputs of the ``breakable'' version (with injected faults) of the system.
+We designed a \ac{CSPm} process to act as an observer, watching outputs of the nominal version and comparing to the outputs of the ``breakable'' version (with injected faults) of the system.
 %
-When the \ac{cspm} process of the model and the observer are loaded into the \acs{fdr} model-checker, counter-examples are generated for each output that differs from the nominal model, thus obtaining a \emph{sequence} of injected faults combinations that leads to the unexpected output, which are indeed \emph{fault traces}.
+When the \ac{CSPm} process of the model and the observer are loaded into the \acs{fdr} model-checker, counter-examples are generated for each output that differs from the nominal model, thus obtaining a \emph{sequence} of injected faults combinations that leads to the unexpected output, which are indeed \emph{fault traces}.
 
 In what follows, injected faults and the top-level failure have generic names based on the names of the \simulink model blocks.
 It is out of the scope of~\cite{DM2012} to define event names.
@@ -727,7 +756,7 @@ To reuse \ac{hiphops}, which is based on \acp{SFT}, each fault trace is abstract
 The result of the combination is a Boolean expression that represents the conditions that cause an undesirable output, the failure logic of the model.
 
 If the failure logic is obtained for a whole system, it is indeed the structure expression\index{structure expression} of a fault tree for a general failure as the top-level event.
-Although it is possible to obtain the failure logic for a larger system, it may be impractical due to state-space explosion in \ac{cspm} model analysis.
+Although it is possible to obtain the failure logic for a larger system, it may be impractical due to state-space explosion in \ac{CSPm} model analysis.
 Thus it should be used for components and subsystems or small systems following \ac{hiphops} compositional structure.
 %
 %Failure logic is used as the input of the strategy presented in~\cite{MJG+2010}.
@@ -811,16 +840,20 @@ The failure expression provided by the engineers of our industrial partner was s
 Although acceptable, it may cause incorrect analysis.
 Our strategy avoids this kind of issue by being completely systematic.
 
+\section{Isabelle/HOL}
+\label{sec:isabelle}
+
+TODO...
 
 \chapter{A free algebra to express structure expressions of ordered events}
 \label{sec:strategy}
 
 Recall from \cref{sec:time-relations,sec:structure-expressions} that fault events are independent on one another if the events are not susceptible to a common cause.
-The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{fba}, where each generator in \acp{fba} corresponds to a fault event symbol in fault trees.
-In \acp{fba}, as generators are ``free'', they are independent on one another and Boolean formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
+The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{FBA}, where each generator in \acp{FBA} corresponds to a fault event symbol in fault trees.
+In \acp{FBA}, as generators are ``free'', they are independent on one another and Boolean formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
 %This is equivalent to the disjunctive normal form, where each set is a minterm (conjunction) and the formula itself is the disjunction of minterms.
 
-The set of sets for \acp{fba} are the denotational semantics for Boolean algebras.
+The set of sets for \acp{FBA} are the denotational semantics for Boolean algebras.
 We use the concept of generators to define the denotational semantics of \ac{algebra} using a set of lists without repetition (distinct lists).
 The choice of lists is because this structure inherently associates a generator to an index, making implicit the representation of order.
 These lists are composed by non-repeated elements (distinct lists) because the events in fault trees are non-repairable, thus they do not occur more than once.
@@ -828,7 +861,7 @@ These lists are composed by non-repeated elements (distinct lists) because the e
 This list representation is different from the Sequence Number function used in~\cite{WP2009,Walker2009}, but is related to the concept that there should be no gaps between consecutive events occurrence.
 It is different because order 0 (zero) in~\cite{WP2009,Walker2009} means non-occurrence.
 It may cause a discontinuity because 0 to 1 is different of 1 to 2.
-In \acp{fba} the non-occurrence of an event is just the absence of the event, thus we use the same representation of non-occurrence in \ac{algebra} to avoid this discontinuity.
+In \acp{FBA} the non-occurrence of an event is just the absence of the event, thus we use the same representation of non-occurrence in \ac{algebra} to avoid this discontinuity.
 
 %The work reported in~\cite{MRL2011,Merle2010} uses continuous time and the relations of events is obtained from a ``date-of-occurrence'' function.
 %It is related to the detection of an event as discussed in~\cref{sec:time-relations,sec:structure-expressions} and the useful information is in fact the order of occurrence of the events, not the date-of-occurrence itself.
@@ -838,7 +871,7 @@ In \acp{fba} the non-occurrence of an event is just the absence of the event, th
 %The drawback of this approach is that fault events ordering information is lost because it is not relevant on the Boolean expressions extraction.
 
 From the need to tackle events ordering and from the ordering information we had from fault injection that we developed in~\cite{DM2012}, we defined a lists-based algebra, called \ac{algebra}, to express and analyse systems considering events ordering.
-We also provide a mapping from fault traces~\cite{DM2012} (from \ac{cspm} models) to this algebra.
+We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra.
 The order-specific operations are expressed with a new operator ($\xbeforeop$) that we call XBefore (or exclusive before).
 
 %We show reduction laws relating the XBefore operator to traditional Boolean operators.
@@ -861,13 +894,13 @@ In the following we show the definitions and laws of our proposed \ac{algebra}.
 To avoid repetition, let $S$, $T$ and $U$ be sets of distinct lists.
 A list $xs$ is distinct if it has no repeated element.
 So, if $x$ is in $xs$, then it has a unique associated index $i$ and we denote it as $x = \nth{xs}{i}$.
-Furthermore, as we follow \iac{fba} characterisation, we also need to show that the generators are independent.
+Furthermore, as we follow \iac{FBA} characterisation, we also need to show that the generators are independent.
 
-The \ac{algebra} form a free algebra, similarly to \acp{fba}.
+The \ac{algebra} form a free algebra, similarly to \acp{FBA}.
 \emph{Infimum} and \emph{Supremum} are defined as set intersection ($\inter$) and union ($\union$) respectively.
 The order within the algebra is defined with set inclusion ($\subseteq$).
 
-To distinguish the permutations that are not defined in \ac{fba}, we need a new operator.
+To distinguish the permutations that are not defined in \ac{FBA}, we need a new operator.
 We give the definition of XBefore ($\xbeforeop$) in terms of list concatenation, similar to the work reported in~\cite{DM2015}:
 %
 \begin{equation}
@@ -952,7 +985,7 @@ The following expressions are valid for generators $a$ and $b$ and are sufficien
 \end{subequations}
 
 Expressions \eqref{def:algebraset-var} to \eqref{def:algebraset-sup} and \eqref{eqs:generators-independence-subseteq-eq} to \eqref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the XBefore operator \eqref{def:xbefore-append} forms a Boolean algebra based on sets of lists.
-And this is also equivalent to \iac{fba} with the same generators.
+And this is also equivalent to \iac{FBA} with the same generators.
 
 In our previous work~\cite{DM2015} we stated a relation of XBefore and \emph{supremum}, provided the operands are variables \eqref{def:var}.
 Now we generalise this relation in terms of abstract properties of the operands of the XBefore.
@@ -1239,7 +1272,7 @@ It observes the value of this input port and compares it to a threshold.
 If the value is below the threshold, the monitor disconnects the output from the main input and connects to the secondary input.
 We present the \simulink model for this monitor in \cref{fg:blockDiagramMonitorInternals}.
 
-%As we mentioned in~\cref{sec:faults-injection} we translated the monitor to \ac{cspm} according to our strategy and modified the observer to make \acs{fdr} generate more counter-examples.
+%As we mentioned in~\cref{sec:faults-injection} we translated the monitor to \ac{CSPm} according to our strategy and modified the observer to make \acs{fdr} generate more counter-examples.
 
 Now we show two contributions: (i) using only Boolean operators, thus ignoring ordering, we can obtain the same results obtained in~\cite{DM2012}, and (ii) we represent each of the fault traces reported in~\cite{DM2012} as a term in our proposed algebra of temporal faults.
 Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cref{sec:faults-injection}, we associate the fault events as:
@@ -1269,7 +1302,7 @@ The mapping rules follow the traces: XBefore is obtained by the order of occurre
 \end{align*}
 
 They represent the same faults shown in \cref{sec:faults-injection}.
-Note that the negation in the formula is very simple to represent in \ac{algebra} (and \ac{fba}) because it is just the absence of the generator.
+Note that the negation in the formula is very simple to represent in \ac{algebra} (and \ac{FBA}) because it is just the absence of the generator.
 
 Combining the above sets with unions (ORs), we obtain the following formula set:
 %
@@ -1277,7 +1310,7 @@ Combining the above sets with unions (ORs), we obtain the following formula set:
 \left\{ \listsin{s,b}, \listsin{b,s}, \listsin{a,b}, \listsin{b,a}, \listsin{a,s}, \listsin{s,a}, \listsin{a,b,s}, \listsin{a,s,b},\ldots,\listsin{s,b,a} \right\}
 \]
 
-If we use Boolean expression reduction instead, it results in the following expression in \ac{algebra} (and in \ac{fba}):
+If we use Boolean expression reduction instead, it results in the following expression in \ac{algebra} (and in \ac{FBA}):
 \[
 (A \inter B) \union (S \inter (A \union B))
 \]
@@ -1371,11 +1404,11 @@ But we consider instantaneous events, like the work reported in~\cite{MRL2014}, 
 %
 %We believe that the direct analysis on failure logic expressed by our TFA can also accelerate temporal fault trees analysis as it is a subclass of dynamic fault trees.
 
-The distinct lists representation in our algebra does not allow obtaining minimal cut sequences\index{Minimal Cut!Sequences} directly from the formula, similar to \acp{fba}.
-The sets in \iac{fba} formula are already the minimal cut sets\index{Minimal Cut!Sets}.
+The distinct lists representation in our algebra does not allow obtaining minimal cut sequences\index{Minimal Cut!Sequences} directly from the formula, similar to \acp{FBA}.
+The sets in \iac{FBA} formula are already the minimal cut sets\index{Minimal Cut!Sets}.
 In our work, \ac{algebra} allows us to find minimal cut sequences\index{Minimal Cut!Sequences} (with XBefore) from the formulas in DNF algebraically: each sub-expression is a minimal cut sequence\index{Minimal Cut!Sequences}.
 
-Boolean formulas reduction can be achieved by: (i) application of Boolean laws, (ii) \ac{BDD}\index{Binary Decision Diagrams}, or (iii) \acp{fba}.
+Boolean formulas reduction can be achieved by: (i) application of Boolean laws, (ii) \ac{BDD}\index{Binary Decision Diagrams}, or (iii) \acp{FBA}.
 We used Boolean and XBefore laws to reduce \ac{algebra} formulas.
 %
 The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs\index{Binary Decision Diagrams!Sequential} to reduce formulas with order-based operators.
@@ -1430,5 +1463,7 @@ This work was partially supported by the National Institute of Science and Techn
 \chapter{First appendix}
 
 \printindex
+\todo{Verify indexes again (search again for words already in the index)}
+\todo{Run makeindex main on this directory}
 
 \end{document}

@@ -207,15 +207,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 77473,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "risethesis.cls",
-			"settings":
-			{
-				"buffer_size": 26869,
+				"buffer_size": 79715,
 				"line_ending": "Windows"
 			}
 		},
@@ -223,7 +215,7 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 1933,
+				"buffer_size": 2514,
 				"line_ending": "Windows"
 			}
 		}
@@ -309,22 +301,33 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis"
+	],
 	"file_history":
 	[
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrdacro.sty",
+		"/C/Users/andre/Desktop/Set_Theory_and_Logic.bibtex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.log",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acronyms.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.pdf",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/delete.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lot",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acro.sty",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrdacro.sty",
 		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/tocloft/tocloft.sty",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrd.sty",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/delete.tex",
 		"/C/Users/andre/Desktop/Mesa/2015-12-15 Avaliações 2015.2/Lista de alunos para revisão de prova da final de CE.txt",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
 		"/C/Users/andre/AppData/Local/Temp/Temp1_glossaries.tds.zip/doc/latex/glossaries/samples/sample-newkeys.tex",
 		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/acro/acro.sty",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
 		"/C/Users/andre/Desktop/Mesa/risethesis/resumo.tex",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/andre/Desktop/Mesa/risethesis/risethesis.tex",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/LaTeXTools.sublime-settings",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
@@ -431,14 +434,7 @@
 		"/C/Users/andre/Desktop/NumeroMaquina.cls",
 		"/C/Users/andre/Desktop/MaquinaPF.cls",
 		"/C/Users/andre/Dropbox/site-alrd/WebContent/index.html",
-		"/C/Users/andre/Dropbox/site-alrd/WebContent/clean.css",
-		"/C/Users/andre/Dropbox/site-alrd/WebContent/programa-de-aula.js",
-		"/C/Users/andre/Dropbox/site-alrd/build.xml",
-		"/C/Users/andre/Dropbox/site-alrd/WebContent/cronograma-2015-1.js",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Python/2015.1/Avaliador.py",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Python/2015.1/20150618 Alunos Atuariais",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Python/2015.1/20150629 Alunos Bacharelado Matemática",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Python/2015.1/20150626 Alunos LEG"
+		"/C/Users/andre/Dropbox/site-alrd/WebContent/clean.css"
 	],
 	"find":
 	{
@@ -453,9 +449,45 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"\\{cspm\\}",
+			"\\{csp\\}",
+			"csp",
+			"BDD!",
+			"fba",
+			"FBA",
+			"tracetoFBA",
+			"fba",
+			"FBA",
+			"Shannon",
+			"\\\\l__acro_custom_long_format_tl",
+			"\\\\acro_write_long",
+			"\\\\acro_write_expanded",
+			"\\\\acro_plural",
+			"l__acro_.*_form_prop",
+			"´",
+			"l__acro_.*_form_prop",
+			"l__acro_long_.*_prop",
+			"l__acro_long_#1_prop",
+			"l__acro_long_#1_form_prop",
+			"l__acro_long.*_form_prop",
+			"l__acro_long_",
+			"l__acro_long_#1_form_prop",
+			"-plural",
+			"-form",
+			"plural-form",
+			"-form",
+			"plural-form",
+			"plural",
+			"fault tree",
+			"item",
+			"begin",
+			"next",
+			"go to",
+			"section",
+			"jump",
 			"BDD",
 			"minimal cut sequence[s]?",
 			"\\index{Minimal Cut!Sequences}",
@@ -547,43 +579,7 @@
 			"shannon",
 			"HW",
 			"\\\\hardware",
-			"HW",
-			"[0-9]\\)",
-			"1)",
-			"[0-9]\\)",
-			"1)",
-			"parsim",
-			"\\listset",
-			"s",
-			"S",
-			"s",
-			"S",
-			"s",
-			"S",
-			"B",
-			"b",
-			"B",
-			"snippetcspm",
-			"NOT",
-			"aligned",
-			"From",
-			"trace",
-			"failure trace",
-			"then the comp",
-			"fault trace",
-			"hiphops",
-			"structure[s]?",
-			"structure-functions",
-			"structure[s]?",
-			"(structure[s]?) function",
-			"structure[s?] function",
-			"failure event",
-			"\\\\intertion",
-			"\\\\cap",
-			"\\\\cup",
-			"\\cup",
-			"algebraalign",
-			"algebraeq"
+			"HW"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -591,6 +587,9 @@
 		"regex": true,
 		"replace_history":
 		[
+			"\\{CSPm\\}",
+			"Binary Decision Diagrams!",
+			"FBA",
 			"\\index{Minimal Cut!Sets}",
 			"\\index{Minimal Cut Sets}\\index{Minimal Cut!Sets}",
 			"\\\\ac{hiphops}",
@@ -628,7 +627,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -637,7 +636,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 77473,
+						"buffer_size": 79715,
 						"regions":
 						{
 							"bookmarks":
@@ -647,28 +646,28 @@
 								"regions":
 								[
 									[
-										5070,
-										5070
+										16084,
+										16084
 									],
 									[
-										12791,
-										12791
+										18291,
+										18291
 									],
 									[
-										14281,
-										14281
+										18799,
+										18799
 									],
 									[
-										15855,
-										15855
+										33682,
+										33682
 									],
 									[
-										18065,
-										18065
+										46923,
+										46923
 									],
 									[
-										69855,
-										69855
+										71979,
+										71979
 									]
 								],
 								"scope": "bookmarks"
@@ -677,8 +676,8 @@
 						"selection":
 						[
 							[
-								19287,
-								19287
+								33732,
+								33732
 							]
 						],
 						"settings":
@@ -689,57 +688,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7651.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "risethesis.cls",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 26869,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3901,
-								3908
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX/TeX.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2173.0,
+						"translation.y": 12994.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 1,
 					"file": "acronyms.tex",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1933,
+						"buffer_size": 2514,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								427,
-								427
+								1968,
+								1968
 							]
 						],
 						"settings":
@@ -751,7 +720,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -838,7 +807,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 364.0,
+	"side_bar_width": 210.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
