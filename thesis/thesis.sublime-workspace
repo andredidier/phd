@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"boole",
+				"lem:boolean-algebra-free-generators-valuation"
+			],
+			[
+				"bo",
+				"lem:boolean-algebra-free-generators"
+			],
+			[
 				"Dec",
 				"DeclareAcronym"
 			],
@@ -207,7 +215,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 79715,
+				"buffer_size": 85225,
 				"line_ending": "Windows"
 			}
 		},
@@ -216,6 +224,14 @@
 			"settings":
 			{
 				"buffer_size": 2514,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "risethesis.cls",
+			"settings":
+			{
+				"buffer_size": 26856,
 				"line_ending": "Windows"
 			}
 		}
@@ -307,6 +323,11 @@
 	],
 	"file_history":
 	[
+		"/C/Users/andre/Dropbox/todo/todo.txt",
+		"/C/Users/andre/Dropbox/todo/todo (Cópia em conflito de Reis 2016-01-20).txt",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acro.sty",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
 		"/C/Users/andre/Desktop/Set_Theory_and_Logic.bibtex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.log",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
@@ -314,15 +335,12 @@
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.pdf",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/delete.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lot",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acro.sty",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrdacro.sty",
 		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/tocloft/tocloft.sty",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrd.sty",
 		"/C/Users/andre/Desktop/Mesa/2015-12-15 Avaliações 2015.2/Lista de alunos para revisão de prova da final de CE.txt",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
 		"/C/Users/andre/AppData/Local/Temp/Temp1_glossaries.tds.zip/doc/latex/glossaries/samples/sample-newkeys.tex",
 		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/acro/acro.sty",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
@@ -432,9 +450,7 @@
 		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo04.c",
 		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo01.c",
 		"/C/Users/andre/Desktop/NumeroMaquina.cls",
-		"/C/Users/andre/Desktop/MaquinaPF.cls",
-		"/C/Users/andre/Dropbox/site-alrd/WebContent/index.html",
-		"/C/Users/andre/Dropbox/site-alrd/WebContent/clean.css"
+		"/C/Users/andre/Desktop/MaquinaPF.cls"
 	],
 	"find":
 	{
@@ -452,6 +468,20 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"neq",
+			"amsmath",
+			"cref",
+			"free",
+			"parsin",
+			"setsyn",
+			"acron",
+			"acrony",
+			"listoffigures",
+			"acrony",
+			"definition",
+			"FBA",
+			"Boolean",
+			"boolean",
 			"\\{cspm\\}",
 			"\\{csp\\}",
 			"csp",
@@ -565,21 +595,7 @@
 			"sloppypar",
 			"%",
 			"||",
-			".",
-			"and $",
-			"LowPower",
-			"and \\$",
-			"The following expressions are sufficient to define",
-			"variable",
-			"generator",
-			"fba",
-			"\\\\todo",
-			"VGR\\+1981",
-			"VGR+1981",
-			"shannon",
-			"HW",
-			"\\\\hardware",
-			"HW"
+			"."
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -636,7 +652,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 79715,
+						"buffer_size": 85225,
 						"regions":
 						{
 							"bookmarks":
@@ -646,28 +662,28 @@
 								"regions":
 								[
 									[
-										16084,
-										16084
+										37089,
+										37089
 									],
 									[
-										18291,
-										18291
+										37631,
+										37640
 									],
 									[
-										18799,
-										18799
+										38268,
+										38268
 									],
 									[
-										33682,
-										33682
+										38808,
+										38808
 									],
 									[
-										46923,
-										46923
+										52041,
+										52041
 									],
 									[
-										71979,
-										71979
+										77405,
+										77405
 									]
 								],
 								"scope": "bookmarks"
@@ -676,8 +692,8 @@
 						"selection":
 						[
 							[
-								33732,
-								33732
+								38350,
+								38350
 							]
 						],
 						"settings":
@@ -688,7 +704,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 12994.0,
+						"translation.y": 14869.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -718,6 +734,36 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "risethesis.cls",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26856,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1890,
+								1897
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LaTeX/TeX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1003.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
