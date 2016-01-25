@@ -11,7 +11,7 @@
 %%
 %% ACKNOWLEDGEMENTS
 %%
-%% We would like to thanks the RiSE's researchers community, the 
+%% We would like to thanks the RiSE's researchers community, the
 %% students from Federal University of Pernambuco, and other users that have
 %% been contributing to this projects with comments and patches.
 %%
@@ -61,7 +61,7 @@
 %%          \propref -- for proprosition reference
 %%          \pgref   -- for page reference
 %%
-%%          Example: See \chapref{chap:introduction}. It will produce 
+%%          Example: See \chapref{chap:introduction}. It will produce
 %%                   'See Chapter 1', in case of English language.
 %%
 %% Citation commands:
@@ -250,6 +250,7 @@
 \newcommand{\listsin}[1]{\ensuremath\left[ #1 \right]}
 \newcommand{\parsin}[1]{\ensuremath\left( #1 \right)}
 \newcommand{\anglesin}[1]{\ensuremath\left\langle #1 \right\rangle}
+\newcommand{\squaresin}[1]{\ensuremath\left[ #1 \right]}
 \newcommand{\highlight}[1]{\fcolorbox{red}{white}{$\displaystyle#1$}}
 \newcommand{\highlightresult}[1]{\colorbox{green!50}{$\displaystyle#1$}}
 %\def\dlists{\ensuremath\operatorname{\mathbf{dlists}}}
@@ -258,6 +259,9 @@
 \def\powersetop{\ensuremath\mathbb{P}}
 \newcommand{\powerset}[1]{\ensuremath\powersetop\left(#1\right)}
 \def\cartesian{\ensuremath\operatorname{\times}}
+\def\ftcoherencyop{\ensuremath\operatorname{\Phi}}
+\newcommand{\ftcoherency}[1]{\ensuremath\ftcoherencyop\parsin{#1}}
+\newcommand{\replace}[2]{\ensuremath\squaresin{#1\middle/#2}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -374,9 +378,10 @@ It is a deductive process that uses trees to model faults and their dependencies
 In such trees, the premises are the leaves (basic events) and the conclusions are the roots (top events).
 Intermediary events use gates to combine basic events and each kind of gate has its own combination semantics definition.
 For example, the most traditional gates are OR and AND.
+\Acp{FT} that use only these gates are called \emph{coherent \aclp{FT}}~\cite{Andrews2001,AB2003,Oliv2006,CCR2008,Vaurio2016}\index{Fault Tree!coherent}.
 They combine the events as \emph{at least one shall occur} and \emph{all shall occur}, respectively.
 To analyse \aclp{FT}, their structures are then abstracted as Boolean\index{Boolean Algebra} expressions called \emph{structure expressions}\index{structure expression}.
-The analysis with these two traditional gates uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method}---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain minimal cut sets\index{Minimal Cut!Sets} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
+The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method}---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain minimal cut sets\index{Minimal Cut!Sets} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
 
 Besides the traditional OR and AND gates, the \FThandbook defines other gates.
 For example the Priority-AND gate, which considers the order of occurrence of events.
@@ -424,7 +429,7 @@ For two case studies provided by our industrial partner, we showed that our auto
 
 In this work, we present a strategy to perform \aclp{FTA} on systems by: (i) injecting faults on its nominal model, and (ii) complement the injected faults by modelling faults in a formal method.
 \Cref{fig:strategy-overview} show the strategy overview.
-``Faults injection'' block is obtained from part of the work reported in~\cite{Didier2012}. 
+``Faults injection'' block is obtained from part of the work reported in~\cite{Didier2012}.
 It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault events sequences.
 The fault events sequences are then mapped to \theac{algebra}.
 As fault names are obtained directly from components and subsystems in a Simulink model, \theac{activation} (``Faults Modelling'' block) allows them to be modified or complemented.
@@ -469,8 +474,8 @@ Finally, we present our conclusions and future work in \cref{sec:conclusion}.
 \label{chap:background}
 
 Faults modelling depends on which analyses we want to perform.
-For instance, in fault trees, even if a fault can be repaired, it is considered as a non-repairable fault.
-A fault tree is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occurs, then it will.} of a faults topology of a system, subsystem or component.
+For instance, in \aclp{FT}, even if a fault can be repaired, it is considered as a non-repairable fault.
+A \acl{FT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occurs, then it will.} of a faults topology of a system, subsystem or component.
 %\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
 The time relation on fault events in \acp{TFT} and \acp{DFT} allows the analysis of different configurations (or snapshots) of a system, subsystem or component.
 We discuss these time relations in \cref{sec:time-relations}.
@@ -480,7 +485,7 @@ In general, a structure expression\index{structure expression} comes from gates 
 Basic events become variables and gates become operators (a gate may become one or more operators).
 In \cref{sec:structure-expressions} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their respective structure expressions\index{structure expression}.
 
-\Acp{FBA} and \acp{BDD} are a basis to analyse structure expressions. 
+\Acp{FBA} and \acp{BDD} are a basis to analyse structure expressions.
 Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{sec:strategy}).
 We explain \acp{FBA} in \cref{sec:fba}, and \acp{BDD} in \cref{sec:bdd}.
 
@@ -527,6 +532,8 @@ In \cref{sec:strategy} we abstract events relation in continuous time as an \emp
 \index{structure expression}
 
 \todo{Add fault trees}
+\todo{Talk about component importances: how much a component contributes to system failure---it's a number between 0 and 1---see AB2003}
+\todo{Talk about prime implicants (minterms)}
 
 Structure expressions\index{structure expression} in \ac{FTA} are defined in terms of set theory, using symbols for fault events occurrence.
 %, using what is called of generative sets.
@@ -534,7 +541,7 @@ If a fault event symbol is in a set, then it means that that fault has occurred.
 A set is a combination of fault events that causes the top-level event of a tree.
 A structure expression\index{structure expression} of a tree is denoted by a set of sets of fault event combinations.
 The OR gate becomes the union operator between sets and the AND gate, the intersection.
-For example, if a system contains fault events \emph{a}, \emph{b}, and \emph{c}, fault trees for this system contain at most all these three events.
+For example, if a system contains fault events \emph{a}, \emph{b}, and \emph{c}, \aclp{FT} for this system contain at most all these three events.
 %The occurrence of a single event $a$ may be associated with the occurrence (or not) of the other events in any order.
 The occurrence of the fault event $a$ is denoted by a set of sets $A$, which contains the following sets:
 %
@@ -551,13 +558,13 @@ The occurrence of the fault event $a$ is denoted by a set of sets $A$, which con
 %Let the set that contains these sets be $A$.
 %Similarly, let $B$ be the set of sets that contain the fault event $b$.
 
-The fault tree in \cref{fig:ex-fault-tree1} contains only two events and the resulting structure expression\index{structure expression} for this tree is the expression $A \inter B$ ($TOP$), where $A$ and $B$ are the sets of sets that contain $a$ and $b$, respectively.
+The \acl{FT} in \cref{fig:ex-fault-tree1} contains only two events and the resulting structure expression\index{structure expression} for this tree is the expression $A \inter B$ ($TOP$), where $A$ and $B$ are the sets of sets that contain $a$ and $b$, respectively.
 The resulting combinations for $TOP$ are $\left\{a,b\right\}$ and $\left\{a,b,c\right\}$ (fault events \emph{a} and \emph{b} occur in all possibilities).\todo{Pedir para Alexandre avaliar pontualmente esta frase}
 
 \begin{figure}[t]
   \centering
-  \includegraphicsaspectratio[0.3]{ex-fault-tree1}
-  \caption{Very simple example of a fault tree}
+  \includegraphicsaspectratio[0.25]{ex-fault-tree1}
+  \caption{Very simple example of a \acl{FT}}
   \label{fig:ex-fault-tree1}
 \end{figure}
 
@@ -647,7 +654,7 @@ A Boolean algebra is defined as triple $\anglesin{B, \inter, -}$, where $B$ is a
 A generator can be represented as a proposition in statement calculus~\cite[p. 274]{Stoll1979}.
 For example, ``valve A is stuck closed'' and ``motor X is malfunctioning'' are valid statements.
 A \acl{FBA} is constructed from $\powerset{E}$, where $\powersetop$ is the power set\index{Power Set}.
-Note that if $E$ has $n$ symbols, $\powerset{E}$ has $2^{n}$ elements, called \emph{atoms}\index{Boolean algebra!atoms} of a finite Boolean algebra. 
+Note that if $E$ has $n$ symbols, $\powerset{E}$ has $2^{n}$ elements, called \emph{atoms}\index{Boolean algebra!atoms} of a finite Boolean algebra.
 For the two statements above, the atoms\index{Boolean algebra!atoms} are:
 \begin{itemize}
   \item ``Valve A is stuck closed'' and ``motor X is malfunctioning''
@@ -656,13 +663,13 @@ For the two statements above, the atoms\index{Boolean algebra!atoms} are:
   \item ``Valve A is \emph{not} stuck closed'' and ``motor X is \emph{not} malfunctioning''
 \end{itemize}
 Such Boolean algebra has $2^{2^{n}}$ formulas~\cite[p. 261]{GH2009}.
-For example, if $E = \setsin{a,b}$, then $\powerset{E} = \setsin{ \setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b} }$, hence the Boolean algebra generated by $E$ contains sixteen ($2^{2^{2}}$) formulas: 
+For example, if $E = \setsin{a,b}$, then $\powerset{E} = \setsin{ \setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b} }$, hence the Boolean algebra generated by $E$ contains sixteen ($2^{2^{2}}$) formulas:
 $\setsin{}$,
-$\setsin{\setsin{}}$, 
-$\setsin{\setsin{}, \setsin{a}}$, 
-$\setsin{\setsin{}, \setsin{b}}, \ldots$, 
-$\setsin{\setsin{a}, \setsin{a,b}}, \ldots$, 
-$\setsin{\setsin{b}, \setsin{a,b}}, \ldots$, 
+$\setsin{\setsin{}}$,
+$\setsin{\setsin{}, \setsin{a}}$,
+$\setsin{\setsin{}, \setsin{b}}, \ldots$,
+$\setsin{\setsin{a}, \setsin{a,b}}, \ldots$,
+$\setsin{\setsin{b}, \setsin{a,b}}, \ldots$,
 $\setsin{\setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b}}$.
 \end{sloppypar}
 
@@ -682,11 +689,11 @@ X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
 %
 \end{Def}
 
-The characterisation of a ``free'' Boolean algebra comes from that, for some valuation function $a$, some of the formulas evaluates to ``1''. 
+The characterisation of a ``free'' Boolean algebra comes from that, for some valuation function $a$, some of the formulas evaluates to ``1''.
 Given a function $p:B \cartesian \setsin{0,1} \rightarrow B$, such that:
 %
 \begin{equation}
-p\parsin{i,j} = 
+p\parsin{i,j} =
 \begin{cases}
   i & \quad j = 1\\
   -i & \quad j = 0
@@ -733,7 +740,81 @@ See~\cite[p. 4]{Huffm2010}
 \section[Using NOT operator in FTs]{Using NOT operator in \aclp*{FT}}
 \label{sec:not-operator}
 
-\todo{NOT operator in FTs}
+Although the \FThandbook introduces several gates, the vast majority analysis of systems would fit in \acp{FT} with only AND and OR gates (coherent \acp{FT})\index{Fault tree!coherent}.
+Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when NOT gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}), such reduction can cause the interpretation of failure logic to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
+The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} shows how to solve it using \acp{BDD}.
+In the following we show: (i) the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and (ii) the example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates (\cref{sec:non-coherent-usefulness}).
+
+The problem with non-coherent \acp{FT} is that its analysis can cause impossible situations.
+The general formula to identify coherency is given in~\cite{Andrews2001,CCR2008} in terms of a structure function\index{structure expression!function}.
+
+\begin{Def}[\ac{FT} Coherency]
+\label{def:ft-coherency}
+Let $\ftcoherency{x}:B^n \rightarrow B^1$ be a binary function of a vector of binary variables, such that $x = \squaresin{x_1, x_2,\ldots,x_n}$, representing the states of $n$ system's components. 
+
+A binary structure function $\ftcoherency{x}$ is coherent if all the following hold:
+\begin{enumerate}
+  \item $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
+  \item Each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$.
+\end{enumerate}
+\end{Def}
+%
+\noindent where $B^1 = \setsin{0,1}$, $B^n = B^{n-1} \cartesian B^1$, $x_i = 1$ implies that component $i$ is failed, and $\ftcoherency{x} = 1$ implies the system is failed.
+For $y = \squaresin{y_1,y_2,\ldots,y_n}$, monotonicity of $\ftcoherencyop$ means that for \emph{all} $i$, $x_i \ge y_i$, and for \emph{some} $i$, $x_i > y_i$.
+Variable replacement ($\replace{a}{b}$) is as usual: 
+$\ftcoherency{x}\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, \ldots, x_n}$
+
+\subsection{Non-coherent \ac{FT} misleads}
+\label{sec:non-coherent-misleads-example}
+
+In this section, we show the second example detailed in~\cite{Oliv2006}. 
+
+A college student who wants to visit her mother in another city has two options: wake up early ($x_3$) and take ride with a friend ($x_1$), or wake up late ($\lnot x_3$) and take the metro ($x_2$).
+The top-event failure is ``fail to visit mother'' with expression $S = \parsin{x_1 \land x_3} \lor \parsin{x_2 \land \lnot x_3}$.
+Its fault tree is depicted in \cref{fig:non-coherent-ft-example}.
+It is clear that the structure function is not-coherent in $x_3$ accordingly to \cref{def:ft-coherency}: $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0}$.
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.4]{non-coherent-ft-example}
+  \caption{Non-coherent \ac{FT} college student's example}
+  \label{fig:non-coherent-ft-example}
+\end{figure}
+
+The problem with this tree is the interpretation of the qualitative results.
+One of the possibilities in this scenario is that the college student would take a ride AND take the metro ($x_1 \land x_2$).
+Quantitatively, the analysis of the probabilities shows that this result is not negligible, but its interpretation is impossible.
+
+\subsection{Usefulness of NOT gates in \ac{FTA}}
+\label{sec:non-coherent-usefulness}
+
+\todo{Replace the example to the one shown in Andrews2001}
+
+The examples of the usefulness of NOT gates in \ac{FTA} are one of the following, but not limited to: (i) generally, when the probability of negated events are close to $1$, (ii) exclusive states systems as, for example, non-repairable phased mission systems.
+
+Here we show the example of a simplified electric network (\cref{fig:simplified-electric-network-diagram}), presented in~\cite{CCR2008}.
+Two loads, pumps, $P_1$ and $P_2$ are supplied through circuits $CP_1$ and $CP_2$ by two external lines $D_1$ and $D_2$ through bars $B_1$ and $B_2$. 
+The bars can be connected by switch $I$.
+Failures in $B_1$ and $B_2$ are not considered.
+In normal conditions, $I$ is open and is automatically closed in case of a failure of a line.
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.3]{simplified-electric-network-diagram}
+  \caption{Simplified Electric Network}
+  \label{fig:simplified-electric-network-diagram}
+\end{figure}
+
+Suppose we need to calculate the following probabilities:
+\begin{description}
+  \item[$TOP_1$] = $P_1$ unavailable \emph{or} $P_2$ unavailable;
+  \item[$TOP_2$] = $P_1$ unavailable \emph{and} $P_2$ unavailable;
+  \item[$TOP_3$] = $P_1$ unavailable \emph{and} $P_2$ \emph{available};
+  \item[$TOP_4$] = Only one pump unavailable given only one electric line available.
+\end{description}
+
+We can construct two independent fault trees, $TP_1$ and $TP_2$, for the unavailability of $P_1$ and $P_2$ as: $TP_1 = P_1 \lor CP_1 \lor \parsin{D_1 \land \parsin{I \lor D_2}}$ and $TP_2 = P_2 \lor CP_2 \lor \parsin{D_2 \land \parsin{I \lor D_1}}$.
+$TOP_1$ and $TOP_2$ generate coherent fault trees, using $TP_1$ and $TP_2$.
 
 \section{Systems' nominal model and faults injection}
 \label{sec:faults-injection}
@@ -870,13 +951,13 @@ To reuse \ac{hiphops}, which is based on \acp{SFT}, each fault trace is abstract
 %
 The result of the combination is a Boolean expression that represents the conditions that cause an undesirable output, the failure logic of the model.
 
-If the failure logic is obtained for a whole system, it is indeed the structure expression\index{structure expression} of a fault tree for a general failure as the top-level event.
+If the failure logic is obtained for a whole system, it is indeed the structure expression\index{structure expression} of a \acl{FT} for a general failure as the top-level event.
 Although it is possible to obtain the failure logic for a larger system, it may be impractical due to state-space explosion in \ac{CSPm} model analysis.
 Thus it should be used for components and subsystems or small systems following \ac{hiphops} compositional structure.
 %
 %Failure logic is used as the input of the strategy presented in~\cite{MJG+2010}.
 Using failure logic as subsystem annotations in~\cite{PMS+2001}, it is possible to obtain structure expressions\index{structure expression} for a larger system.
-It is worth noting that the goal of the work reported in~\cite{DM2012} was to connect with \ac{hiphops}, which is based on static fault trees.
+It is worth noting that the goal of the work reported in~\cite{DM2012} was to connect with \ac{hiphops}, which is based on static \aclp{FT}.
 But we already knew that we had a richer fault modelling information than that presented in~\cite{DM2012} because we abstracted traces (which already capture fault events ordering) to create propositions (any fault events order combination).
 %In the works reported in~\cite{APR+2013,AFP+2013,AIP+2014}, fault modelling was used to verify if a system model is fault tolerant with respect to undesirable critical failures.
 %The faults were explicitly modelled, and the analysis starts after the preliminary analysis of faults.
@@ -964,14 +1045,14 @@ TODO...
 \label{sec:strategy}
 
 Recall from \cref{sec:time-relations,sec:structure-expressions} that fault events are independent on one another if the events are not susceptible to a common cause.
-The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{FBA}\index{Boolean Algebra!Free}, where each generator in \acp{FBA}\index{Boolean Algebra!Free} corresponds to a fault event symbol in fault trees.
+The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{FBA}\index{Boolean Algebra!Free}, where each generator in \acp{FBA}\index{Boolean Algebra!Free} corresponds to a fault event symbol in \aclp{FT}.
 In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are independent on one another and Boolean formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
 %This is equivalent to the disjunctive normal form, where each set is a minterm (conjunction) and the formula itself is the disjunction of minterms.
 
 The set of sets for \acp{FBA}\index{Boolean Algebra!Free} are the denotational semantics for Boolean algebras.
 We use the concept of generators to define the denotational semantics of \ac{algebra} using a set of lists without repetition (distinct lists).
 The choice of lists is because this structure inherently associates a generator to an index, making implicit the representation of order.
-These lists are composed by non-repeated elements (distinct lists) because the events in fault trees are non-repairable, thus they do not occur more than once.
+These lists are composed by non-repeated elements (distinct lists) because the events in \aclp{FT} are non-repairable, thus they do not occur more than once.
 
 This list representation is different from the Sequence Number function used in~\cite{WP2009,Walker2009}, but is related to the concept that there should be no gaps between consecutive events occurrence.
 It is different because order 0 (zero) in~\cite{WP2009,Walker2009} means non-occurrence.
@@ -1490,7 +1571,7 @@ The semantics of the above expression is: (i) fault $b$ ($\var{b}$) occurs and f
 
 In this work we presented a foundational theory to support a more precise representation of fault events as compared to our previous strategy for injecting faults~\cite{DM2012}.
 %
-The failure logic is essential for system safety assessment because it is used as basic input for building fault trees~\cite{PMS+2001,JMS+2011,GMS+2010}.
+The failure logic is essential for system safety assessment because it is used as basic input for building \aclp{FT}~\cite{PMS+2001,JMS+2011,GMS+2010}.
 %
 %We use \simulink as starting point because it is a standard tool in the control systems industry.
 %
@@ -1555,7 +1636,7 @@ for comments in drafts of this work.
 %
 This work used funded by CNPq, grants 476821/2011-8, 442859/2014-7, and 246956/2012-7, and
 %
-by FACEPE grant IBPG-0408-1.03/11. 
+by FACEPE grant IBPG-0408-1.03/11.
 %
 This work was partially supported by the National Institute of Science and Technology for Software Engineering (INES\footnote{http://www.ines.org.br}), funded by CNPq and FACEPE, grants 573964/2008-4 and APQ-1037-1.03/08.
 \end{acknowledgements}

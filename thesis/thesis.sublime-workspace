@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"includegr",
+				"includegraphics"
+			],
+			[
+				"figure",
+				"figure	Figure"
+			],
+			[
 				"boole",
 				"lem:boolean-algebra-free-generators-valuation"
 			],
@@ -14,10 +22,6 @@
 			[
 				"Dec",
 				"DeclareAcronym"
-			],
-			[
-				"figure",
-				"Figure"
 			],
 			[
 				"use",
@@ -215,7 +219,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 85225,
+				"buffer_size": 91116,
 				"line_ending": "Windows"
 			}
 		},
@@ -244,9 +248,29 @@
 	"command_palette":
 	{
 		"height": 104.0,
-		"last_filter": "remove",
+		"last_filter": "Package Control: insta",
 		"selected_items":
 		[
+			[
+				"Package Control: insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remo",
+				"Package Control: Remove Repository"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Add Repository"
+			],
 			[
 				"remove",
 				"Package Control: Remove Package"
@@ -256,24 +280,12 @@
 				"File: Rename"
 			],
 			[
-				"Package Control: ",
-				"Package Control: List Packages"
-			],
-			[
 				"enable",
 				"Package Control: Enable Package"
 			],
 			[
-				"Package Control: instal",
-				"Package Control: Install Package"
-			],
-			[
 				"Package Control: install",
 				"Package Control: Install Package"
-			],
-			[
-				"Package Control: remove",
-				"Package Control: Remove Package"
 			],
 			[
 				"install",
@@ -323,6 +335,11 @@
 	],
 	"file_history":
 	[
+		"/C/Users/andre/Desktop/Projeto Calculadora de Diferencas - Final/Projeto Calculadora de Diferencas - Final.c",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/2pdf.sublime-settings",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/2pdf/2pdf.sublime-settings",
+		"/C/Users/andre/Dropbox (Pessoal)/todo/todo.txt",
 		"/C/Users/andre/Dropbox/todo/todo.txt",
 		"/C/Users/andre/Dropbox/todo/todo (Cópia em conflito de Reis 2016-01-20).txt",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
@@ -336,7 +353,6 @@
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/delete.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lot",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrdacro.sty",
 		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/tocloft/tocloft.sty",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrd.sty",
@@ -446,11 +462,7 @@
 		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo08.c",
 		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo07.c",
 		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo06.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo05.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo04.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo01.c",
-		"/C/Users/andre/Desktop/NumeroMaquina.cls",
-		"/C/Users/andre/Desktop/MaquinaPF.cls"
+		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo05.c"
 	],
 	"find":
 	{
@@ -468,6 +480,27 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"TOP(.)",
+			"TP2",
+			"TP1",
+			"P2",
+			"P1",
+			"I",
+			"In normal conditions, I is open and is automatically closed in case of a failure of a line.\n",
+			"I",
+			"B2",
+			"B1",
+			"D2",
+			"D1",
+			"CP2",
+			"CP1",
+			"figure",
+			"definition",
+			"fault tree",
+			"\\aclp{FT}",
+			"fault tree",
+			"\\\\index\\{fault tree",
+			"AND",
 			"neq",
 			"amsmath",
 			"cref",
@@ -574,28 +607,7 @@
 			"\\\\subsection",
 			"\\subsection",
 			"\\\\chapter",
-			"\\set",
-			"\\Set",
-			"\\ACSEMBRAER",
-			"verb",
-			"verba",
-			"input",
-			"include",
-			"verba",
-			"ref",
-			"acknowledgements",
-			"\\\\usepackage",
-			"includegraphics",
-			"\\\\includegraph",
-			"\\include",
-			"\\\\begin",
-			"\\begin",
-			"sloppypar",
-			"%\\",
-			"sloppypar",
-			"%",
-			"||",
-			"."
+			"\\set"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -603,6 +615,7 @@
 		"regex": true,
 		"replace_history":
 		[
+			"$TOP_\\1$",
 			"\\{CSPm\\}",
 			"Binary Decision Diagrams!",
 			"FBA",
@@ -652,7 +665,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 85225,
+						"buffer_size": 91116,
 						"regions":
 						{
 							"bookmarks":
@@ -662,28 +675,12 @@
 								"regions":
 								[
 									[
-										37089,
-										37089
+										9273,
+										9273
 									],
 									[
-										37631,
-										37640
-									],
-									[
-										38268,
-										38268
-									],
-									[
-										38808,
-										38808
-									],
-									[
-										52041,
-										52041
-									],
-									[
-										77405,
-										77405
+										41424,
+										41424
 									]
 								],
 								"scope": "bookmarks"
@@ -692,8 +689,8 @@
 						"selection":
 						[
 							[
-								38350,
-								38350
+								43326,
+								43326
 							]
 						],
 						"settings":
@@ -704,7 +701,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 14869.0,
+						"translation.y": 16839.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
