@@ -177,6 +177,9 @@
 %\Crefname{section}{Chapter}{Chapters}
 \Crefname{Lem}{Lemma}{Lemmas}
 \Crefname{Def}{Definition}{Definitions}
+\Crefname{figure}{Figure}{Figures}
+%\crefname{Def}{Def.}{Defs.}
+
 \newcommand{\textsim}[1]{$#1$}
 \newenvironment{snippetcspm}[1][2]
 {
@@ -743,7 +746,7 @@ See~\cite[p. 4]{Huffm2010}
 Although the \FThandbook introduces several gates, the vast majority analysis of systems would fit in \acp{FT} with only AND and OR gates (coherent \acp{FT})\index{Fault tree!coherent}.
 Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when NOT gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}), such reduction can cause the interpretation of failure logic to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
 The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} shows how to solve it using \acp{BDD}.
-In the following we show: (i) the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and (ii) the example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates (\cref{sec:non-coherent-usefulness}).
+In the following we show: (i) the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and (ii) the second example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates in a multitasking system (\cref{sec:non-coherent-usefulness}).
 
 The problem with non-coherent \acp{FT} is that its analysis can cause impossible situations.
 The general formula to identify coherency is given in~\cite{Andrews2001,CCR2008} in terms of a structure function\index{structure expression!function}.
@@ -767,12 +770,12 @@ $\ftcoherency{x}\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, 
 \subsection{Non-coherent \ac{FT} misleads}
 \label{sec:non-coherent-misleads-example}
 
-In this section, we show the second example detailed in~\cite{Oliv2006}. 
+In this section we illustrate---with the second example detailed in~\cite{Oliv2006}---how non-coherent \ac{FT} misleads. 
 
 A college student who wants to visit her mother in another city has two options: wake up early ($x_3$) and take ride with a friend ($x_1$), or wake up late ($\lnot x_3$) and take the metro ($x_2$).
 The top-event failure is ``fail to visit mother'' with expression $S = \parsin{x_1 \land x_3} \lor \parsin{x_2 \land \lnot x_3}$.
 Its fault tree is depicted in \cref{fig:non-coherent-ft-example}.
-It is clear that the structure function is not-coherent in $x_3$ accordingly to \cref{def:ft-coherency}: $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0}$.
+It is clear that the structure function is non-coherent in $x_3$ accordingly to \cref{def:ft-coherency}: $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0}$.
 
 \begin{figure}[t]
   \centering
@@ -790,31 +793,88 @@ Quantitatively, the analysis of the probabilities shows that this result is not 
 
 \todo{Replace the example to the one shown in Andrews2001}
 
-The examples of the usefulness of NOT gates in \ac{FTA} are one of the following, but not limited to: (i) generally, when the probability of negated events are close to $1$, (ii) exclusive states systems as, for example, non-repairable phased mission systems.
+In this section we show the second example detailed in~\cite{Andrews2001}. 
 
-Here we show the example of a simplified electric network (\cref{fig:simplified-electric-network-diagram}), presented in~\cite{CCR2008}.
-Two loads, pumps, $P_1$ and $P_2$ are supplied through circuits $CP_1$ and $CP_2$ by two external lines $D_1$ and $D_2$ through bars $B_1$ and $B_2$. 
-The bars can be connected by switch $I$.
-Failures in $B_1$ and $B_2$ are not considered.
-In normal conditions, $I$ is open and is automatically closed in case of a failure of a line.
+The gas detection system\index{gas detection system} depicted in \cref{fig:gas-detection-system} has two sensors $D_1$ and $D_2$ used to detect a leakage in a confined space.
+When a leakage is detected these sensors send a signal to the logic control unit $LU$, which performs three tasks:
+%
+\begin{enumerate}
+  \item shuts-down the main system (process isolation) by de-energizing relay $R_1$;
+  \item inform the operator of the leakage by lamp and siren $L$;
+  \item deactivates all possible ignition sources, which is the interruption of power supply by de-energizing relay $R_2$.
+\end{enumerate}
 
 \begin{figure}[t]
   \centering
-  \includegraphicsaspectratio[0.3]{simplified-electric-network-diagram}
-  \caption{Simplified Electric Network}
-  \label{fig:simplified-electric-network-diagram}
+  \includegraphicsaspectratio[0.4]{gas-detection-system}
+  \caption{Gas detection system}
+  \label{fig:gas-detection-system}
 \end{figure}
 
-Suppose we need to calculate the following probabilities:
-\begin{description}
-  \item[$TOP_1$] = $P_1$ unavailable \emph{or} $P_2$ unavailable;
-  \item[$TOP_2$] = $P_1$ unavailable \emph{and} $P_2$ unavailable;
-  \item[$TOP_3$] = $P_1$ unavailable \emph{and} $P_2$ \emph{available};
-  \item[$TOP_4$] = Only one pump unavailable given only one electric line available.
-\end{description}
+The system\index{gas detection system} is in fail state if does not perform one of these three tasks.
+The fault tree that represents this generic failure is depicted in \cref{fig:ft-generic-failure-gas-detection-system}.
+$G_1$, $G_2$, and $G_3$ are subtrees that represents the three tasks ``Operator not informed'', ``Process shut-down fails'', and ``Power supply not isolated'', respectively.
+All three tasks will fail if their respective main component fails ($L$, $R_1$, and $R_2$) or there is no signal from $LU$ ($LU$ fails or both $D_1$ and $D_2$ fail).
+The structure expressions for the subtrees are:
+%
+\begin{subequations}
+\begin{align}
+  G_1 & = L \lor LU \lor \parsin{D_1 \land D_2}\\
+  G_2 & = R_1 \lor LU \lor \parsin{D_1 \land D_2}\\
+  G_3 & = R_2 \lor LU \lor \parsin{D_1 \land D_2}
+\end{align}
+\end{subequations}
 
-We can construct two independent fault trees, $TP_1$ and $TP_2$, for the unavailability of $P_1$ and $P_2$ as: $TP_1 = P_1 \lor CP_1 \lor \parsin{D_1 \land \parsin{I \lor D_2}}$ and $TP_2 = P_2 \lor CP_2 \lor \parsin{D_2 \land \parsin{I \lor D_1}}$.
-$TOP_1$ and $TOP_2$ generate coherent fault trees, using $TP_1$ and $TP_2$.
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.8]{ft-generic-failure-gas-detection-system}
+  \caption{\ac{FT} for a generic failure in the gas detection system}
+  \label{fig:ft-generic-failure-gas-detection-system}
+\end{figure}
+
+There are eight outcomes (given the three tasks) and the most critical one is when both process shut-down ($G_2$) and power supply isolation ($G_3$) fail keeping energized upon a leakage, and the operator is not informed ($G_1$), but the operator information system is working (lamp and siren are off, but they are operational).
+The coherent \ac{FT} of this outcome is depicted in \cref{fig:outcome-4-coherent-ft}.
+The minimal cut sets obtained from this will be: $R_1 \land R_2$, $D_1 \land D_2$, and $LU$.
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.5]{outcome-4-coherent-ft}
+  \caption{\emph{Coherent} \ac{FT} for the most critical outcome of the gas detection system}
+  \label{fig:outcome-4-coherent-ft}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.65]{outcome-4-non-coherent-ft}
+  \caption{\emph{Non-coherent} \ac{FT} for the most critical outcome of the gas detection system}
+  \label{fig:outcome-4-non-coherent-ft}
+\end{figure}
+
+%The examples of the usefulness of NOT gates in \ac{FTA} are one of the following, but not limited to: (i) generally, when the probability of negated events are close to $1$, (ii) exclusive states systems as, for example, non-repairable phased mission systems.
+
+%Here we show the example of a simplified electric network (\cref{fig:simplified-electric-network-diagram}), presented in~\cite{CCR2008}.
+%Two loads, pumps, $P_1$ and $P_2$ are supplied through circuits $CP_1$ and $CP_2$ by two external lines $D_1$ and $D_2$ through bars $B_1$ and $B_2$. 
+%The bars can be connected by switch $I$.
+%Failures in $B_1$ and $B_2$ are not considered.
+%In normal conditions, $I$ is open and is automatically closed in case of a failure of a line.
+
+%\begin{figure}[t]
+%  \centering
+%  \includegraphicsaspectratio[0.3]{simplified-electric-network-diagram}
+%  \caption{Simplified Electric Network}
+%  \label{fig:simplified-electric-network-diagram}
+%\end{figure}
+
+%Suppose we need to calculate the following probabilities:
+%\begin{description}
+%  \item[$TOP_1$] = $P_1$ unavailable \emph{or} $P_2$ unavailable;
+%  \item[$TOP_2$] = $P_1$ unavailable \emph{and} $P_2$ unavailable;
+%  \item[$TOP_3$] = $P_1$ unavailable \emph{and} $P_2$ \emph{available};
+%  \item[$TOP_4$] = Only one pump unavailable given only one electric line available.
+%\end{description}
+
+%We can construct two independent fault trees, $TP_1$ and $TP_2$, for the unavailability of $P_1$ and $P_2$ as: $TP_1 = P_1 \lor CP_1 \lor \parsin{D_1 \land \parsin{I \lor D_2}}$ and $TP_2 = P_2 \lor CP_2 \lor \parsin{D_2 \land \parsin{I \lor D_1}}$.
+%$TOP_1$ and $TOP_2$ generate coherent fault trees, using $TP_1$ and $TP_2$.
 
 \section{Systems' nominal model and faults injection}
 \label{sec:faults-injection}

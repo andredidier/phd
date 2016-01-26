@@ -219,7 +219,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 91116,
+				"buffer_size": 94193,
 				"line_ending": "Windows"
 			}
 		},
@@ -480,6 +480,11 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"cref",
+			"figurename",
+			"theoname",
+			"Def",
+			"crefname",
 			"TOP(.)",
 			"TP2",
 			"TP1",
@@ -602,12 +607,7 @@
 			"\\FTA",
 			"\\\\FTA",
 			"acr",
-			"spacefactor",
-			"\\\\subsubsection",
-			"\\\\subsection",
-			"\\subsection",
-			"\\\\chapter",
-			"\\set"
+			"spacefactor"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -665,7 +665,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 91116,
+						"buffer_size": 94193,
 						"regions":
 						{
 							"bookmarks":
@@ -675,12 +675,12 @@
 								"regions":
 								[
 									[
-										9273,
-										9273
+										9338,
+										9338
 									],
 									[
-										41424,
-										41424
+										43436,
+										43436
 									]
 								],
 								"scope": "bookmarks"
@@ -689,8 +689,8 @@
 						"selection":
 						[
 							[
-								43326,
-								43326
+								45872,
+								45872
 							]
 						],
 						"settings":
@@ -701,7 +701,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 16839.0,
+						"translation.y": 17800.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -749,8 +749,8 @@
 						"selection":
 						[
 							[
-								1890,
-								1897
+								26128,
+								26138
 							]
 						],
 						"settings":
@@ -760,7 +760,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1003.0,
+						"translation.y": 17650.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
