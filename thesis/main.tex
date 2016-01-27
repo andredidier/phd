@@ -748,6 +748,9 @@ Qualitative analysis requires the reduction of the structure expression of \acp{
 The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} shows how to solve it using \acp{BDD}.
 In the following we show: (i) the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and (ii) the second example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates in a multitasking system (\cref{sec:non-coherent-usefulness}).
 
+Negated events in non-coherent analysis are in fact the working state of a component.
+The probability contribution of a negated basic event is close to 1~\cite{Andrews2001,CCR2008}.
+
 The problem with non-coherent \acp{FT} is that its analysis can cause impossible situations.
 The general formula to identify coherency is given in~\cite{Andrews2001,CCR2008} in terms of a structure function\index{structure expression!function}.
 
@@ -791,12 +794,10 @@ Quantitatively, the analysis of the probabilities shows that this result is not 
 \subsection{Usefulness of NOT gates in \ac{FTA}}
 \label{sec:non-coherent-usefulness}
 
-\todo{Replace the example to the one shown in Andrews2001}
-
 In this section we show the second example detailed in~\cite{Andrews2001}. 
 
-The gas detection system\index{gas detection system} depicted in \cref{fig:gas-detection-system} has two sensors $D_1$ and $D_2$ used to detect a leakage in a confined space.
-When a leakage is detected these sensors send a signal to the logic control unit $LU$, which performs three tasks:
+The gas detection system\index{gas detection system} depicted in \cref{fig:gas-detection-system} has two sensors $D_1$ and $D_2$ which are used to detect a leakage in a confined space.
+When a leakage is detected, these sensors send a signal to the logic control unit $LU$, which performs three tasks:
 %
 \begin{enumerate}
   \item shuts-down the main system (process isolation) by de-energizing relay $R_1$;
@@ -817,13 +818,11 @@ $G_1$, $G_2$, and $G_3$ are subtrees that represents the three tasks ``Operator 
 All three tasks will fail if their respective main component fails ($L$, $R_1$, and $R_2$) or there is no signal from $LU$ ($LU$ fails or both $D_1$ and $D_2$ fail).
 The structure expressions for the subtrees are:
 %
-\begin{subequations}
-\begin{align}
+\begin{align*}
   G_1 & = L \lor LU \lor \parsin{D_1 \land D_2}\\
   G_2 & = R_1 \lor LU \lor \parsin{D_1 \land D_2}\\
   G_3 & = R_2 \lor LU \lor \parsin{D_1 \land D_2}
-\end{align}
-\end{subequations}
+\end{align*}
 
 \begin{figure}[t]
   \centering
@@ -832,9 +831,10 @@ The structure expressions for the subtrees are:
   \label{fig:ft-generic-failure-gas-detection-system}
 \end{figure}
 
+Analysing in more detail, there are different degrees of system failure. 
 There are eight outcomes (given the three tasks) and the most critical one is when both process shut-down ($G_2$) and power supply isolation ($G_3$) fail keeping energized upon a leakage, and the operator is not informed ($G_1$), but the operator information system is working (lamp and siren are off, but they are operational).
 The coherent \ac{FT} of this outcome is depicted in \cref{fig:outcome-4-coherent-ft}.
-The minimal cut sets obtained from this will be: $R_1 \land R_2$, $D_1 \land D_2$, and $LU$.
+The minimal cut sets obtained from this will be: $\setsin{R_1, R_2}$, $\setsin{D_1, D_2}$, and $\setsin{LU}$.
 
 \begin{figure}[t]
   \centering
@@ -843,12 +843,19 @@ The minimal cut sets obtained from this will be: $R_1 \land R_2$, $D_1 \land D_2
   \label{fig:outcome-4-coherent-ft}
 \end{figure}
 
+Quantification of the coherent \ac{FT} will overestimate the probability of the critical outcome unless the part of the system that is working (lamp and siren $L$, $LU$, and sensors $D_1$ and $D_2$) is taken into account.
+The non-coherent \ac{FT} with the working part is shown in \cref{fig:outcome-4-non-coherent-ft}.
+
 \begin{figure}[t]
   \centering
   \includegraphicsaspectratio[0.65]{outcome-4-non-coherent-ft}
   \caption{\emph{Non-coherent} \ac{FT} for the most critical outcome of the gas detection system}
   \label{fig:outcome-4-non-coherent-ft}
 \end{figure}
+
+If the operator \emph{can} be informed, then cut sets $\setsin{D_1, D_2}$ and $\setsin{LU}$ could not have occurred (see \cref{fig:ft-generic-failure-gas-detection-system}), thus the correct qualitative analysis should consider only cut set $\setsin{R_1,R_2}$.
+Reducing the expressions of the non-coherent \ac{FT} (\cref{fig:outcome-4-non-coherent-ft}), we obtain the structure expression: $\lnot L \land \lnot LU \land R_1 \land R_2 \land \parsin{\lnot D_1 \lor \lnot D_2}$.
+The approximation for this expression, removing the negated events, gives the cut set $\setsin{R_1,R_2}$, which gives a correct quantitative analysis.
 
 %The examples of the usefulness of NOT gates in \ac{FTA} are one of the following, but not limited to: (i) generally, when the probability of negated events are close to $1$, (ii) exclusive states systems as, for example, non-repairable phased mission systems.
 
