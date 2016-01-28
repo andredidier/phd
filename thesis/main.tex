@@ -92,6 +92,7 @@
 \usepackage{environ}
 \usepackage{acro}
 \usepackage{longtable}
+\usepackage{isabelle,isabellesym}
 
 \acsetup{%
   hyperref=true,
@@ -158,6 +159,7 @@
 \newcommand{\matlab}{\textsf{Matlab}\xspace}
 
 \input{acronyms}
+\makeatletter
 \renewcommand{\listofacronyms}{%
   \acresetall
   \pagestyle{empty}
@@ -170,6 +172,7 @@
   \fi\fi
   \acresetall
 }
+\makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TEXT
@@ -1106,7 +1109,7 @@ Our strategy avoids this kind of issue by being completely systematic.
 \section{Isabelle/HOL}
 \label{sec:isabelle}
 
-TODO...
+\input{isabelle-hol-basic/output/document/Basic}
 
 \chapter{A free algebra to express structure expressions of ordered events}
 \label{sec:strategy}

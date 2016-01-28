@@ -1,0 +1,11 @@
+session "isabelle-hol-basic" = "HOL" +
+  options [document = pdf, document_output = "output", show_question_marks = false]
+  theories [document = false]
+    (* Foo *)
+    (* Bar *)
+    Main
+  theories
+    (* Baz *)
+    Basic
+  document_files
+    "root.tex"

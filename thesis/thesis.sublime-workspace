@@ -4,14 +4,6 @@
 		"selected_items":
 		[
 			[
-				"includegr",
-				"includegraphics"
-			],
-			[
-				"figure",
-				"figure	Figure"
-			],
-			[
 				"boole",
 				"lem:boolean-algebra-free-generators-valuation"
 			],
@@ -22,6 +14,10 @@
 			[
 				"Dec",
 				"DeclareAcronym"
+			],
+			[
+				"figure",
+				"Figure"
 			],
 			[
 				"use",
@@ -219,7 +215,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 94193,
+				"buffer_size": 95974,
 				"line_ending": "Windows"
 			}
 		},
@@ -248,29 +244,9 @@
 	"command_palette":
 	{
 		"height": 104.0,
-		"last_filter": "Package Control: insta",
+		"last_filter": "remove",
 		"selected_items":
 		[
-			[
-				"Package Control: insta",
-				"Package Control: Install Package"
-			],
-			[
-				"Package Control: remo",
-				"Package Control: Remove Repository"
-			],
-			[
-				"Package Control: remove",
-				"Package Control: Remove Package"
-			],
-			[
-				"Package Control: instal",
-				"Package Control: Install Package"
-			],
-			[
-				"Package Control: ",
-				"Package Control: Add Repository"
-			],
 			[
 				"remove",
 				"Package Control: Remove Package"
@@ -280,12 +256,24 @@
 				"File: Rename"
 			],
 			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
 				"enable",
 				"Package Control: Enable Package"
 			],
 			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
 				"Package Control: install",
 				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Package"
 			],
 			[
 				"install",
@@ -331,15 +319,14 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis"
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis"
 	],
 	"file_history":
 	[
-		"/C/Users/andre/Desktop/Projeto Calculadora de Diferencas - Final/Projeto Calculadora de Diferencas - Final.c",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/2pdf.sublime-settings",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/2pdf/2pdf.sublime-settings",
-		"/C/Users/andre/Dropbox (Pessoal)/todo/todo.txt",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/if215ufpe.txt",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/provas.csv",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/turmas.csv",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/aulas.csv",
 		"/C/Users/andre/Dropbox/todo/todo.txt",
 		"/C/Users/andre/Dropbox/todo/todo (Cópia em conflito de Reis 2016-01-20).txt",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
@@ -353,6 +340,7 @@
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/delete.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lot",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrdacro.sty",
 		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/tocloft/tocloft.sty",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrd.sty",
@@ -480,32 +468,6 @@
 		"case_sensitive": true,
 		"find_history":
 		[
-			"cref",
-			"figurename",
-			"theoname",
-			"Def",
-			"crefname",
-			"TOP(.)",
-			"TP2",
-			"TP1",
-			"P2",
-			"P1",
-			"I",
-			"In normal conditions, I is open and is automatically closed in case of a failure of a line.\n",
-			"I",
-			"B2",
-			"B1",
-			"D2",
-			"D1",
-			"CP2",
-			"CP1",
-			"figure",
-			"definition",
-			"fault tree",
-			"\\aclp{FT}",
-			"fault tree",
-			"\\\\index\\{fault tree",
-			"AND",
 			"neq",
 			"amsmath",
 			"cref",
@@ -607,7 +569,33 @@
 			"\\FTA",
 			"\\\\FTA",
 			"acr",
-			"spacefactor"
+			"spacefactor",
+			"\\\\subsubsection",
+			"\\\\subsection",
+			"\\subsection",
+			"\\\\chapter",
+			"\\set",
+			"\\Set",
+			"\\ACSEMBRAER",
+			"verb",
+			"verba",
+			"input",
+			"include",
+			"verba",
+			"ref",
+			"acknowledgements",
+			"\\\\usepackage",
+			"includegraphics",
+			"\\\\includegraph",
+			"\\include",
+			"\\\\begin",
+			"\\begin",
+			"sloppypar",
+			"%\\",
+			"sloppypar",
+			"%",
+			"||",
+			"."
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -615,7 +603,6 @@
 		"regex": true,
 		"replace_history":
 		[
-			"$TOP_\\1$",
 			"\\{CSPm\\}",
 			"Binary Decision Diagrams!",
 			"FBA",
@@ -656,7 +643,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -665,32 +652,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 94193,
+						"buffer_size": 95974,
 						"regions":
 						{
-							"bookmarks":
-							{
-								"flags": 144,
-								"icon": "bookmark",
-								"regions":
-								[
-									[
-										9338,
-										9338
-									],
-									[
-										43436,
-										43436
-									]
-								],
-								"scope": "bookmarks"
-							}
 						},
 						"selection":
 						[
 							[
-								45872,
-								45872
+								0,
+								0
 							]
 						],
 						"settings":
@@ -701,10 +671,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 17800.0,
+						"translation.y": 17173.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -749,8 +719,8 @@
 						"selection":
 						[
 							[
-								26128,
-								26138
+								1890,
+								1897
 							]
 						],
 						"settings":
@@ -760,10 +730,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 17650.0,
+						"translation.y": 283.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
