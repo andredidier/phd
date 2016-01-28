@@ -1,4 +1,5 @@
 thesis/fault-modelling-theory/output/*
+thesis/isabelle-hol-basic/output/*
 **.bak
 *~
 **.thy.marks
