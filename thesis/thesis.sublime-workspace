@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"includegr",
+				"includegraphics"
+			],
+			[
+				"figure",
+				"figure	Figure"
+			],
+			[
 				"boole",
 				"lem:boolean-algebra-free-generators-valuation"
 			],
@@ -14,10 +22,6 @@
 			[
 				"Dec",
 				"DeclareAcronym"
-			],
-			[
-				"figure",
-				"Figure"
 			],
 			[
 				"use",
@@ -215,7 +219,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 95974,
+				"buffer_size": 98226,
 				"line_ending": "Windows"
 			}
 		},
@@ -223,7 +227,7 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 2514,
+				"buffer_size": 2728,
 				"line_ending": "Windows"
 			}
 		},
@@ -244,9 +248,29 @@
 	"command_palette":
 	{
 		"height": 104.0,
-		"last_filter": "remove",
+		"last_filter": "Package Control: insta",
 		"selected_items":
 		[
+			[
+				"Package Control: insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remo",
+				"Package Control: Remove Repository"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Add Repository"
+			],
 			[
 				"remove",
 				"Package Control: Remove Package"
@@ -256,24 +280,12 @@
 				"File: Rename"
 			],
 			[
-				"Package Control: ",
-				"Package Control: List Packages"
-			],
-			[
 				"enable",
 				"Package Control: Enable Package"
 			],
 			[
-				"Package Control: instal",
-				"Package Control: Install Package"
-			],
-			[
 				"Package Control: install",
 				"Package Control: Install Package"
-			],
-			[
-				"Package Control: remove",
-				"Package Control: Remove Package"
 			],
 			[
 				"install",
@@ -319,14 +331,29 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis"
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/document"
 	],
 	"file_history":
 	[
-		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/if215ufpe.txt",
-		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/provas.csv",
-		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/turmas.csv",
-		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/aulas.csv",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/.gitignore",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/ROOT",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/session.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acronyms.tex",
+		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/aulas.csv",
+		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/if215ufpe.txt",
+		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/provas.csv",
+		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/turmas.csv",
+		"/C/Users/andre/Desktop/Mesa/JSON-java/Cookie.java",
+		"/C/Users/andre/Desktop/Projeto Calculadora de Diferencas - Final/Projeto Calculadora de Diferencas - Final.c",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/2pdf.sublime-settings",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/2pdf/2pdf.sublime-settings",
+		"/C/Users/andre/Dropbox (Pessoal)/todo/todo.txt",
 		"/C/Users/andre/Dropbox/todo/todo.txt",
 		"/C/Users/andre/Dropbox/todo/todo (Cópia em conflito de Reis 2016-01-20).txt",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
@@ -335,12 +362,10 @@
 		"/C/Users/andre/Desktop/Set_Theory_and_Logic.bibtex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.log",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acronyms.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.pdf",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/delete.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lot",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrdacro.sty",
 		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/tocloft/tocloft.sty",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrd.sty",
@@ -439,18 +464,7 @@
 		"/C/Users/andre/Desktop/10.1007%2Fs100090050035.bib",
 		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes Est.csv",
 		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/main.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/1EE/makefile",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Projetos de Programação/Correção-01/Rinaldo do Herval - 08842969460-01.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_Thiago Oliveira - 05967003428-cos-taylor.zip/cosseno.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/CNT7-líderes.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Lìderes CN.csv",
-		"/C/Users/andre/Dropbox/Organização/Aulas/CNT7-líderes.csv",
-		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/makefile",
-		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/main.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo08.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo07.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo06.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo05.c"
+		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/1EE/makefile"
 	],
 	"find":
 	{
@@ -465,9 +479,49 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"DFT",
+			"enumerate",
+			"sec:structure-expressions",
+			"figure",
+			"bsproof",
+			"proof",
+			"isar",
+			";",
+			"quotation",
+			"isabelle",
+			"language1",
+			"listofacronyms",
+			"align",
+			"parsin",
+			"cref",
+			"figurename",
+			"theoname",
+			"Def",
+			"crefname",
+			"TOP(.)",
+			"TP2",
+			"TP1",
+			"P2",
+			"P1",
+			"I",
+			"In normal conditions, I is open and is automatically closed in case of a failure of a line.\n",
+			"I",
+			"B2",
+			"B1",
+			"D2",
+			"D1",
+			"CP2",
+			"CP1",
+			"figure",
+			"definition",
+			"fault tree",
+			"\\aclp{FT}",
+			"fault tree",
+			"\\\\index\\{fault tree",
+			"AND",
 			"neq",
 			"amsmath",
 			"cref",
@@ -555,47 +609,7 @@
 			"\\SFT",
 			"\\fba",
 			"\\anfba",
-			"\\fbas",
-			"\\BDD",
-			"\\algebra",
-			"\\fdr",
-			"\\cspm",
-			"\\SFTs",
-			"\\DFT",
-			"\\TFT",
-			"\\TFTs",
-			"\\DFTs",
-			"\\BDDs",
-			"\\FTA",
-			"\\\\FTA",
-			"acr",
-			"spacefactor",
-			"\\\\subsubsection",
-			"\\\\subsection",
-			"\\subsection",
-			"\\\\chapter",
-			"\\set",
-			"\\Set",
-			"\\ACSEMBRAER",
-			"verb",
-			"verba",
-			"input",
-			"include",
-			"verba",
-			"ref",
-			"acknowledgements",
-			"\\\\usepackage",
-			"includegraphics",
-			"\\\\includegraph",
-			"\\include",
-			"\\\\begin",
-			"\\begin",
-			"sloppypar",
-			"%\\",
-			"sloppypar",
-			"%",
-			"||",
-			"."
+			"\\fbas"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -603,6 +617,8 @@
 		"regex": true,
 		"replace_history":
 		[
+			"sec:fault-trees",
+			"$TOP_\\1$",
 			"\\{CSPm\\}",
 			"Binary Decision Diagrams!",
 			"FBA",
@@ -643,7 +659,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -652,15 +668,32 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 95974,
+						"buffer_size": 98226,
 						"regions":
 						{
+							"bookmarks":
+							{
+								"flags": 144,
+								"icon": "bookmark",
+								"regions":
+								[
+									[
+										30333,
+										30333
+									],
+									[
+										98077,
+										98077
+									]
+								],
+								"scope": "bookmarks"
+							}
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								29412,
+								29412
 							]
 						],
 						"settings":
@@ -671,10 +704,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 17173.0,
+						"translation.y": 11431.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -683,15 +716,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2514,
+						"buffer_size": 2728,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1968,
-								1968
+								2057,
+								2060
 							]
 						],
 						"settings":
@@ -700,10 +733,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1849.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -719,8 +752,8 @@
 						"selection":
 						[
 							[
-								1890,
-								1897
+								25909,
+								25914
 							]
 						],
 						"settings":
@@ -730,10 +763,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 283.0,
+						"translation.y": 17563.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]

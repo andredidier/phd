@@ -94,7 +94,8 @@ Assuming @{thm (prem 1) basic_symmetry}, thus:
 \end{proof}
 
 Otherwise specified, in the next sections we will omit proofs because they are all verified using
-Isabelle/HOL.
+Isabelle/HOL. 
+The complete listing is in \cref{app:formal-proofs-isabelle-hol}.
 *}
 
 (*<*)
