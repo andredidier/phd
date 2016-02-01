@@ -533,36 +533,67 @@ In \cref{sec:strategy} we abstract events relation in continuous time as an \emp
   \label{fig:time-relations}
 \end{figure}
 
+\section{Dependability\index{Dependability} and fault modelling\index{fault modelling}}
+\label{sec:dependability}
+
+\todo{Escrever sobre dependability e sobre a cadeia defeito-erro-falha}
+
+Dependability means:
+
+\begin{description}
+  \item[Prevention] is about avoiding incorporate faults during development.
+  \item[Forecasting] is about predicting likely faults so they can removed, or tackling their effects.
+  \item[Tolerance] deals with usage of mechanisms to still deliver a---possibly degraded---service even in the presence of faults.
+  \item[Removal] is about detecting and removing failure from a real system, as in the development stage as in production stage.
+\end{description}
+
 \section{\Acl{FTA} and structure expressions}
 \label{sec:fault-trees}
 
-In important stages of critical systems, \acl{FTA} play essential roles.
-At least three dependability means\footnote{The fourth dependability means is: fault removal. It is about detecting and removing failure from a real system, as in the development stage as in production stage.}\todo{Encontrar trabalho sobre meios de dependabilidade} can---or should---be achieved using \acp{FT}:
-%
-\begin{description}
-  \item[Prevention] is about avoid incorporating faults during development. 
-  A \ac{FTA} can indicate if the probability of failure of a subsystem is high, so it could be left to be incorporated when it becomes more reliable.
-  \item[Forecasting] is about predicting likely faults so they can removed, or tackling their effects.
-  After a system is in production, one could use its \acp{FT} to verify likely faults and evaluate its importance to take decisions.
-  \item[Tolerance ] deals with usage of mechanisms to still deliver a---possibly degraded---service even in the presence of faults.
-  \Iac{FTA} indicate whether a single fault---or fewer combinations than expected---could lead to a catastrophic failure. 
-  In this case, a system should have replication, or stages of fault detection and error handling.
-  Also, the probability of replicated combinations can be evaluated, so a homogeneous replication could be replaced by a heterogeneous one, reducing the probability of failure\todo{Citar trabalho sobre redução de probabilidade com replicação heterogênea}.
-\end{description}
-
-\Ac{FTA} was introduced in~\cite{VGR+1981} with \ac{SFT}. 
-\Iac{SFT} gives a general view---very often considering faults outside of the boundaries of a system---and represents, in a single view, different states in which a particular failure is active in a system.
+\Ac{FTA} was introduced in~\cite{VGR+1981} with \aclp{SFT}.
+\Ac{FTA} is a deductive method, that investigates what are the possible causes of a unwanted event.
+The method starts with the top-level event as the unwanted event and the combination of lower-level events that can cause it.
+Events are combined using gates, and each gate has a well defined semantics.
+It continues until basic (atomic) events are reached.
+\Iac{SFT} represents, in a single view---very often considering faults outside of the boundaries of a system---different states in which a particular failure is active in a system.
+The most traditional gates are AND and OR, which are equivalent to Boolean operators.
+These gates are also called coherent gates\index{coherent gates} because they construct coherent trees (see \cref{sec:not-operator} about the use of NOT gates).
+\Acg{SFT} gates and analysis are detailed in \cref{sec:static-fault-trees}.
 
 With component and system design evolution, \acp{DFT} were created to tackle dynamic behaviour: fault-tolerance-related components (\ac{CSp}), functional dependency (\ac{FDEP}), and analysis of particular order of occurrence of faults (\ac{SEQ}).
+\Acg{SFT} gates are still present as \acg{DFT} gates. 
+We explain them and \acg{DFT} analysis in \cref{sec:dynamic-fault-trees}.
+
+\Acp{TFT}~\cite{} were created aiming at fully implement the \FThandbook~\cite{VGR+1981}.
+The Priority-AND gate was first defined for \acp{SFT}, but its analysis was left open in the handbook.
+\Acp{TFT} create a new kind of structure expressions, using \emph{sequence values}\index{Temporal Fault Tree!sequence value} to express ordering of events.
 
 
+The structure of \iac{FT} is represented with a formula with variables that represent basic events, and symbols that capture the semantics of the gates. 
+This formula is called structure expression\index{structure expression} or structure function\index{structure expressions!function} (as the expression depends on the variables).
+The semantics of a structure expressions it that the top-level event occurs if some combination of basic events occur.
+
+
+In important stages of critical systems, \acl{FTA} plays essential role.
+At least three dependability means\todo{Encontrar trabalho sobre meios de dependabilidade} can be achieved using \acp{FT}:
+%
+\begin{description}
+  \item[Prevention.]
+  \Iac{FTA} indicates if the probability of failure of a subsystem is high, so such subsystem could be left to be incorporated later, then modifying it to become more reliable, or replacing it.
+  \item[Forecasting.]
+  After a system is in production, one could use its \acp{FT} to verify likely faults and evaluate its importance to take decisions about using the system (e.g. an airplane).
+  \item[Tolerance.]
+  \Iac{FTA} indicate whether a single fault---or fewer combinations than expected---could lead to a catastrophic failure.
+  In this case, a system should have replication, or stages of fault detection and error handling.
+  Also, the probability of replicated systems can be evaluated, so a homogeneous replication could be replaced by a heterogeneous one, reducing the probability of failure (in general)\todo{Citar trabalho sobre redução de probabilidade com replicação heterogênea}.
+\end{description}
 
 \Iac{FTA} output allows one to obtain the following information~\cite{VGR+1981}:
 %
 \begin{itemize}
   \item Qualitative
   \begin{itemize}
-    \item 
+    \item
   \end{itemize}
   \item Quantitative
   \begin{itemize}
@@ -575,6 +606,15 @@ One of great importance is using it to minimize and optimize resources, which ha
 Through importance measures\index{importance measure}, \ac{FTA} not only identifies what is important but also what is unimportant, thus removing components without impacting the overall failure probability.
 
 
+
+\subsection{\Aclp{SFT}}
+\label{sec:static-fault-trees}
+
+\subsection{\Aclp{DFT}}
+\label{sec:dynamic-fault-trees}
+
+\subsection{\Aclp{TFT}}
+\label{sec:temporal-fault-trees}
 
 
 \todo{Add fault trees}

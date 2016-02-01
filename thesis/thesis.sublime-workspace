@@ -219,7 +219,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 98226,
+				"buffer_size": 100326,
 				"line_ending": "Windows"
 			}
 		},
@@ -227,7 +227,7 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 2728,
+				"buffer_size": 2909,
 				"line_ending": "Windows"
 			}
 		},
@@ -482,6 +482,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"FThandbook",
+			"VGR",
+			"dft",
 			"DFT",
 			"enumerate",
 			"sec:structure-expressions",
@@ -606,10 +609,7 @@
 			"\\\\[i]?ac",
 			"\\algebra",
 			"\\analgebra",
-			"\\SFT",
-			"\\fba",
-			"\\anfba",
-			"\\fbas"
+			"\\SFT"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -668,7 +668,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 98226,
+						"buffer_size": 100326,
 						"regions":
 						{
 							"bookmarks":
@@ -677,14 +677,6 @@
 								"icon": "bookmark",
 								"regions":
 								[
-									[
-										30333,
-										30333
-									],
-									[
-										98077,
-										98077
-									]
 								],
 								"scope": "bookmarks"
 							}
@@ -692,8 +684,8 @@
 						"selection":
 						[
 							[
-								29412,
-								29412
+								29405,
+								29405
 							]
 						],
 						"settings":
@@ -704,7 +696,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 11431.0,
+						"translation.y": 11624.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -716,15 +708,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2728,
+						"buffer_size": 2909,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2057,
-								2060
+								47,
+								48
 							]
 						],
 						"settings":
@@ -733,7 +725,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1849.0,
+						"translation.y": 1512.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
