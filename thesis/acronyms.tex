@@ -14,10 +14,17 @@
 	\acro_first_upper:
 	\acro_use:n {#1}
 }
-\NewAcroCommand \acgp
+\NewAcroCommand \acpg
 {
 	\acro_possessive:
 	\acro_plural:
+	\acro_use:n {#1}
+}
+\NewAcroCommand \Acpg
+{
+	\acro_possessive:
+	\acro_plural:
+	\acro_first_upper:
 	\acro_use:n {#1}
 }
 
@@ -46,12 +53,34 @@
 	\acro_use:n {#1}
 }
 
-\NewAcroCommand \workaroundac 
+\NewAcroCommand \workaroundac
 {
 	##2
 	\todo{Issue-workaround-#1}
 }
 
+
+\NewAcroCommand \accite
+{
+	\acro_cite:
+	\acro_use:n {#1}
+}
+
+
+\NewAcroCommand \acpcite
+{
+	\acro_cite:
+	\acro_plural
+	\acro_use:n {#1}
+}
+
+\NewAcroCommand \Acpcite
+{
+	\acro_cite:
+	\acro_plural:
+	\acro_first_upper:
+	\acro_use:n {#1}
+}
 
 \ExplSyntaxOff
 
@@ -173,6 +202,20 @@
 	short=AFP,
 	long=archive of formal proofs,
 	long-post={\footnote{Accessed 27/jan/2016: \url{http://afp.sourceforge.net/}}}
+}
+\DeclareAcronym{MCS}{%
+	short=MCS,
+	long=minimal cut set,
+	short-possessive=',
+	long-post={\footnote{Also known as \emph{prime implicants} and \emph{minterms}---two names that came from Boolean logic.}}
+}
+\DeclareAcronym{DNF}{%
+	short=DNF,
+	long=disjunctive normal form
+}
+\DeclareAcronym{TTT}{%
+	short=TTT,
+	long=Temporal Truth Table
 }
 
 %\acresetall

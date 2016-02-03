@@ -80,12 +80,13 @@
 \usepackage{tabularx}
 \usepackage{microtype}
 \usepackage{bibentry}
-\usepackage{subfigure}
+%\usepackage{subfigure}
 \usepackage{multirow}
 \usepackage{rotating}
 \usepackage{booktabs}
 \usepackage{pdfpages}
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage{xspace}
 \usepackage{ifthen}
 \usepackage{verbatim}
@@ -142,6 +143,8 @@
 \author{\thesisauthor}
 \adviser{Alexandre Cabral Mota}
 \coadviser{Alexander Romanovsky}
+
+%\addbibresource{references-jabref.bib}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Macros (defines your own macros here, if needed)
@@ -214,6 +217,57 @@
 \def\pandora{Pandora\footnote{Pandora stands for: P-AND-ORA, which translates to Priority AND, Time.}%
   \gdef\pandora{Pandora\xspace}%
   \xspace}
+\def\theftanalyser{%
+  the Fault Tree Analyser\footnote{\url{http://www.fault-tree-analysis-software.com}, accessed 2/feb/2016}
+  %~\cite{ALDSoftwareFTAnalyser}%
+  \gdef\theftanalyser{the Fault Tree Analyser\xspace}
+}
+%\AtEveryBibitem{%
+%  \ifentrytype{online}{%
+%    \clearfield{labelyear}%
+%  }{%
+%  }%
+%}
+\def\ortext{OR ($\lor$)%
+  \gdef\ortext{OR\xspace}%
+  \xspace
+}
+\def\andtext{AND ($\land$)%
+  \gdef\andtext{AND\xspace}%
+  \xspace
+}
+\def\pandtext{Priority-AND (PAND, $\pand$)%
+  \gdef\pandtext{PAND\xspace}%
+  \xspace
+}
+\def\portext{Priority-OR (POR, $\por$)%
+  \gdef\portext{POR\xspace}%
+  \xspace
+}
+\def\sandtext{Simultaneous-AND (SAND, $\sand$)%
+  \gdef\sandtext{SAND\xspace}%
+  \xspace
+}
+\def\nottext{NOT ($\lnot$)%
+  \gdef\nottext{NOT\xspace}%
+  \xspace
+}
+\def\nibeforetext{non-inclusive-before (ni-before, $\nibefore$)%
+  \gdef\nibeforetext{NI-Before\xspace}%
+  \xspace
+}
+\def\ibeforetext{inclusive-before (i-before, $\ibefore$)%
+  \gdef\ibeforetext{IBefore\xspace}%
+  \xspace
+}
+\def\simultaneoustext{simultaneous ($\simultaneous$)%
+  \gdef\simultaneoustext{simultaneous\xspace}%
+  \xspace
+}
+\def\xbeforetext{exclusive-before (XBefore, $\xbefore$)%
+  \gdef\xbeforetext{XBefore\xspace}%
+  \xspace
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MATH
@@ -268,6 +322,13 @@
 \def\ftcoherencyop{\ensuremath\operatorname{\Phi}}
 \newcommand{\ftcoherency}[1]{\ensuremath\ftcoherencyop\parsin{#1}}
 \newcommand{\replace}[2]{\ensuremath\squaresin{#1\middle/#2}}
+\def\pand{\ensuremath\operatorname{<}}
+\def\por{\ensuremath\operatorname{|}}
+\def\sand{\ensuremath\operatorname{\&}}
+\def\nibefore{\ensuremath\operatorname{\lhd}}
+\def\ibefore{\ensuremath\operatorname{\unlhd}}
+\def\simultaneous{\ensuremath\operatorname{\bigtriangleup}}
+\def\xbefore{\ensuremath\operatorname{\rightarrow}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -383,14 +444,14 @@ One of them is \ac{FTA}\index{Fault Tree!Analysis}.
 It is a deductive process that uses trees to model faults and their dependencies and propagation.
 In such trees, the premises are the leaves (basic events) and the conclusions are the roots (top events).
 Intermediary events use gates to combine basic events and each kind of gate has its own combination semantics definition.
-For example, the most traditional gates are OR and AND.
+For example, the most traditional gates are \ortext and \andtext.
 \Acp{FT} that use only these gates are called \emph{coherent \aclp{FT}}~\cite{Andrews2001,AB2003,Oliv2006,CCR2008,Vaurio2016}\index{Fault Tree!coherent}.
 They combine the events as \emph{at least one shall occur} and \emph{all shall occur}, respectively.
 To analyse \aclp{FT}, their structures are then abstracted as Boolean\index{Boolean Algebra} expressions called \emph{structure expressions}\index{structure expression}.
 The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method}---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain minimal cut sets\index{Minimal Cut!Sets} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
 
-Besides the traditional OR and AND gates, the \FThandbook defines other gates.
-For example the Priority-AND gate, which considers the order of occurrence of events.
+Besides the traditional \ortext and \andtext gates, the \FThandbook defines other gates.
+For example the \pandtext gate, which considers the order of occurrence of events.
 Although the work reported in~\cite{VGR+1981} defines these new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
 This motivated the introduction of two new kinds of \aclp{FT}: \acp{DFT} and \acp{TFT}.
 These variant trees can capture sequence dependencies of fault events in a system.
@@ -556,23 +617,58 @@ The method starts with the top-level event as the unwanted event and the combina
 Events are combined using gates, and each gate has a well defined semantics.
 It continues until basic (atomic) events are reached.
 \Iac{SFT} represents, in a single view---very often considering faults outside of the boundaries of a system---different states in which a particular failure is active in a system.
-The most traditional gates are AND and OR, which are equivalent to Boolean operators.
-These gates are also called coherent gates\index{coherent gates} because they construct coherent trees (see \cref{sec:not-operator} about the use of NOT gates).
+The most traditional gates are \andtext and \ortext, which are equivalent to Boolean operators.
+These gates are also called coherent gates\index{coherent gates} because they construct coherent trees (see \cref{sec:not-operator} about the use of \nottext gates).
 \Acg{SFT} gates and analysis are detailed in \cref{sec:static-fault-trees}.
 
 With component and system design evolution, \acp{DFT} were created to tackle dynamic behaviour: fault-tolerance-related components (\ac{CSp}), functional dependency (\ac{FDEP}), and analysis of particular order of occurrence of faults (\ac{SEQ}).
-\Acg{SFT} gates are still present as \acg{DFT} gates. 
+\Acg{SFT} gates are still present as \acg{DFT} gates.
 We explain them and \acg{DFT} analysis in \cref{sec:dynamic-fault-trees}.
 
-\Acp{TFT}~\cite{} were created aiming at fully implement the \FThandbook~\cite{VGR+1981}.
-The Priority-AND gate was first defined for \acp{SFT}, but its analysis was left open in the handbook.
-\Acp{TFT} create a new kind of structure expressions, using \emph{sequence values}\index{Temporal Fault Tree!sequence value} to express ordering of events.
+\Acpcite{TFT} were created aiming at fully implement the \FThandbook~\cite{VGR+1981}.
+The \pandtext gate was first defined for \acp{SFT}, but its analysis was left open in the handbook.
+\Acp{TFT} create a new kind of structure expressions, using \emph{sequence values}\index{Temporal Fault Tree!sequence value} to express ordering of events, thus tackling \pandtext's order.
 
-
-The structure of \iac{FT} is represented with a formula with variables that represent basic events, and symbols that capture the semantics of the gates. 
+The structure of \iac{FT} (or \iac{MCS}, explained further) is represented with a formula with variables that represent occurrence of basic events, and symbols that capture the semantics of gates.
 This formula is called structure expression\index{structure expression} or structure function\index{structure expressions!function} (as the expression depends on the variables).
-The semantics of a structure expressions it that the top-level event occurs if some combination of basic events occur.
+The semantics of a structure expression is that the top-level event occurs if some combination of basic events occur.
 
+Some of \acg{FT} evaluation results shown in the \FThandbook are:
+%
+\begin{itemize}
+  \item Qualitative
+  \begin{description}
+    \item[\Acp{MCS}\index{Fault Tree Analysis!minimal cut set}:]
+    Smallest combinations of components failures causing system failure.
+    They are obtained from the reduction to a normal form.
+    For example, in \acp{SFT}, structure expressions\index{structure expression} are reduced to \ac{DNF}.
+    Each term in \ac{DNF} is \iac{MCS}.
+    \item[Importances\index{Fault Tree Analysis!qualitative importance}:]
+    Qualitative rankings on contributions to system failure.
+    A single fault causing a catastrophic failure is usually unacceptable.
+    Ranking \acp{MCS} is the same as ordering them in ascending order of their size (smaller first).
+  \end{description}
+  \item Quantitative
+  \begin{description}
+    \item[Numerical probabilities\index{Fault Tree Analysis!numerical probability}:]
+    Probabilities of system and \acg{MCS} failures.
+    A system failure probability is obtained by assigning probabilities to basic events and then calculating it accordingly to the gates' semantics.
+    \Acg{MCS} failure probability is the calculation of the probability of the occurrence of \emph{all} basic events of a specific \ac{MCS}.
+    \item[Importances\index{Fault Tree Analysis!quantitative importance}:]
+    Quantitative rankings on contributions to system failure.
+    Ranking \acp{MCS} is the same as ordering them in descending order of some unreliability formula (higher first).
+    These formulas used to calculate importance vary.
+    The most commons are: (i) system unavailability, and (ii) system failure occurrence rate.
+    \item[Sensitivity evaluation\index{Fault Tree Analysis!sensitivity evaluation}:]
+    Modifying characteristics of components and evaluate their impact.
+    For a particular event in a tree, a higher and a lower failure probability value are assigned.
+    If system's unavailability is not changed, then such event is not important---the system is not sensitive to such event.
+  \end{description}
+\end{itemize}
+
+As stated in~\cite{SVD+2002}, there are other uses of \ac{FTA}.
+One of great importance is using it to minimize and optimize resources, which has been object of study in \ac{hiphops}\todo{citar hiphops que tem otimização}.
+Through importance measures\index{importance measure}, \ac{FTA} not only identifies what is important but also what is unimportant, thus removing components without impacting the overall failure probability, which is related to the quantitative importance\index{Fault Tree Analysis!quantitative importance} and sensitivity evaluation\index{Fault Tree Analysis!sensitivity evaluation}.
 
 In important stages of critical systems, \acl{FTA} plays essential role.
 At least three dependability means\todo{Encontrar trabalho sobre meios de dependabilidade} can be achieved using \acp{FT}:
@@ -588,48 +684,67 @@ At least three dependability means\todo{Encontrar trabalho sobre meios de depend
   Also, the probability of replicated systems can be evaluated, so a homogeneous replication could be replaced by a heterogeneous one, reducing the probability of failure (in general)\todo{Citar trabalho sobre redução de probabilidade com replicação heterogênea}.
 \end{description}
 
-\Iac{FTA} output allows one to obtain the following information~\cite{VGR+1981}:
-%
-\begin{itemize}
-  \item Qualitative
-  \begin{itemize}
-    \item
-  \end{itemize}
-  \item Quantitative
-  \begin{itemize}
-    \item \todo{citar importance measure}
-  \end{itemize}
-\end{itemize}
-
-As stated in~\cite{SVD+2002}, there are other uses of \ac{FTA}.
-One of great importance is using it to minimize and optimize resources, which has been object of study in \ac{hiphops}\todo{citar hiphops que tem otimização}.
-Through importance measures\index{importance measure}, \ac{FTA} not only identifies what is important but also what is unimportant, thus removing components without impacting the overall failure probability.
-
-
-
 \subsection{\Aclp{SFT}}
 \label{sec:static-fault-trees}
 
-\subsection{\Aclp{DFT}}
-\label{sec:dynamic-fault-trees}
+\Acg{SFT} gates and structure expressions are explained in this section.
 
-\subsection{\Aclp{TFT}}
-\label{sec:temporal-fault-trees}
+The \FThandbook shows traditional symbols for gates and events.
+Basic events are usually drawn as rectangle (for the text) and a circle below it. Top-level and intermediary events are drawn as a rectangle (for the text) and a gate below it.
+When \iac{FT} becomes too large, transfer in and out symbols can be used.
+They are usually drawn as triangles with a letter or a number.
+\Cref{fig:sft-example-traditional-gates} depicts traditional gates as specified in the \FThandbook, and \cref{fig:sft-example-ald-software} shows \iac{FT} using \theftanalyser---a free commercial tool.
+In this work, to keep a visual identity with other \acp{FT}, and to avoid symbols confusion, we use gates symbols as shown in~\cref{fig:sft-gates}.
 
+\begin{figure}[t]
+\includegraphicsaspectratio[1]{sft-symbols-ft-handbook}
+  \caption{\Ac{SFT} symbols as in the \FThandbook}
+  \label{fig:sft-example-traditional-gates}
+\end{figure}
 
-\todo{Add fault trees}
-\todo{Talk about component importances: how much a component contributes to system failure---it's a number between 0 and 1---see AB2003}
-\todo{Talk about prime implicants (minterms)}
+\begin{figure}[t]
+  \includegraphicsaspectratio[1]{sft-example-ald-software}
+  \caption{\Ac{SFT} symbols using a free commercial tool}
+  \label{fig:sft-example-ald-software}
+\end{figure}
 
-\subsection{Structure expressions}
-\label{sec:structure-expressions}
+\begin{figure}[t]
+  \centering
+  \subcaptionbox{Basic event\label{fig:sft-basic-event}}
+    [.25\textwidth]{%
+      \includegraphics{ft-symbol-basic-event}
+    }%
+  \subcaptionbox{Intermediary event\label{fig:sft-intermediary-event}}
+    [.25\textwidth]{%
+      \includegraphics{ft-symbol-top-or-intermediary}
+    }
+  \subcaptionbox{\andtext gate\label{fig:sft-and-gate}}
+    [.25\textwidth]{%
+      \includegraphics{ft-symbol-and-gate}
+    }
+  \subcaptionbox{\ortext gate\label{fig:sft-or-gate}}
+    [.25\textwidth]{%
+      \includegraphics{ft-symbol-or-gate}
+    }
+  \subcaptionbox{\nottext gate\label{fig:sft-not-gate}}
+    [.25\textwidth]{%
+      \includegraphics{ft-symbol-not-gate}
+    }
+  \subcaptionbox{Transfer symbol\label{fig:sft-transfer}}
+    [.25\textwidth]{%
+      \includegraphics{ft-symbol-transfer}
+    }
+  \caption{\ac{SFT} gates}
+  \label{fig:sft-gates}
+  \todo{Colocar figuras das portas de SFT.}
+\end{figure}
 
 Structure expressions\index{structure expression} in \ac{FTA} are defined in terms of set theory, using symbols for fault events occurrence.
 %, using what is called of generative sets.
 If a fault event symbol is in a set, then it means that that fault has occurred.
 A set is a combination of fault events that causes the top-level event of a tree.
 A structure expression\index{structure expression} of a tree is denoted by a set of sets of fault event combinations.
-The OR gate becomes the union operator between sets and the AND gate, the intersection.
+The \ortext gate becomes the union operator between sets and the \andtext gate, the intersection.
 For example, if a system contains fault events \emph{a}, \emph{b}, and \emph{c}, \aclp{FT} for this system contain at most all these three events.
 %The occurrence of a single event $a$ may be associated with the occurrence (or not) of the other events in any order.
 The occurrence of the fault event $a$ is denoted by a set of sets $A$, which contains the following sets:
@@ -647,45 +762,67 @@ The occurrence of the fault event $a$ is denoted by a set of sets $A$, which con
 %Let the set that contains these sets be $A$.
 %Similarly, let $B$ be the set of sets that contain the fault event $b$.
 
-The \acl{FT} in \cref{fig:ex-fault-tree1} contains only two events and the resulting structure expression\index{structure expression} for this tree is the expression $A \inter B$ ($TOP$), where $A$ and $B$ are the sets of sets that contain $a$ and $b$, respectively.
+The \acl{FT} in \cref{fig:ex-fault-tree1} contains only two events and the resulting structure expression\index{structure expression} for this \ac{FT} is the expression $A \inter B$ ($TOP$), where $A$ and $B$ are the sets of sets that contain $a$ and $b$, respectively.
 The resulting combinations for $TOP$ are $\left\{a,b\right\}$ and $\left\{a,b,c\right\}$ (fault events \emph{a} and \emph{b} occur in all possibilities).\todo{Pedir para Alexandre avaliar pontualmente esta frase}
 
 \begin{figure}[t]
   \centering
-  \includegraphicsaspectratio[0.25]{ex-fault-tree1}
+  \includegraphicsaspectratio[0.45]{ex-fault-tree1}
   \caption{Very simple example of a \acl{FT}}
   \label{fig:ex-fault-tree1}
 \end{figure}
 
-After obtaining structure expressions\index{structure expression}, the next step is to reduce the expressions to a canonical form to obtain the \emph{minimal cut sets}\index{Minimal Cut!Sets}.
-Minimal cut sets\index{Minimal Cut!Sets} are the sets that contain the minimum and sufficient events to activate the top-level failure.
-That is, minimal cut sets\index{Minimal Cut!Sets} are the smallest sets of fault event that, if all occur, cause the top-level failure to occur.
+After obtaining structure expressions\index{structure expression}, the next step is to reduce the expressions to a canonical form to obtain the \emph{\aclp{MCS}}\index{Minimal Cut!Sets}.
+\Acp{MCS}\index{Minimal Cut!Sets} are the sets that contain the minimum and sufficient events to activate the top-level failure.
+That is, \acp{MCS}\index{Minimal Cut!Sets} are the smallest sets of fault event that, if all occur, cause the top-level failure to occur.
 Probabilistic analysis is then performed on these events to obtain the overall probability of occurrence of the top-level event.
 The \FThandbook shows an algorithm based on Shannon's method\index{Binary Decision Diagrams!Shannon's method} to reduce structure expressions\index{structure expression} to obtain minimal cut sets\index{Minimal Cut!Sets}.
 %BDDs are essentially the diagrams of Shannon's method.
 The Boolean\index{Boolean Algebra} expression of the tree shown in \cref{fig:ex-fault-tree1} is $TOP = A \wedge B$.
+Shannon's method is explained in \cref{sec:bdd}.
+
+
+\subsection{\Aclp{DFT}}
+\label{sec:dynamic-fault-trees}
+
+Structure expressions\index{structure expression} are also used in \acp{DFT}.
+In~\cite{Merle2010,MRL+2010,MRL2011} fault events occur in a specific time and are instantaneous (similar to detected faults), stated through a ``date-of-occurrence'' function.
+As the ``date-of-occurrence'' function is stated in continuous time, the probability of two events occurring at the same time is negligible.
+In fact, useful information is obtained from the possibilities of relation in time of the occurrence of the events.
+
+The work reported in~\cite{Merle2010,MRL+2010,MRL2011} describe an algebra with operators \ortext and \andtext, and three new operators to express events ordering: (i) \nibeforetext, (ii) \simultaneoustext, and (iii) \ibeforetext.
+The non-inclusive-before and the simultaneous operators are similar to \ac{TFT}'s \portext and \sandtext operators, respectively.
+The inclusive-before is a composition of the non-inclusive-before and the simultaneous operators.
+
+The work reported in~\cite{TXD2011,XTD2012} shows the top-level events probability calculation for \acp{DFT} by converting them to a simplified version, using only order-based operators.
+Such a simplified version, which is based on a modified \ac{BDD}\index{Binary Decision Diagrams} that includes an order-based operator, creates Sequential BDDs\index{Binary Decision Diagrams!Sequential} that are used to perform the probabilistic analysis.
+
+\subsection{\Aclp{TFT}}
+\label{sec:temporal-fault-trees}
 
 Structure expressions\index{structure expression} are also present in \acp{TFT}~\cite{WP2009,Walker2009,WP2010}, through the \pandora methodology.
-These expressions use the \ac{FTA} operators OR and AND, and three new operators related to events ordering: Priority-AND (PAND), Priority-OR (POR), and Simultaneous-AND (SAND).
-The semantics of the PAND in \acp{TFT} is similar to the semantics of the Priority-AND described in the \FThandbook.
+These expressions use the \ac{SFT} operators \ortext and \andtext, and three new operators related to events ordering: \pandtext, \portext, and \sandtext.
+The semantics of the \pandtext in \acp{TFT} is similar to the semantics of the \pandtext described in the \FThandbook.
 To avoid ambiguous expressions, the semantics in \acp{TFT} is stated in terms of natural numbers, using a \emph{sequence value} function.
 For every possibility it assigns a sequence value to each fault event.
-For example, if event A occurs before event B, then the sequence value of A is lower than the sequence value of B, and one formula to express this is A PAND B.
+For example, if event A occurs before event B, then the sequence value of A is lower than the sequence value of B, and one formula to express this is $A \pand B$.
 
 An invariant on sequence values is that there are no gaps for assigned values higher than zero.
 For example, if faults A and B occur at the same time and there are only these two events, then they should both be assigned value $1$.
 On the other hand, if A occurs before B, then the assigned values are 1 and 2, respectively.
 Value zero means that the event is not active on the combination.
-\Cref{tbl:tft-operators} shows the semantics of all \ac{TFT} operators.
+\Cref{tbl:tft-operators} shows the semantics of all \ac{TFT} operators, and \cref{fig:tft-symbols} shows \ac{TFT}-specific symbols used in this work.
+To illustrate \acp{TFT}, for the formula $\parsin{A \pand C} \lor \parsin{A \land B}$, we show: (i) the \ac{FT} in \cref{fig:tft-small-example}, and (ii) its corresponding \ac{TTT} in \cref{tbl:ttt-small-example} (the column `\#' indicates the \ac{MCS} number).
 
 \begin{table}
 % table caption is above the table
-\caption{\acsg*{TFT} operators and sequence value numbers}
+\caption{\Acl{TTT} of \acsg*{TFT} operators and sequence value numbers}
 \label{tbl:tft-operators}
 % For LaTeX tables use
+\centering
 \begin{tabular}{ccccccc}
 \hline\noalign{\smallskip}
-A & B & AND & OR & PAND & POR & SAND  \\
+A & B & \andtext & \ortext & \pandtext & \portext & \sandtext  \\
 \noalign{\smallskip}\hline\noalign{\smallskip}
 0 & 0 & 0 & 0 & 0 & 0 & 0\\
 0 & 1 & 0 & 1 & 0 & 0 & 0\\
@@ -697,27 +834,87 @@ A & B & AND & OR & PAND & POR & SAND  \\
 \end{tabular}
 \end{table}
 
-The reduction of \ac{TFT} expressions is achieved using dependency trees.
+\begin{figure}[t]
+  \centering
+  \subcaptionbox{\andtext gate\label{fig:tft-pand-gate}}
+    [.25\textwidth]{%
+      \includegraphics{ft-symbol-pand-gate}
+    }
+  \subcaptionbox{\ortext gate\label{fig:tft-por-gate}}
+    [.25\textwidth]{%
+      \includegraphics{ft-symbol-por-gate}
+    }
+  \subcaptionbox{\nottext gate\label{fig:tft-sand-gate}}
+    [.25\textwidth]{%
+      \includegraphics{ft-symbol-sand-gate}
+    }
+  \caption{\ac{TFT}-specific gates}
+  \label{fig:tft-symbols}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.55]{tft-small-example}
+  \caption{\ac{TFT} small example}
+  \label{fig:tft-small-example}
+\end{figure}
+
+\begin{table}
+  \caption{\Ac{TTT} of a simple example}
+  \label{tbl:ttt-small-example}
+  \centering
+  \begin{tabular}{ccccccc}
+  \hline\noalign{\smallskip}
+  \# & A & B & C & $A \pand C$ & $A \land B$ & $\parsin{A \pand C} \lor \parsin{A \land B}$ \\
+  \noalign{\smallskip}\hline\noalign{\smallskip}
+  01 & 0 & 0 & 0 & 0 & 0 & \textbf{0}\\
+  02 & 0 & 0 & 1 & 0 & 0 & \textbf{0}\\
+  03 & 0 & 1 & 0 & 0 & 0 & \textbf{0}\\
+  04 & 0 & 1 & 1 & 0 & 0 & \textbf{0}\\
+  05 & 0 & 1 & 2 & 0 & 0 & \textbf{0}\\
+  06 & 0 & 2 & 1 & 0 & 0 & \textbf{0}\\
+  07 & 1 & 0 & 0 & 0 & 0 & \textbf{0}\\
+  08 & 1 & 0 & 1 & 0 & 0 & \textbf{0}\\
+  09 & 1 & 0 & 2 & 2 & 0 & \textbf{2}\\
+  10 & 1 & 1 & 0 & 0 & 1 & \textbf{1}\\
+  11 & 1 & 1 & 1 & 0 & 1 & \textbf{1}\\
+  12 & 1 & 1 & 2 & 2 & 1 & \textbf{1}\\
+  13 & 1 & 2 & 1 & 0 & 2 & \textbf{2}\\
+  14 & 1 & 2 & 2 & 2 & 2 & \textbf{2}\\
+  15 & 1 & 2 & 3 & 3 & 2 & \textbf{2}\\
+  16 & 1 & 3 & 2 & 2 & 3 & \textbf{2}\\
+  17 & 2 & 0 & 1 & 0 & 0 & \textbf{0}\\
+  18 & 2 & 1 & 0 & 0 & 2 & \textbf{2}\\
+  19 & 2 & 1 & 1 & 0 & 2 & \textbf{2}\\
+  20 & 2 & 1 & 2 & 0 & 2 & \textbf{2}\\
+  21 & 2 & 1 & 3 & 3 & 2 & \textbf{2}\\
+  22 & 2 & 2 & 1 & 0 & 2 & \textbf{2}\\
+  23 & 2 & 3 & 1 & 0 & 3 & \textbf{3}\\
+  24 & 3 & 1 & 2 & 0 & 3 & \textbf{3}\\
+  25 & 3 & 2 & 1 & 0 & 3 & \textbf{3}\\
+  \noalign{\smallskip}\hline
+  \end{tabular}
+  
+\end{table}
+
+The normal form for \ac{TFT} is similar to \ac{SFT}: it is \iac{DNF} with temporal operators (\pandtext, \portext, \sandtext) in the minterms.
+The reduction of \ac{TFT} structure expressions is achieved using dependency trees.
 In a dependency tree, if all children of a tree node are true, then the node is also true.
 Conversely, if a node is true, then all its children are also true.
 An issue with dependency trees is that they grow exponentially.
 Accordingly to the work reported in~\cite{WP2010}, it is already infeasible to deal with seven fault events in TFTs.
-They use an alternative solution based on modularisation and algebraic laws~\cite{WP2009} to tackle this.
+The solution is based on a mixed application of dependency trees, modularisation of independent subtrees, and algebraic laws~\cite{WP2009}.
+Some of these algebraic laws are:
+%
+\begin{subequations}
+\begin{align}
+  \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} &= X \land Y & \text{Conjunctive Completion Law}\\
+  \parsin{X \por Y} \lor \parsin{X \sand Y} \lor \parsin{Y \por X} &= X \lor Y & \text{Disjunctive Completion Law}\\
+  \parsin{X \por Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} &= X & \text{Reductive Completion Law 1st}\\
+  \parsin{X \land Y} \lor \parsin{X \por Y}  &= X & \text{Reductive Completion Law 2nd}
+\end{align}
+\end{subequations}
 
-Structure expressions\index{structure expression} are also used in \acp{DFT}.
-In~\cite{Merle2010,MRL+2010,MRL2011} fault events occur in a specific time and are instantaneous (similar to detected faults), stated through a ``date-of-occurrence'' function.
-As the ``date-of-occurrence'' function is stated in continuous time, the probability of two events occurring at the same time is negligible.
-In fact, useful information is obtained from the possibilities of relation in time of the occurrence of the events.
-
-The work reported in~\cite{Merle2010,MRL+2010,MRL2011} describe an algebra with operators OR and AND, and three new operators to express events ordering: (i) non-inclusive-before, (ii) simultaneous, and (iii) inclusive-before.
-The non-inclusive-before and the simultaneous operators are similar to \ac{TFT}'s POR and SAND operators, respectively.
-The inclusive-before is a composition of the non-inclusive-before and the simultaneous operators.
-
-The work reported in~\cite{TXD2011,XTD2012} shows the top-level events probability calculation for \acp{DFT} by converting them to a simplified version, using only order-based operators.
-Such a simplified version, which is based on a modified \ac{BDD}\index{Binary Decision Diagrams} that includes an order-based operator, creates Sequential BDDs\index{Binary Decision Diagrams!Sequential} that are used to perform the probabilistic analysis.
-
-From the previous explanation, we can conclude that there is an omnipresence of order-based operators to analyse \acp{TFT} and \acp{DFT}.
-And that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a canonical form.
 
 \section[Free Boolean Algebras]{\Aclp*{FBA}}
 \label{sec:fba}
@@ -826,10 +1023,10 @@ See~\cite[p. 4]{Huffm2010}
 
 \todo{BDDs e Shannon's}
 
-\section[Using NOT operator in FTs]{Using NOT operator in \aclp*{FT}}
+\section[Using NOT operator in fault trees]{Using NOT operator in \aclp*{FT}}
 \label{sec:not-operator}
 
-Although the \FThandbook introduces several gates, the vast majority analysis of systems would fit in \acp{FT} with only AND and OR gates (coherent \acp{FT})\index{Fault tree!coherent}.
+Although the \FThandbook introduces several gates, the vast majority analysis of systems would fit in \acp{FT} with only \andtext and \ortext gates (coherent \acp{FT})\index{Fault tree!coherent}.
 Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when NOT gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}), such reduction can cause the interpretation of failure logic to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
 The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} shows how to solve it using \acp{BDD}.
 In the following we show: (i) the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and (ii) the second example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates in a multitasking system (\cref{sec:non-coherent-usefulness}).
@@ -863,21 +1060,21 @@ In this section we illustrate---with the second example detailed in~\cite{Oliv20
 
 A college student who wants to visit her mother in another city has two options: wake up early ($x_3$) and take ride with a friend ($x_1$), or wake up late ($\lnot x_3$) and take the metro ($x_2$).
 The top-event failure is ``fail to visit mother'' with expression $S = \parsin{x_1 \land x_3} \lor \parsin{x_2 \land \lnot x_3}$.
-Its fault tree is depicted in \cref{fig:non-coherent-ft-example}.
+Its \acl{FT} is depicted in \cref{fig:non-coherent-ft-example}.
 It is clear that the structure function is non-coherent in $x_3$ accordingly to \cref{def:ft-coherency}: $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0}$.
 
 \begin{figure}[t]
   \centering
-  \includegraphicsaspectratio[0.4]{non-coherent-ft-example}
+  \includegraphicsaspectratio[0.55]{non-coherent-ft-example}
   \caption{Non-coherent \ac{FT} college student's example}
   \label{fig:non-coherent-ft-example}
 \end{figure}
 
 The problem with this tree is the interpretation of the qualitative results.
-One of the possibilities in this scenario is that the college student would take a ride AND take the metro ($x_1 \land x_2$).
+One of the possibilities in this scenario is that the college student would take a ride \andtext take the metro ($x_1 \land x_2$).
 Quantitatively, the analysis of the probabilities shows that this result is not negligible, but its interpretation is impossible.
 
-\subsection{Usefulness of NOT gates in \ac{FTA}}
+\subsection[Usefulness of NOT gates in FTA]{Usefulness of \nottext gates in \ac{FTA}}
 \label{sec:non-coherent-usefulness}
 
 In this section we show the second example detailed in~\cite{Andrews2001}.
@@ -893,13 +1090,13 @@ When a leakage is detected, these sensors send a signal to the logic control uni
 
 \begin{figure}[t]
   \centering
-  \includegraphicsaspectratio[0.4]{gas-detection-system}
+  \includegraphicsaspectratio[0.45]{gas-detection-system}
   \caption{Gas detection system}
   \label{fig:gas-detection-system}
 \end{figure}
 
 The system\index{gas detection system} is in fail state if does not perform one of these three tasks.
-The fault tree that represents this generic failure is depicted in \cref{fig:ft-generic-failure-gas-detection-system}.
+The \acl{FT} that represents this generic failure is depicted in \cref{fig:ft-generic-failure-gas-detection-system}.
 $G_1$, $G_2$, and $G_3$ are subtrees that represents the three tasks ``Operator not informed'', ``Process shut-down fails'', and ``Power supply not isolated'', respectively.
 All three tasks will fail if their respective main component fails ($L$, $R_1$, and $R_2$) or there is no signal from $LU$ ($LU$ fails or both $D_1$ and $D_2$ fail).
 The structure expressions for the subtrees are:
@@ -912,7 +1109,7 @@ The structure expressions for the subtrees are:
 
 \begin{figure}[t]
   \centering
-  \includegraphicsaspectratio[0.8]{ft-generic-failure-gas-detection-system}
+  \includegraphicsaspectratio[1]{ft-generic-failure-gas-detection-system}
   \caption{\ac{FT} for a generic failure in the gas detection system}
   \label{fig:ft-generic-failure-gas-detection-system}
 \end{figure}
@@ -1100,7 +1297,7 @@ where \verb$N04$ is the subsystem name of the monitor in the \simulink diagram, 
 We only show eight counter-examples, but \acs{fdr} generates a total of 64 counter-examples for this system.
 The other counter-examples are similar to the traces shown with different internal events.
 
-To reuse \ac{hiphops}, which is based on \acp{SFT}, each fault trace is abstracted as a conjunction (AND combination of the inner events), and the several conjunction-based fault events are combined using ORs (disjunctions).
+To reuse \ac{hiphops}, which is based on \acp{SFT}, each fault trace is abstracted as a conjunction (\andtext combination of the inner events), and the several conjunction-based fault events are combined using \ortext\ s (disjunctions).
 %
 The result of the combination is a Boolean expression that represents the conditions that cause an undesirable output, the failure logic of the model.
 
@@ -1174,7 +1371,7 @@ Reference & OmissionSignal & Out1 & ReferenceDeviceFailure OR LowPower-In1\\
 \end{tabularx}
 \end{table}
 
-Note that when we combine each fault with ANDs, we lose the information about order\footnote{In our previous work we designed the observer to ignore order as well, by making similar traces---with different ordering---the same size. Here we modified the observer specification to make similar traces with different sizes.}: $S \land B$ and $B \land S$ are equal, due to the commutative law of Boolean expressions.
+Note that when we combine each fault with \andtext\ s, we lose the information about order\footnote{In our previous work we designed the observer to ignore order as well, by making similar traces---with different ordering---the same size. Here we modified the observer specification to make similar traces with different sizes.}: $S \land B$ and $B \land S$ are equal, due to the commutative law of Boolean expressions.
 
 Our strategy finds fault combinations $S$ and $B$ (in the sense of $S$ occurring before $B$) as well as $B$ and $S$ (in the sense of $B$ occurring before $S$) but abstracts this ordering information obtaining $B$ and $S$, which is equivalent to $S$ and $B$ in Boolean Algebra.
 %
@@ -1197,7 +1394,7 @@ Our strategy avoids this kind of issue by being completely systematic.
 \chapter{A free algebra to express structure expressions of ordered events}
 \label{sec:strategy}
 
-Recall from \cref{sec:time-relations,sec:structure-expressions} that fault events are independent on one another if the events are not susceptible to a common cause.
+Recall from \cref{sec:time-relations,sec:fault-trees} that fault events are independent on one another if the events are not susceptible to a common cause.
 The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{FBA}\index{Boolean Algebra!Free}, where each generator in \acp{FBA}\index{Boolean Algebra!Free} corresponds to a fault event symbol in \aclp{FT}.
 In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are independent on one another and Boolean formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
 %This is equivalent to the disjunctive normal form, where each set is a minterm (conjunction) and the formula itself is the disjunction of minterms.
@@ -1218,6 +1415,9 @@ In \acp{FBA}\index{Boolean Algebra!Free} the non-occurrence of an event is just 
 
 %In our previous work, we used this technique of using fault injection to reuse a nominal model without explicit fault modelling, obtaining Boolean expressions of systems' failures, as we showed in \cref{sec:faults-injection}.
 %The drawback of this approach is that fault events ordering information is lost because it is not relevant on the Boolean expressions extraction.
+
+We shown in \cref{sec:fault-trees} that there is an omnipresence of order-based operators to analyse \acp{TFT} and \acp{DFT}.
+And that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a canonical form.
 
 From the need to tackle events ordering and from the ordering information we had from fault injection that we developed in~\cite{DM2012}, we defined a lists-based algebra, called \ac{algebra}, to express and analyse systems considering events ordering.
 We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra.
@@ -1437,7 +1637,7 @@ The laws follow from the definition of XBefore, from events independence, and fr
 
 We use a normal form similar to the disjunctive normal form (DNF) of Boolean algebra.
 In DNF each sub-expression is a minimal cut set\index{Minimal Cut!Sets} for \ac{SFT}.
-In our normal form, also called DNF, we allow ANDs, NOTs, and XBefores to be in the sub-expressions.
+In our normal form, also called DNF, we allow \andtext\ s, \nottext\ s, and \xbeforetext\ s to be in the sub-expressions.
 Each sub-expression is a set of minimal cut sequences\index{Minimal Cut!Sequences} for \ac{TFT} and \ac{DFT}.
 The following formulas are in DNF:
 %
@@ -1664,7 +1864,7 @@ If we use Boolean expression reduction instead, it results in the following expr
 (A \inter B) \union (S \inter (A \union B))
 \]
 %
-which is equivalent to the set of sets above and is equivalent to \EMBRAER failure logic expression shown in \cref{tbl:acsAnnotations} (with ANDs as $\inter$ and ORs as $\union$).
+which is equivalent to the set of sets above and is equivalent to \EMBRAER failure logic expression shown in \cref{tbl:acsAnnotations} (with \andtext\ s as $\inter$ and \ortext\ s as $\union$).
 %
 This shows that \ac{algebra} can represent (static) failure logic as in our previous work~\cite{DM2012}.
 
@@ -1764,8 +1964,8 @@ The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs\index{Binary De
 %
 We plan to use similar concepts in a future work.
 
-Although we do not use negation (NOT operator) with XBefore in our case study it is part of \ac{algebra}, so it could be used.
-As future work we will demonstrate the relations of NOT and XBefore, as we did for AND and OR.
+Although we do not use negation (\nottext operator) with XBefore in our case study it is part of \ac{algebra}, so it could be used.
+As future work we will demonstrate the relations of \nottext and \xbeforetext, as we did for \andtext and \ortext.
 We will also define laws to avoid the conditions that cause non-coherent analysis~\cite{Oliv2006}.
 The issue with negated events comes up when both an event and its negation appear on the same tree.
 One very restrictive solution to this issue is applying the \emph{generators independence} laws (\ref{eqs:generators-independence-subseteq-neq-compl}, \ref{eqs:generators-independence-subseteq-compl-neq}) on basic events of a tree, by actually considering the negation of an event a different event (for instance, $\var a= \var e$ and $\var b=-\var e$).

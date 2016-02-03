@@ -103,6 +103,7 @@
 \RequirePackage{indentfirst}
 \RequirePackage{enumitem}
 \RequirePackage{natbib}
+%\RequirePackage[style=abnt,backend=biber]{biblatex}
 \RequirePackage{lastpage}
 
 \if\@scr0
