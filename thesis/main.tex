@@ -311,6 +311,7 @@
 \newcommand{\parsin}[1]{\ensuremath\left( #1 \right)}
 \newcommand{\anglesin}[1]{\ensuremath\left\langle #1 \right\rangle}
 \newcommand{\squaresin}[1]{\ensuremath\left[ #1 \right]}
+\newcommand{\func}[2]{\ensuremath #1 \left( #2 \right)}
 \newcommand{\highlight}[1]{\fcolorbox{red}{white}{$\displaystyle#1$}}
 \newcommand{\highlightresult}[1]{\colorbox{green!50}{$\displaystyle#1$}}
 %\def\dlists{\ensuremath\operatorname{\mathbf{dlists}}}
@@ -540,9 +541,13 @@ Finally, we present our conclusions and future work in \cref{sec:conclusion}.
 \chapter{Background}
 \label{chap:background}
 
-Faults modelling depends on which analyses we want to perform.
-For instance, in \aclp{FT}, even if a fault can be repaired, it is considered as a non-repairable fault.
-A \acl{FT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occurs, then it will.} of a faults topology of a system, subsystem or component.
+Means to dependability are obtained by modelling and analysing a system.
+It is strongly related to faults modelling, which depends on which analyses we want to perform.
+%For instance, in \aclp{FT}, even if a fault can be repaired, it is considered as a non-repairable fault.
+\Acp{FT} are present in several stages of systems' modelling.
+We introduce dependability and faults modelling in \cref{sec:dependability}.
+
+\Iacl{FT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occurs, then it will.} of a faults topology of a system, subsystem or component.
 %\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
 The time relation on fault events in \acp{TFT} and \acp{DFT} allows the analysis of different configurations (or snapshots) of a system, subsystem or component.
 We discuss these time relations in \cref{sec:time-relations}.
@@ -563,6 +568,20 @@ To reuse a nominal model to analyse faults we need fault injection.
 In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to inject faults and obtain failure logic from a nominal model.
 
 Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isabelle/HOL} and \ac{Isar}, which were essential to carry out the proofs presented in this thesis.
+
+\section{Dependability\index{Dependability} and fault modelling\index{fault modelling}}
+\label{sec:dependability}
+
+\todo{Escrever sobre dependability e sobre a cadeia defeito-erro-falha}
+
+Dependability means:
+
+\begin{description}
+  \item[Prevention] is about avoiding incorporate faults during development.
+  \item[Forecasting] is about predicting likely faults so they can removed, or tackling their effects.
+  \item[Tolerance] deals with usage of mechanisms to still deliver a---possibly degraded---service even in the presence of faults.
+  \item[Removal] is about detecting and removing failure from a real system, as in the development stage as in production stage.
+\end{description}
 
 \section{Time relation of fault events}
 \label{sec:time-relations}
@@ -594,19 +613,6 @@ In \cref{sec:strategy} we abstract events relation in continuous time as an \emp
   \label{fig:time-relations}
 \end{figure}
 
-\section{Dependability\index{Dependability} and fault modelling\index{fault modelling}}
-\label{sec:dependability}
-
-\todo{Escrever sobre dependability e sobre a cadeia defeito-erro-falha}
-
-Dependability means:
-
-\begin{description}
-  \item[Prevention] is about avoiding incorporate faults during development.
-  \item[Forecasting] is about predicting likely faults so they can removed, or tackling their effects.
-  \item[Tolerance] deals with usage of mechanisms to still deliver a---possibly degraded---service even in the presence of faults.
-  \item[Removal] is about detecting and removing failure from a real system, as in the development stage as in production stage.
-\end{description}
 
 \section{\Acl{FTA} and structure expressions}
 \label{sec:fault-trees}
@@ -667,7 +673,7 @@ Some of \acg{FT} evaluation results shown in the \FThandbook are:
 \end{itemize}
 
 As stated in~\cite{SVD+2002}, there are other uses of \ac{FTA}.
-One of great importance is using it to minimize and optimize resources, which has been object of study in \ac{hiphops}\todo{citar hiphops que tem otimização}.
+One of great importance is using it to minimize and optimize resources, which has been object of study in \ac{hiphops}~\cite{APS+2011}.
 Through importance measures\index{importance measure}, \ac{FTA} not only identifies what is important but also what is unimportant, thus removing components without impacting the overall failure probability, which is related to the quantitative importance\index{Fault Tree Analysis!quantitative importance} and sensitivity evaluation\index{Fault Tree Analysis!sensitivity evaluation}.
 
 In important stages of critical systems, \ac{FTA} plays essential role.
@@ -683,6 +689,9 @@ At least three dependability means\todo{Encontrar trabalho sobre meios de depend
   In this case, a system should have replication, or stages of fault detection and error handling.
   Also, the probability of failure of replicated systems can be evaluated, so a homogeneous replication could be replaced by a heterogeneous one, reducing the probability of failure (in general)\todo{Citar trabalho sobre redução de probabilidade com replicação heterogênea}.
 \end{description}
+
+In \cref{sec:static-fault-trees,sec:temporal-fault-trees,sec:dynamic-fault-trees} we show briefly \acpg{FT} symbology and means to analyse \acp{FT}.
+We will detail it structure expressions extraction because they are a common means to perform both qualitative and quantitative analysis.
 
 \subsection{\Aclp{SFT}}
 \label{sec:static-fault-trees}
@@ -736,7 +745,6 @@ In this work, to keep a visual identity with other \acp{FT}, and to avoid symbol
     }
   \caption{\ac{SFT} gates}
   \label{fig:sft-gates}
-  \todo{Colocar figuras das portas de SFT.}
 \end{figure}
 
 Structure expressions\index{structure expression} in \ac{FTA} are defined in terms of set theory, using symbols for fault events occurrence.
@@ -784,8 +792,13 @@ Shannon's method is explained in \cref{sec:bdd}.
 \subsection{\Aclp{TFT}}
 \label{sec:temporal-fault-trees}
 
-\Aclp{TFT} are \ldots...
-\todo{talk about minimal cut sequences}
+There are at least two versions of \acp{TFT}.
+One is described in~\cite{Palshikar2002} and use more traditional style of temporal logic (a variation of \ac{LTL}).
+The other version is also called \pandora, and is the one we refer to in the following.
+
+\Acp{TFT} were conceived taking a slightly different direction to \ac{DFT}.
+They are focused on directly expressing ordering relationships rather than different states of a system. Basically they extend \acg{SFT} \pandtext gates, allowing analysis of \ac{FT} with such gates.
+It is simpler to express than \ac{DFT}, but lacks the fault-tolerance-related gate of \acp{DFT} (which we show in \cref{sec:dynamic-fault-trees}).
 
 Structure expressions\index{structure expression} are also present in \acp{TFT}~\cite{WP2009,Walker2009,WP2010}, through the \pandora methodology.
 These expressions use the \ac{SFT} operators \ortext and \andtext, and three new operators related to events ordering: \pandtext, \portext, and \sandtext.
@@ -825,17 +838,17 @@ A & B & \andtext & \ortext & \pandtext & \portext & \sandtext  \\
   \centering
   \begin{subfigure}[b]{0.15\linewidth}
     \centering
-    \includegraphicsaspectratio[1]{ft-symbol-pand-gate}
+    \includegraphicsaspectratio[0.75]{ft-symbol-pand-gate}
     \caption{\pandtext gate}\label{fig:tft-pand-gate}
   \end{subfigure}
   \begin{subfigure}[b]{0.15\linewidth}
     \centering
-    \includegraphicsaspectratio[1]{ft-symbol-por-gate}
+    \includegraphicsaspectratio[0.75]{ft-symbol-por-gate}
     \caption{\portext gate}\label{fig:tft-por-gate}
   \end{subfigure}
   \begin{subfigure}[b]{0.15\linewidth}
     \centering
-    \includegraphicsaspectratio[1]{ft-symbol-sand-gate}
+    \includegraphicsaspectratio[0.75]{ft-symbol-sand-gate}
     \caption{\sandtext gate}\label{fig:tft-sand-gate}
   \end{subfigure}
   \caption{\ac{TFT}-specific gates}
@@ -887,6 +900,13 @@ A & B & \andtext & \ortext & \pandtext & \portext & \sandtext  \\
   \end{tabular}
   }
 \end{table}
+
+From structure expressions in order-sensitive \acp{FT} (\ac{TFT} and \ac{DFT}), \acp{MCSeq} are obtained.
+Several approaches represent \acg{MCSeq} ordering differently.
+For the best of our knowledge they are introduced in~\cite{TD2004} similarly as \ac{MCS}, allowing set elements with arrows (``->'') to represent order.
+
+For \acp{TFT}, in~\cite{Walker2009} \acp{MCSeq} are represented as \iac{DNF} using \andtext and the temporal operators (\pandtext, \portext, and \sandtext) as doublets (a single temporal relation)---which are the minimal terms---or prime implicants---in the \ac{DNF}.
+In a doublet, the expression is a product (of \andtext\ s) of temporal operators.
 
 The normal form for \ac{TFT} is similar to \ac{SFT}: it is \iac{DNF} with temporal operators (\pandtext, \portext, \sandtext) in the minterms.
 The reduction of \ac{TFT} structure expressions is achieved using dependency trees.
@@ -980,8 +1000,8 @@ The informal semantics of them are:
   %
   \caption{\acpg{DFT} gates symbols}
   \label{fig:dft-symbols}
-  \todo{Colocar figuras das portas de DFT.}
 \end{figure}
+
 
 There are several means to analyse qualitative and quantitative analysis.
 The work reported in~\cite{Merle2010,MRL+2010,MRL2011,MRL2014} uses structure expressions to perform both qualitative and quantitative analysis, and the work reported in~\cite{MRL2014} summarizes other approaches.
@@ -989,7 +1009,6 @@ We increment their summary and categorize them as:
 %
 \begin{itemize}
   \item
-  \todo{citar MCSeq antes}
   Finding \acp{MCSeq} (qualitative analysis) is obtained by replacing \ac{DFT} gates with \ac{SFT} gates, using the text as its logical constraints.
   \Acp{MCS} in the \ac{SFT} are expanded using timing constraints from the texts into \ac{MCSeq}.
   In this case, the behaviour of spare events cannot be correctly taken into account;
@@ -1024,11 +1043,16 @@ We increment their summary and categorize them as:
 In~\cite{Merle2010,MRL+2010,MRL2011} fault events occur in a specific time and are instantaneous (similar to detected faults), stated through a ``date-of-occurrence'' function.
 As the ``date-of-occurrence'' function is stated in continuous time, the probability of two events occurring at the same time is negligible.
 In fact, useful information is obtained from the possibilities of relation in time of the occurrence of the events.
-\Ac{DFT} gates algebraic model is summarized in \cref{tbl:merle-dft-algebraic-model}.
+\Ac{DFT} gates' algebraic model is summarized in \cref{tbl:merle-dft-algebraic-model}.
 Structure expressions\index{structure expression} are written with an algebra that has operators \ortext and \andtext, and three new operators to express events ordering: (i) \nibeforetext, (ii) \simultaneoustext, and (iii) \ibeforetext.
 The \nibeforetext and the \simultaneoustext operators are similar to \ac{TFT}'s \portext and \sandtext operators, respectively.
-The \ibeforetext is a composition of the \nibeforetext and the \simultaneoustext operators.
-Structure expressions\index{structure expression} are reduced to a normal form (similar to \ac{DNF}) using algebraic laws, as for example:
+The \ibeforetext is a composition of \nibeforetext and \simultaneoustext operators.
+\Cref{tbl:date-of-occurrence-for-operators} summarizes the date-of-occurrence function for all operators.
+An infinite value means the event never occurs.
+
+\Acp{MCSeq} are extracted from canonical form of structure expressions written in \iac{DNF}.
+Minimal terms are products of variables and \nibeforetext operators (the other operators can be written as combinations of \nibeforetext).
+Structure expressions'\index{structure expression} reduction uses algebraic laws, as for example:
 \begin{subequations}
 \begin{align}
 %a \lor \parsin{a \nibefore b} &= a\\
@@ -1067,6 +1091,32 @@ Structure expressions\index{structure expression} are reduced to a normal form (
   \pandtext & $B \land \parsin{A \ibefore B}$ &\\
   %
   \hline\noalign{\smallskip}
+  \end{tabularx}
+\end{table}
+
+\begin{table}[t]
+  \caption{Date-of-occurrence\index{Dynamic Fault Tree!Date-of-occurrence function} function for operators defined in \cite{Merle2010}}
+  \label{tbl:date-of-occurrence-for-operators}
+  \centering
+  \begin{tabularx}{\textwidth}{ccXXX}
+    \hline\noalign{\smallskip}
+    \textbf{Operator} &
+      \textbf{Expression} &
+      \textbf{Value if \smallskip\smallskip} $\mathbf{\func{d}{a} < \func{d}{b}}$ &
+      \textbf{Value if \smallskip\smallskip} $\mathbf{\func{d}{a} = \func{d}{b}}$ &
+      \textbf{Value if \smallskip\smallskip} $\mathbf{\func{d}{a} > \func{d}{b}}$\\
+    \hline\noalign{\smallskip}\hline\noalign{\smallskip}
+    \ortext &
+      $\func{d}{a \lor b}$ & $\func{d}{a}$ & $\func{d}{a}$ & $\func{d}{b}$\\
+    \andtext &
+      $\func{d}{a \land b}$ & $\func{d}{b}$ & $\func{d}{a}$ & $\func{d}{a}$\\
+    \nibeforetext &
+      $\func{d}{a \nibefore b}$ & $\func{d}{a}$ & $+\infty$ & $+\infty$\\
+    \simultaneoustext &
+      $\func{d}{a \simultaneous b}$ & $+\infty$ & $\func{d}{a}$ & $+\infty$\\
+    \ibeforetext &
+      $\func{d}{a \ibefore b}$ & $\func{d}{a}$ & $\func{d}{a}$ & $+\infty$\\
+    \hline\noalign{\smallskip}
   \end{tabularx}
 
 \end{table}
@@ -1574,6 +1624,11 @@ Our strategy avoids this kind of issue by being completely systematic.
 
 \chapter{A free algebra to express structure expressions of ordered events}
 \label{sec:strategy}
+
+There are some hints to use sets of sequences mixed with sets of variables (as in \acp{SFT}) as shown in~\cite{TD2004}.
+Differently, we use a uniform representation of sets of sequences.
+Considering performance, instead of using the sets of sequences directly, we use a symbolic representation using propositions for systems and \acp{FT}.
+\todo{Elaborate this paragraph}
 
 \todo{dizer que nossa abordagem usa a abordagem similar à de expressões de estrutura, mas que tem o objetivo de dar uma semântica denotacional baseada em conjuntos}
 

@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"temporal",
+				"sec:temporal-fault-trees"
+			],
+			[
+				"simulta",
+				"simultaneous"
+			],
+			[
+				"nibef",
+				"nibefore"
+			],
+			[
 				"simult",
 				"simultaneous"
 			],
@@ -223,7 +235,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 117746,
+				"buffer_size": 121384,
 				"line_ending": "Windows"
 			}
 		},
@@ -231,7 +243,7 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 4414,
+				"buffer_size": 4420,
 				"line_ending": "Windows"
 			}
 		},
@@ -331,9 +343,9 @@
 	],
 	"file_history":
 	[
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
 		"/C/Users/Andre/Dropbox/Organização/2016-02-06 Lista de presentes de Lu.txt",
 		"/C/Users/Andre/AppData/Roaming/MiKTeX/2.9/tex/latex/caption/subcaption.sty",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
 		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
 		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/if215ufpe.txt",
 		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/provas.csv",
@@ -476,6 +488,17 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"markov",
+			"pandora",
+			"[1]",
+			"1",
+			"tb2004",
+			"mathbf",
+			"tabular",
+			"Value",
+			"infty",
+			"d\\parsin",
+			"tabularx",
 			"tabular",
 			"begin\\{table",
 			"itemize",
@@ -592,18 +615,7 @@
 			"\\ac",
 			"\\\\[i]?ac",
 			"bdd",
-			"\\\\[i]?ac",
-			"\\algebra",
-			"\\analgebra",
-			"\\SFT",
-			"\\fba",
-			"\\anfba",
-			"\\fbas",
-			"\\BDD",
-			"\\algebra",
-			"\\fdr",
-			"\\cspm",
-			"\\SFTs"
+			"\\\\[i]?ac"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -660,7 +672,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 117746,
+						"buffer_size": 121384,
 						"regions":
 						{
 							"bookmarks":
@@ -670,12 +682,24 @@
 								"regions":
 								[
 									[
-										51515,
-										51515
+										42477,
+										42477
 									],
 									[
-										54853,
-										54853
+										47520,
+										47520
+									],
+									[
+										52101,
+										52101
+									],
+									[
+										54822,
+										54822
+									],
+									[
+										57686,
+										57686
 									]
 								],
 								"scope": "bookmarks"
@@ -684,8 +708,8 @@
 						"selection":
 						[
 							[
-								56514,
-								56514
+								52018,
+								52018
 							]
 						],
 						"settings":
@@ -696,7 +720,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 24940.0,
+						"translation.y": 22933.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -708,15 +732,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4414,
+						"buffer_size": 4420,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4360,
-								4360
+								4200,
+								4200
 							]
 						],
 						"settings":
@@ -725,7 +749,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4921.0,
+						"translation.y": 5255.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -797,7 +821,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 130.0
+		"height": 174.0
 	},
 	"output.find_results":
 	{
