@@ -252,11 +252,11 @@
   \gdef\nottext{NOT\xspace}%
   \xspace
 }
-\def\nibeforetext{non-inclusive-before (ni-before, $\nibefore$)%
+\def\nibeforetext{non-inclusive-before (NIBefore, $\nibefore$)%
   \gdef\nibeforetext{NI-Before\xspace}%
   \xspace
 }
-\def\ibeforetext{inclusive-before (i-before, $\ibefore$)%
+\def\ibeforetext{inclusive-before (IBefore, $\ibefore$)%
   \gdef\ibeforetext{IBefore\xspace}%
   \xspace
 }
@@ -670,18 +670,18 @@ As stated in~\cite{SVD+2002}, there are other uses of \ac{FTA}.
 One of great importance is using it to minimize and optimize resources, which has been object of study in \ac{hiphops}\todo{citar hiphops que tem otimização}.
 Through importance measures\index{importance measure}, \ac{FTA} not only identifies what is important but also what is unimportant, thus removing components without impacting the overall failure probability, which is related to the quantitative importance\index{Fault Tree Analysis!quantitative importance} and sensitivity evaluation\index{Fault Tree Analysis!sensitivity evaluation}.
 
-In important stages of critical systems, \acl{FTA} plays essential role.
+In important stages of critical systems, \ac{FTA} plays essential role.
 At least three dependability means\todo{Encontrar trabalho sobre meios de dependabilidade} can be achieved using \acp{FT}:
 %
 \begin{description}
   \item[Prevention.]
-  \Iac{FTA} indicates if the probability of failure of a subsystem is high, so such subsystem could be left to be incorporated later, then modifying it to become more reliable, or replacing it.
+  \Iac{FTA} indicates if the probability of failure of a subsystem is high, so such subsystem could be left to be incorporated later.
   \item[Forecasting.]
-  After a system is in production, one could use its \acp{FT} to verify likely faults and evaluate its importance to take decisions about using the system (e.g. an airplane).
+  After a system is in production, one could evaluate its \acp{FT} to verify likely faults and verify its importance to take decisions about using the system (e.g. an airplane).
   \item[Tolerance.]
   \Iac{FTA} indicate whether a single fault---or fewer combinations than expected---could lead to a catastrophic failure.
   In this case, a system should have replication, or stages of fault detection and error handling.
-  Also, the probability of replicated systems can be evaluated, so a homogeneous replication could be replaced by a heterogeneous one, reducing the probability of failure (in general)\todo{Citar trabalho sobre redução de probabilidade com replicação heterogênea}.
+  Also, the probability of failure of replicated systems can be evaluated, so a homogeneous replication could be replaced by a heterogeneous one, reducing the probability of failure (in general)\todo{Citar trabalho sobre redução de probabilidade com replicação heterogênea}.
 \end{description}
 
 \subsection{\Aclp{SFT}}
@@ -697,7 +697,7 @@ They are usually drawn as triangles with a letter or a number.
 In this work, to keep a visual identity with other \acp{FT}, and to avoid symbols confusion, we use gates symbols as shown in~\cref{fig:sft-gates}.
 
 \begin{figure}[t]
-\includegraphicsaspectratio[1]{sft-symbols-ft-handbook}
+\includegraphicsaspectratio[0.9]{sft-symbols-ft-handbook}
   \caption{\Ac{SFT} symbols as in the \FThandbook}
   \label{fig:sft-example-traditional-gates}
 \end{figure}
@@ -732,7 +732,7 @@ In this work, to keep a visual identity with other \acp{FT}, and to avoid symbol
     }
   \subcaptionbox{Transfer symbol\label{fig:sft-transfer}}
     [.25\textwidth]{%
-      \includegraphics{ft-symbol-transfer}
+      \includegraphicsaspectratio[0.15]{ft-symbol-transfer}
     }
   \caption{\ac{SFT} gates}
   \label{fig:sft-gates}
@@ -781,24 +781,11 @@ The \FThandbook shows an algorithm based on Shannon's method\index{Binary Decisi
 The Boolean\index{Boolean Algebra} expression of the tree shown in \cref{fig:ex-fault-tree1} is $TOP = A \wedge B$.
 Shannon's method is explained in \cref{sec:bdd}.
 
-
-\subsection{\Aclp{DFT}}
-\label{sec:dynamic-fault-trees}
-
-Structure expressions\index{structure expression} are also used in \acp{DFT}.
-In~\cite{Merle2010,MRL+2010,MRL2011} fault events occur in a specific time and are instantaneous (similar to detected faults), stated through a ``date-of-occurrence'' function.
-As the ``date-of-occurrence'' function is stated in continuous time, the probability of two events occurring at the same time is negligible.
-In fact, useful information is obtained from the possibilities of relation in time of the occurrence of the events.
-
-The work reported in~\cite{Merle2010,MRL+2010,MRL2011} describe an algebra with operators \ortext and \andtext, and three new operators to express events ordering: (i) \nibeforetext, (ii) \simultaneoustext, and (iii) \ibeforetext.
-The non-inclusive-before and the simultaneous operators are similar to \ac{TFT}'s \portext and \sandtext operators, respectively.
-The inclusive-before is a composition of the non-inclusive-before and the simultaneous operators.
-
-The work reported in~\cite{TXD2011,XTD2012} shows the top-level events probability calculation for \acp{DFT} by converting them to a simplified version, using only order-based operators.
-Such a simplified version, which is based on a modified \ac{BDD}\index{Binary Decision Diagrams} that includes an order-based operator, creates Sequential BDDs\index{Binary Decision Diagrams!Sequential} that are used to perform the probabilistic analysis.
-
 \subsection{\Aclp{TFT}}
 \label{sec:temporal-fault-trees}
+
+\Aclp{TFT} are \ldots...
+\todo{talk about minimal cut sequences}
 
 Structure expressions\index{structure expression} are also present in \acp{TFT}~\cite{WP2009,Walker2009,WP2010}, through the \pandora methodology.
 These expressions use the \ac{SFT} operators \ortext and \andtext, and three new operators related to events ordering: \pandtext, \portext, and \sandtext.
@@ -836,18 +823,21 @@ A & B & \andtext & \ortext & \pandtext & \portext & \sandtext  \\
 
 \begin{figure}[t]
   \centering
-  \subcaptionbox{\andtext gate\label{fig:tft-pand-gate}}
-    [.25\textwidth]{%
-      \includegraphics{ft-symbol-pand-gate}
-    }
-  \subcaptionbox{\ortext gate\label{fig:tft-por-gate}}
-    [.25\textwidth]{%
-      \includegraphics{ft-symbol-por-gate}
-    }
-  \subcaptionbox{\nottext gate\label{fig:tft-sand-gate}}
-    [.25\textwidth]{%
-      \includegraphics{ft-symbol-sand-gate}
-    }
+  \begin{subfigure}[b]{0.15\linewidth}
+    \centering
+    \includegraphicsaspectratio[1]{ft-symbol-pand-gate}
+    \caption{\pandtext gate}\label{fig:tft-pand-gate}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.15\linewidth}
+    \centering
+    \includegraphicsaspectratio[1]{ft-symbol-por-gate}
+    \caption{\portext gate}\label{fig:tft-por-gate}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.15\linewidth}
+    \centering
+    \includegraphicsaspectratio[1]{ft-symbol-sand-gate}
+    \caption{\sandtext gate}\label{fig:tft-sand-gate}
+  \end{subfigure}
   \caption{\ac{TFT}-specific gates}
   \label{fig:tft-symbols}
 \end{figure}
@@ -863,6 +853,7 @@ A & B & \andtext & \ortext & \pandtext & \portext & \sandtext  \\
   \caption{\Ac{TTT} of a simple example}
   \label{tbl:ttt-small-example}
   \centering
+  {\scriptsize
   \begin{tabular}{ccccccc}
   \hline\noalign{\smallskip}
   \# & A & B & C & $A \pand C$ & $A \land B$ & $\parsin{A \pand C} \lor \parsin{A \land B}$ \\
@@ -894,7 +885,7 @@ A & B & \andtext & \ortext & \pandtext & \portext & \sandtext  \\
   25 & 3 & 2 & 1 & 0 & 3 & \textbf{3}\\
   \noalign{\smallskip}\hline
   \end{tabular}
-  
+  }
 \end{table}
 
 The normal form for \ac{TFT} is similar to \ac{SFT}: it is \iac{DNF} with temporal operators (\pandtext, \portext, \sandtext) in the minterms.
@@ -914,6 +905,196 @@ Some of these algebraic laws are:
   \parsin{X \land Y} \lor \parsin{X \por Y}  &= X & \text{Reductive Completion Law 2nd}
 \end{align}
 \end{subequations}
+
+\subsection{\Aclp{DFT}}
+\label{sec:dynamic-fault-trees}
+
+\Aclp{DFT} were designed with the goal of analysing complex systems with dynamic redundancy management and complex fault and recovery mechanisms~\cite{DBB1992}.
+The idea was to create easy-to-use and less error-prone modelling tools than using \acp{DTMC}---or simply \emph{\acap{DTMC}}---directly.
+So, since the very beginning, \acp{DFT} were intended to be evaluated using \acap{DTMC}.
+\Cref{fig:dft-original-symbols} depicts the original gate symbols as shown in~\cite{DBB1992,Boyd1992}.
+In this work, we use gates symbols as depicted in \cref{fig:dft-symbols}.
+The informal semantics of them are:
+%
+\begin{description}
+  \item[\Ac{FDEP}:]
+  When the trigger event occurs, the dependent events are forced to occur.
+  Timing in this gate between trigger event and dependent events occurrences can be at the same time (like in \acg{TFT} \sandtext gate), or in a small amount of time, thus implying an order of occurrence, depending on the kind of dependency.
+  \item[\Ac{CSp}:]
+  It is a specific gate to handle spare components.
+  It is important to note that connected inputs are not components---they are fault events of connected components.
+  If the i\emph{th} input is already active (fault has occurred), then it is expected that the input $i+1$ is not, following the specified order.
+  The output becomes true after all connected inputs become true.
+  A spare event can be connected to more than one \ac{CSp} gate, representing the spare unit connection to one or more components.
+  \item[\pandtext:]
+  The same as in \ac{TFT}: when the connected input events occur in the specified order, it outputs true.
+  \item[\Ac{SEQ}:]
+  The connected events \emph{shall} occur in the specified order.
+  It is different from the \pandtext gate, because the latter \emph{detects} the specified order.
+  The usage of this gate is usually associated with \ac{FDEP}.
+\end{description}
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{.32\linewidth}
+    \centering
+    \includegraphicsaspectratio[1]{dft-original-fdep-symbol}
+    \caption{\Ac{FDEP} gate}\label{fig:dft-original-fdep-symbol}
+  \end{subfigure}%
+  %
+  \begin{subfigure}[b]{.45\linewidth}
+    \centering
+    \includegraphicsaspectratio[1]{dft-original-csp-symbol}
+    \caption{\Ac{CSp} gate}\label{fig:dft-original-csp-symbol}
+  \end{subfigure}%
+  %
+  \begin{subfigure}[b]{.20\linewidth}
+    \centering
+    \includegraphicsaspectratio[1]{dft-original-seq-symbol}
+    \caption{\Ac{SEQ} gate}\label{fig:dft-original-seq-symbol}
+  \end{subfigure}%
+  %
+  \caption{\acpg{DFT} original gates symbols}
+  \label{fig:dft-original-symbols}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{.3\linewidth}
+    \centering
+    \includegraphicsaspectratio[0.7]{ft-symbol-fdep-gate}
+    \caption{\Ac{FDEP} gate}\label{fig:dft-fdep-symbol}
+  \end{subfigure}%
+  %
+  \begin{subfigure}[b]{.3\linewidth}
+    \centering
+    \includegraphicsaspectratio[1]{ft-symbol-csp-gate}
+    \caption{\Ac{CSp} gate}\label{fig:dft-csp-symbol}
+  \end{subfigure}%
+  %
+  \begin{subfigure}[b]{.3\linewidth}
+    \centering
+    \includegraphicsaspectratio[0.8]{ft-symbol-seq-gate}
+    \caption{\Ac{SEQ} gate}\label{fig:dft-seq-symbol}
+  \end{subfigure}%
+  %
+  \caption{\acpg{DFT} gates symbols}
+  \label{fig:dft-symbols}
+  \todo{Colocar figuras das portas de DFT.}
+\end{figure}
+
+There are several means to analyse qualitative and quantitative analysis.
+The work reported in~\cite{Merle2010,MRL+2010,MRL2011,MRL2014} uses structure expressions to perform both qualitative and quantitative analysis, and the work reported in~\cite{MRL2014} summarizes other approaches.
+We increment their summary and categorize them as:
+%
+\begin{itemize}
+  \item
+  \todo{citar MCSeq antes}
+  Finding \acp{MCSeq} (qualitative analysis) is obtained by replacing \ac{DFT} gates with \ac{SFT} gates, using the text as its logical constraints.
+  \Acp{MCS} in the \ac{SFT} are expanded using timing constraints from the texts into \ac{MCSeq}.
+  In this case, the behaviour of spare events cannot be correctly taken into account;
+  \item
+  Quantitative analysis is based in converting \iac{DFT} to a well-defined formalism to calculate the probability of its top-level event.
+  \Cref{tbl:dft-conversion-te-probability} shows the conversion, the calculation, and where the method is explained.
+\end{itemize}
+
+\begin{table}[t]
+  \caption{\Ac{DFT} conversion to calculate probability of top-level event}
+  \label{tbl:dft-conversion-te-probability}
+  \centering
+  \begin{tabularx}{\linewidth}{XXX}
+  \hline\noalign{\smallskip}
+  \textbf{Conversion} & \textbf{Calculation} & \textbf{Explained in}\\
+  \hline\noalign{\smallskip}\hline\noalign{\smallskip}
+  Automaton-like structure & \ac{CTMC} & \cite{CSD2000}\\
+  %
+  \hline\noalign{\smallskip}
+  \Ac{BN} & Inference algorithm (model-specific) & \cite{BRM+2005}\\
+  %
+  \hline\noalign{\smallskip}
+  \Ac{SWN} (a kind of \ac{CPN}) & \ac{CTMC} & \cite{BR2004} \\
+  %
+  \hline\noalign{\smallskip}
+  \Ac{SBDD} (a modified version of \ac{BDD}) & model-specific & \cite{TXD2011,XTD2012} \\
+  \hline\noalign{\smallskip}
+  \end{tabularx}
+\end{table}
+
+%Structure expressions\index{structure expression} are also used in \acp{DFT}.
+In~\cite{Merle2010,MRL+2010,MRL2011} fault events occur in a specific time and are instantaneous (similar to detected faults), stated through a ``date-of-occurrence'' function.
+As the ``date-of-occurrence'' function is stated in continuous time, the probability of two events occurring at the same time is negligible.
+In fact, useful information is obtained from the possibilities of relation in time of the occurrence of the events.
+\Ac{DFT} gates algebraic model is summarized in \cref{tbl:merle-dft-algebraic-model}.
+Structure expressions\index{structure expression} are written with an algebra that has operators \ortext and \andtext, and three new operators to express events ordering: (i) \nibeforetext, (ii) \simultaneoustext, and (iii) \ibeforetext.
+The \nibeforetext and the \simultaneoustext operators are similar to \ac{TFT}'s \portext and \sandtext operators, respectively.
+The \ibeforetext is a composition of the \nibeforetext and the \simultaneoustext operators.
+Structure expressions\index{structure expression} are reduced to a normal form (similar to \ac{DNF}) using algebraic laws, as for example:
+\begin{subequations}
+\begin{align}
+%a \lor \parsin{a \nibefore b} &= a\\
+%\parsin{a \nibefore b} \lor b &= a \lor b\\
+%a \land \parsin{a \nibefore b} &= a \nibefore b\\
+%a \lor \parsin{a \simultaneous b} &= a\\
+%a \land \parsin{a \simultaneous b} &= a \simultaneous b\\
+\parsin{a \nibefore b} \lor
+  \parsin{a \simultaneous b} \lor
+  \parsin{b \nibefore a} &= a \lor b\\
+%
+\parsin{a \land \parsin{b \nibefore a}} \lor
+  \parsin{a \simultaneous b} \lor
+  \parsin{b \land \parsin{a \nibefore b}} &= a \land b\\
+%
+\parsin{a \ibefore b} \land \parsin{b \ibefore a} &= a \simultaneous b
+\end{align}
+\end{subequations}
+
+\begin{table}[t]
+  \caption{Algebraic model of \ac{DFT} gates with inputs $A$ and $B$}
+  \label{tbl:merle-dft-algebraic-model}
+  \begin{tabularx}{\linewidth}{cXX}
+  \hline\noalign{\smallskip}
+  \textbf{Gate} & \textbf{Algebraic model of gate's output} & \textbf{Note}\\
+  \hline\noalign{\smallskip}\hline\noalign{\smallskip}
+  %
+  \ac{FDEP} & $A_T = T \lor A$ and $B_T = T \lor B$ & $A_T$ and $B_T$ replaces $A$ and $B$ on the resulting expression\\
+  %
+  \hline\noalign{\smallskip}
+  \ac{CSp} &
+    $\parsin{B_a \land \parsin{A \nibefore B_a}} \lor
+    \parsin{A \land \parsin{B_d \nibefore A}}$ & $A$ is the active input, and $B$ is the spare. Subscripts $a$ and $d$ represents component's state---\emph{active} and \emph{dormant}, respectively, which are used on the failure distribution formulas\\
+  %
+  \hline\noalign{\smallskip}
+  \pandtext & $B \land \parsin{A \ibefore B}$ &\\
+  %
+  \hline\noalign{\smallskip}
+  \end{tabularx}
+
+\end{table}
+
+%The work reported in~\cite{TXD2011,XTD2012} shows the top-level events probability calculation for \acp{DFT} by converting them to a simplified version, using only order-based operators.
+%Such a simplified version, which is based on a modified \ac{BDD}\index{Binary Decision Diagrams} that includes an order-based operator, creates Sequential BDDs\index{Binary Decision Diagrams!Sequential} that are used to perform the probabilistic analysis.
+
+\Cref{fig:dft-example} shows an example of \ac{DFT} extracted from~\cite{MRL2014}.
+It is \iac{HCAS} which is divided in four modules: trigger, CPU unit, motor section, and pumps.
+The trigger is divided in two components, CS and SS.
+The failure of any CS or SS, triggers a CPU unit failure.
+The primary CPU (P) has a warm\footnote{Warm spare gates only differ from \ac{CSp} on the activation time.} spare (B).
+The motor module fails if both M and MC fails.
+In order for the pumps unit to fail, all three pumps need to fail, and the left-hand side spare gate needs to fail before (or at the same time as) the right-hand side spare gate (\pandtext gate\footnote{Although the original example uses a \pandtext gate, accordingly to the informal description, \iac{SEQ} gate would fit better.}).
+The top-level event structure expression is:
+\begin{align}
+SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
+  &\parsin{P \land \parsin{B_d \nibefore P}} \lor \parsin{B_a \land \parsin{P \nibefore B_a}} \lor \nonumber\\
+  &\parsin{BP_a \land \parsin{P2 \nibefore P1} \land \parsin{P1 \nibefore BP_a}} \lor
+  \parsin{P2 \land \parsin{P1 \nibefore BP_a} \land \parsin{BP_a \nibefore P2}}\nonumber
+\end{align}
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.8]{dft-example-mrl2014}
+  \caption{\Ac{DFT} example}
+  \label{fig:dft-example}
+\end{figure}
 
 
 \section[Free Boolean Algebras]{\Aclp*{FBA}}
@@ -1393,6 +1574,8 @@ Our strategy avoids this kind of issue by being completely systematic.
 
 \chapter{A free algebra to express structure expressions of ordered events}
 \label{sec:strategy}
+
+\todo{dizer que nossa abordagem usa a abordagem similar à de expressões de estrutura, mas que tem o objetivo de dar uma semântica denotacional baseada em conjuntos}
 
 Recall from \cref{sec:time-relations,sec:fault-trees} that fault events are independent on one another if the events are not susceptible to a common cause.
 The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{FBA}\index{Boolean Algebra!Free}, where each generator in \acp{FBA}\index{Boolean Algebra!Free} corresponds to a fault event symbol in \aclp{FT}.
