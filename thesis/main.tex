@@ -547,7 +547,7 @@ It is strongly related to faults modelling, which depends on which analyses we w
 \Acp{FT} are present in several stages of systems' modelling.
 We introduce dependability and faults modelling in \cref{sec:dependability}.
 
-\Iacl{FT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occurs, then it will.} of a faults topology of a system, subsystem or component.
+\Iacl{FT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occur, then it will.} of a faults topology of a system, subsystem or component.
 %\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
 The time relation on fault events in \acp{TFT} and \acp{DFT} allows the analysis of different configurations (or snapshots) of a system, subsystem or component.
 We discuss these time relations in \cref{sec:time-relations}.
@@ -569,10 +569,57 @@ In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to
 
 Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isabelle/HOL} and \ac{Isar}, which were essential to carry out the proofs presented in this thesis.
 
-\section{Dependability\index{Dependability} and fault modelling\index{fault modelling}}
+\section{Systems, dependability\index{Dependability} and fault modelling\index{fault modelling}}
 \label{sec:dependability}
 
 \todo{Escrever sobre dependability e sobre a cadeia defeito-erro-falha}
+
+Computing systems are characterized by five properties: functionality, performance, cost, dependability\index{dependability}, security.
+The work reported in~\cite[p. 289--302]{Sommerville2011} explain these properties---including dependability---with a focus in software.
+Hardware and software are connected, as software faults may cause software-controlled hardware to fail, and hardware faults may send incorrect data, causing software to fail.
+
+The work reported in~\cite{ALR+2004} summarizes all concepts of and related to dependability for computing systems that contains software and hardware.
+In the following, we show these concepts and highlight those used in this work.
+
+Before introducing systems' dependability, we first describe what a system is and its characteristics.
+It is an entity that interacts with other systems (software and hardware as well), users (humans), and the physical world.
+These other entities are the \emph{environment} of the given system, and its \emph{boundary} is the frontier between the system and its environment.
+
+The \emph{function} of a system is what the system is intended to do, and its \emph{behaviour} is what the system does to implement the function.
+The \emph{total state} of a system is the set of the following states: computation, communication, stored information, interconnection, and physical condition.
+The \emph{service} delivered by a system is its behaviour as it is perceived by its users.
+A system can both provider and consumer of other services.
+
+The \emph{structure} of a system is how it is composed: a system is composed of components, and each component is another system, etc.
+This concept of compositionality in systems, is what originated the concept of \ac{SoS}.
+Such recursion stops when a component---or a constituent system---is considered to be atomic.
+A system is the total state of its atomic components.
+
+The concepts of dependability\index{dependability} are: (i) threats to, (ii) attributes of, and (iii) means to attain.
+
+\emph{Threats to dependability}\index{dependability!threats to} are the so-called \emph{fault-error-failure} chain.
+A failure is a service deviation perceived on systems' boundaries.
+An error is the part of the total state of a system that leads to subsequent service failure.
+Depending on how a system tolerate internal errors, many errors may not reach system's boundaries.
+Finally, a fault is what causes an error.
+In this case, we say that the fault is active, the fault \emph{occurred}.
+Otherwise, the fault is dormant, and has not occurred (yet).
+A \emph{degraded} mode of a system is when there are active faults, so some functions of the system are inoperative, but the system still delivers its service.
+
+There are two acceptable definitions of dependability reported in~\cite{ALR+2004}.
+One is more general, difficult to measure: ``the ability to deliver service that can be justifiably be \emph{trusted}''.
+A more precise definition that uses the definition of service failure is: ``the ability to to avoid service failures that are more frequent and more severe than is acceptable''.
+
+The \emph{Attributes of dependability}\index{dependability!attributes of} are:
+\begin{description}
+  \item[availability:] readiness for correct service
+  \item[reliability:] continuity of correct service
+  \item[safety:] absence of catastrophic consequences on the environment (other systems, users, and the physical world)
+  \item[integrity:] absence of improper systems alterations
+  \item[maintainability:] ability to be modified and repaired
+\end{description}
+
+\emph{Means to attain dependability}\index{dependability!means to attain}\ldots\todo{Write about means to attain dependability}
 
 Dependability means:
 
@@ -582,6 +629,9 @@ Dependability means:
   \item[Tolerance] deals with usage of mechanisms to still deliver a---possibly degraded---service even in the presence of faults.
   \item[Removal] is about detecting and removing failure from a real system, as in the development stage as in production stage.
 \end{description}
+
+In this work we focus on some aspects of dependability\index{dependability}.
+\ldots\todo{Elaborate the focus of the aspects of dependability}
 
 \section{Time relation of fault events}
 \label{sec:time-relations}

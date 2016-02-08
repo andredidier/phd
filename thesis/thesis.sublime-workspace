@@ -235,7 +235,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 121384,
+				"buffer_size": 125233,
 				"line_ending": "Windows"
 			}
 		},
@@ -243,7 +243,7 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 4420,
+				"buffer_size": 4538,
 				"line_ending": "Windows"
 			}
 		},
@@ -343,6 +343,7 @@
 	],
 	"file_history":
 	[
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
 		"/C/Users/Andre/Dropbox/Organização/2016-02-06 Lista de presentes de Lu.txt",
 		"/C/Users/Andre/AppData/Roaming/MiKTeX/2.9/tex/latex/caption/subcaption.sty",
@@ -469,8 +470,7 @@
 		"/C/Users/andre/Dropbox/Organização/Aulas/CNT7-líderes.txt",
 		"/C/Users/andre/Dropbox/Organização/Aulas/Lìderes CN.csv",
 		"/C/Users/andre/Dropbox/Organização/Aulas/CNT7-líderes.csv",
-		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/makefile",
-		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/main.c"
+		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/makefile"
 	],
 	"find":
 	{
@@ -488,6 +488,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"-possessive",
+			"possessive",
 			"markov",
 			"pandora",
 			"[1]",
@@ -613,8 +615,6 @@
 			"\\\\iac",
 			"\\\\[i]?ac",
 			"\\ac",
-			"\\\\[i]?ac",
-			"bdd",
 			"\\\\[i]?ac"
 		],
 		"highlight": true,
@@ -672,7 +672,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 121384,
+						"buffer_size": 125233,
 						"regions":
 						{
 							"bookmarks":
@@ -682,24 +682,24 @@
 								"regions":
 								[
 									[
-										42477,
-										42477
+										46326,
+										46326
 									],
 									[
-										47520,
-										47520
+										51369,
+										51369
 									],
 									[
-										52101,
-										52101
+										55950,
+										55950
 									],
 									[
-										54822,
-										54822
+										58671,
+										58671
 									],
 									[
-										57686,
-										57686
+										61535,
+										61535
 									]
 								],
 								"scope": "bookmarks"
@@ -708,8 +708,8 @@
 						"selection":
 						[
 							[
-								52018,
-								52018
+								31102,
+								31102
 							]
 						],
 						"settings":
@@ -720,7 +720,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 22933.0,
+						"translation.y": 14145.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -732,15 +732,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4420,
+						"buffer_size": 4538,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4200,
-								4200
+								4489,
+								4489
 							]
 						],
 						"settings":
@@ -749,7 +749,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5255.0,
+						"translation.y": 5371.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
