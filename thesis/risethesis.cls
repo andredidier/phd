@@ -104,6 +104,7 @@
 \RequirePackage{enumitem}
 \RequirePackage{natbib}
 %\RequirePackage[style=abnt,backend=biber]{biblatex}
+%\RequirePackage[alf]{abntex2cite}
 \RequirePackage{lastpage}
 
 \if\@scr0
@@ -473,6 +474,7 @@ requirements for the degree of \@degree\ in \@majorfielden.
 {
 	\backmatter
 	\bibliographystyle{abnt}
+%  \bibliographystyle{abnt-alf}
 	\setlength{\bibhang}{0pt}
 	\singlespacing % Change to singlespacing for the references
 	\begingroup
