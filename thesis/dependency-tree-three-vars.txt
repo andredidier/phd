@@ -1,0 +1,34 @@
+TREE				FORMULA X AND Y OR ((X PAND Y) AND Z)
+X,X POR Y			 
+  X AND Y			x
+Y,X AND Y			x
+  Y POR X			 
+X POR Y,X AND NOT Y	 
+		X PAND Y	x
+X AND Y,X PAND Y	x
+		X SAND Y	x
+		Y PAND X	x
+Y POR X,Y PAND X	 
+		Y AND NOT X	 
+X,X POR Z			 
+  X AND Z			 
+Z,X AND Z			x
+  Z POR X			x
+X POR Z,X AND NOT Z	 
+		X PAND Z	 
+X AND Z,X PAND Z	x
+		X SAND Z	x
+		Z PAND X	x
+Z POR X,Z PAND X	x
+		Z AND NOT X	x
+Y,Y POR Z			 
+  Y AND Z			 
+Z,Y AND Z			x
+  Z POR Y			x
+Y POR Z,Y AND NOT Z	 
+		Y PAND Z	 
+Y AND Z,Y PAND Z	x
+		Y SAND Z	x
+		Z PAND Y	x
+Z POR Y,Z PAND Y	x
+		Z AND NOT Y	x

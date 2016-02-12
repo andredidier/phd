@@ -730,26 +730,29 @@ In \cref{sec:strategy} we abstract events relation in continuous time as an \emp
 \section{\Acl{FTA} and structure expressions}
 \label{sec:fault-trees}
 
-\Ac{FTA} was introduced in~\cite{VGR+1981} with \aclp{SFT}.
-\Ac{FTA} is a deductive method, that investigates what are the possible causes of a unwanted event.
+\Ac{FTA} was introduced in the \FThandbook with \aclp{SFT}.
+\Ac{FTA} is a deductive method that investigates what are the possible causes of a unwanted event.
 The method starts with the top-level event as the unwanted event and the combination of lower-level events that can cause it.
 Events are combined using gates, and each gate has a well defined semantics.
 It continues until basic (atomic) events are reached.
 \Iac{SFT} represents, in a single view---very often considering faults outside of the boundaries of a system---different states in which a particular failure is active in a system.
 The most traditional gates are \andtext and \ortext, which are equivalent to Boolean operators.
 These gates are also called coherent gates\index{coherent gates} because they construct coherent trees (see \cref{sec:not-operator} about the use of \nottext gates).
+%A Boolean expression represents the structure of \iac{SFT}.
+%Qualitative and quantitative analysis are evaluated on these Boolean expressions, that are referred to as \emph{structure expressions}.
 \Acg{SFT} gates and analysis are detailed in \cref{sec:static-fault-trees}.
+
+\Acp{TFT} were created aiming at fully implement the \FThandbook~\cite{VGR+1981}.
+The \pandtext gate was first defined for \acp{SFT}, but its analysis was left open in the handbook.
+The analysis of \acp{TFT} uses a denotational semantics based on \emph{sequence values}\index{Temporal Fault Tree!sequence value} to express ordering of events, thus tackling \pandtext's order.
+We explain \acp{TFT} and the sequence values in \cref{sec:temporal-fault-trees}.
 
 With component and system design evolution, \acp{DFT} were created to tackle dynamic behaviour: fault-tolerance-related components (\ac{CSp}), functional dependency (\ac{FDEP}), and analysis of particular order of occurrence of faults (\ac{SEQ}).
 \Acg{SFT} gates are still present as \acg{DFT} gates.
 We explain them and \acg{DFT} analysis in \cref{sec:dynamic-fault-trees}.
 
-\Acpcite{TFT} were created aiming at fully implement the \FThandbook~\cite{VGR+1981}.
-The \pandtext gate was first defined for \acp{SFT}, but its analysis was left open in the handbook.
-\Acp{TFT} create a new kind of structure expressions, using \emph{sequence values}\index{Temporal Fault Tree!sequence value} to express ordering of events, thus tackling \pandtext's order.
-
 The structure of \iac{FT} (or \iac{MCS}, explained further) is represented with a formula with variables that represent occurrence of basic events, and symbols that capture the semantics of gates.
-This formula is called structure expression\index{structure expression} or structure function\index{structure expressions!function} (as the expression depends on the variables).
+This formula is called \emph{structure expression}\index{structure expression} or \emph{structure function}\index{structure expressions!function} (as the expression depends on the variables).
 The semantics of a structure expression is that the top-level event occurs if some combination of basic events occur.
 
 Some of \acg{FT} evaluation results shown in the \FThandbook are:
@@ -792,6 +795,7 @@ Through importance measures\index{importance measure}, \ac{FTA} not only identif
 In important stages of critical systems, \ac{FTA} plays essential role.
 At least three dependability means\todo{Encontrar trabalho sobre meios de dependabilidade} can be achieved using \acp{FT}:
 %
+\todo{Improve the relations of dependability and FTA}
 \begin{description}
   \item[Prevention.]
   \Iac{FTA} indicates if the probability of failure of a subsystem is high, so such subsystem could be left to be incorporated later.
@@ -1032,7 +1036,7 @@ Some of these algebraic laws are:
 %
 \begin{subequations}
 \begin{align}
-  \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} &= X \land Y & \text{Conjunctive Completion Law}\\
+  \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} &= X \land Y & \text{Conjunctive Completion Law}\label{law:tft-conjunctive-completion-law}\\
   \parsin{X \por Y} \lor \parsin{X \sand Y} \lor \parsin{Y \por X} &= X \lor Y & \text{Disjunctive Completion Law}\\
   \parsin{X \por Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} &= X & \text{Reductive Completion Law 1st}\\
   \parsin{X \land Y} \lor \parsin{X \por Y}  &= X & \text{Reductive Completion Law 2nd}
@@ -1362,10 +1366,68 @@ Let $i$ and $j$ be statements, such that $i,j \in E$, hence from \cref{def:induc
 See~\cite[p. 4]{Huffm2010}
 \end{proof}
 
-\section[BDDs and Shannon's method]{\Aclp*{BDD} and Shannon's method\index{Binary Decision Diagrams!Shannon's method}}
+\section{Structure expressions analysis}
+\label{sec:structure-expressions-analysis}
+
+In this section we detail the non-state-based methods to analyse structure expressions.
+As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based\todo{cite all dft works that are state-based}.
+An alternative to a specific analysis method is to use algebraic laws.
+Boolean laws are well-known and are used for \acp{SFT}, temporal laws~\cite{Walker2009,WP2010} for \acp{TFT}, and the works reported in~\cite{Merle2010,MRL2011} show laws for \acp{DFT}.
+An issue with algebraic laws is that in some cases, the expression needs to be expanded before it gets reduced, so reduction automation is not trivial without a theorem prover.
+For example, the following \acg{TFT} structure expression needs to be expanded \cite{WP2010}:
+\begin{align*}
+  \parsin{X \land Y} & \lor \parsin{\parsin{X \pand Y} \land Z} &\\
+  \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} & \lor \parsin{\parsin{X \pand Y} \land Z} & \text{\cref{law:tft-conjunctive-completion-law}}\\
+  \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} & &\\
+  X \land Y & & \text{\cref{law:tft-conjunctive-completion-law}}
+\end{align*}
+
+In the following we show specific methods that are designed to reduce structure expressions.
+Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using dependency trees (\cref{sec:dependency-trees}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD} (\cref{sec:sbdd}).
+
+\subsection{\Aclp*{BDD}\index{Binary Decision Diagrams}}
 \label{sec:bdd}
 
+In a 
+
+\subsection{Dependency trees}
+\label{sec:dependency-trees}
+
+A dependency tree is a hierarchical acyclic graph of expressions that shows all possible cut sequences for any given set of events.
+It is a graphical view of a \ac{TTT}.
+At the top of a dependency tree are the variables, the single events that occur in an expression.
+On the lower levels are the increasingly complex expressions.
+Each node represents \iac{MCSeq}.
+\Cref{fig:simple-dependency-tree} shows a dependency tree with all nodes for variables $X$ and $Y$.
+
+\begin{figure}
+  \centering
+  \includegraphicsaspectratio[0.6]{simple-dependency-tree}
+  \caption{Dependency tree for variables $X$ and $Y$}
+  \label{fig:simple-dependency-tree}
+\end{figure}
+
+The reduction of a structure expression is given by activation (true values) of nodes.
+If a node is active (true), then all child nodes are also active; the converse is also true: if all node's children are active, then it is also active.
+The reduced expression is given by the \ac{DNF} created with the expressions of active higher level nodes.
+To reduce the formula given on the beginning of this section, the expression $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$, we create the dependency tree depicted in \cref{fig:dependency-tree-reduction}.
+Nodes marked as ``1'' are those \acp{MCSeq} given directly by the formula.
+Nodes marked as ``2'' are child nodes of the ``1'''s nodes, and so forth.
+The node of the expression $\parsin{\parsin{X \pand Y} \land Z}$ is a grandchild of $X \land Y$, thus it is not necessary.
+Thus the expression if obtained by the active higher level node, which is $X \land Y$.
+
+\begin{figure}
+  \centering
+  \includegraphicsaspectratio[0.7]{dependency-tree-reduction}
+  \caption{Dependency tree for the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$}
+  \label{fig:dependency-tree-reduction}
+\end{figure}
+
+\subsection{\Aclp*{SBDD}\index{Sequential Binary Decision Diagrams}}
+\label{sec:sbdd}
+
 \todo{BDDs e Shannon's}
+\todo{SBDD}
 
 \section[Using NOT operator in fault trees]{Using NOT operator in \aclp*{FT}}
 \label{sec:not-operator}
