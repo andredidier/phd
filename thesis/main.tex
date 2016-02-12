@@ -649,7 +649,7 @@ There are some techniques for fault removal, summarized as:
     \end{description}
     \item Behaviour model
     \begin{description}
-      \item[Model checking:] Usually the model is a state-transition model (\acp{PN}, finite or infinite state automata). 
+      \item[Model checking:] Usually the model is a state-transition model (\acp{PN}, finite or infinite state automata).
       Model-checked verify all possible states on a given system's model.
     \end{description}
   \end{itemize}
@@ -662,7 +662,7 @@ There are some techniques for fault removal, summarized as:
     \item Actual inputs
     \begin{description}
       \item[Testing:] Selected input values are set on system's inputs and their outputs are compared to expected values.
-      Outputs in this case are observed faults, in case of hardware testing or software's mutation testing, and criteria-based, in case of software testing. 
+      Outputs in this case are observed faults, in case of hardware testing or software's mutation testing, and criteria-based, in case of software testing.
     \end{description}
   \end{itemize}
 \end{itemize}
@@ -671,7 +671,7 @@ Verification methods are often used in combination as, for example, symbolic exe
 
 In this work, we use a combination of: (i) fault-injection, (ii) theorem proving, and (iii) symbolic execution.
 We use these methods to obtain an erroneous behaviour of the system which is compared to system's dependability attributes (safety).
-We explain how these methods interact in \cref{sec:strategy}.
+We explain how these methods combine in \cref{sec:strategy}.
 
 \subsection{Fault Modelling}
 
@@ -679,9 +679,10 @@ Fault modelling plays an important role in reasoning about the fault-error-failu
 They are the initial steps to perform the verification of a system.
 
 \todo{Solve the same author, same year citation problem.}
-The works reported in~\cite{AFP+2013,APR+2013} define several \ac{SysML} structural and behavioural views to model the fault-error-failure chain and fault tolerance.
+\Ac{SysML} is a profile for \ac{UML} that provides features to model structure and behaviour of systems.
+The works reported in~\cite{APR+2013,ADP+2013} define several structural and behavioural views in \ac{SysML} to model the fault-error-failure chain and fault tolerance.
 Fault, error, failures, and fault propagation have structural views, which are related to behavioural views to describe fault activation and recovery.
-The works map \ac{SysML} to \ac{CML} and \ac{CSP}, respectively, to verify fault tolerance.
+These works map \ac{SysML} to two formal languages---\ac{CML} and \ac{CSP}, respectively---to verify fault tolerance.
 
 In~\cite{SAE1996b} the safety assessment process for civil airborne systems and equipment describes development cycles and methods to ``clearly identify each failure condition''.
 The methods that involves failure identification are: (i) \ac{SFT}, (ii) \ac{DD}, (iii) \aca{DTMC}, and (iv) \ac{FMEA}.
@@ -692,7 +693,8 @@ We detail \ac{SFT} in \cref{sec:static-fault-trees}.
 
 \Acp{DFT} are an extension of \acp{SFT} and models dynamic behaviour of system's faults.
 Similarly to the relation of \acp{SFT} and \acp{DD}, the work reported in~\cite{DP2009} demonstrates the relation of \acp{DFT} to \acp{DRBD}.
-This work attains to \acp{DFT} and we detail them in \cref{sec:dynamic-fault-trees}.
+As the models (\ac{DFT} and \ac{DRBD}) are equivalent, this work sticks to \ac{DFT} due to the amount of work already published.
+We detail \acp{DFT} in \cref{sec:dynamic-fault-trees}.
 
 \section{Time relation of fault events}
 \label{sec:time-relations}
@@ -1735,6 +1737,8 @@ Our strategy avoids this kind of issue by being completely systematic.
 
 \chapter{A free algebra to express structure expressions of ordered events}
 \label{sec:strategy}
+
+\todo{Explain the interaction of (i) fault-injection, (ii) theorem proving, and (iii) symbolic execution.}
 
 There are some hints to use sets of sequences mixed with sets of variables (as in \acp{SFT}) as shown in~\cite{TD2004}.
 Differently, we use a uniform representation of sets of sequences.
