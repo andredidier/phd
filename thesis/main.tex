@@ -1383,12 +1383,21 @@ For example, the following \acg{TFT} structure expression needs to be expanded \
 \end{align*}
 
 In the following we show specific methods that are designed to reduce structure expressions.
+In essence, the methods are very similar.
 Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using dependency trees (\cref{sec:dependency-trees}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD} (\cref{sec:sbdd}).
 
 \subsection{\Aclp*{BDD}\index{Binary Decision Diagrams}}
 \label{sec:bdd}
 
-In a 
+\Acp{BDD} are directed acyclic graphs that represents a Boolean expression.
+They are still referred as \ac{BDD}, but the more spread version is the \ac{ROBDD}, which is an optimised version, based on Shannon's method (describe in \FThandbook).
+
+The general idea to create a graph is to assume a value to each variable and evaluate the other variables in both cases of the assumed values.
+This exactly what Shannon's method defines.
+One implementation of the \ac{BDD} creation algorithm is based on a set of true and false value sets, denoted by the environment of the create algorithm.
+For example, given the expression 
+\todo{continue from here.}
+
 
 \subsection{Dependency trees}
 \label{sec:dependency-trees}
