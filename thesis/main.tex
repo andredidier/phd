@@ -467,9 +467,12 @@ This implementation created a new kind of tree: \acp{TFT}.
 In such trees, events ordering is well-defined and they developed an algebraic framework to reduce structure expressions\index{structure expression} to obtain minimal cut sequences\index{Minimal Cut!Sequences} and perform probabilistic analysis.
 Reducing expressions is also desirable to check for tautologies, for example.
 
-\Acp{DFT} introduce very different gates to capture dynamic configurations of systems: cold spare (\acs{CSp}), functional dependency (\acs{FDEP}), and sequence enforcing (\acs{SEQ}).
+\Acp{DFT} introduce very different gates to capture dynamic configurations of systems: \ac{CSp}, \ac{FDEP}, and \ac{SEQ}.
 The semantics of the first is to add ``backup'' events, so the gate is active if the primary event and all spares are active.
 The second adds basic events dependency from a trigger event, and the third forces the occurrence of events in a particular order.
+There is also \iac{WSp} that is slightly different to the \ac{CSp} gate.
+They differ on the nature of sparing, whether warm or cold.
+The readiness of the backup system in \iac{WSp} gate is higher than in \iac{CSp} gate.
 The work reported in~\cite{MRL2011} shows an algebraic framework to compositionally reduce \ac{DFT} gates to order-based gates and perform probabilistic analysis of structure expressions\index{structure expression}.
 
 Thus, despite some limitations for spare gates~\cite{MRL2014}, the structure expressions\index{structure expression} used in \acp{TFT} and \acp{DFT} can be formulated in terms of a generic order-based operator.
@@ -574,8 +577,6 @@ Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isa
 
 \section{Systems, dependability\index{Dependability} and fault modelling\index{fault modelling}}
 \label{sec:dependability}
-
-\todo{Escrever sobre dependability e sobre a cadeia defeito-erro-falha}
 
 Computing systems are characterized by five properties: functionality, performance, cost, dependability\index{dependability}, security.
 The work reported in~\cite[p. 289--302]{Sommerville2011} explain these properties---including dependability---with a focus in software.
@@ -804,7 +805,8 @@ At least three dependability means\todo{Encontrar trabalho sobre meios de depend
   \item[Tolerance.]
   \Iac{FTA} indicate whether a single fault---or fewer combinations than expected---could lead to a catastrophic failure.
   In this case, a system should have replication, or stages of fault detection and error handling.
-  Also, the probability of failure of replicated systems can be evaluated, so a homogeneous replication could be replaced by a heterogeneous one, reducing the probability of failure (in general)\todo{Citar trabalho sobre redução de probabilidade com replicação heterogênea}.
+  Also, the probability of failure of replicated systems can be evaluated, so a homogeneous replication could be replaced by a heterogeneous one, reducing the probability of failure (in general)
+  \todo{Cite work about failure probability reduction using heterogeneous replication}.
 \end{description}
 
 In \cref{sec:static-fault-trees,sec:temporal-fault-trees,sec:dynamic-fault-trees} we show briefly \acpg{FT} symbology and means to analyse \acp{FT}.
@@ -1370,7 +1372,8 @@ See~\cite[p. 4]{Huffm2010}
 \label{sec:structure-expressions-analysis}
 
 In this section we detail the non-state-based methods to analyse structure expressions.
-As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based\todo{cite all dft works that are state-based}.
+As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based
+\todo{cite all dft works that are state-based}.
 An alternative to a specific analysis method is to use algebraic laws.
 Boolean laws are well-known and are used for \acp{SFT}, temporal laws~\cite{Walker2009,WP2010} for \acp{TFT}, and the works reported in~\cite{Merle2010,MRL2011} show laws for \acp{DFT}.
 An issue with algebraic laws is that in some cases, the expression needs to be expanded before it gets reduced, so reduction automation is not trivial without a theorem prover.
@@ -1390,12 +1393,13 @@ Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bd
 \label{sec:bdd}
 
 \Acp{BDD} are directed acyclic graphs that represents a Boolean expression.
-They are still referred as \ac{BDD}, but the more spread version is the \ac{ROBDD}, which is an optimised version, based on Shannon's method (describe in \FThandbook).
+They are still referred as \ac{BDD}, but the more spread version is the \ac{ROBDD}, which is an optimised version, based on Shannon's method (described in \FThandbook).
 
 The general idea to create a graph is to assume a value to each variable and evaluate the other variables in both cases of the assumed values.
 This exactly what Shannon's method defines.
 One implementation of the \ac{BDD} creation algorithm is based on a set of true and false value sets, denoted by the environment of the create algorithm.
-For example, given the expression 
+For example, given the expression
+\todo{talk about evaluation: the probability is calculated for all paths ending in ``1'' }
 \todo{continue from here.}
 
 
@@ -1435,8 +1439,20 @@ Thus the expression if obtained by the active higher level node, which is $X \la
 \subsection{\Aclp*{SBDD}\index{Sequential Binary Decision Diagrams}}
 \label{sec:sbdd}
 
-\todo{BDDs e Shannon's}
-\todo{SBDD}
+\Acp{SBDD} are an extension of \ac{BDD} to tackle ordering of events in \acp{DFT} for \ac{CSp} and \ac{WSp} gates.
+Ordering of events in \ac{CSp} gates~\cite{XTD2012} is slightly different compared to \ac{WSp}~\cite{TXD2011}.
+A backup system in \ac{CSp} is slower than in \ac{WSp}, which implies that there are less failure possibilities in \ac{CSp}, but its the readiness is lower than in \ac{WSp}.
+\Ac{SBDD} adds a new node kind that contains a binary operation of fault events, which allows to express the ordering of events.
+One kind of operation expresses the slowness of the relation of the fault events of \ac{CSp}, and another one expresses the readiness of the \ac{WSp}.
+The latter semantics is similar to the semantics of \pandtext and \nibeforetext (combined with \andtext) gates.
+
+\Ac{SBDD} creation has two steps: (i) \ac{CSp} or \ac{WSp} \ac{DFT} conversion, and (ii) \ac{SBDD} model generation.
+In (i), it is a \ac{DFT}-to-\ac{DFT} conversion.
+\Ac{CSp} and \ac{WSp} gates are converted to a new, but equivalent \ac{DFT} without \ac{CSp} and \ac{WSp} gates, where the operations appear as basic events and are combined using other gates.
+In (ii), the \ac{SBDD} model is created.
+The model may contain nodes that are contradictory as, for example, nodes that assumes that an event $A$ is false and a binary operation that contains $A$ is true.
+This step ends when all contradictions are removed.
+The evaluation is similar to \acg{BDD}: each path ending in true is a minimal term in the \ac{DNF} that may contain one of the binary operations and individual events.
 
 \section[Using NOT operator in fault trees]{Using NOT operator in \aclp*{FT}}
 \label{sec:not-operator}

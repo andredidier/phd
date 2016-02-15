@@ -124,13 +124,23 @@
 
 \DeclareAcronym{CSp}{%
 	short=CSp,
-	long=\acsg*{DFT} cold spare gate
+	%long=\acsg*{DFT} cold spare gate
+	%long=DFT's cold spare gate
+	long={cold spare}
+}
+
+\DeclareAcronym{WSp}{%
+	short=WSp,
+	%long=\acsg*{DFT} warm spare gate
+	%long=DFT's warm spare gate
+	long={warm spare}
 }
 
 \DeclareAcronym{CSPm}{%
 	short=CSP{$_M$},
 	long=Communicating Sequential Processes,
 	long-post={\footnote{This variant ``M'' is the machine-readable version of \acs*{CSP}.}}
+	%long-post={\footnote{This variant ``M'' is the machine-readable version of CSP.}}
 }
 
 \DeclareAcronym{DFT}{%
@@ -148,7 +158,9 @@
 
 \DeclareAcronym{FDEP}{%
 	short=FDEP,
-	long=\acsg*{DFT} functional dependency gate,
+	%long=\acsg*{DFT} functional dependency gate,
+	%long=DFT's functional dependency gate,
+	long={functional dependency},
 	short-indefinite=an
 }
 
@@ -178,7 +190,9 @@
 
 \DeclareAcronym{SEQ}{%
 	short=SEQ,
-	long=\acsg*{DFT} sequence enforcing gate
+	%long=\acsg*{DFT} sequence enforcing gate
+	%long=DFT's sequence enforcing gate
+	long={sequence enforcing}
 }
 
 \DeclareAcronym{SFT}{%
@@ -291,7 +305,6 @@
 	cite={MMB2008}
 }
 
-\todo{CITE DD, pp198}
 \DeclareAcronym{DD}{%
 	short=DD,
 	long={Dependence Diagram},
@@ -299,6 +312,7 @@
 	%alt-long={Reliability Block Diagram},
 	cite={[p. 198]{MKK2009}},
 	long-post={\footnote{Also known as Reliability Block Diagram (\aca*{DD}). }}
+	%long-post={\footnote{Also known as Reliability Block Diagram (RBD). }}
 }
 
 \DeclareAcronym{DRBD}{%
