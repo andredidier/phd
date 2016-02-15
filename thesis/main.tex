@@ -722,7 +722,7 @@ In \cref{sec:strategy} we abstract events relation in continuous time as an \emp
 
 \begin{figure}[t]
   \centering
-  \includegraphicsaspectratio[0.6]{time-relations}
+  \includegraphicsaspectratio[0.5]{time-relations}
   \caption{Relation of two events with duration}
   \label{fig:time-relations}
 \end{figure}
@@ -840,23 +840,23 @@ In this work, to keep a visual identity with other \acp{FT}, and to avoid symbol
   \centering
   \subcaptionbox{Basic event\label{fig:sft-basic-event}}
     [.25\textwidth]{%
-      \includegraphics{ft-symbol-basic-event}
+      \includegraphicsaspectratio[0.2]{ft-symbol-basic-event}
     }%
   \subcaptionbox{Intermediary event\label{fig:sft-intermediary-event}}
     [.25\textwidth]{%
-      \includegraphics{ft-symbol-top-or-intermediary}
+      \includegraphicsaspectratio[0.2]{ft-symbol-top-or-intermediary}
     }
   \subcaptionbox{\andtext gate\label{fig:sft-and-gate}}
     [.25\textwidth]{%
-      \includegraphics{ft-symbol-and-gate}
+      \includegraphicsaspectratio[0.1]{ft-symbol-and-gate}
     }
   \subcaptionbox{\ortext gate\label{fig:sft-or-gate}}
     [.25\textwidth]{%
-      \includegraphics{ft-symbol-or-gate}
+      \includegraphicsaspectratio[0.1]{ft-symbol-or-gate}
     }
   \subcaptionbox{\nottext gate\label{fig:sft-not-gate}}
     [.25\textwidth]{%
-      \includegraphics{ft-symbol-not-gate}
+      \includegraphicsaspectratio[0.1]{ft-symbol-not-gate}
     }
   \subcaptionbox{Transfer symbol\label{fig:sft-transfer}}
     [.25\textwidth]{%
@@ -1260,7 +1260,7 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
 
 \begin{figure}[t]
   \centering
-  \includegraphicsaspectratio[0.8]{dft-example-mrl2014}
+  \includegraphicsaspectratio[0.65]{dft-example-mrl2014}
   \caption{\Ac{DFT} example}
   \label{fig:dft-example}
 \end{figure}
@@ -1393,12 +1393,71 @@ Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bd
 \label{sec:bdd}
 
 \Acp{BDD} are directed acyclic graphs that represents a Boolean expression.
-They are still referred as \ac{BDD}, but the more spread version is the \ac{ROBDD}, which is an optimised version, based on Shannon's method (described in \FThandbook).
+They are still referred to as \ac{BDD}, but the more spread version is the \ac{ROBDD}, which is an optimisation.
+There are two ways to generate \iac{BDD} for an expression: (i) derive a diagram from the truth-table, or (ii) expand the paths based on Shannon's method (described in \FThandbook).
 
-The general idea to create a graph is to assume a value to each variable and evaluate the other variables in both cases of the assumed values.
-This exactly what Shannon's method defines.
-One implementation of the \ac{BDD} creation algorithm is based on a set of true and false value sets, denoted by the environment of the create algorithm.
-For example, given the expression
+To demonstrate the expressiveness of \iac{BDD}, \cref{fig:bdd-diagram-for-a-truth-table} shows a diagram for a truth table with three variables (\cref{tbl:bdd-truth-table-with-three-variable}).
+In a node, when a path is chosen, the variable of the node assumes the edge value.
+For example, the top-level node variable of \cref{fig:bdd-diagram-for-a-truth-table} is $A$.
+Following the right-hand side of the node, all leaf nodes corresponds to the lines of the truth-table that $A$ has ``0'' values (the first four lines).
+The symbol nodes are replaced by the values assumed by a specific formula.
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.5]{bdd-diagram-for-a-truth-table}
+  \caption{A diagram for a truth table}
+  \label{fig:bdd-diagram-for-a-truth-table}
+\end{figure}
+
+\begin{table}[t]
+  \caption{Truth table for a formula outputs with three variables (A, B, and C)}
+  \label{tbl:bdd-truth-table-with-three-variable}
+  \centering
+  {\footnotesize
+  \begin{tabular}{cccc}
+    \hline\noalign{\smallskip}
+    \textbf{A} & \textbf{B} & \textbf{C} & \textbf{Formula}\\
+    \hline\noalign{\smallskip}\hline\noalign{\smallskip}
+    0 & 0 & 0 & a \\
+    0 & 0 & 1 & b \\
+    0 & 1 & 0 & c \\
+    0 & 1 & 1 & d \\
+    1 & 0 & 0 & e \\
+    1 & 0 & 1 & f \\
+    1 & 1 & 0 & g \\
+    1 & 1 & 1 & h \\
+    \hline\noalign{\smallskip}
+  \end{tabular}
+  }
+\end{table}
+
+Following Shannon's method, we choose a variable, and build the lower level \ac{BDD} assuming the edge value for the chosen variable.
+In the remainder of the path, the variable's value is unchanged.
+For example, the expression $A \lor \parsin{\lnot B \land C}$ has value ``0'' on lines $a$ and $c$, and value ``1'' on the other lines.
+Choosing variable $A$ first, then $B$ and $C$, the resulting \ac{BDD} with the binary values nodes (called sink nodes ``false'' and ``true'') for this formula is depicted in \cref{fig:bdd-diagram-for-example-expression}.
+Starting from the top-level node $A$, the formula expressed by the \ac{BDD} is true if $A$ assumes value true. 
+If $A$ is false, and $B$ is false, the expression is only true if $C$ is true.
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.25]{bdd-diagram-for-example-expression}
+  \caption{\Iac{BDD} for the expression $A \lor \parsin{\lnot B \land C}$}
+  \label{fig:bdd-diagram-for-example-expression}
+\end{figure}
+
+\Cref{fig:bdd-diagram-for-example-expression} is \iac{ROBDD}.
+To be considered \iac{ROBDD}, the \ac{BDD} must meet the following constraints~\cite{BRB1990}: 
+%
+\begin{itemize}
+  \item the variables are assigned a constant ordering;
+  \item every path to sink nodes visit the input variables in ascending order;
+  \item each node represents a distinct logic function.
+\end{itemize}
+%
+The size of \iac{ROBDD} for a given expression depends on the variable order chosen.
+The work reported in~\cite{Rudell1993} shows initial findings on variable order, and the work reported in~\cite{KH2014} shows heuristics to improve the performance for optimal order search.
+
+
 \todo{talk about evaluation: the probability is calculated for all paths ending in ``1'' }
 \todo{continue from here.}
 
@@ -1415,7 +1474,7 @@ Each node represents \iac{MCSeq}.
 
 \begin{figure}
   \centering
-  \includegraphicsaspectratio[0.6]{simple-dependency-tree}
+  \includegraphicsaspectratio[0.5]{simple-dependency-tree}
   \caption{Dependency tree for variables $X$ and $Y$}
   \label{fig:simple-dependency-tree}
 \end{figure}
