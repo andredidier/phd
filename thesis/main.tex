@@ -379,10 +379,35 @@ I dedicate this thesis to Juliana, Luciana (pipoquinha), and Bianca (snowflake)
 
 \acknowledgements
 If I were afraid of the path, I wouldn't have gotten here.
-Two men helped me to build this path far before I started this journey: Roberto and J{\'u}nior. May God have them in his arms.
+Two men helped me to build this path far before I started my scholar journey: Roberto and Júnior. 
+My two grandparents couldn't see how far I got.
+My heart was with them all the time, but I was physically far away from them in their very last breath.
+May God have them in his arms.
 
+It is now ten years since I graduated.
+I met professors Alexandre and Augusto still during the Computing Science undergrad course.
+They have been present in my academic life ever since.
+Their comments, instructions, talks, (even jokes), are what molded my path to here. 
+I have no words to express how much I thank them.
+%I hope this is the beginning of a healthy partnership for the improvement of science.
 
-\todo{Agradecimentos: Alexandre, Sascha, Augusto, Zoe, John Fitz.}
+CNPq and FACEPE were keen to guarantee my existential needs.
+The former with the trip to Newcastle upon Tyne, and the latter during the time I stayed in Recife, before and after the trip.
+
+I thank to Sascha Romanovsky for accepting me as his advisee while I was a Research Assistant of the COMPASS project.
+His comments, instructions, and knowledge were of great importance for this work.
+
+My stay in Newcastle upon Tyne could be as good as it was without the hospitality, useful discussions, and support of my colleagues at Newcastle University.
+A big THANK YOU to John Fitzgerald, Zoe Andrews, Richard Payne, Claire Smith, Dee Carr, Claire Ingram, my shared office colleague Anirban Bhattacharyya, and all other staff members.
+
+Still in Newcastle upon Tyne, I thank all friends my family and I made outside University.
+Thanks to Kelechi Dibie and her family to welcome us for the Christmas' and new year's dinners.
+They were our family abroad.
+
+I thank all my family for their patience to have me away in several family reunions, due the time required to do this work.
+In special, my two girls and my wife.
+
+\todo{Agradecimentos: Alexandre, Sascha, Augusto, Zoe, John Fitzgerald}
 
 \begin{epigraph}[]{Alan Turing}
 % quotes from: http://www.brainyquote.com/quotes/authors/e/edsger_dijkstra.html
@@ -453,12 +478,12 @@ Intermediary events use gates to combine basic events and each kind of gate has 
 For example, the most traditional gates are \ortext and \andtext.
 \Acp{FT} that use only these gates are called \emph{coherent \aclp{FT}}~\cite{Andrews2001,AB2003,Oliv2006,CCR2008,Vaurio2016}\index{Fault Tree!coherent}.
 They combine the events as \emph{at least one shall occur} and \emph{all shall occur}, respectively.
-To analyse \aclp{FT}, their structures are then abstracted as Boolean\index{Boolean Algebra} expressions called \emph{structure expressions}\index{structure expression}.
-The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method}---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain minimal cut sets\index{Minimal Cut!Sets} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
+To analyse \aclp{FT}, their structures are abstracted as Boolean\index{Boolean Algebra} expressions called \emph{structure expressions}\index{structure expression}.
+The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method}---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain \acp{MCS} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
 
 Besides the traditional \ortext and \andtext gates, the \FThandbook defines other gates.
 For example the \pandtext gate, which considers the order of occurrence of events.
-Although the work reported in~\cite{VGR+1981} defines these new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
+Although the work defines these new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
 This motivated the introduction of two new kinds of \aclp{FT}: \acp{DFT} and \acp{TFT}.
 These variant trees can capture sequence dependencies of fault events in a system.
 The difference from \ac{TFT} to \ac{DFT} is that \acp{TFT} use temporal gates directly, while \ac{DFT} does not---\acp{DFT} gates are an abstraction of temporal gates.
@@ -466,34 +491,33 @@ To differentiate traditional \aclp{FT} from the other two, we will call traditio
 
 The work reported in~\cite{WP2009} aims at performing the full implementation of the \FThandbook, adding temporal gates to its \pandora methodology.
 This implementation created a new kind of tree: \acp{TFT}.
-In such trees, events ordering is well-defined and they developed an algebraic framework to reduce structure expressions\index{structure expression} to obtain minimal cut sequences\index{Minimal Cut!Sequences} and perform probabilistic analysis.
+In such trees, events ordering is well-defined and they developed an algebraic framework to reduce structure expressions\index{structure expression} to obtain \acp{MCSeq} and perform probabilistic analysis.
 Reducing expressions is also desirable to check for tautologies, for example.
 
 \Acp{DFT} introduce very different gates to capture dynamic configurations of systems: \ac{CSp}, \ac{FDEP}, and \ac{SEQ}.
 The semantics of the first is to add ``backup'' events, so the gate is active if the primary event and all spares are active.
-The second adds basic events dependency from a trigger event, and the third forces the occurrence of events in a particular order.
-There is also \iac{WSp} that is slightly different to the \ac{CSp} gate.
-They differ on the nature of sparing, whether warm or cold.
+The second adds basic events dependency from a trigger event.
+The third forces the occurrence of events in a particular order.
+There is also \iac{WSp} gate that is slightly different from the \ac{CSp} gate.
+They differ on the nature of sparing, whether fast (warm, always-on) or slow (cold, stand-by).
 The readiness of the backup system in \iac{WSp} gate is higher than in \iac{CSp} gate.
-The work reported in~\cite{MRL2011} shows an algebraic framework to compositionally reduce \ac{DFT} gates to order-based gates and perform probabilistic analysis of structure expressions\index{structure expression}.
+The work reported in~\cite{MRL2011} shows an algebraic framework to compositionally reduce \ac{DFT} gates to order-based gates and perform probabilistic analysis of structure expressions\index{structure expression}. Thus, despite some limitations for spare gates~\cite{MRL2014}, the structure expressions\index{structure expression} used in \acp{TFT} and \acp{DFT} can be formulated in terms of a generic order-based operator.
 
-Thus, despite some limitations for spare gates~\cite{MRL2014}, the structure expressions\index{structure expression} used in \acp{TFT} and \acp{DFT} can be formulated in terms of a generic order-based operator.
-
-The NOT operator is absent in the algebras showed in~\cite{WP2009,Walker2009,Merle2010,MRL2011b}.
+The NOT operator is absent in the algebras reported in~\cite{WP2009,Walker2009,Merle2010,MRL2011b}.
 There is no consensus about the relevance of its use: (i) it can be misleading, generating non-coherent analysis~\cite{Oliv2006}, or (ii) it can be essential in practical use~\cite{Andrews2001}.
 Our concern is that the decision of the relevance of its use should not be due to the choice of events-occurrence representation.
 The algebra created in this work defines the NOT operator and allows its use, as we show in \cref{sec:strategy}.
 
 In previous work~\cite{Didier2012,DM2012}, we proposed a systematic hardware-based faults identification strategy to obtain failure expressions as defined in \acs{hiphops} for \acp{SFT}.
-We considered faults in components or subsystems, but if we obtain failure expressions of a whole system, they are in fact structure expressions\index{structure expression} of \iacl{FT}.
+We considered faults in components or subsystems, but if we obtain failure expressions of a whole system, they are in fact structure expressions\index{structure expression} of \iac{FT}.
 %
 %Using our strategy as input for \ac{hiphops} we obtain a failure expression of a fault tree.
 %
-We focused on hardware faults because we assume that software does not fail as a function of time.
+We focused on hardware faults because we assume that software does not fail as a function of time (wear, corrosion, etc).
 %
 We inherited this view from our industrial partner (\EMBRAER), which assumes that functional behaviour is completely analysed by functional verification~\cite{SP2011}.
 %
-We followed industry common practices using \simulink diagrams~\cite{Nise1992} as starting point.
+We followed industry common practices using \simulink diagrams~\cite{Nise1992} as a starting point.
 %
 The work~\cite{DM2012} was based on \ac{CSPm} to allow an automatic analysis using the model checker \acs{fdr}.
 %
@@ -503,15 +527,16 @@ It then runs \acs{fdr} to obtain several counter-examples (which are fault trace
 %
 For two case studies provided by our industrial partner, we showed that our automatically created failure logic matches with the engineer's provided one or is better (a weaker proposition).
 
-In this work, we present a strategy to perform \aclp{FTA} on systems by: (i) injecting faults on its nominal model, and (ii) complement the injected faults by modelling faults in a formal method.
+In this work, we present a strategy to perform \aclp{FTA} on systems by: (i) injecting faults on its nominal model, and (ii) complement the injected faults by modelling faults in a formal model.
 \Cref{fig:strategy-overview} show the strategy overview.
 ``Faults injection'' block is obtained from part of the work reported in~\cite{Didier2012}.
 It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault events sequences.
 The fault events sequences are then mapped to \theac{algebra}.
-As fault names are obtained directly from components and subsystems in a Simulink model, \theac{activation} (``Faults Modelling'' block) allows them to be modified or complemented.
+As fault names are obtained directly from components and subsystems in a Simulink model, \theac{activation} (in the ``Faults Modelling'' group) allows them to be modified or complemented.
 \Theac{activation} also allows reasoning about faults that are not modelled in Simulink as, for example, common cause or environmental faults.
-\Ac{activation} can be used to model faults formally, reasoning about basic fault events and top-events failures.
-Each predicate in \ac{activation} generates an expression in \theac{algebra}, which allows expressions reduction to obtain a canonical form that enables finding cut sequences and calculating top-events probability.
+\Ac{activation} can be used to model faults formally, reasoning about basic fault events and top-event failures.
+Each predicate in \ac{activation} generates an expression in \theac{algebra}, which allows expressions reduction to obtain a canonical form that enables finding \acp{MCSeq} and calculating top-events probability.
+
 \Theac{FTA} has associated system requirements which are in fact acceptance criteria.
 Once \acg{FT} acceptance criteria is modelled as expressions in \ac{algebra}, we formally check whether they are accepted by system models' expressions.
 
@@ -525,16 +550,17 @@ Once \acg{FT} acceptance criteria is modelled as expressions in \ac{algebra}, we
 The main contributions of this work are:
 
 \begin{enumerate}
-  \item Define a denotational and algebraic model to express fault events order (\ac{algebra}) and formally verify \ac{FT} acceptance;
+  \item Define a denotational and algebraic model to express fault events order with \theac{algebra}, and formally verify \acg{FT} acceptance;
   \item Reusing \simulink models, obtaining fault event sequences and mapping to \ac{algebra};
-  \item Reasoning about faults modelling in \ac{activation}, obtaining formal expressions of top-events failures;
+  \item Reasoning about faults modelling in \ac{activation}, obtaining formal expressions of top-event failures;
   \item Illustrating the application of the laws on real case studies, two provided by our industrial partner.
 \end{enumerate}
 
 Other contributions of this work are:
 
 \begin{enumerate}
-  \item Defining a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extensions of the Boolean\index{Boolean Algebra} algebra (also published in~\cite{DM2016});
+  \item Defining a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016});
+  \todo{When accepted, add work submitted to ISF}
   \item Generalising laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}.
 \end{enumerate}
 
@@ -557,7 +583,7 @@ We introduce dependability and faults modelling in \cref{sec:dependability}.
 
 \Iacl{FT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occur, then it will.} of a faults topology of a system, subsystem or component.
 %\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
-The time relation on fault events in \acp{TFT} and \acp{DFT} allows the analysis of different configurations (or snapshots) of a system, subsystem or component.
+The time relation of fault events in \acp{TFT} and \acp{DFT} allows the analysis of different configurations (or snapshots) of a system, subsystem or component.
 We discuss these time relations in \cref{sec:time-relations}.
 
 Structure expressions\index{structure expression} are used to analyse \aclp{FT}.
@@ -567,7 +593,7 @@ In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their 
 
 \Acp{FBA} and \acp{BDD} are a basis to analyse structure expressions.
 Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{sec:strategy}).
-We explain \acp{FBA} in \cref{sec:fba}, and \acp{BDD} in \cref{sec:bdd}.
+We explain \acp{FBA} in \cref{sec:fba}, and \acp{BDD} and derived techniques in \cref{sec:structure-expressions-analysis}.
 
 The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}: (i) can be misleading, generating non-coherent \aclp{FT}, or (ii) can be essential in practical use.
 We discuss such cases in \cref{sec:not-operator}.
@@ -577,6 +603,8 @@ In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to
 
 Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isabelle/HOL} and \ac{Isar}, which were essential to carry out the proofs presented in this thesis.
 
+
+\todo{CONTINUE FROM HERE. SO FAR, SO GOOD.}
 \section{Systems, dependability\index{Dependability} and fault modelling\index{fault modelling}}
 \label{sec:dependability}
 
@@ -796,7 +824,7 @@ One of great importance is using it to minimize and optimize resources, which ha
 Through importance measures\index{importance measure}, \ac{FTA} not only identifies what is important but also what is unimportant, thus removing components without impacting the overall failure probability, which is related to the quantitative importance\index{Fault Tree Analysis!quantitative importance} and sensitivity evaluation\index{Fault Tree Analysis!sensitivity evaluation}.
 
 In important stages of critical systems, \ac{FTA} plays essential role.
-At least three dependability means\todo{Encontrar trabalho sobre meios de dependabilidade} can be achieved using \acp{FT}:
+At least three dependability means can be achieved using \acp{FT}:
 %
 \todo{Improve the relations of dependability and FTA}
 \begin{description}
@@ -807,8 +835,7 @@ At least three dependability means\todo{Encontrar trabalho sobre meios de depend
   \item[Tolerance.]
   \Iac{FTA} indicate whether a single fault---or fewer combinations than expected---could lead to a catastrophic failure.
   In this case, a system should have replication, or stages of fault detection and error handling.
-  Also, the probability of failure of replicated systems can be evaluated, so a homogeneous replication could be replaced by a heterogeneous one, reducing the probability of failure (in general)
-  \todo{Cite work about failure probability reduction using heterogeneous replication}.
+  Also, the probability of failure of the chosen fault tolerance method can be evaluated.
 \end{description}
 
 In \cref{sec:static-fault-trees,sec:temporal-fault-trees,sec:dynamic-fault-trees} we show briefly \acpg{FT} symbology and means to analyse \acp{FT}.
