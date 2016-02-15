@@ -333,6 +333,8 @@
 \def\ibefore{\ensuremath\operatorname{\unlhd}}
 \def\simultaneous{\ensuremath\operatorname{\bigtriangleup}}
 \def\xbefore{\ensuremath\operatorname{\rightarrow}}
+\def\probabilityop{\ensuremath P}
+\newcommand{\probability}[1]{\ensuremath \probabilityop\parsin{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1457,10 +1459,8 @@ To be considered \iac{ROBDD}, the \ac{BDD} must meet the following constraints~\
 The size of \iac{ROBDD} for a given expression depends on the variable order chosen.
 The work reported in~\cite{Rudell1993} shows initial findings on variable order, and the work reported in~\cite{KH2014} shows heuristics to improve the performance for optimal order search.
 
-
-\todo{talk about evaluation: the probability is calculated for all paths ending in ``1'' }
-\todo{continue from here.}
-
+For \acp{SFT} the evaluation of \iac{BDD} is the calculation of the probability of the paths ending in \emph{true}.
+For the example of \cref{fig:bdd-diagram-for-example-expression}, the probability of the expression is given by: $\probability{A \lor \parsin{\lnot A \land \lnot B \land C}}$ (note that the formula in the probability calculation is different from the formula that originated the diagram).
 
 \subsection{Dependency trees}
 \label{sec:dependency-trees}
