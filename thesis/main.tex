@@ -1357,6 +1357,7 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
 
 \section{Structure expressions analysis}
 \label{sec:structure-expressions-analysis}
+\todo{Continue from here. Jump FBA.}
 
 In this section we detail the non-state-based methods to analyse structure expressions.
 As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based
@@ -1498,56 +1499,6 @@ The model may contain nodes that are contradictory as, for example, nodes that a
 This step ends when all contradictions are removed.
 The evaluation is similar to \acg{BDD}: each path ending in true is a minimal term in the \ac{DNF} that may contain one of the binary operations and individual events.
 
-\section[Using NOT operator in fault trees]{Using NOT operator in \aclp*{FT}}
-\label{sec:not-operator}
-
-Although the \FThandbook introduces several gates, the vast majority analysis of systems would fit in \acp{FT} with only \andtext and \ortext gates (coherent \acp{FT})\index{Fault tree!coherent}.
-Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when NOT gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}), such reduction can cause the interpretation of failure logic to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
-The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} shows how to solve it using \acp{BDD}.
-In the following we show: (i) the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and (ii) the second example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates in a multitasking system (\cref{sec:non-coherent-usefulness}).
-
-Negated events in non-coherent analysis are in fact the working state of a component.
-The probability contribution of a negated basic event is close to 1~\cite{Andrews2001,CCR2008}.
-
-The problem with non-coherent \acp{FT} is that its analysis can cause impossible situations.
-The general formula to identify coherency is given in~\cite{Andrews2001,CCR2008} in terms of a structure function\index{structure expression!function}.
-
-\begin{Def}[\ac{FT} Coherency]
-\label{def:ft-coherency}
-Let $\ftcoherency{x}:B^n \rightarrow B^1$ be a binary function of a vector of binary variables, such that $x = \squaresin{x_1, x_2,\ldots,x_n}$, representing the states of $n$ system's components.
-
-A binary structure function $\ftcoherency{x}$ is coherent if all the following hold:
-\begin{enumerate}
-  \item $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
-  \item Each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$.
-\end{enumerate}
-\end{Def}
-%
-\noindent where $B^1 = \setsin{0,1}$, $B^n = B^{n-1} \cartesian B^1$, $x_i = 1$ implies that component $i$ is failed, and $\ftcoherency{x} = 1$ implies the system is failed.
-For $y = \squaresin{y_1,y_2,\ldots,y_n}$, monotonicity of $\ftcoherencyop$ means that for \emph{all} $i$, $x_i \ge y_i$, and for \emph{some} $i$, $x_i > y_i$.
-Variable replacement ($\replace{a}{b}$) is as usual:
-$\ftcoherency{x}\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, \ldots, x_n}$
-
-\subsection{Non-coherent \ac{FT} misleads}
-\label{sec:non-coherent-misleads-example}
-
-In this section we illustrate---with the second example detailed in~\cite{Oliv2006}---how non-coherent \ac{FT} misleads.
-
-A college student who wants to visit her mother in another city has two options: wake up early ($x_3$) and take ride with a friend ($x_1$), or wake up late ($\lnot x_3$) and take the metro ($x_2$).
-The top-event failure is ``fail to visit mother'' with expression $S = \parsin{x_1 \land x_3} \lor \parsin{x_2 \land \lnot x_3}$.
-Its \acl{FT} is depicted in \cref{fig:non-coherent-ft-example}.
-It is clear that the structure function is non-coherent in $x_3$ accordingly to \cref{def:ft-coherency}: $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0}$.
-
-\begin{figure}[t]
-  \centering
-  \includegraphicsaspectratio[0.55]{non-coherent-ft-example}
-  \caption{Non-coherent \ac{FT} college student's example}
-  \label{fig:non-coherent-ft-example}
-\end{figure}
-
-The problem with this tree is the interpretation of the qualitative results.
-One of the possibilities in this scenario is that the college student would take a ride \andtext take the metro ($x_1 \land x_2$).
-Quantitatively, the analysis of the probabilities shows that this result is not negligible, but its interpretation is impossible.
 
 \section[Free Boolean Algebras]{\Aclp*{FBA}}
 \label{sec:fba}
@@ -1650,6 +1601,57 @@ Let $i$ and $j$ be statements, such that $i,j \in E$, hence from \cref{def:induc
 \begin{proof}
 See~\cite[p. 4]{Huffm2010}
 \end{proof}
+
+\section[Using NOT operator in fault trees]{Using NOT operator in \aclp*{FT}}
+\label{sec:not-operator}
+
+Although the \FThandbook introduces several gates, the vast majority analysis of systems would fit in \acp{FT} with only \andtext and \ortext gates (coherent \acp{FT})\index{Fault tree!coherent}.
+Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when NOT gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}), such reduction can cause the interpretation of failure logic to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
+The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} shows how to solve it using \acp{BDD}.
+In the following we show: (i) the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and (ii) the second example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates in a multitasking system (\cref{sec:non-coherent-usefulness}).
+
+Negated events in non-coherent analysis are in fact the working state of a component.
+The probability contribution of a negated basic event is close to 1~\cite{Andrews2001,CCR2008}.
+
+The problem with non-coherent \acp{FT} is that its analysis can cause impossible situations.
+The general formula to identify coherency is given in~\cite{Andrews2001,CCR2008} in terms of a structure function\index{structure expression!function}.
+
+\begin{Def}[\ac{FT} Coherency]
+\label{def:ft-coherency}
+Let $\ftcoherency{x}:B^n \rightarrow B^1$ be a binary function of a vector of binary variables, such that $x = \squaresin{x_1, x_2,\ldots,x_n}$, representing the states of $n$ system's components.
+
+A binary structure function $\ftcoherency{x}$ is coherent if all the following hold:
+\begin{enumerate}
+  \item $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
+  \item Each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$.
+\end{enumerate}
+\end{Def}
+%
+\noindent where $B^1 = \setsin{0,1}$, $B^n = B^{n-1} \cartesian B^1$, $x_i = 1$ implies that component $i$ is failed, and $\ftcoherency{x} = 1$ implies the system is failed.
+For $y = \squaresin{y_1,y_2,\ldots,y_n}$, monotonicity of $\ftcoherencyop$ means that for \emph{all} $i$, $x_i \ge y_i$, and for \emph{some} $i$, $x_i > y_i$.
+Variable replacement ($\replace{a}{b}$) is as usual:
+$\ftcoherency{x}\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, \ldots, x_n}$
+
+\subsection{Non-coherent \ac{FT} misleads}
+\label{sec:non-coherent-misleads-example}
+
+In this section we illustrate---with the second example detailed in~\cite{Oliv2006}---how non-coherent \ac{FT} misleads.
+
+A college student who wants to visit her mother in another city has two options: wake up early ($x_3$) and take ride with a friend ($x_1$), or wake up late ($\lnot x_3$) and take the metro ($x_2$).
+The top-event failure is ``fail to visit mother'' with expression $S = \parsin{x_1 \land x_3} \lor \parsin{x_2 \land \lnot x_3}$.
+Its \acl{FT} is depicted in \cref{fig:non-coherent-ft-example}.
+It is clear that the structure function is non-coherent in $x_3$ accordingly to \cref{def:ft-coherency}: $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0}$.
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.55]{non-coherent-ft-example}
+  \caption{Non-coherent \ac{FT} college student's example}
+  \label{fig:non-coherent-ft-example}
+\end{figure}
+
+The problem with this tree is the interpretation of the qualitative results.
+One of the possibilities in this scenario is that the college student would take a ride \andtext take the metro ($x_1 \land x_2$).
+Quantitatively, the analysis of the probabilities shows that this result is not negligible, but its interpretation is impossible.
 
 \subsection[Usefulness of NOT gates in FTA]{Usefulness of \nottext gates in \ac{FTA}}
 \label{sec:non-coherent-usefulness}
