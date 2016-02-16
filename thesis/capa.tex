@@ -1,0 +1,29 @@
+\renewcommand{\imprimircapa}{%
+	\begin{capa}%
+		\if@openright\cleardoublepage\else\clearpage\fi
+		\thispagestyle{empty}
+		\begin{center}
+			\includegraphics[scale=0.65]{cinlogo} \\
+			\vfill
+			\begin{center}
+				{\ABNTEXchapterfont\large\imprimirautor}
+				\vskip4\baselineskip
+				\ABNTEXchapterfont\bfseries\LARGE\imprimirtitulo
+				\vskip2\baselineskip
+				{{\large Ph.D. Thesis}}\\
+			\end{center}
+			\vspace{1.4cm}
+			\includegraphics[width=1cm]{ufpelogo} \\
+			{\fontfamily{times}\selectfont \tiny Federal University of Pernambuco\\}
+			{\fontfamily{times}\selectfont \tiny posgraduacao@cin.ufpe.br\\}
+			{\fontfamily{times}\selectfont \tiny \url{www.cin.ufpe.br/~posgraduacao}\\}
+			\vskip\baselineskip
+			\vskip\baselineskip
+
+			\large\imprimirlocal
+			\\
+			\large\imprimirdata
+
+		\end{center}
+	\end{capa}
+}
