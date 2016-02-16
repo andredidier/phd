@@ -1,8 +1,8 @@
 \documentclass[12pt,openright,twoside,a4paper,oldfontcommands,english,brazil]{abntex2}
 
-\usepackage[utf8]{inputenc}
-%\usepackage[T1]{fontenc}
-%\usepackage[english]{babel}
+\usepackage{lmodern}      % Usa a fonte Latin Modern      
+\usepackage[T1]{fontenc}    % Selecao de codigos de fonte.
+\usepackage[utf8]{inputenc}   % Codificacao do documento (conversÃ£o automÃ¡tica dos acentos)
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \usepackage{makeidx}
 \usepackage{colortbl}
@@ -31,6 +31,12 @@
 \usepackage{textcomp}
 %Quantas vezes e em quais páginas a referência foi citada
 %\usepackage[english,hyperpageref]{backref}
+
+\usepackage{indentfirst}
+\usepackage{microtype}      % para melhorias de justificação
+
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
 
 \acsetup{%
   hyperref=true,
@@ -111,9 +117,9 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 
 
 % Tamanho do parágrafo
-%\setlength{\parindent}{1.3cm}
-% Identação do primeiro parágrafo
-%\usepackage{indentfirst} 
+\setlength{\parindent}{1.3cm}
+\setlength{\parskip}{0.2cm}
+\frenchspacing 
 
 
 %\address{Recife-PE}
@@ -486,25 +492,26 @@ We illustrate our work on simple but real case studies, some supplied by our ind
 \end{resumo}
 
 % List of figures
-\listoffigures
+\listoffigures*
 \cleardoublepage
 
 % List of tables
-\listoftables
+\listoftables*
 \cleardoublepage
 
 % List of acronyms
 % Acronyms manual: http://linorg.usp.br/CTAN/macros/latex/contrib/acronym/acronym.pdf
 %\input{acronyms}
 %\listofacronyms
+
 \acresetall
-\printacronyms[name={List of Acronyms},heading=chapter*]
+\printacronyms[name={\listadesiglasname{}},heading=chapter*]
 \acresetall
 \cleardoublepage
 
 
 % Summary (tables of contents)
-\tableofcontents
+\tableofcontents*
 \cleardoublepage
 
 %\mainmatter
@@ -512,8 +519,11 @@ We illustrate our work on simple but real case studies, some supplied by our ind
 
 %\part{Context}
 %\label{part:context}
-\chapter{Introduction}
+\chapter*{Introduction}
 %\label{chap:intro}
+
+\todo{use all figure captions before figures}
+\todo{fix table lines.}
 
 The development process of critical control systems is based essentially on the rigorous execution of guides and regulations~\cite{ANAC2011,FAA1993,FAA2007,SAE1996b}.
 Specialized agencies (like FAA, EASA and ANAC in the aviation field) use these guides and regulations to certify such systems.
@@ -617,12 +627,14 @@ We used Isabelle/HOL\index{Isabelle/HOL} 2015\footnote{The 2002 tutorial is repo
 The tool and the tutorial are available on their website at http://isabelle.in.tum.de .}, theories in Isabelle's library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
 %We omit the proofs in the paper, but they are available in Online Resource 1.\todo{publish theory files online: ``Specialized format such as .pdb (chemical), .wrl (VRML), .nb (Mathematica notebook), and .tex can also be supplied.''}
 
-This thesis is organized as follows: in \cref{chap:background} we show the concepts and tools used as basis for this work.
-\Cref{sec:strategy} presents our strategy, and \cref{sec:case-study} the case study and the application of the proposed strategy.
-Finally, we present our conclusions and future work in \cref{sec:conclusion}.
+This thesis is organized as follows: in \cref{part:background} we show the concepts and tools used as basis for this work.
+\Cref{part:results} describes the results: \cref{sec:strategy} presents our strategy, \cref{sec:case-study} the case study and the application of the proposed strategy, and we present our conclusions and future work in \cref{sec:conclusion}.
 
-\chapter{Background}
-\label{chap:background}
+\part{Background}
+\label{part:background}
+
+\chapter{Basic concepts}
+\label{chap:basic-concepts}
 
 Means to dependability are obtained by modelling and analysing a system.
 It is strongly related to faults modelling, which depends on which analyses we want to perform.
@@ -632,26 +644,8 @@ We introduce dependability and faults modelling in \cref{sec:dependability}.
 
 \Iacl{FT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occur, then it will.} of a faults topology of a system, subsystem or component.
 %\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
-\Acp{SFT} e
 The time relation of fault events in \acp{TFT} and \acp{DFT} allows the analysis of different configurations (or snapshots) of a system, subsystem or component.
 We discuss these time relations in \cref{sec:time-relations}.
-
-Structure expressions\index{structure expression} are used to analyse \aclp{FT}.
-In general, a structure expression\index{structure expression} comes from gates semantics and basic events.
-Basic events become variables and gates become operators (a gate may become one or more operators).
-In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their respective structure expressions\index{structure expression}.
-
-\Acp{FBA} and \acp{BDD} are a basis to analyse structure expressions.
-Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{sec:strategy}).
-We explain \acp{FBA} in \cref{sec:fba}, and \acp{BDD} and derived techniques in \cref{sec:structure-expressions-analysis}.
-
-The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}: (i) can be misleading, generating non-coherent \aclp{FT}, or (ii) can be essential in practical use.
-We discuss such cases in \cref{sec:not-operator}.
-
-To reuse a nominal model to analyse faults we need fault injection.
-In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to inject faults and obtain failure logic from a nominal model.
-
-Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isabelle/HOL} and \ac{Isar}, which were essential to carry out the proofs presented in this thesis.
 
 \section{Systems, dependability\index{Dependability} and fault modelling\index{fault modelling}}
 \label{sec:dependability}
@@ -818,6 +812,25 @@ In \cref{sec:strategy} we abstract events relation in continuous time as an \emp
   \label{fig:time-relations}
 \end{figure}
 
+\chapter{Analysis and tools}
+\label{chap:analysis}
+
+Structure expressions\index{structure expression} are used to analyse \aclp{FT}.
+In general, a structure expression\index{structure expression} comes from gates semantics and basic events.
+Basic events become variables and gates become operators (a gate may become one or more operators).
+In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their respective structure expressions\index{structure expression}.
+
+\Acp{FBA} and \acp{BDD} are a basis to analyse structure expressions.
+Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{sec:strategy}).
+We explain \acp{FBA} in \cref{sec:fba}, and \acp{BDD} and derived techniques in \cref{sec:structure-expressions-analysis}.
+
+The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}: (i) can be misleading, generating non-coherent \aclp{FT}, or (ii) can be essential in practical use.
+We discuss such cases in \cref{sec:not-operator}.
+
+To reuse a nominal model to analyse faults we need fault injection.
+In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to inject faults and obtain failure logic from a nominal model.
+
+Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isabelle/HOL} and \ac{Isar}, which were essential to carry out the proofs presented in this thesis.
 
 \section{\Acl{FTA} and structure expressions}
 \label{sec:fault-trees}
@@ -1969,6 +1982,9 @@ Our strategy avoids this kind of issue by being completely systematic.
 
 \input{isabelle-hol-basic/output/document/Basic}
 
+\part{Results}
+\label{part:results}
+
 \chapter{A free algebra to express structure expressions of ordered events}
 \label{sec:strategy}
 
@@ -2580,9 +2596,14 @@ We leave these demonstrations as future work.
 % Appendix
 
 %\theappendix
-%\chapter{Formal proofs in Isabelle/HOL}
-%\label{app:formal-proofs-isabelle-hol}
+\begin{apendicesenv}
+\partapendices
+\chapter{Formal proofs in Isabelle/HOL}
+\label{app:formal-proofs-isabelle-hol}
 
+\end{apendicesenv}
+
+\phantompart
 \printindex
 \todo{Verify indexes again (search again for words already in the index)}
 \todo{Run makeindex main on this directory}
