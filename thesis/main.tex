@@ -230,9 +230,9 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
   \gdef\pandora{Pandora\xspace}%
   \xspace}
 \def\theftanalyser{%
-  the Fault Tree Analyser\footnote{\url{http://www.fault-tree-analysis-software.com}, accessed 2/feb/2016}
+  the Fault Tree Analyser\footnote{\url{http://www.fault-tree-analysis-software.com}, accessed 2/feb/2016}%
   %~\cite{ALDSoftwareFTAnalyser}%
-  \gdef\theftanalyser{the Fault Tree Analyser\xspace}
+  \gdef\theftanalyser{the Fault Tree Analyser\xspace}%
 }
 %\AtEveryBibitem{%
 %  \ifentrytype{online}{%
@@ -345,25 +345,6 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \newcommand{\probability}[1]{\ensuremath \probabilityop\parsin{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\bancaumtrue
-%\bancadoistrue
-%\bancatrestrue
-\def\primeiromembrobanca{
-  Prof. Augusto Cesar Alves Sampaio\\%
-  %Prof. Juliano Manabu Iyoda
-  Centro de Informática/UFPE%
-}
-\def\segundomembrobanca{
-  Prof. Paulo Romero Martins Maciel\\%
-  %Prof. Eduardo Antônio Guimarães Tavares
-  Centro de Informática/UFPE%
-}
-\def\terceiromembrobanca{
-  Prof. Enrique Andrés López Droguett\\%
-  %Prof. aluno?
-  Departamento de Engenharia de Produção/UFPE%
-}
 
 \makeindex
 
@@ -772,7 +753,7 @@ These works map \ac{SysML} to two formal languages---\ac{CML} and \ac{CSP}, resp
 
 In~\cite{SAE1996b} the safety assessment process for civil airborne systems and equipment describes development cycles and methods to ``clearly identify each failure condition''.
 The methods that involves failure identification are: (i) \ac{SFT}, (ii) \ac{DD}, (iii) \aca{DTMC}, and (iv) \ac{FMEA}.
-The first three are top-down methods, that starts with an undesired failure conditions and moves to lower levels to obtain more detailed conditions that causes the top-level undesired failure condition.
+The first three are top-down methods, that starts with undesired failure conditions and moves to lower levels to obtain more detailed conditions that causes the top-level event.
 \Acp{DD} are an alternate method of representing the data in \ac{SFT}.
 \Ac{FMEA} is a bottom-up method that identifies failure modes of a component and determines the effects on the next higher level.
 We detail \ac{SFT} in \cref{sec:static-fault-trees}.
@@ -787,20 +768,20 @@ We detail \acp{DFT} in \cref{sec:dynamic-fault-trees}.
 
 The most general case for time relations\index{time relations}\index{order!time relations} is to consider that each fault event has a continuous time duration.
 They are the basis on how fault events discretisation are defined.
-In \cref{fig:time-relations} we show all possibilities of events relations in a continuous time line (from A to B; the converse relation is similar):
+In \cref{fig:time-relations} we show all possibilities of events relations in a continuous time line (from $A$ to $B$; the converse relation is similar):
 
-\begin{enumerate}\renewcommand{\theenumi}{\alph{enumi}}
-  \item A starts and ends before B starts;
-  \item A starts before and ends after B has started, but before B has ended;
-  \item A starts before B and ends after B has ended (A contains B);
-  \item A and B start at the same time, but A ends before B;
-  \item B starts after A, but they end at the same time;
-  \item A and B start and end at the same time;
-  \item A starts before B and ends when B starts.
-\end{enumerate}
+\begin{description}
+  \item[a.] $A$ starts and ends before $B$ starts;
+  \item[b.] $A$ starts before and ends after $B$ has started, but before $B$ has ended;
+  \item[c.] $A$ starts before $B$ and ends after $B$ has ended ($A$ contains $B$);
+  \item[d.] $A$ and $B$ start at the same time, but $A$ ends before $B$;
+  \item[e.] $B$ starts after $A$, but they end at the same time;
+  \item[f.] $A$ and $B$ start and end at the same time;
+  \item[g.] $A$ starts before $B$ and ends when $B$ starts.
+\end{description}
 
-Although the occurrence of fault events has at least seven possibilities, what really matters (when analysing systems) is when a fault is \emph{detected}.
-Considering that fault detection corresponds to the start of a fault event, from \cref{fig:time-relations} we clearly identify which event comes first: A comes before than B, except in the cases (d) and (f), where they start exactly at the same time.
+Although the occurrence of fault events has at least seven possibilities, what really matters when analysing systems is when a fault is \emph{detected}.
+Considering that fault detection corresponds to the start of a fault event, from \cref{fig:time-relations} we clearly identify which event comes first: $A$ comes before than $B$, except in the cases (d) and (f), where they start exactly at the same time.
 If fault events are independent (they are not susceptible to have a common cause) then the probability of they are starting at the same time is very low.
 In \cref{sec:strategy} we abstract events relation in continuous time as an \emph{exclusive before} relation, based on fault \emph{detection} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
 
@@ -856,11 +837,14 @@ With component and system design evolution, \acp{DFT} were created to tackle dyn
 \Acg{SFT} gates are still present as \acg{DFT} gates.
 We explain them and \acg{DFT} analysis in \cref{sec:dynamic-fault-trees}.
 
-The structure of \iac{FT} (or \iac{MCS}, explained further) is represented with a formula with variables that represent occurrence of basic events, and symbols that capture the semantics of gates.
-This formula is called \emph{structure expression}\index{structure expression} or \emph{structure function}\index{structure expressions!function} (as the expression depends on the variables).
+The structure of \iac{FT} (or the structure of \iac{MCS}, explained further) is represented with a formula. 
+The variables represent occurrence of basic events.
+Unary and binary relation symbols capture the semantics of gates.
+A formula with these characteristics is called \emph{structure expression}\index{structure expression} or \emph{structure function}\index{structure expressions!function} (as the expression depends on the variables).
 The semantics of a structure expression is that the top-level event occurs if some combination of basic events occur.
 
-Some of \acg{FT} evaluation results shown in the \FThandbook are:
+The results obtained from the evaluation of \acp{FT} are shown in the \FThandbook.
+We summarize them as:
 %
 \begin{itemize}
   \item Qualitative
@@ -869,7 +853,7 @@ Some of \acg{FT} evaluation results shown in the \FThandbook are:
     Smallest combinations of components failures causing system failure.
     They are obtained from the reduction to a normal form.
     For example, in \acp{SFT}, structure expressions\index{structure expression} are reduced to \ac{DNF}.
-    Each term in \ac{DNF} is \iac{MCS}.
+    Each term in a reduced \ac{DNF} is \iac{MCS}.
     \item[Importances\index{Fault Tree Analysis!qualitative importance}:]
     Qualitative rankings on contributions to system failure.
     A single fault causing a catastrophic failure is usually unacceptable.
@@ -879,7 +863,7 @@ Some of \acg{FT} evaluation results shown in the \FThandbook are:
   \begin{description}
     \item[Numerical probabilities\index{Fault Tree Analysis!numerical probability}:]
     Probabilities of system and \acg{MCS} failures.
-    A system failure probability is obtained by assigning probabilities to basic events and then calculating it accordingly to the gates' semantics.
+    A system failure probability is obtained by assigning probabilities to basic events and then calculating it accordingly to gates' semantics.
     \Acg{MCS} failure probability is the calculation of the probability of the occurrence of \emph{all} basic events of a specific \ac{MCS}.
     \item[Importances\index{Fault Tree Analysis!quantitative importance}:]
     Quantitative rankings on contributions to system failure.
@@ -889,7 +873,7 @@ Some of \acg{FT} evaluation results shown in the \FThandbook are:
     \item[Sensitivity evaluation\index{Fault Tree Analysis!sensitivity evaluation}:]
     Modifying characteristics of components and evaluate their impact.
     For a particular event in a tree, a higher and a lower failure probability value are assigned.
-    If system's unavailability is not changed, then such event is not important---the system is not sensitive to such event.
+    If system's unavailability is not changed, then such event is not important---the system is not sensitive to such an event.
   \end{description}
 \end{itemize}
 
@@ -902,10 +886,8 @@ At least three dependability means can be achieved using \acp{FT}:
 %
 \todo{Improve the relations of dependability and FTA}
 \begin{description}
-  \item[Prevention.]
-  \Iac{FTA} indicates if the probability of failure of a subsystem is high, so such subsystem could be left to be incorporated later.
-  \item[Forecasting.]
-  After a system is in production, one could evaluate its \acp{FT} to verify likely faults and verify its importance to take decisions about using the system (e.g. an airplane).
+  \item[Removal.]
+  \Iac{FTA} indicates if the probability of failure of a subsystem is high, so such subsystem should be removed or left to be incorporated in combination of a more reliable component.
   \item[Tolerance.]
   \Iac{FTA} indicate whether a single fault---or fewer combinations than expected---could lead to a catastrophic failure.
   In this case, a system should have replication, or stages of fault detection and error handling.
@@ -924,7 +906,7 @@ The \FThandbook shows traditional symbols for gates and events.
 Basic events are usually drawn as rectangle (for the text) and a circle below it. Top-level and intermediary events are drawn as a rectangle (for the text) and a gate below it.
 When \iac{FT} becomes too large, transfer in and out symbols can be used.
 They are usually drawn as triangles with a letter or a number.
-\Cref{fig:sft-example-traditional-gates} depicts traditional gates as specified in the \FThandbook, and \cref{fig:sft-example-ald-software} shows \iac{FT} using \theftanalyser---a free commercial tool.
+\Cref{fig:sft-example-traditional-gates} depicts traditional gates as specified in the \FThandbook, and \cref{fig:sft-example-ald-software} shows \iac{FT} using \theftanalyser{}---a free commercial tool.
 In this work, to keep a visual identity with other \acp{FT}, and to avoid symbols confusion, we use gates symbols as shown in~\cref{fig:sft-gates}.
 
 \begin{figure}[t]
@@ -971,7 +953,7 @@ In this work, to keep a visual identity with other \acp{FT}, and to avoid symbol
 
 Structure expressions\index{structure expression} in \ac{FTA} are defined in terms of set theory, using symbols for fault events occurrence.
 %, using what is called of generative sets.
-If a fault event symbol is in a set, then it means that that fault has occurred.
+If a fault event symbol is in a set, then it means that fault has occurred.
 A set is a combination of fault events that causes the top-level event of a tree.
 A structure expression\index{structure expression} of a tree is denoted by a set of sets of fault event combinations.
 The \ortext gate becomes the union operator between sets and the \andtext gate, the intersection.
@@ -1002,14 +984,13 @@ The resulting combinations for $TOP$ are $\left\{a,b\right\}$ and $\left\{a,b,c\
   \label{fig:ex-fault-tree1}
 \end{figure}
 
-After obtaining structure expressions\index{structure expression}, the next step is to reduce the expressions to a canonical form to obtain the \emph{\aclp{MCS}}\index{Minimal Cut!Sets}.
-\Acp{MCS}\index{Minimal Cut!Sets} are the sets that contain the minimum and sufficient events to activate the top-level failure.
-That is, \acp{MCS}\index{Minimal Cut!Sets} are the smallest sets of fault event that, if all occur, cause the top-level failure to occur.
+After obtaining structure expressions\index{structure expression}, the next step is to reduce the expressions to a canonical form to obtain the \emph{\acp{MCS}}\index{Minimal Cut!Sets}, which are the sets that contain the minimum and sufficient events to activate the top-level failure.
+%That is, \acp{MCS}\index{Minimal Cut!Sets} are the smallest sets of fault event that, if all occur, cause the top-level failure to occur.
 Probabilistic analysis is then performed on these events to obtain the overall probability of occurrence of the top-level event.
 The \FThandbook shows an algorithm based on Shannon's method\index{Binary Decision Diagrams!Shannon's method} to reduce structure expressions\index{structure expression} to obtain minimal cut sets\index{Minimal Cut!Sets}.
 %BDDs are essentially the diagrams of Shannon's method.
 The Boolean\index{Boolean Algebra} expression of the tree shown in \cref{fig:ex-fault-tree1} is $TOP = A \wedge B$.
-Shannon's method is explained in \cref{sec:bdd}.
+A technique called \ac{BDD}---which derives from Shannon's method---is explained in \cref{sec:bdd}.
 
 \subsection{\Aclp{TFT}}
 \label{sec:temporal-fault-trees}
@@ -1026,19 +1007,21 @@ Structure expressions\index{structure expression} are also present in \acp{TFT}~
 These expressions use the \ac{SFT} operators \ortext and \andtext, and three new operators related to events ordering: \pandtext, \portext, and \sandtext.
 The semantics of the \pandtext in \acp{TFT} is similar to the semantics of the \pandtext described in the \FThandbook.
 To avoid ambiguous expressions, the semantics in \acp{TFT} is stated in terms of natural numbers, using a \emph{sequence value} function.
-For every possibility it assigns a sequence value to each fault event.
+For every possible combination of events ordering, it assigns a sequence value to each fault event.
 For example, if event A occurs before event B, then the sequence value of A is lower than the sequence value of B, and one formula to express this is $A \pand B$.
 
-An invariant on sequence values is that there are no gaps for assigned values higher than zero.
+An invariant on sequence values is that there are no gaps for assigned values.
 For example, if faults A and B occur at the same time and there are only these two events, then they should both be assigned value $1$.
 On the other hand, if A occurs before B, then the assigned values are 1 and 2, respectively.
 Value zero means that the event is not active on the combination.
-\Cref{tbl:tft-operators} shows the semantics of all \ac{TFT} operators, and \cref{fig:tft-symbols} shows \ac{TFT}-specific symbols used in this work.
-To illustrate \acp{TFT}, for the formula $\parsin{A \pand C} \lor \parsin{A \land B}$, we show: (i) the \ac{FT} in \cref{fig:tft-small-example}, and (ii) its corresponding \ac{TTT} in \cref{tbl:ttt-small-example} (the column `\#' indicates the \ac{MCS} number).
+Similar to Boolean's truth tables, the \pandora methodology defines \acp{TTT}.
+They represent formula values for every combination of events.
+\Cref{tbl:tft-operators} shows the \ac{TTT} of all \ac{TFT} operators, and \cref{fig:tft-symbols} shows \ac{TFT}-specific symbols used in this work.
+To illustrate \acp{TFT}, for the formula $\parsin{A \pand C} \lor \parsin{A \land B}$, we show: (i) the \ac{TFT} in \cref{fig:tft-small-example}, and (ii) its corresponding \ac{TTT} in \cref{tbl:ttt-small-example} (the column `\#' indicates the \ac{MCSeq} number).
 
 \begin{table}
 % table caption is above the table
-\caption{\Acl{TTT} of \acsg*{TFT} operators and sequence value numbers}
+\caption{\Ac{TTT} of \acsg*{TFT} operators and sequence value numbers}
 \label{tbl:tft-operators}
 % For LaTeX tables use
 \centering
@@ -1125,10 +1108,10 @@ A & B & \andtext & \ortext & \pandtext & \portext & \sandtext  \\
 
 From structure expressions in order-sensitive \acp{FT} (\ac{TFT} and \ac{DFT}), \acp{MCSeq} are obtained.
 Several approaches represent \acg{MCSeq} ordering differently.
-For the best of our knowledge they are introduced in~\cite{TD2004} similarly as \ac{MCS}, allowing set elements with arrows (``->'') to represent order.
+For the best of our knowledge they are introduced in~\cite{TD2004} similarly as \ac{MCS}, allowing set elements with arrows (``$\rightarrow$'') to represent order.
 
 For \acp{TFT}, in~\cite{Walker2009} \acp{MCSeq} are represented as \iac{DNF} using \andtext and the temporal operators (\pandtext, \portext, and \sandtext) as doublets (a single temporal relation)---which are the minimal terms---or prime implicants---in the \ac{DNF}.
-In a doublet, the expression is a product (of \andtext\ s) of temporal operators.
+In a doublet, the expression is a product (of \andtext{}s) of temporal operators.
 
 The normal form for \ac{TFT} is similar to \ac{SFT}: it is \iac{DNF} with temporal operators (\pandtext, \portext, \sandtext) in the minterms.
 The reduction of \ac{TFT} structure expressions is achieved using dependency trees.
@@ -1137,6 +1120,7 @@ Conversely, if a node is true, then all its children are also true.
 An issue with dependency trees is that they grow exponentially.
 Accordingly to the work reported in~\cite{WP2010}, it is already infeasible to deal with seven fault events in TFTs.
 The solution is based on a mixed application of dependency trees, modularisation of independent subtrees, and algebraic laws~\cite{WP2009}.
+We show dependency trees in~\cref{sec:dependency-trees}.
 Some of these algebraic laws are:
 %
 \begin{subequations}
@@ -1201,6 +1185,8 @@ The informal semantics of them are:
 \end{figure}
 
 \begin{figure}[t]
+  \caption{\acpg{DFT} gates symbols}
+  \label{fig:dft-symbols}
   \centering
   \begin{subfigure}[b]{.3\linewidth}
     \centering
@@ -1220,14 +1206,13 @@ The informal semantics of them are:
     \caption{\Ac{SEQ} gate}\label{fig:dft-seq-symbol}
   \end{subfigure}%
   %
-  \caption{\acpg{DFT} gates symbols}
-  \label{fig:dft-symbols}
+  \legend{Source: \cite{DBB1992,Boyd1992}}
 \end{figure}
 
 
 There are several means to analyse qualitative and quantitative analysis.
-The work reported in~\cite{Merle2010,MRL+2010,MRL2011,MRL2014} uses structure expressions to perform both qualitative and quantitative analysis, and the work reported in~\cite{MRL2014} summarizes other approaches.
-We increment their summary and categorize them as:
+The works reported in~\cite{Merle2010,MRL+2010,MRL2011,MRL2014} use structure expressions to perform both qualitative and quantitative analysis, and the work reported in~\cite{MRL2014} summarizes other approaches.
+We increment their summary (\cref{tbl:dft-conversion-te-probability}) and categorize them as:
 %
 \begin{itemize}
   \item
@@ -1243,7 +1228,8 @@ We increment their summary and categorize them as:
   \caption{\Ac{DFT} conversion to calculate probability of top-level event}
   \label{tbl:dft-conversion-te-probability}
   \centering
-  \begin{tabularx}{\linewidth}{XXX}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill} } p{5cm} p{5cm} p{5cm} }
+  %\begin{tabularx}{\linewidth}{XXX}
   \hline\noalign{\smallskip}
   \textbf{Conversion} & \textbf{Calculation} & \textbf{Explained in}\\
   \hline\noalign{\smallskip}\hline\noalign{\smallskip}
@@ -1258,7 +1244,8 @@ We increment their summary and categorize them as:
   \hline\noalign{\smallskip}
   \Ac{SBDD} (a modified version of \ac{BDD}) & model-specific & \cite{TXD2011,XTD2012} \\
   \hline\noalign{\smallskip}
-  \end{tabularx}
+  \end{tabular*}
+  %\end{tabularx}
 \end{table}
 
 %Structure expressions\index{structure expression} are also used in \acp{DFT}.
@@ -1274,7 +1261,7 @@ An infinite value means the event never occurs.
 
 \Acp{MCSeq} are extracted from canonical form of structure expressions written in \iac{DNF}.
 Minimal terms are products of variables and \nibeforetext operators (the other operators can be written as combinations of \nibeforetext).
-Structure expressions'\index{structure expression} reduction uses algebraic laws, as for example:
+Structure expressions'\index{structure expression} reduction uses algebraic laws as, for example:
 \begin{subequations}
 \begin{align}
 %a \lor \parsin{a \nibefore b} &= a\\
@@ -1294,10 +1281,10 @@ Structure expressions'\index{structure expression} reduction uses algebraic laws
 \end{align}
 \end{subequations}
 
-\begin{table}[t]
+\begin{table}
   \caption{Algebraic model of \ac{DFT} gates with inputs $A$ and $B$}
   \label{tbl:merle-dft-algebraic-model}
-  \begin{tabularx}{\linewidth}{cXX}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill} } c p{5.9cm} p{7.8cm} }
   \hline\noalign{\smallskip}
   \textbf{Gate} & \textbf{Algebraic model of gate's output} & \textbf{Note}\\
   \hline\noalign{\smallskip}\hline\noalign{\smallskip}
@@ -1313,10 +1300,10 @@ Structure expressions'\index{structure expression} reduction uses algebraic laws
   \pandtext & $B \land \parsin{A \ibefore B}$ &\\
   %
   \hline\noalign{\smallskip}
-  \end{tabularx}
+  \end{tabular*}
 \end{table}
 
-\begin{table}[t]
+\begin{table}
   \caption{Date-of-occurrence\index{Dynamic Fault Tree!Date-of-occurrence function} function for operators defined in \cite{Merle2010}}
   \label{tbl:date-of-occurrence-for-operators}
   \centering
@@ -1367,109 +1354,6 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
   \caption{\Ac{DFT} example}
   \label{fig:dft-example}
 \end{figure}
-
-
-\section[Free Boolean Algebras]{\Aclp*{FBA}}
-\label{sec:fba}
-\index{Boolean Algebra!Free}
-
-Instead of using an axiomatic definition of Boolean\index{Boolean Algebra} algebra, we follow its set-theoretical definition, as shown in~\cite[pp. 254--258]{Stoll1979} and~\cite[pp. 8--11]{GH2009}.
-This definition is more elegant because it represents a Boolean\index{Boolean Algebra} algebra as an algebra of sets and does not rely on axioms (which can be misleading, case there is a unfounded axiom).
-
-\begin{Def}[Boolean Algebra]
-\label{def:boolean-algebra}
-A Boolean algebra is defined as triple $\anglesin{B, \inter, -}$, where $B$ is a set with at least two elements, $inter$ is the intersection (also called meet or \emph{infimum}) and $-$ is the complement (also called negation).
-\end{Def}
-%
-\noindent The other Boolean elements (union, $\bot$, and $\top$) are derived from the other two operators:
-\begin{description}
-  \item[$\union$] is the union (also called join or \emph{supremum}): $A \union B = -(-A \inter -B)$
-  \item [$\bot$] is the bottom (also called zero): $\bot = A \inter -A$
-  \item [$\top$] is the top (also called unit): $\top = -\bot$
-\end{description}
-
-\begin{sloppypar}
-\Iacl{FBA} is defined from a set $E$ of generators.
-A generator can be represented as a proposition in statement calculus~\cite[p. 274]{Stoll1979}.
-For example, ``valve A is stuck closed'' and ``motor X is malfunctioning'' are valid statements.
-A \acl{FBA} is constructed from $\powerset{E}$, where $\powersetop$ is the power set\index{Power Set}.
-Note that if $E$ has $n$ symbols, $\powerset{E}$ has $2^{n}$ elements, called \emph{atoms}\index{Boolean algebra!atoms} of a finite Boolean algebra.
-For the two statements above, the atoms\index{Boolean algebra!atoms} are:
-\begin{itemize}
-  \item ``Valve A is stuck closed'' and ``motor X is malfunctioning''
-  \item ``Valve A is stuck closed'' and ``motor X is \emph{not} malfunctioning''
-  \item ``Valve A is \emph{not} stuck closed'' and ``motor X is malfunctioning''
-  \item ``Valve A is \emph{not} stuck closed'' and ``motor X is \emph{not} malfunctioning''
-\end{itemize}
-Such Boolean algebra has $2^{2^{n}}$ formulas~\cite[p. 261]{GH2009}.
-For example, if $E = \setsin{a,b}$, then $\powerset{E} = \setsin{ \setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b} }$, hence the Boolean algebra generated by $E$ contains sixteen ($2^{2^{2}}$) formulas:
-$\setsin{}$,
-$\setsin{\setsin{}}$,
-$\setsin{\setsin{}, \setsin{a}}$,
-$\setsin{\setsin{}, \setsin{b}}, \ldots$,
-$\setsin{\setsin{a}, \setsin{a,b}}, \ldots$,
-$\setsin{\setsin{b}, \setsin{a,b}}, \ldots$,
-$\setsin{\setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b}}$.
-\end{sloppypar}
-
-The Boolean algebra $B$ can be inductively defined using some constructs.
-%
-\begin{Def}[Inductive \acl{FBA}]
-\label{def:inductive-fba}
-Let $s$ be a statement, then:
-%
-\begin{subequations}
-\begin{align}
-\var s = \setsin{X | s \in X} & \implies \var s \in B & \text{(variable)}\\
-X \in B & \implies -X \in B                           & \text{(complement)}\\
-X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
-\end{align}
-\end{subequations}
-%
-\end{Def}
-
-The characterisation of a ``free'' Boolean algebra comes from that, for some valuation function $a$, some of the formulas evaluates to ``1''.
-Given a function $p:B \cartesian \setsin{0,1} \rightarrow B$, such that:
-%
-\begin{equation}
-p\parsin{i,j} =
-\begin{cases}
-  i & \quad j = 1\\
-  -i & \quad j = 0
-\end{cases}
-\end{equation}
-
-\begin{Lem}[Free generators (valuation)]
-\label{lem:boolean-algebra-free-generators-valuation}
-Let $F$ be a finite set, such that $F \subseteq E$, and $a: F \rightarrow \setsin{0,1}$, a necessary and sufficient condition for a set $E$ of generators of a Boolean algebra B to be free is then:
-%
-\begin{equation}
-\bigwedge_{i \in F} p\parsin{i, a \parsin{i}} \neq 0
-\end{equation}
-\end{Lem}
-\begin{proof}
-See~\cite[p. 258]{GH2009}.
-\end{proof}
-
-
-Essentially, \cref{lem:boolean-algebra-free-generators-valuation} states that there is no relation between generators, such as $a = -b$.
-
-\begin{Lem}[Free generators (algebraic)]
-Let $i$ and $j$ be statements, such that $i,j \in E$, hence from \cref{def:inductive-fba,lem:boolean-algebra-free-generators-valuation} it is necessary and sufficient that:
-%
-\begin{subequations}
-\begin{align}
-\var i = \var j & \iff i = j\\
-\var i & \neq - \var j\\
--\var i & \neq \var j
-\end{align}
-\end{subequations}
-%
-\end{Lem}
-%
-\begin{proof}
-See~\cite[p. 4]{Huffm2010}
-\end{proof}
 
 \section{Structure expressions analysis}
 \label{sec:structure-expressions-analysis}
@@ -1664,6 +1548,108 @@ It is clear that the structure function is non-coherent in $x_3$ accordingly to 
 The problem with this tree is the interpretation of the qualitative results.
 One of the possibilities in this scenario is that the college student would take a ride \andtext take the metro ($x_1 \land x_2$).
 Quantitatively, the analysis of the probabilities shows that this result is not negligible, but its interpretation is impossible.
+
+\section[Free Boolean Algebras]{\Aclp*{FBA}}
+\label{sec:fba}
+\index{Boolean Algebra!Free}
+
+Instead of using an axiomatic definition of Boolean\index{Boolean Algebra} algebra, we follow its set-theoretical definition, as shown in~\cite[pp. 254--258]{Stoll1979} and~\cite[pp. 8--11]{GH2009}.
+This definition is more elegant because it represents a Boolean\index{Boolean Algebra} algebra as an algebra of sets and does not rely on axioms (which can be misleading, case there is a unfounded axiom).
+
+\begin{Def}[Boolean Algebra]
+\label{def:boolean-algebra}
+A Boolean algebra is defined as a triple $\anglesin{B, \inter, -}$, where $B$ is a set with at least two elements, $\inter$ is the intersection (also called meet or \emph{infimum}) and $-$ is the complement (also called negation).
+\end{Def}
+%
+\noindent The other Boolean elements (union, $\bot$, and $\top$) are derived from the other two operators:
+\begin{description}
+  \item[$\union$] is the union (also called join or \emph{supremum}): $A \union B = -(-A \inter -B)$
+  \item [$\bot$] is the bottom (also called zero): $\bot = A \inter -A$
+  \item [$\top$] is the top (also called unit): $\top = -\bot$
+\end{description}
+
+\begin{sloppypar}
+\Iacl{FBA} is defined from a set $E$ of generators.
+A generator can be represented as a proposition in statement calculus~\cite[p. 274]{Stoll1979}.
+For example, ``valve A is stuck closed'' and ``motor X is malfunctioning'' are valid statements.
+A \acl{FBA} is constructed from $\powerset{E}$, where $\powersetop$ is the power set\index{Power Set}.
+Note that if $E$ has $n$ symbols, $\powerset{E}$ has $2^{n}$ elements, called \emph{atoms}\index{Boolean algebra!atoms} of a finite Boolean algebra.
+For the two statements above, the atoms\index{Boolean algebra!atoms} are:
+\begin{itemize}
+  \item ``Valve A is stuck closed'' and ``motor X is malfunctioning''
+  \item ``Valve A is stuck closed'' and ``motor X is \emph{not} malfunctioning''
+  \item ``Valve A is \emph{not} stuck closed'' and ``motor X is malfunctioning''
+  \item ``Valve A is \emph{not} stuck closed'' and ``motor X is \emph{not} malfunctioning''
+\end{itemize}
+Such Boolean algebra has $2^{2^{n}}$ formulas~\cite[p. 261]{GH2009}.
+For example, if $E = \setsin{a,b}$, then $\powerset{E} = \setsin{ \setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b} }$, hence the Boolean algebra generated by $E$ contains sixteen ($2^{2^{2}}$) formulas:
+$\setsin{}$,
+$\setsin{\setsin{}}$,
+$\setsin{\setsin{}, \setsin{a}}$,
+$\setsin{\setsin{}, \setsin{b}}, \ldots$,
+$\setsin{\setsin{a}, \setsin{a,b}}, \ldots$,
+$\setsin{\setsin{b}, \setsin{a,b}}, \ldots$,
+$\setsin{\setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b}}$.
+\end{sloppypar}
+
+The Boolean algebra $B$ can be inductively defined using some constructs.
+%
+\begin{Def}[Inductive \acl{FBA}]
+\label{def:inductive-fba}
+Let $s$ be a statement, then:
+%
+\begin{subequations}
+\begin{align}
+\var s = \setsin{X | s \in X} & \implies \var s \in B & \text{(variable)}\\
+X \in B & \implies -X \in B                           & \text{(complement)}\\
+X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
+\end{align}
+\end{subequations}
+%
+\end{Def}
+
+The characterisation of a ``free'' Boolean algebra comes from that, for some valuation function $a$, some of the formulas evaluates to ``1''.
+Given a function $p:B \cartesian \setsin{0,1} \rightarrow B$, such that:
+%
+\begin{equation}
+p\parsin{i,j} =
+\begin{cases}
+  i & \quad j = 1\\
+  -i & \quad j = 0
+\end{cases}
+\end{equation}
+
+\begin{Lem}[Free generators (valuation)]
+\label{lem:boolean-algebra-free-generators-valuation}
+Let $F$ be a finite set, such that $F \subseteq E$, and $a: F \rightarrow \setsin{0,1}$, a necessary and sufficient condition for a set $E$ of generators of a Boolean algebra B to be free is then:
+%
+\begin{equation}
+\bigwedge_{i \in F} p\parsin{i, a \parsin{i}} \neq 0
+\end{equation}
+\end{Lem}
+\begin{proof}
+See~\cite[p. 258]{GH2009}.
+\end{proof}
+
+
+Essentially, \cref{lem:boolean-algebra-free-generators-valuation} states that there is no relation between generators, such as $a = -b$.
+
+\begin{Lem}[Free generators (algebraic)]
+Let $i$ and $j$ be statements, such that $i,j \in E$, hence from \cref{def:inductive-fba,lem:boolean-algebra-free-generators-valuation} it is necessary and sufficient that:
+%
+\begin{subequations}
+\begin{align}
+\var i = \var j & \iff i = j\\
+\var i & \neq - \var j\\
+-\var i & \neq \var j
+\end{align}
+\end{subequations}
+%
+\end{Lem}
+%
+\begin{proof}
+See~\cite[p. 4]{Huffm2010}
+\end{proof}
 
 \subsection[Usefulness of NOT gates in FTA]{Usefulness of \nottext gates in \ac{FTA}}
 \label{sec:non-coherent-usefulness}
