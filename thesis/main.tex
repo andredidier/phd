@@ -1,6 +1,6 @@
 \documentclass[12pt,openright,twoside,a4paper,oldfontcommands,english,brazil]{abntex2}
 
-\usepackage{lmodern}      % Usa a fonte Latin Modern      
+\usepackage{lmodern}      % Usa a fonte Latin Modern
 \usepackage[T1]{fontenc}    % Selecao de codigos de fonte.
 \usepackage[utf8]{inputenc}   % Codificacao do documento (conversÃ£o automÃ¡tica dos acentos)
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
@@ -119,7 +119,7 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 % Tamanho do parágrafo
 \setlength{\parindent}{1.3cm}
 \setlength{\parskip}{0.2cm}
-\frenchspacing 
+\frenchspacing
 
 
 %\address{Recife-PE}
@@ -382,7 +382,7 @@ I dedicate this thesis to Juliana, Luciana (pipoquinha), and Bianca (snowflake).
 
 If I were afraid of the path, I wouldn't have gotten here.
 
-Two men helped me to build this path far before I started my scholar journey: Roberto and Júnior. 
+Two men helped me to build this path far before I started my scholar journey: Roberto and Júnior.
 My two grandparents couldn't see how far I got.
 My heart was with them all the time, but I was physically far away from them in their very last breath.
 May God have them in his arms.
@@ -390,7 +390,7 @@ May God have them in his arms.
 It is now ten years since I graduated.
 I met professors Alexandre and Augusto still during the Computing Science undergrad course.
 They have been present in my academic life ever since.
-Their comments, instructions, talks, (even jokes), are what molded my path to here. 
+Their comments, instructions, talks, (even jokes), are what molded my path to here.
 I have no words to express how much I thank them.
 %I hope this is the beginning of a healthy partnership for the improvement of science.
 
@@ -418,7 +418,7 @@ In special, my two girls and my wife.
   \vspace*{\fill}
   \begin{flushright}
   \textit{‘‘Mathematical reasoning may be regarded
-  rather schematically as the exercise of a combination of two facilities, 
+  rather schematically as the exercise of a combination of two facilities,
   which we may call intuition and ingenuity.\\
   (Alan Turing)}
   \end{flushright}
@@ -729,10 +729,10 @@ For example, symbolic execution may be used to obtain testing patterns, test inp
 
 The techniques to attain fault tolerance are summarized as follows:
 \begin{description}
-  \item[Error detection:] is used to identify the presence of an error. 
-  It can be a concurrent or a preemptive detection. 
+  \item[Error detection:] is used to identify the presence of an error.
+  It can be a concurrent or a preemptive detection.
   Concurrent detection takes place during normal service, while preemptive detection takes place while normal service is suspended.
-  \item[Recovery:] transforms a system state that contains errors into a state without them. The behaviour of the system upon recovery is equivalent to the normal behaviour. 
+  \item[Recovery:] transforms a system state that contains errors into a state without them. The behaviour of the system upon recovery is equivalent to the normal behaviour.
   Techniques range from rollback to a previously saved state without errors, error masking, isolation of faulty components, to reconfiguration using spare components.
 \end{description}
 
@@ -803,7 +803,7 @@ In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their 
 
 \Acp{FBA} and \acp{BDD} are a basis to analyse structure expressions.
 Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{sec:strategy}).
-We explain \acp{FBA} in \cref{sec:fba}, and \acp{BDD} and derived techniques in \cref{sec:structure-expressions-analysis}.
+We explain \acp{BDD} and derived techniques in \cref{sec:structure-expressions-analysis}, and \acp{FBA} in \cref{sec:fba}.
 
 The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}: (i) can be misleading, generating non-coherent \aclp{FT}, or (ii) can be essential in practical use.
 We discuss such cases in \cref{sec:not-operator}.
@@ -837,7 +837,7 @@ With component and system design evolution, \acp{DFT} were created to tackle dyn
 \Acg{SFT} gates are still present as \acg{DFT} gates.
 We explain them and \acg{DFT} analysis in \cref{sec:dynamic-fault-trees}.
 
-The structure of \iac{FT} (or the structure of \iac{MCS}, explained further) is represented with a formula. 
+The structure of \iac{FT} (or the structure of \iac{MCS}, explained further) is represented with a formula.
 The variables represent occurrence of basic events.
 Unary and binary relation symbols capture the semantics of gates.
 A formula with these characteristics is called \emph{structure expression}\index{structure expression} or \emph{structure function}\index{structure expressions!function} (as the expression depends on the variables).
@@ -1357,21 +1357,45 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
 
 \section{Structure expressions analysis}
 \label{sec:structure-expressions-analysis}
-\todo{Continue from here. Jump FBA.}
 
 In this section we detail the non-state-based methods to analyse structure expressions.
-As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based
-\todo{cite all dft works that are state-based}.
-An alternative to a specific analysis method is to use algebraic laws.
+%As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based
+%\todo{cite all dft works that are state-based}.
+Another common approach to analyse fault tree is to perform structure expression analysis based on algebraic laws.
 Boolean laws are well-known and are used for \acp{SFT}, temporal laws~\cite{Walker2009,WP2010} for \acp{TFT}, and the works reported in~\cite{Merle2010,MRL2011} show laws for \acp{DFT}.
 An issue with algebraic laws is that in some cases, the expression needs to be expanded before it gets reduced, so reduction automation is not trivial without a theorem prover.
-For example, the following \acg{TFT} structure expression needs to be expanded \cite{WP2010}:
+For example, the following \acg{TFT} structure expression needs to be expanded \cite{WP2010} before it gets reduced:
 \begin{align*}
   \parsin{X \land Y} & \lor \parsin{\parsin{X \pand Y} \land Z} &\\
-  \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} & \lor \parsin{\parsin{X \pand Y} \land Z} & \text{\cref{law:tft-conjunctive-completion-law}}\\
+  \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} & \lor \parsin{\parsin{X \pand Y} \land Z} & \text{by \cref{law:tft-conjunctive-completion-law}}\\
   \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} & &\\
-  X \land Y & & \text{\cref{law:tft-conjunctive-completion-law}}
+  X \land Y & & \text{by \cref{law:tft-conjunctive-completion-law}}
 \end{align*}
+%
+A denotational semantics to Boolean expressions---and consequently to \ac{SFT}---is given by \acp{FBA} (\cref{sec:fba}).
+
+There are several works with state-based analysis for \acp{FT} (\ac{SFT}, \ac{TFT}, and \ac{DFT}).
+We show some of them in \cref{sec:ft-state-based-analysis}.
+
+\subsection{State-based and temporal logic analysis}
+\label{sec:ft-state-based-analysis}
+
+The work reported in~\cite{STR2002} shows a formal approach to analyse \ac{SFT} using \ac{ITL}.
+Instead of tackling basic events ordering (as in \pandtext), it consider a causal relation over a gate, as for example, a relation of a basic event and a higher-level intermediary event.
+
+For \acp{TFT}, the works reported in~\cite{MPW2010,MWP2012} shows an inverse solution.
+They map \acp{FSM} to \pandora logic, then verify system properties.
+They show that such a mapping simplifies expressions reduction, thus improving performance on the analysis.
+
+Although there is formal modelling for \acp{DFT}, most of the works are state-based.
+The work reported in~\cite{CSD2000} shows a formal model for \ac{DFT} analysis.
+It models \acap{DTMC} in \ac{Z}, as well as each \ac{DFT} element (basic events and gates).
+The analysis uses a quantifier on states of the resulting \aca{DTMC} automaton.
+The work reported in~\cite{GD1997} shows a methodology to perform a modular analysis of \acp{DFT} based on \ac{BDD} and \aca{DTMC}.
+As \ac{DFT} extends \ac{SFT}, it identifies subtrees that are purely \ac{SFT} and uses \ac{BDD}, otherwise, it performs \aca{DTMC} analysis.
+Still on the state-based approaches, the work reported in~\cite{SLD2011} maps \acp{DFT} to \ac{HLPN} to analyse false alarms.
+
+%The work reported in~\cite{LR1998} uses a formal approach using \ac{FSM} to generate fault trees automatically from system models.
 
 In the following we show specific methods that are designed to reduce structure expressions.
 In essence, the methods are very similar.
@@ -1423,7 +1447,7 @@ Following Shannon's method, we choose a variable, and build the lower level \ac{
 In the remainder of the path, the variable's value is unchanged.
 For example, the expression $A \lor \parsin{\lnot B \land C}$ has value ``0'' on lines $a$ and $c$, and value ``1'' on the other lines.
 Choosing variable $A$ first, then $B$ and $C$, the resulting \ac{BDD} with the binary values nodes (called sink nodes ``false'' and ``true'') for this formula is depicted in \cref{fig:bdd-diagram-for-example-expression}.
-Starting from the top-level node $A$, the formula expressed by the \ac{BDD} is true if $A$ assumes value true. 
+Starting from the top-level node $A$, the formula expressed by the \ac{BDD} is true if $A$ assumes value true.
 If $A$ is false, and $B$ is false, the expression is only true if $C$ is true.
 
 \begin{figure}[t]
@@ -1434,7 +1458,7 @@ If $A$ is false, and $B$ is false, the expression is only true if $C$ is true.
 \end{figure}
 
 \Cref{fig:bdd-diagram-for-example-expression} is \iac{ROBDD}.
-To be considered \iac{ROBDD}, the \ac{BDD} must meet the following constraints~\cite{BRB1990}: 
+To be considered \iac{ROBDD}, the \ac{BDD} must meet the following constraints~\cite{BRB1990}:
 %
 \begin{itemize}
   \item the variables are assigned a constant ordering;
@@ -1442,18 +1466,18 @@ To be considered \iac{ROBDD}, the \ac{BDD} must meet the following constraints~\
   \item each node represents a distinct logic function.
 \end{itemize}
 %
-The size of \iac{ROBDD} for a given expression depends on the variable order chosen.
+The size of \iac{ROBDD} for a given expression depends on the chosen variable ordering.
 The work reported in~\cite{Rudell1993} shows initial findings on variable order, and the work reported in~\cite{KH2014} shows heuristics to improve the performance for optimal order search.
 
 For \acp{SFT} the evaluation of \iac{BDD} is the calculation of the probability of the paths ending in \emph{true}.
-For the example of \cref{fig:bdd-diagram-for-example-expression}, the probability of the expression is given by: $\probability{A \lor \parsin{\lnot A \land \lnot B \land C}}$ (note that the formula in the probability calculation is different from the formula that originated the diagram).
+For the example of \cref{fig:bdd-diagram-for-example-expression}, the probability of the expression is obtained from the formula: $\probability{A \lor \parsin{\lnot A \land \lnot B \land C}}$. Note that the formula in the probability calculation is different from the formula that originated the diagram.
 
 \subsection{Dependency trees}
 \label{sec:dependency-trees}
 
 A dependency tree is a hierarchical acyclic graph of expressions that shows all possible cut sequences for any given set of events.
 It is a graphical view of a \ac{TTT}.
-At the top of a dependency tree are the variables, the single events that occur in an expression.
+At the top of a dependency tree are the variables, that is, the single events that occur in an expression.
 On the lower levels are the increasingly complex expressions.
 Each node represents \iac{MCSeq}.
 \Cref{fig:simple-dependency-tree} shows a dependency tree with all nodes for variables $X$ and $Y$.
@@ -1472,7 +1496,7 @@ To reduce the formula given on the beginning of this section, the expression $\p
 Nodes marked as ``1'' are those \acp{MCSeq} given directly by the formula.
 Nodes marked as ``2'' are child nodes of the ``1'''s nodes, and so forth.
 The node of the expression $\parsin{\parsin{X \pand Y} \land Z}$ is a grandchild of $X \land Y$, thus it is not necessary.
-Thus the expression if obtained by the active higher level node, which is $X \land Y$.
+The final expression if obtained by the active higher level node, which is $X \land Y$.
 
 \begin{figure}
   \centering
@@ -1484,12 +1508,12 @@ Thus the expression if obtained by the active higher level node, which is $X \la
 \subsection{\Aclp*{SBDD}\index{Sequential Binary Decision Diagrams}}
 \label{sec:sbdd}
 
-\Acp{SBDD} are an extension of \ac{BDD} to tackle ordering of events in \acp{DFT} for \ac{CSp} and \ac{WSp} gates.
+\Ac{SBDD} is an extension of \ac{BDD} to tackle ordering of events in \acp{DFT} for \ac{CSp} and \ac{WSp} gates.
 Ordering of events in \ac{CSp} gates~\cite{XTD2012} is slightly different compared to \ac{WSp}~\cite{TXD2011}.
-A backup system in \ac{CSp} is slower than in \ac{WSp}, which implies that there are less failure possibilities in \ac{CSp}, but its the readiness is lower than in \ac{WSp}.
+A backup system in \ac{CSp} gets activated slower than in \ac{WSp}, which implies that there are less failure possibilities in \ac{CSp}, but its the readiness is lower than in \ac{WSp}.
 \Ac{SBDD} adds a new node kind that contains a binary operation of fault events, which allows to express the ordering of events.
 One kind of operation expresses the slowness of the relation of the fault events of \ac{CSp}, and another one expresses the readiness of the \ac{WSp}.
-The latter semantics is similar to the semantics of \pandtext and \nibeforetext (combined with \andtext) gates.
+The latter semantics is similar to the semantics of \pandtext and \ibeforetext (combined with \andtext) gates.
 
 \Ac{SBDD} creation has two steps: (i) \ac{CSp} or \ac{WSp} \ac{DFT} conversion, and (ii) \ac{SBDD} model generation.
 In (i), it is a \ac{DFT}-to-\ac{DFT} conversion.
@@ -1503,6 +1527,9 @@ The evaluation is similar to \acg{BDD}: each path ending in true is a minimal te
 \section[Free Boolean Algebras]{\Aclp*{FBA}}
 \label{sec:fba}
 \index{Boolean Algebra!Free}
+
+Another means to analyse \acp{SFT} is to use \iac{FBA} to perform set-theoretical operations (intersection, difference, etc.) to reduce expressions.
+In this section we briefly present \ac{FBA} theory and elements.
 
 Instead of using an axiomatic definition of Boolean\index{Boolean Algebra} algebra, we follow its set-theoretical definition, as shown in~\cite[pp. 254--258]{Stoll1979} and~\cite[pp. 8--11]{GH2009}.
 This definition is more elegant because it represents a Boolean\index{Boolean Algebra} algebra as an algebra of sets and does not rely on axioms (which can be misleading, case there is a unfounded axiom).
@@ -1605,14 +1632,14 @@ See~\cite[p. 4]{Huffm2010}
 \section[Using NOT operator in fault trees]{Using NOT operator in \aclp*{FT}}
 \label{sec:not-operator}
 
-Although the \FThandbook introduces several gates, the vast majority analysis of systems would fit in \acp{FT} with only \andtext and \ortext gates (coherent \acp{FT})\index{Fault tree!coherent}.
-Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when NOT gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}), such reduction can cause the interpretation of failure logic to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
+Although the \FThandbook introduces several gates, the vast majority of \ac{SFT} analysis would fit in \acp{FT} with only \andtext and \ortext gates (coherent \acp{FT})\index{Fault tree!coherent}.
+Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when NOT gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}).
+Such a reduction can cause the interpretation of failure logic to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
 The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} shows how to solve it using \acp{BDD}.
 In the following we show: (i) the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and (ii) the second example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates in a multitasking system (\cref{sec:non-coherent-usefulness}).
 
 Negated events in non-coherent analysis are in fact the working state of a component.
-The probability contribution of a negated basic event is close to 1~\cite{Andrews2001,CCR2008}.
-
+The probability contribution of a negated basic event is close to 1.
 The problem with non-coherent \acp{FT} is that its analysis can cause impossible situations.
 The general formula to identify coherency is given in~\cite{Andrews2001,CCR2008} in terms of a structure function\index{structure expression!function}.
 
@@ -1628,7 +1655,7 @@ A binary structure function $\ftcoherency{x}$ is coherent if all the following h
 \end{Def}
 %
 \noindent where $B^1 = \setsin{0,1}$, $B^n = B^{n-1} \cartesian B^1$, $x_i = 1$ implies that component $i$ is failed, and $\ftcoherency{x} = 1$ implies the system is failed.
-For $y = \squaresin{y_1,y_2,\ldots,y_n}$, monotonicity of $\ftcoherencyop$ means that for \emph{all} $i$, $x_i \ge y_i$, and for \emph{some} $i$, $x_i > y_i$.
+For $y = \squaresin{y_1,y_2,\ldots,y_n}$, monotonicity of $\ftcoherencyop$ means that for \emph{all} $i$, $x_i \ge y_i$ ($y_i = 1 \implies x_i = 1$), and for \emph{some} $i$, $x_i > y_i$ ($x_i = 1$ and $y_i = 0$).
 Variable replacement ($\replace{a}{b}$) is as usual:
 $\ftcoherency{x}\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, \ldots, x_n}$
 
@@ -1972,6 +1999,8 @@ Our strategy avoids this kind of issue by being completely systematic.
 
 \part{Results}
 \label{part:results}
+
+\todo{Use BA1993 to minimise the gap between systems models and fault trees. Also: MCS+1999}
 
 \chapter{A free algebra to express structure expressions of ordered events}
 \label{sec:strategy}

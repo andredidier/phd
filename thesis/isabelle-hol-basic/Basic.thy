@@ -48,7 +48,7 @@ Theories in Isabelle/HOL are based in a few axioms.
 Isabelle/HOL Library's theories---that comes with the installer---and user's theories are based on 
 these axioms.
 %
-This design decision avoids inconsistencies and paradoxes.
+This design decision avoids inconsistencies and paradoxes (similar as it is in \ac{Z}).
 
 Besides the provided theories, its active community provides a comprehensive \ac{AFP}.
 %
