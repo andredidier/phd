@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"clear",
+				"cleardoublepage"
+			],
+			[
 				"pand",
 				"pandora"
 			],
@@ -239,7 +243,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 0,
+				"buffer_size": 145965,
 				"line_ending": "Windows"
 			}
 		},
@@ -247,7 +251,7 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 6141,
+				"buffer_size": 6376,
 				"line_ending": "Windows"
 			}
 		},
@@ -343,10 +347,17 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis"
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis"
 	],
 	"file_history":
 	[
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
+		"/C/Users/andre/Desktop/Mesa/2015-12-12 Concurso UFRPE/2016-01-11_resumos-ufrpe.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/ficha-catalografica.tex",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/thesis.sublime-project",
 		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
 		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/main.log",
 		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/AutoSpell/AutoSpell.sublime-settings",
@@ -369,7 +380,6 @@
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
 		"/C/Users/andre/Desktop/Set_Theory_and_Logic.bibtex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.log",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acronyms.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.pdf",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/delete.tex",
@@ -387,17 +397,13 @@
 		"/C/Users/andre/Desktop/Mesa/risethesis/resumo.tex",
 		"/C/Users/andre/Desktop/Mesa/risethesis/risethesis.tex",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/LaTeXTools.sublime-settings",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/thesis.sublime-project",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/banca.tex",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/main.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/intro.tex",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
 		"/C/Users/andre/Desktop/Mesa/risethesis/appendix/mapping-study.tex",
 		"/C/Users/andre/Desktop/Mesa/risethesis/chapters/introduction.tex",
 		"/C/Users/andre/Desktop/Mesa/risethesis/agradecimentos.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/operating-and-support-hazard-analysis/replace-220v-electrical-outlet.csp",
-		"/C/Users/andre/Desktop/Mesa/2015-12-12 Concurso UFRPE/2016-01-11_resumos-ufrpe.tex",
 		"/C/Users/andre/Dropbox (Pessoal)/Doutorado/Prorrogação 2016.1 - novo.xml",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/suggested-reviewers.txt",
 		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/document/root.tex",
@@ -472,13 +478,11 @@
 		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes CN.csv",
 		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/teste-andreia.c",
 		"/C/Users/andre/Desktop/10.1007%2Fs100090050035.bib",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes Est.csv",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/main.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/1EE/makefile"
+		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes Est.csv"
 	],
 	"find":
 	{
-		"height": 36.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -492,6 +496,18 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"\\",
+			"possessive-",
+			"possessive",
+			"plural",
+			"dft",
+			"\\\\todo",
+			"\\todo",
+			"acro",
+			"expl",
+			"acro",
+			"\\\\([aA])c([a-z])\\{",
+			"\\\\ac([a-z])\\{",
 			"\\\\\\\\cite",
 			"\\\\pandora",
 			"dic",
@@ -607,19 +623,7 @@
 			"index",
 			"\\\\hiphops",
 			"acronym",
-			"acro",
-			"\\\\endcsname",
-			"acronym",
-			"acsg",
-			"acrony",
-			"\\\\acsu",
-			"\\acro",
-			"includegraphics",
-			"includegraphicsaspectratio",
-			"simple",
-			"jump",
-			"sec:background",
-			"sec:intro"
+			"acro"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -627,6 +631,8 @@
 		"regex": true,
 		"replace_history":
 		[
+			"\\\\$1c$2*\\{",
+			"\\$1c$2*\\{",
 			"\\{CSPm\\}",
 			"Binary Decision Diagrams!",
 			"FBA",
@@ -676,7 +682,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 145965,
 						"regions":
 						{
 							"bookmarks":
@@ -686,8 +692,24 @@
 								"regions":
 								[
 									[
-										0,
-										0
+										2115,
+										2115
+									],
+									[
+										13966,
+										13966
+									],
+									[
+										14828,
+										14828
+									],
+									[
+										16677,
+										16677
+									],
+									[
+										19127,
+										19127
 									]
 								],
 								"scope": "bookmarks"
@@ -696,19 +718,20 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								19104,
+								19104
 							]
 						],
 						"settings":
 						{
 							"forward_sync": false,
+							"spell_check": true,
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 10363.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -720,15 +743,28 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6141,
+						"buffer_size": 6376,
 						"regions":
 						{
+							"bookmarks":
+							{
+								"flags": 144,
+								"icon": "bookmark",
+								"regions":
+								[
+									[
+										2577,
+										2577
+									]
+								],
+								"scope": "bookmarks"
+							}
 						},
 						"selection":
 						[
 							[
-								6044,
-								6044
+								3071,
+								3071
 							]
 						],
 						"settings":
@@ -737,7 +773,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 6671.0,
+						"translation.y": 2605.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -819,7 +855,7 @@
 	"project": "thesis.sublime-project",
 	"replace":
 	{
-		"height": 62.0
+		"height": 66.0
 	},
 	"save_all_on_build": true,
 	"select_file":

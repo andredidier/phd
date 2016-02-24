@@ -1,8 +1,8 @@
-\documentclass[12pt,openright,twoside,a4paper,oldfontcommands,english,brazil]{abntex2}
+\documentclass[12pt,openright,twoside,a4paper,oldfontcommands,english,brazil,draft]{abntex2}
 
-\usepackage{lmodern}      % Usa a fonte Latin Modern
-\usepackage[T1]{fontenc}    % Selecao de codigos de fonte.
-\usepackage[utf8]{inputenc}   % Codificacao do documento (conversÃ£o automÃ¡tica dos acentos)
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}  
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \usepackage{makeidx}
 \usepackage{colortbl}
@@ -31,9 +31,55 @@
 \usepackage{textcomp}
 %Quantas vezes e em quais páginas a referência foi citada
 %\usepackage[english,hyperpageref]{backref}
+%\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm]{todonotes} % NOTAS
+\usepackage[draft]{fixme}
+\usepackage{soul}
 
 \usepackage{indentfirst}
 \usepackage{microtype}      % para melhorias de justificação
+
+%%%%%%%%%%%%%%%%% NOTAS
+%TODONOTES
+%\newcommand{\notename}{Comment}%
+%
+%\addto\captionsbrazil{%
+%  %\renewcommand{\chaptername}{Tema}%
+%  \renewcommand{\contentsname}{Temas}%
+%  \renewcommand{\notename}{Comentário}%
+%}
+%
+%\newcounter{note}
+%\newcommand{\note}[2][]{%
+%  % initials of the author (optional) + note in the margin
+%  \refstepcounter{note}%
+%  {%
+%    %\setstretch{0.7}% spacing
+%    \todo[color={red!100!green!33},size=\small,inline]{%
+%    \textbf{\notename{} [\uppercase{#1}\thenote]:}~#2}%
+%  }
+%}
+%\newcommand{\texthl}[1]{#1}
+%\newcommand{\hlfix}[2]{\texthl{#1}\todo{#2}\xspace}
+
+%SIMPLES
+%\makeatletter
+%\newcommand{\texthl}[1]{#1}
+%\newcommand{\todo}[1]{\@latex@warning{TODO #1}}
+%\newcommand{\hlfix}[2]{\texthl{#1}\todo{#2}\xspace}
+%\newcommand{\listoftodos}[1]{}
+%\makeatother
+
+%FIXME
+\fxsetup{layout={footnote}}
+%\fxuselayouts{pdfnote,margin}
+%\fxusetargetlayout{signature}
+\FXRegisterAuthor{ad}{alrd}{AD}
+\FXRegisterAuthor{am}{acm}{AM}
+%\fxuselayouts{pdfsignote,margin}
+\newcommand{\todo}[1]{\adnote{#1}}
+\newcommand{\note}[2][]{\adnote{#2}}
+\newcommand{\listoftodos}[1]{\listoffixmes}
+%%%%%%%%%%%%%%%%% NOTAS
 
 % alterando o aspecto da cor azul
 \definecolor{blue}{RGB}{41,5,195}
@@ -159,9 +205,6 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \newtheorem{Prop}{Proposition}[chapter]
 \newtheorem{Cor}{Corollary}[chapter]
 
-\makeatletter
-\newcommand{\todo}[1]{\@latex@warning{TODO #1}}
-\makeatother
 \hyphenation{EMBRAER}
 \newcommand{\includegraphicsaspectratio}[2][1]{%
   \includegraphics[width=#1\textwidth,height=#1\textheight,keepaspectratio]{#2}%
@@ -397,7 +440,7 @@ I have no words to express how much I thank them.
 CNPq and FACEPE were keen to guarantee my existential needs.
 The former with the trip to Newcastle upon Tyne, and the latter during the time I stayed in Recife, before and after the trip.
 
-I thank to Sascha Romanovsky for accepting me as his advisee while I was a Research Assistant of the COMPASS project.
+I thank to Sascha Romanovsky for accepting me as his \hl{advisee}\adnote{Advisee estaria correto, não?} while I was a Research Assistant of the COMPASS project.
 His comments, instructions, and knowledge were of great importance for this work.
 
 My stay in Newcastle upon Tyne could be as good as it was without the hospitality, useful discussions, and support of my colleagues at Newcastle University.
@@ -410,7 +453,6 @@ They were our family abroad.
 I thank all my family for their patience to have me away in several family reunions, due the time required to do this work.
 In special, my two girls and my wife.
 
-\todo{Agradecimentos: Alexandre, Sascha, Augusto, Zoe, John Fitzgerald}
 \end{agradecimentos}
 
 \begin{epigrafe}
@@ -435,13 +477,13 @@ In special, my two girls and my wife.
 \begin{resumo}[Resumo]
 \begin{otherlanguage*}{brazil}
 A modelagem de defeitos é essencial na antecipação de falhas em sistemas críticos.
-Tradicionalmente, Árvores de Defeitos Estáticas são empregadas para este fim, mas Árvores de Defeitos Temporais e Dinâmicas têm ganhado evidência devido ao seu rico poder para modelar e detectar complexa propagação de defeitos que levam a uma falha.
+Tradicionalmente, Árvores de Defeitos Estáticas são empregadas para este fim, mas Árvores de Defeitos Temporais e Dinâmicas têm ganho evidência devido ao seu maior poder para modelar e detectar propagações complexas de defeitos que levam a uma falha.
 
-Em um trabalho anterior, mostramos uma estratégia baseada na álgebra de processos CSP e modelos Simulink para obter rastros de defeitos que levam a uma falha.
-Apesar de o trabalho usar Árvores de Defeitos Estáticas, poderíamos usar Árvores de Defeitos Temporais ou Dinâmicas.
-Neste trabalho, apresentamos duas álgebras: (i) uma para modelar defeitos a partir de modelos arquiteturais formalmente, racionalizando sobre combinações de defeitos, e (ii) uma álgebra temporal de defeitos (com noção de propagação de defeitos) e provar que ela é de fato uma álgebra Booleana.
+Em um trabalho anterior, mostramos uma estratégia baseada na álgebra de processos CSP e modelos Simulink para obter rastros (propagações) de defeitos que levam a uma falha.
+Apesar de o trabalho usar Árvores de Defeitos Estáticas, poderíamos ter usado Árvores de Defeitos Temporais ou Dinâmicas.
+No presente trabalho, apresentamos duas álgebras: (i) uma para modelar formalmente defeitos a partir de modelos arquiteturais, racionalizando sobre combinações de defeitos, e (ii) uma álgebra temporal de defeitos (com noção de propagação de defeitos) e provar que ela é de fato uma álgebra Booleana.
 Isso permite herdar as propriedades de álgebras Booleanas, leis e técnicas de redução existentes, as quais são muito benéficas para a modelagem e análise de defeitos.
-Nós ilustramos nosso trabalho com simples, mas reais estudos de caso, alguns fornecidos pelo nosso parceiro industrial, a EMBRAER.
+Nós ilustramos nosso trabalho com alguns estudos de caso simples, mas reais, fornecidos pelo nosso parceiro industrial, a EMBRAER.
 
 \vspace{\onelineskip}
 \noindent
@@ -461,12 +503,12 @@ Traditionally, Static Fault Trees are employed to this end, but Temporal and Dyn
 In previous work, we showed a strategy based on the process algebra CSP and Simulink models to obtain fault traces that lead to a failure.
 Although that work used Static Fault Trees, it could be used Temporal or Dynamic Fault Trees.
 In this work we present two algebras: (i) one to model faults from architectural models formally, reasoning about faults combinations, and (ii) an algebra of temporal faults (with a notion of fault propagation) and prove that it is indeed a Boolean algebra.
-This allows us to inherit Boolean algebra's properties, laws and existing reduction techniques, which are very beneficial for faults modelling and analysis.
+\hl{This allows us to inherit Boolean algebra's properties, laws and existing reduction techniques, which are very beneficial for faults modelling and analysis.}\amnote{Qual a conexão com Temporal e Dynamic Fault Trees?? E as propagações complexas}
 We illustrate our work on simple but real case studies, some supplied by our industrial partner EMBRAER.
 
 \vspace{\onelineskip}
 \noindent
-\todo{MSC2010: 06E25, 68M15, 68Q60, 93A30}
+\todo{Adicionar MSC2010 06E25, 68M15, 68Q60, 93A30}
 %\begin{keywords}
 \textbf{Keywords}: Simulink, CSP, FDR, Fault Tree Analysis, Temporal Fault Trees, Dynamic Fault Trees, Pandora, Fault Injection
 %\end{keywords},
@@ -493,6 +535,7 @@ We illustrate our work on simple but real case studies, some supplied by our ind
 
 % Summary (tables of contents)
 \tableofcontents*
+\acresetall
 \cleardoublepage
 
 %\mainmatter
@@ -500,11 +543,12 @@ We illustrate our work on simple but real case studies, some supplied by our ind
 
 %\part{Context}
 %\label{part:context}
-\chapter*{Introduction}
-%\label{chap:intro}
+\chapter{Introduction}
+\label{chap:intro}
 
-\todo{use all figure captions before figures}
-\todo{fix table lines.}
+\todo{Write the problem: simple mathematical notation for all fault trees. Include direct DFT-to-ATF mapping.}
+\todo{use all figure captions before figures (ABNT)}
+\todo{fix table lines (ABNT)}
 
 The development process of critical control systems is based essentially on the rigorous execution of guides and regulations~\cite{ANAC2011,FAA1993,FAA2007,SAE1996b}.
 Specialized agencies (like FAA, EASA and ANAC in the aviation field) use these guides and regulations to certify such systems.
@@ -512,14 +556,14 @@ Specialized agencies (like FAA, EASA and ANAC in the aviation field) use these g
 Safety plays a crucial concern on critical systems and it is the responsibility of the safety assessment process.
 ARP-4761~\cite{SAE1996b} defines several techniques to perform safety assessment.
 One of them is \ac{FTA}\index{Fault Tree!Analysis}.
-It is a deductive process that uses trees to model faults and their dependencies and propagation.
+It is a deductive method that uses trees to model faults and their dependencies and propagation.
 In such trees, the premises are the leaves (basic events) and the conclusions are the roots (top events).
 Intermediary events use gates to combine basic events and each kind of gate has its own combination semantics definition.
 For example, the most traditional gates are \ortext and \andtext.
 \Acp{FT} that use only these gates are called \emph{coherent \aclp{FT}}~\cite{Andrews2001,AB2003,Oliv2006,CCR2008,Vaurio2016}\index{Fault Tree!coherent}.
 They combine the events as \emph{at least one shall occur} and \emph{all shall occur}, respectively.
 To analyse \aclp{FT}, their structures are abstracted as Boolean\index{Boolean Algebra} expressions called \emph{structure expressions}\index{structure expression}.
-The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method}---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain \acp{MCS} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
+The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method}---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain \acp{MCS}\adnote{Correct the first citation of the plural form of MCS} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
 
 Besides the traditional \ortext and \andtext gates, the \FThandbook defines other gates.
 For example the \pandtext gate, which considers the order of occurrence of events.
@@ -911,7 +955,7 @@ In this work, to keep a visual identity with other \acp{FT}, and to avoid symbol
 
 \begin{figure}[t]
 \includegraphicsaspectratio[0.9]{sft-symbols-ft-handbook}
-  \caption{\Ac{SFT} symbols as in the \FThandbook}
+  \caption{\acs{SFT} symbols as in the \FThandbook}
   \label{fig:sft-example-traditional-gates}
 \end{figure}
 
@@ -1021,7 +1065,7 @@ To illustrate \acp{TFT}, for the formula $\parsin{A \pand C} \lor \parsin{A \lan
 
 \begin{table}
 % table caption is above the table
-\caption{\Ac{TTT} of \acsg*{TFT} operators and sequence value numbers}
+\caption{\acs{TTT} of \acsg*{TFT} operators and sequence value numbers}
 \label{tbl:tft-operators}
 % For LaTeX tables use
 \centering
@@ -1056,19 +1100,19 @@ A & B & \andtext & \ortext & \pandtext & \portext & \sandtext  \\
     \includegraphicsaspectratio[0.75]{ft-symbol-sand-gate}
     \caption{\sandtext gate}\label{fig:tft-sand-gate}
   \end{subfigure}
-  \caption{\ac{TFT}-specific gates}
+  \caption{\acs{TFT}-specific gates}
   \label{fig:tft-symbols}
 \end{figure}
 
 \begin{figure}[t]
   \centering
   \includegraphicsaspectratio[0.55]{tft-small-example}
-  \caption{\ac{TFT} small example}
+  \caption{\acs{TFT} small example}
   \label{fig:tft-small-example}
 \end{figure}
 
 \begin{table}
-  \caption{\Ac{TTT} of a simple example}
+  \caption{\acs{TTT} of a simple example}
   \label{tbl:ttt-small-example}
   \centering
   {\scriptsize
@@ -1180,7 +1224,7 @@ The informal semantics of them are:
     \caption{\Ac{SEQ} gate}\label{fig:dft-original-seq-symbol}
   \end{subfigure}%
   %
-  \caption{\acpg{DFT} original gates symbols}
+  \caption{\acspg{DFT} original gates symbols}
   \label{fig:dft-original-symbols}
 \end{figure}
 
@@ -1384,7 +1428,7 @@ The work reported in~\cite{STR2002} shows a formal approach to analyse \ac{SFT} 
 Instead of tackling basic events ordering (as in \pandtext), it consider a causal relation over a gate, as for example, a relation of a basic event and a higher-level intermediary event.
 
 For \acp{TFT}, the works reported in~\cite{MPW2010,MWP2012} shows an inverse solution.
-They map \acp{FSM} to \pandora logic, then verify system properties.
+They map \acp{FSM}\adnote{Cite FSM} to \pandora logic, then verify system properties.
 They show that such a mapping simplifies expressions reduction, thus improving performance on the analysis.
 
 Although there is formal modelling for \acp{DFT}, most of the works are state-based.
@@ -1453,7 +1497,7 @@ If $A$ is false, and $B$ is false, the expression is only true if $C$ is true.
 \begin{figure}[t]
   \centering
   \includegraphicsaspectratio[0.25]{bdd-diagram-for-example-expression}
-  \caption{\Iac{BDD} for the expression $A \lor \parsin{\lnot B \land C}$}
+  \caption{\Iacs{BDD} for the expression $A \lor \parsin{\lnot B \land C}$}
   \label{fig:bdd-diagram-for-example-expression}
 \end{figure}
 
@@ -2542,6 +2586,8 @@ The semantics of the above expression is: (i) fault $b$ ($\var{b}$) occurs and f
 \chapter{Conclusion}
 \label{sec:conclusion}
 
+\todo{Add a schedule of activities to conclude.}
+
 In this work we presented a foundational theory to support a more precise representation of fault events as compared to our previous strategy for injecting faults~\cite{DM2012}.
 %
 The failure logic is essential for system safety assessment because it is used as basic input for building \aclp{FT}~\cite{PMS+2001,JMS+2011,GMS+2010}.
@@ -2624,5 +2670,7 @@ We leave these demonstrations as future work.
 \printindex
 \todo{Verify indexes again (search again for words already in the index)}
 \todo{Run makeindex main on this directory}
+\cleardoublepage
 
+\listoftodos[Notes]{}
 \end{document}

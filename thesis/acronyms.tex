@@ -2,41 +2,50 @@
 \ExplSyntaxOn
 % this now only works because I've use the same already in the preamble so
 % it does nothing here:
-\ProvideAcroEnding {possessive} {'s} {'s}
+\ProvideAcroEnding {possessive_singular} {'s} {'s}
+\ProvideAcroEnding {possessive_plural} {'} {'}
+
 \ProvideAcroCommand \acg
 {
-	\acro_possessive:
+	\acro_possessive_singular:
 	\acro_use:n {#1}
 }
 \ProvideAcroCommand \Acg
 {
-	\acro_possessive:
+	\acro_possessive_singular:
 	\acro_first_upper:
 	\acro_use:n {#1}
 }
 \NewAcroCommand \acpg
 {
-	\acro_possessive:
+	\acro_possessive_plural:
 	\acro_plural:
 	\acro_use:n {#1}
 }
 \NewAcroCommand \Acpg
 {
-	\acro_possessive:
+	\acro_possessive_plural:
 	\acro_plural:
 	\acro_first_upper:
 	\acro_use:n {#1}
 }
 
+\NewAcroCommand \acspg
+{
+	\acro_possessive_plural:
+	\acro_plural:
+	\acro_short:n {#1}
+}
+
 \NewAcroCommand \acsg
 {
-	\acro_possessive:
+	\acro_possessive_singular:
 	\acro_short:n {#1}
 }
 
 \NewAcroCommand \Acsg
 {
-	\acro_possessive:
+	\acro_possessive_singular:
 	\acro_first_upper:
 	\acro_short:n {#1}
 }
@@ -148,6 +157,7 @@
 	short=DFT,
 	long=Dynamic Fault Tree,
 	cite={DBB1992,Boyd1992}
+	%short-possessive_plural='
 }
 
 \DeclareAcronym{FBA}{%
@@ -181,7 +191,8 @@
 	short=FTA,
 	long=Fault Tree Analysis,
 	short-indefinite=an,
-	long-plural-form={Fault Tree Analyses}
+	long-plural-form={Fault Tree Analyses},
+	cite={VGR+1981}
 }
 
 \DeclareAcronym{Isar}{%
@@ -233,7 +244,7 @@
 \DeclareAcronym{MCS}{%
 	short=MCS,
 	long=minimal cut set,
-	short-possessive=',
+	short-possessive_singular=',
 	long-post={\footnote{Also known as \emph{prime implicants} and \emph{minterms}---two names that came from Boolean logic.}}
 }
 \DeclareAcronym{MCSeq}{%
@@ -357,7 +368,6 @@
 	cite={Moszkowski1982}
 }
 
-\todo{Cite FSM}
 \DeclareAcronym{FSM}{%
 	short=FSM,
 	long={Finite State Machine}
