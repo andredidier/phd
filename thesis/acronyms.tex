@@ -2,51 +2,48 @@
 \ExplSyntaxOn
 % this now only works because I've use the same already in the preamble so
 % it does nothing here:
-\ProvideAcroEnding {possessive_singular} {'s} {'s}
-\ProvideAcroEnding {possessive_plural} {'} {'}
-
+\ProvideAcroEnding {possessive} {'s} {'s}
 \ProvideAcroCommand \acg
 {
-	\acro_possessive_singular:
+	\acro_possessive:
 	\acro_use:n {#1}
 }
 \ProvideAcroCommand \Acg
 {
-	\acro_possessive_singular:
+	\acro_possessive:
 	\acro_first_upper:
 	\acro_use:n {#1}
 }
 \NewAcroCommand \acpg
 {
-	\acro_possessive_plural:
+	\acro_possessive:
 	\acro_plural:
 	\acro_use:n {#1}
 }
 \NewAcroCommand \Acpg
 {
-	\acro_possessive_plural:
+	\acro_possessive:
 	\acro_plural:
 	\acro_first_upper:
 	\acro_use:n {#1}
 }
 
-\NewAcroCommand \acspg
-{
-	\acro_possessive_plural:
-	\acro_plural:
-	\acro_short:n {#1}
-}
-
 \NewAcroCommand \acsg
 {
-	\acro_possessive_singular:
+	\acro_possessive:
 	\acro_short:n {#1}
 }
 
 \NewAcroCommand \Acsg
 {
-	\acro_possessive_singular:
+	\acro_possessive:
 	\acro_first_upper:
+	\acro_short:n {#1}
+}
+\NewAcroCommand \acspg
+{
+	\acro_possessive:
+	\acro_plural:
 	\acro_short:n {#1}
 }
 
@@ -89,6 +86,13 @@
 	\acro_plural:
 	\acro_first_upper:
 	\acro_use:n {#1}
+}
+
+
+\NewAcroCommand \acscite
+{
+	\acro_cite:
+	\acro_short:n {#1}
 }
 
 \ExplSyntaxOff
@@ -157,7 +161,6 @@
 	short=DFT,
 	long=Dynamic Fault Tree,
 	cite={DBB1992,Boyd1992}
-	%short-possessive_plural='
 }
 
 \DeclareAcronym{FBA}{%
@@ -191,8 +194,7 @@
 	short=FTA,
 	long=Fault Tree Analysis,
 	short-indefinite=an,
-	long-plural-form={Fault Tree Analyses},
-	cite={VGR+1981}
+	long-plural-form={Fault Tree Analyses}
 }
 
 \DeclareAcronym{Isar}{%
@@ -216,7 +218,7 @@
 \DeclareAcronym{TFT}{%
 	short=TFT,
 	long=Temporal Fault Tree,
-	cite={WP2008,WP2009}
+	cite={WP2008,WP2009,Walker2009}
 }
 
 \DeclareAcronym{hiphops}{%
@@ -244,12 +246,14 @@
 \DeclareAcronym{MCS}{%
 	short=MCS,
 	long=minimal cut set,
-	short-possessive_singular=',
-	long-post={\footnote{Also known as \emph{prime implicants} and \emph{minterms}---two names that came from Boolean logic.}}
+	short-possessive=',
+	long-post={\footnote{Also known as \emph{prime implicants} and \emph{minterms}---two names that came from Boolean logic.}},
+	short-indefinite=an
 }
 \DeclareAcronym{MCSeq}{%
 	short=MCSeq,
-	long={minimal cut sequence}
+	long={minimal cut sequence},
+	short-indefinite=an
 }
 \DeclareAcronym{DNF}{%
 	short=DNF,
@@ -371,6 +375,18 @@
 \DeclareAcronym{FSM}{%
 	short=FSM,
 	long={Finite State Machine}
+}
+
+\DeclareAcronym{TDT}{%
+	short=TDT,
+	long={dependency tree},
+	cite={WP2010}
+}
+
+\DeclareAcronym{DBN}{%
+	short=DBN,
+	long={dynamic bayesian network},
+	cite={Murphy2002}
 }
 
 

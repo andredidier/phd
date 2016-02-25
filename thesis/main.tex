@@ -2,7 +2,7 @@
 
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}  
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \usepackage{makeidx}
 \usepackage{colortbl}
@@ -440,7 +440,7 @@ I have no words to express how much I thank them.
 CNPq and FACEPE were keen to guarantee my existential needs.
 The former with the trip to Newcastle upon Tyne, and the latter during the time I stayed in Recife, before and after the trip.
 
-I thank to Sascha Romanovsky for accepting me as his \hl{advisee}\adnote{Advisee estaria correto, não?} while I was a Research Assistant of the COMPASS project.
+I thank to Sascha Romanovsky for accepting me as his \hl{advisee}\adnote{Advisee estaria correto, não? Não entendi\ldots} while I was a Research Assistant of the COMPASS project.
 His comments, instructions, and knowledge were of great importance for this work.
 
 My stay in Newcastle upon Tyne could be as good as it was without the hospitality, useful discussions, and support of my colleagues at Newcastle University.
@@ -559,23 +559,22 @@ One of them is \ac{FTA}\index{Fault Tree!Analysis}.
 It is a deductive method that uses trees to model faults and their dependencies and propagation.
 In such trees, the premises are the leaves (basic events) and the conclusions are the roots (top events).
 Intermediary events use gates to combine basic events and each kind of gate has its own combination semantics definition.
-For example, the most traditional gates are \ortext and \andtext.
-\Acp{FT} that use only these gates are called \emph{coherent \aclp{FT}}~\cite{Andrews2001,AB2003,Oliv2006,CCR2008,Vaurio2016}\index{Fault Tree!coherent}.
+\Acp{FT} that use only \ortext and \andtext gates are called \emph{coherent \aclp{FT}}~\cite{Andrews2001,AB2003,Oliv2006,CCR2008,Vaurio2016}\index{Fault Tree!coherent}.
 They combine the events as \emph{at least one shall occur} and \emph{all shall occur}, respectively.
-To analyse \aclp{FT}, their structures are abstracted as Boolean\index{Boolean Algebra} expressions called \emph{structure expressions}\index{structure expression}.
+To analyse \acp{FT}, their structures are abstracted as Boolean\index{Boolean Algebra} expressions called \emph{structure expressions}\index{structure expression}.
 The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method}---which originated the \ac{BDD}\index{Binary Decision Diagrams}---to obtain \acp{MCS}\adnote{Correct the first citation of the plural form of MCS} from the structure expressions\index{structure expression} and a general formula to calculate the probability of top events.
 
 Besides the traditional \ortext and \andtext gates, the \FThandbook defines other gates.
 For example the \pandtext gate, which considers the order of occurrence of events.
-Although the work defines these new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
-This motivated the introduction of two new kinds of \aclp{FT}: \acp{DFT} and \acp{TFT}.
+Although the \FThandbook defines these new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
+This and the need of analysis of dynamic aspects of increasingly complex systems motivated the introduction of two new kinds of \aclp{FT}: \acp{DFT} and \acp{TFT}.
 These variant trees can capture sequence dependencies of fault events in a system.
 The difference from \ac{TFT} to \ac{DFT} is that \acp{TFT} use temporal gates directly, while \ac{DFT} does not---\acp{DFT} gates are an abstraction of temporal gates.
-To differentiate traditional \aclp{FT} from the other two, we will call traditional \aclp{FT} as \acp{SFT}.
+To differentiate the \aclp{FT} as defined in the \FThandbook from the other two, we will call them \acp{SFT}.
 
 The work reported in~\cite{WP2009} aims at performing the full implementation of the \FThandbook, adding temporal gates to its \pandora methodology.
-This implementation created a new kind of tree: \acp{TFT}.
-In such trees, events ordering is well-defined and they developed an algebraic framework to reduce structure expressions\index{structure expression} to obtain \acp{MCSeq} and perform probabilistic analysis.
+It was this implementation that introduced the new concept of \acp{TFT}, cited previously.
+In such trees, events ordering is well-defined and an algebraic framework was proposed to reduce structure expressions\index{structure expression} to obtain \acp{MCSeq} and perform probabilistic analysis.
 Reducing expressions is also desirable to check for tautologies, for example.
 
 \Acp{DFT} introduce very different gates to capture dynamic configurations of systems: \ac{CSp}, \ac{FDEP}, and \ac{SEQ}.
@@ -587,12 +586,14 @@ They differ on the nature of sparing, whether fast (warm, always-on) or slow (co
 The readiness of the backup system in \iac{WSp} gate is higher than in \iac{CSp} gate.
 The work reported in~\cite{MRL2011} shows an algebraic framework to compositionally reduce \ac{DFT} gates to order-based gates and perform probabilistic analysis of structure expressions\index{structure expression}. Thus, despite some limitations for spare gates~\cite{MRL2014}, the structure expressions\index{structure expression} used in \acp{TFT} and \acp{DFT} can be formulated in terms of a generic order-based operator.
 
+\begin{sloppypar}
 The NOT operator is absent in the algebras reported in~\cite{WP2009,Walker2009,Merle2010,MRL2011b}.
 There is no consensus about the relevance of its use: (i) it can be misleading, generating non-coherent analysis~\cite{Oliv2006}, or (ii) it can be essential in practical use~\cite{Andrews2001}.
 Our concern is that the decision of the relevance of its use should not be due to the choice of events-occurrence representation.
 The algebra created in this work defines the NOT operator and allows its use, as we show in \cref{sec:strategy}.
+\end{sloppypar}
 
-In previous work~\cite{Didier2012,DM2012}, we proposed a systematic hardware-based faults identification strategy to obtain failure expressions as defined in \acs{hiphops} for \acp{SFT}.
+In previous work~\cite{Didier2012,DM2012}, we proposed a systematic hardware-based faults identification strategy to obtain failure expressions as defined in \acifused{hiphops}{\acs{hiphops}}{\acscite{hiphops}} for \acp{SFT}.
 We considered faults in components or subsystems, but if we obtain failure expressions of a whole system, they are in fact structure expressions\index{structure expression} of \iac{FT}.
 %
 %Using our strategy as input for \ac{hiphops} we obtain a failure expression of a fault tree.
@@ -609,7 +610,32 @@ Thus, our strategy required the translation from \simulink to \ac{CSPm}~\cite{JM
 %
 It then runs \acs{fdr} to obtain several counter-examples (which are fault traces) ending in failures.
 %
-For two case studies provided by our industrial partner, we showed that our automatically created failure logic matches with the engineer's provided one or is better (a weaker proposition).
+For two case studies provided by our industrial partner, we showed that our automatically created failure expressions match with the engineer's provided ones or are better (a weaker proposition).
+
+\section{Research questions}
+
+Both \ac{TFT} and \ac{DFT} lack a first-order logic mathematical model as there is to \ac{SFT}.
+For \acp{SFT}, mathematical models for structure expressions reduction is either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}.
+Both are very efficient.
+
+The mathematical model for \ac{TFT} has a discontinuity between two activation states: (i) non-occurrence, and (ii) occurrence some time later.
+Such a discontinuity has some drawbacks, as for example, the impossibility to use \nottext gates and handling the specific case with zeros in \acp{TTT}.
+The reduction of structure expressions in \ac{TFT} is based in a combination of: (i) algebraic reduction---that can lead to an ever-growing rules application---and (ii) \ac{TDT}---which are limited to seven basic events, due to exponential grow of the tree.
+
+\begin{sloppypar}
+Most of the mathematical models for \ac{DFT} are based on the formalisation of \ac{DTMC} or \ac{CTMC}, because \acp{DFT} were initially conceived to be a visual representation of such models.
+There are other approaches, however.
+For instance, a modified version of \ac{BDD} to tackle events ordering, called \ac{SBDD}, to reduce structure expressions, and the work reported in \cite{BRM+2005}, which proposes a conversion of \ac{DFT} into \ac{DBN} to perform probabilistic analysis.
+The construction of \iac{DBN} is automatic and handles time slices as $t + \Delta t$, which implies a notion of events ordering as well.
+\Acp{SBDD}...
+The work reported in~\cite{BRM+2005} is focused in probabilistic analysis, so qualitative analysis is not directly supported.
+\end{sloppypar}
+
+The works reported in~\cite{Merle2010,XTD2012} show that \acg{DFT} operators can be converted into order-related operators, simplifying \ac{DFT} analysis.
+Although the mathematical model presented in~\cite{Merle2010} establishes a denotational semantics for order-related operators, it lacks a method for expression reduction based on such a model.
+It defines, instead, several algebraic laws to reduce expressions.
+
+\section{Proposed solution}
 
 In this work, we present a strategy to perform \aclp{FTA} on systems by: (i) injecting faults on its nominal model, and (ii) complement the injected faults by modelling faults in a formal model.
 \Cref{fig:strategy-overview} show the strategy overview.
@@ -631,6 +657,8 @@ Once \acg{FT} acceptance criteria is modelled as expressions in \ac{algebra}, we
   \label{fig:strategy-overview}
 \end{figure}
 
+\section{Contributions}
+
 The main contributions of this work are:
 
 \begin{enumerate}
@@ -651,6 +679,8 @@ Other contributions of this work are:
 We used Isabelle/HOL\index{Isabelle/HOL} 2015\footnote{The 2002 tutorial is reported in~\cite{NPW2002}, but there is a newer version published with the tool itself.
 The tool and the tutorial are available on their website at http://isabelle.in.tum.de .}, theories in Isabelle's library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
 %We omit the proofs in the paper, but they are available in Online Resource 1.\todo{publish theory files online: ``Specialized format such as .pdb (chemical), .wrl (VRML), .nb (Mathematica notebook), and .tex can also be supplied.''}
+
+\section{Thesis organization}
 
 This thesis is organized as follows: in \cref{part:background} we show the concepts and tools used as basis for this work.
 \Cref{part:results} describes the results: \cref{sec:strategy} presents our strategy, \cref{sec:case-study} the case study and the application of the proposed strategy, and we present our conclusions and future work in \cref{sec:conclusion}.
@@ -675,9 +705,11 @@ We discuss these time relations in \cref{sec:time-relations}.
 \section{Systems, dependability\index{Dependability} and fault modelling\index{fault modelling}}
 \label{sec:dependability}
 
+\begin{sloppypar}
 Computing systems are characterized by five properties: functionality, performance, cost, dependability\index{dependability}, security.
 The work reported in~\cite[p. 289--302]{Sommerville2011} explain these properties---including dependability---with a focus in software.
 Hardware and software are connected, as software faults may cause software-controlled hardware to fail, and hardware faults may send incorrect data, causing software to fail.
+\end{sloppypar}
 
 The work reported in~\cite{ALR+2004} summarizes all concepts of and related to dependability for computing systems that contains software and hardware.
 In the following, we show these concepts and highlight those used in this work.
@@ -877,9 +909,11 @@ The \pandtext gate was first defined for \acp{SFT}, but its analysis was left op
 The analysis of \acp{TFT} uses a denotational semantics based on \emph{sequence values}\index{Temporal Fault Tree!sequence value} to express ordering of events, thus tackling \pandtext's order.
 We explain \acp{TFT} and the sequence values in \cref{sec:temporal-fault-trees}.
 
+\begin{sloppypar}
 With component and system design evolution, \acp{DFT} were created to tackle dynamic behaviour: fault-tolerance-related components (\ac{CSp}), functional dependency (\ac{FDEP}), and analysis of particular order of occurrence of faults (\ac{SEQ}).
 \Acg{SFT} gates are still present as \acg{DFT} gates.
 We explain them and \acg{DFT} analysis in \cref{sec:dynamic-fault-trees}.
+\end{sloppypar}
 
 The structure of \iac{FT} (or the structure of \iac{MCS}, explained further) is represented with a formula.
 The variables represent occurrence of basic events.
@@ -887,6 +921,7 @@ Unary and binary relation symbols capture the semantics of gates.
 A formula with these characteristics is called \emph{structure expression}\index{structure expression} or \emph{structure function}\index{structure expressions!function} (as the expression depends on the variables).
 The semantics of a structure expression is that the top-level event occurs if some combination of basic events occur.
 
+\begin{sloppypar}
 The results obtained from the evaluation of \acp{FT} are shown in the \FThandbook.
 We summarize them as:
 %
@@ -920,11 +955,13 @@ We summarize them as:
     If system's unavailability is not changed, then such event is not important---the system is not sensitive to such an event.
   \end{description}
 \end{itemize}
+\end{sloppypar}
 
 As stated in~\cite{SVD+2002}, there are other uses of \ac{FTA}.
 One of great importance is using it to minimize and optimize resources, which has been object of study in \ac{hiphops}~\cite{APS+2011}.
 Through importance measures\index{importance measure}, \ac{FTA} not only identifies what is important but also what is unimportant, thus removing components without impacting the overall failure probability, which is related to the quantitative importance\index{Fault Tree Analysis!quantitative importance} and sensitivity evaluation\index{Fault Tree Analysis!sensitivity evaluation}.
 
+\begin{sloppypar}
 In important stages of critical systems, \ac{FTA} plays essential role.
 At least three dependability means can be achieved using \acp{FT}:
 %
@@ -937,6 +974,7 @@ At least three dependability means can be achieved using \acp{FT}:
   In this case, a system should have replication, or stages of fault detection and error handling.
   Also, the probability of failure of the chosen fault tolerance method can be evaluated.
 \end{description}
+\end{sloppypar}
 
 In \cref{sec:static-fault-trees,sec:temporal-fault-trees,sec:dynamic-fault-trees} we show briefly \acpg{FT} symbology and means to analyse \acp{FT}.
 We will detail it structure expressions extraction because they are a common means to perform both qualitative and quantitative analysis.
@@ -1047,12 +1085,14 @@ The other version is also called \pandora, and is the one we refer to in the fol
 They are focused on directly expressing ordering relationships rather than different states of a system. Basically they extend \acg{SFT} \pandtext gates, allowing analysis of \ac{FT} with such gates.
 It is simpler to express than \ac{DFT}, but lacks the fault-tolerance-related gate of \acp{DFT} (which we show in \cref{sec:dynamic-fault-trees}).
 
+\begin{sloppypar}
 Structure expressions\index{structure expression} are also present in \acp{TFT}~\cite{WP2009,Walker2009,WP2010}, through the \pandora methodology.
-These expressions use the \ac{SFT} operators \ortext and \andtext, and three new operators related to events ordering: \pandtext, \portext, and \sandtext.
+These expressions use the \ac{SFT} operators \ortext and \andtext, and three new operators related to events ordering: \pandtext\adnote{Use the first appearance form.}, \portext, and \sandtext.
 The semantics of the \pandtext in \acp{TFT} is similar to the semantics of the \pandtext described in the \FThandbook.
 To avoid ambiguous expressions, the semantics in \acp{TFT} is stated in terms of natural numbers, using a \emph{sequence value} function.
 For every possible combination of events ordering, it assigns a sequence value to each fault event.
 For example, if event A occurs before event B, then the sequence value of A is lower than the sequence value of B, and one formula to express this is $A \pand B$.
+\end{sloppypar}
 
 An invariant on sequence values is that there are no gaps for assigned values.
 For example, if faults A and B occur at the same time and there are only these two events, then they should both be assigned value $1$.
@@ -1158,13 +1198,13 @@ For \acp{TFT}, in~\cite{Walker2009} \acp{MCSeq} are represented as \iac{DNF} usi
 In a doublet, the expression is a product (of \andtext{}s) of temporal operators.
 
 The normal form for \ac{TFT} is similar to \ac{SFT}: it is \iac{DNF} with temporal operators (\pandtext, \portext, \sandtext) in the minterms.
-The reduction of \ac{TFT} structure expressions is achieved using dependency trees.
-In a dependency tree, if all children of a tree node are true, then the node is also true.
+The reduction of \ac{TFT} structure expressions is achieved using \ac{TDT}\adnote{Cite dependency tree}.
+In \iac{TDT}, if all children of a tree node are true, then the node is also true.
 Conversely, if a node is true, then all its children are also true.
-An issue with dependency trees is that they grow exponentially.
+An issue with \acp{TDT} is that they grow exponentially.
 Accordingly to the work reported in~\cite{WP2010}, it is already infeasible to deal with seven fault events in TFTs.
-The solution is based on a mixed application of dependency trees, modularisation of independent subtrees, and algebraic laws~\cite{WP2009}.
-We show dependency trees in~\cref{sec:dependency-trees}.
+The solution is based on a mixed application of \acp{TDT}, modularisation of independent subtrees, and algebraic laws~\cite{WP2009}.
+We show \acp{TDT} in~\cref{sec:dependency-trees}.
 Some of these algebraic laws are:
 %
 \begin{subequations}
@@ -1179,6 +1219,7 @@ Some of these algebraic laws are:
 \subsection{\Aclp{DFT}}
 \label{sec:dynamic-fault-trees}
 
+\begin{sloppypar}
 \Aclp{DFT} were designed with the goal of analysing complex systems with dynamic redundancy management and complex fault and recovery mechanisms~\cite{DBB1992}.
 The idea was to create easy-to-use and less error-prone modelling tools than using \acp{DTMC}---or simply \emph{\acap{DTMC}}---directly.
 So, since the very beginning, \acp{DFT} were intended to be evaluated using \acap{DTMC}.
@@ -1193,7 +1234,7 @@ The informal semantics of them are:
   \item[\Ac{CSp}:]
   It is a specific gate to handle spare components.
   It is important to note that connected inputs are not components---they are fault events of connected components.
-  If the i\emph{th} input is already active (fault has occurred), then it is expected that the input $i+1$ is not, following the specified order.
+  If the i\emph{th} input is already active (fault has occurred), then it is expected that the input i\emph{th}$+1$ is not, following the specified order.
   The output becomes true after all connected inputs become true.
   A spare event can be connected to more than one \ac{CSp} gate, representing the spare unit connection to one or more components.
   \item[\pandtext:]
@@ -1203,6 +1244,7 @@ The informal semantics of them are:
   It is different from the \pandtext gate, because the latter \emph{detects} the specified order.
   The usage of this gate is usually associated with \ac{FDEP}.
 \end{description}
+\end{sloppypar}
 
 \begin{figure}[t]
   \centering
@@ -1272,7 +1314,7 @@ We increment their summary (\cref{tbl:dft-conversion-te-probability}) and catego
   \caption{\Ac{DFT} conversion to calculate probability of top-level event}
   \label{tbl:dft-conversion-te-probability}
   \centering
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill} } p{5cm} p{5cm} p{5cm} }
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill} } p{6cm} p{3.5cm} p{5.5cm} }
   %\begin{tabularx}{\linewidth}{XXX}
   \hline\noalign{\smallskip}
   \textbf{Conversion} & \textbf{Calculation} & \textbf{Explained in}\\
@@ -1377,6 +1419,7 @@ Structure expressions'\index{structure expression} reduction uses algebraic laws
 %The work reported in~\cite{TXD2011,XTD2012} shows the top-level events probability calculation for \acp{DFT} by converting them to a simplified version, using only order-based operators.
 %Such a simplified version, which is based on a modified \ac{BDD}\index{Binary Decision Diagrams} that includes an order-based operator, creates Sequential BDDs\index{Binary Decision Diagrams!Sequential} that are used to perform the probabilistic analysis.
 
+\begin{sloppypar}
 \Cref{fig:dft-example} shows an example of \ac{DFT} extracted from~\cite{MRL2014}.
 It is \iac{HCAS} which is divided in four modules: trigger, CPU unit, motor section, and pumps.
 The trigger is divided in two components, CS and SS.
@@ -1391,6 +1434,7 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
   &\parsin{BP_a \land \parsin{P2 \nibefore P1} \land \parsin{P1 \nibefore BP_a}} \lor
   \parsin{P2 \land \parsin{P1 \nibefore BP_a} \land \parsin{BP_a \nibefore P2}}\nonumber
 \end{align}
+\end{sloppypar}
 
 \begin{figure}[t]
   \centering
@@ -1443,7 +1487,7 @@ Still on the state-based approaches, the work reported in~\cite{SLD2011} maps \a
 
 In the following we show specific methods that are designed to reduce structure expressions.
 In essence, the methods are very similar.
-Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using dependency trees (\cref{sec:dependency-trees}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD} (\cref{sec:sbdd}).
+Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{TDT} (\cref{sec:dependency-trees}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD} (\cref{sec:sbdd}).
 
 \subsection{\Aclp*{BDD}\index{Binary Decision Diagrams}}
 \label{sec:bdd}
@@ -1516,27 +1560,27 @@ The work reported in~\cite{Rudell1993} shows initial findings on variable order,
 For \acp{SFT} the evaluation of \iac{BDD} is the calculation of the probability of the paths ending in \emph{true}.
 For the example of \cref{fig:bdd-diagram-for-example-expression}, the probability of the expression is obtained from the formula: $\probability{A \lor \parsin{\lnot A \land \lnot B \land C}}$. Note that the formula in the probability calculation is different from the formula that originated the diagram.
 
-\subsection{Dependency trees}
+\subsection{\Acl{TDT}}
 \label{sec:dependency-trees}
 
-A dependency tree is a hierarchical acyclic graph of expressions that shows all possible cut sequences for any given set of events.
+\Acf{TDT} is a hierarchical acyclic graph of expressions that shows all possible cut sequences for any given set of events.
 It is a graphical view of a \ac{TTT}.
-At the top of a dependency tree are the variables, that is, the single events that occur in an expression.
+At the top of \iac{TDT} are the variables, that is, the single events that occur in an expression.
 On the lower levels are the increasingly complex expressions.
 Each node represents \iac{MCSeq}.
-\Cref{fig:simple-dependency-tree} shows a dependency tree with all nodes for variables $X$ and $Y$.
+\Cref{fig:simple-dependency-tree} shows \iac{TDT} with all nodes for variables $X$ and $Y$.
 
 \begin{figure}
   \centering
   \includegraphicsaspectratio[0.5]{simple-dependency-tree}
-  \caption{Dependency tree for variables $X$ and $Y$}
+  \caption{\acs*{TDT} for variables $X$ and $Y$}
   \label{fig:simple-dependency-tree}
 \end{figure}
 
 The reduction of a structure expression is given by activation (true values) of nodes.
 If a node is active (true), then all child nodes are also active; the converse is also true: if all node's children are active, then it is also active.
 The reduced expression is given by the \ac{DNF} created with the expressions of active higher level nodes.
-To reduce the formula given on the beginning of this section, the expression $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$, we create the dependency tree depicted in \cref{fig:dependency-tree-reduction}.
+To reduce the formula given on the beginning of this section, the expression $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$, we create the \ac{TDT} depicted in \cref{fig:dependency-tree-reduction}.
 Nodes marked as ``1'' are those \acp{MCSeq} given directly by the formula.
 Nodes marked as ``2'' are child nodes of the ``1'''s nodes, and so forth.
 The node of the expression $\parsin{\parsin{X \pand Y} \land Z}$ is a grandchild of $X \land Y$, thus it is not necessary.
@@ -1545,7 +1589,7 @@ The final expression if obtained by the active higher level node, which is $X \l
 \begin{figure}
   \centering
   \includegraphicsaspectratio[0.7]{dependency-tree-reduction}
-  \caption{Dependency tree for the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$}
+  \caption{\acs*{TDT} for the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$}
   \label{fig:dependency-tree-reduction}
 \end{figure}
 
@@ -2322,7 +2366,9 @@ The following formulas are \emph{not} in DNF:
 &\xbefore{A}{\parsin{B \inter C}}
 \end{align*}
 
+\begin{sloppypar}
 But to transform the last two formulas into DNF, one can use Laws \eqref{thm:xbefore-sup-1},~\eqref{thm:xbefore-sup-2},~\eqref{thm:xbefore-inf-1} and~\eqref{thm:xbefore-inf-2}, for instance.
+\end{sloppypar}
 
 We define events independence ($\independenteventsop$) as the property that one operand does not imply the other.
 For example, we need to avoid that the operands of XBefore are $\var{a}$ and $\var{a} \union \var{b}$ (it results in $\False$, see \eqref{thm:xbefore-not-idempotent}).
@@ -2615,7 +2661,7 @@ But we consider instantaneous events, like the work reported in~\cite{MRL2014}, 
 %
 %We plan to verify safety requirements directly from the failure logic expressed by our TFA.
 %
-%It means we need a reduction technique that includes the exclusive before operator to analyse large-scale systems (say with 1000 or more fault events) without using dependency trees~\cite{WP2010}.
+%It means we need a reduction technique that includes the exclusive before operator to analyse large-scale systems (say with 1000 or more fault events) without using \ac{TDT}s~\cite{WP2010}.
 %
 %We believe that the direct analysis on failure logic expressed by our TFA can also accelerate temporal fault trees analysis as it is a subclass of dynamic fault trees.
 

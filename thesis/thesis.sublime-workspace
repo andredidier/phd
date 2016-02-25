@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"simu",
+				"simulink"
+			],
+			[
 				"clear",
 				"cleardoublepage"
 			],
@@ -243,7 +247,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 145965,
+				"buffer_size": 148541,
 				"line_ending": "Windows"
 			}
 		},
@@ -251,7 +255,7 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 6376,
+				"buffer_size": 6494,
 				"line_ending": "Windows"
 			}
 		},
@@ -347,13 +351,14 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis"
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis"
 	],
 	"file_history":
 	[
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
 		"/C/Users/andre/Desktop/Mesa/2015-12-12 Concurso UFRPE/2016-01-11_resumos-ufrpe.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/ficha-catalografica.tex",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
@@ -477,12 +482,11 @@
 		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/alrd.c",
 		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes CN.csv",
 		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/teste-andreia.c",
-		"/C/Users/andre/Desktop/10.1007%2Fs100090050035.bib",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes Est.csv"
+		"/C/Users/andre/Desktop/10.1007%2Fs100090050035.bib"
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 36.0
 	},
 	"find_in_files":
 	{
@@ -496,6 +500,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"input $i",
+			"math",
+			"dependency tree",
+			"dependenc",
+			"limited",
+			"failure expression",
+			"todo",
+			"acspg",
 			"\\",
 			"possessive-",
 			"possessive",
@@ -615,15 +627,7 @@
 			"minimal cut sequence[s]?",
 			"\\index{Minimal Cut!Sequences}",
 			"\\index{Minimal Cut Sets}\\index{Minimal Cut!Sets}",
-			"\\index{Minimal Cut Sets}",
-			"minimal cut set[s]?",
-			"structure expression",
-			"\\\\ac.*\\{(.*)\\}",
-			"FThandbook",
-			"index",
-			"\\\\hiphops",
-			"acronym",
-			"acro"
+			"\\index{Minimal Cut Sets}"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -682,7 +686,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 145965,
+						"buffer_size": 148541,
 						"regions":
 						{
 							"bookmarks":
@@ -692,24 +696,16 @@
 								"regions":
 								[
 									[
-										2115,
-										2115
+										25364,
+										25364
 									],
 									[
-										13966,
-										13966
+										26868,
+										26868
 									],
 									[
-										14828,
-										14828
-									],
-									[
-										16677,
-										16677
-									],
-									[
-										19127,
-										19127
+										27519,
+										27519
 									]
 								],
 								"scope": "bookmarks"
@@ -718,8 +714,8 @@
 						"selection":
 						[
 							[
-								19104,
-								19104
+								129995,
+								129995
 							]
 						],
 						"settings":
@@ -731,7 +727,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 10363.0,
+						"translation.y": 55942.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -743,28 +739,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6376,
+						"buffer_size": 6494,
 						"regions":
 						{
-							"bookmarks":
-							{
-								"flags": 144,
-								"icon": "bookmark",
-								"regions":
-								[
-									[
-										2577,
-										2577
-									]
-								],
-								"scope": "bookmarks"
-							}
 						},
 						"selection":
 						[
 							[
-								3071,
-								3071
+								4290,
+								4290
 							]
 						],
 						"settings":
@@ -773,7 +756,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2605.0,
+						"translation.y": 4733.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
