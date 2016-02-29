@@ -140,14 +140,88 @@
 	short=CSp,
 	%long=\acsg*{DFT} cold spare gate
 	%long=DFT's cold spare gate
-	long={cold spare}
+	long={cold spare},
+	class=gate,
+	extra={Used in \acs*{DFT}.}
 }
 
 \DeclareAcronym{WSp}{%
 	short=WSp,
 	%long=\acsg*{DFT} warm spare gate
 	%long=DFT's warm spare gate
-	long={warm spare}
+	long={warm spare},
+	class=gate,
+	extra={Used in \acs*{DFT}.}
+}
+
+\DeclareAcronym{AND}{%
+	short=AND,
+	long={$\land$},
+	class=gate,
+	extra={Used in \acs*{SFT}, \acs*{TFT}, and \acs*{DFT}.}
+}
+
+\DeclareAcronym{OR}{%
+	short=OR,
+	long={$\lor$},
+	class=gate,
+	extra={Used in \acs*{SFT}, \acs*{TFT}, and \acs*{DFT}.}
+}
+
+\DeclareAcronym{PAND}{%
+	short={PAND},
+	long=priority-AND,
+	class=gate,
+	extra={Used in \acs*{SFT}, \acs*{TFT}, and \acs*{DFT}.}
+}
+
+\DeclareAcronym{SAND}{%
+	short={SAND},
+	long=simultaneous-AND,
+	class=gate,
+	extra={Used in \acs*{TFT}.}
+}
+
+\DeclareAcronym{POR}{%
+	short=POR,
+	long={priority-OR},
+	class=gate,
+	extra={Used in \acs*{TFT}.}
+}
+
+\DeclareAcronym{NOT}{%
+	short=NOT,
+	long={$\lnot$},
+	class=gate,
+	extra={Used in non-coherent trees.}
+}
+
+\DeclareAcronym{NIBefore}{%
+	short=NIBefore,
+	long={non-inclusive-before},
+	class=gate,
+	extra={Used in structure expressions of \acs*{DFT}.}
+}
+
+\DeclareAcronym{IBefore}{%
+	short=IBefore,
+	long={inclusive-before},
+	class=gate,
+	extra={Used in structure expressions of \acs*{DFT}.}
+}
+
+\DeclareAcronym{SIMLT}{%
+	short=SIMLT,
+	long={simultaneous},
+	class=gate,
+	extra={Used in structure expressions of \acs*{DFT}.}
+}
+
+\DeclareAcronym{XBefore}{%
+	short=XBefore,
+	long={exclusive-before},
+	class=gate,
+	extra={Proposed in this work.}
 }
 
 \DeclareAcronym{CSPm}{%
@@ -175,7 +249,9 @@
 	%long=\acsg*{DFT} functional dependency gate,
 	%long=DFT's functional dependency gate,
 	long={functional dependency},
-	short-indefinite=an
+	short-indefinite=an,
+	class=gate,
+	extra={Used in \acs*{DFT}.}
 }
 
 \DeclareAcronym{fdr}{%
@@ -206,7 +282,9 @@
 	short=SEQ,
 	%long=\acsg*{DFT} sequence enforcing gate
 	%long=DFT's sequence enforcing gate
-	long={sequence enforcing}
+	long={sequence enforcing},
+	class=gate,
+	extra={Used in \acs*{DFT}.}
 }
 
 \DeclareAcronym{SFT}{%
@@ -247,7 +325,6 @@
 	short=MCS,
 	long=minimal cut set,
 	short-possessive=',
-	long-post={\footnote{Also known as \emph{prime implicants} and \emph{minterms}---two names that came from Boolean logic.}},
 	short-indefinite=an
 }
 \DeclareAcronym{MCSeq}{%
