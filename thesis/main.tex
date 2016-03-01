@@ -593,11 +593,11 @@ Our contribution to this issue for \ac{SFT} is shown in~\cite{DM2012,Didier2012}
 
 The mathematical model for \ac{TFT} has a discontinuity between two activation states: (i) non-occurrence, and (ii) occurrence some time later.
 Such a discontinuity has some drawbacks, as for example, the impossibility to use \ac{NOT} gates and handling the specific case of non-occurrence with zeros in \acp{TTT}.
-The reduction of structure expressions in \ac{TFT} is based in a combination of: (i) algebraic reduction---that can lead to an ever-growing rules application---, (ii) modularisation of independent subtrees, and (iii) \ac{TDT}---which are limited to seven basic events, due to exponential grow of the tree.
+The reduction of structure expressions in \ac{TFT} is based in a combination of: (i) algebraic reduction---that can lead to an ever-growing rules application---, (ii) modularisation of independent subtrees (not always subtree are independent), and (iii) \ac{TDT}---which are limited to seven basic events, due to exponential grow of the tree.
 
 \begin{sloppypar}
-Most of the mathematical models\adnote{Cite all works that models using DTMC/CTMC} for \ac{DFT} are based on the formalisation of \ac{DTMC} or \ac{CTMC}, because \acp{DFT} were initially conceived to be a visual representation of such models.
-As both \ac{DTMC} and \ac{CTMC} are state-based, they suffer the state-space explosion problem\adnote{Cite works about state-explosion: \url{http://ieeexplore.ieee.org/xpls/abs\_all.jsp?arnumber=1205180}, \url{http://www.sciencedirect.com/science/article/pii/S156783260200067X}}.
+Most of the mathematical models~\cite{LHT2013,CSD2000,BRM+2005} for \ac{DFT} are based on the formalisation of \ac{DTMC} or \ac{CTMC}, because \acp{DFT} were initially conceived to be a visual representation of such models.
+As both \ac{DTMC} and \ac{CTMC} are state-based, they suffer the state-space explosion problem~\cite{BKK+2003,BHH+2003}.
 The work reported in~\cite{SAE1996b} shows some techniques to overcome this problem, but the reduction depends on systems' models, whether they are independent or not, which can be impracticable.
 \end{sloppypar}
 
@@ -619,30 +619,26 @@ It defines, instead, several algebraic laws to reduce expressions.
 Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{FT} construction is based on an algorithm (it is not formalised), so there is no proof that it is sound or correct.
 \end{sloppypar}
 
+%The work reported in~\cite{AH2015} shows the formalisation of probabilistic analysis of \ac{SFT} and uses the same concept of date-of-occurrence shown in \adnote{cite Merle work}.
+
 From the exposed in this section, our research question is summarised as follows.
-Is there a mathematical model that is set-based and similar to \ac{FBA} that is:
-\begin{alineas}
-  \item capable of representing events ordering of \ac{TFT} and \ac{DFT}\label{question:ordering-representation};
-  \item allows both qualitative and quantitative analyses of both \ac{TFT} and \ac{DFT}\label{question:analyses};
-  \item represents systems behaviour by construction\label{question:gap};
+Is there a mathematical model that is set-based and similar to \ac{FBA} that:
+\begin{alineas}[ref={research question \alph*)}]
+  \item is capable of representing events ordering of \ac{TFT} and \ac{DFT}\label{question:ordering-representation}?
+  \item represents systems behaviour by construction\label{question:gap}?
+  \item allows both qualitative and quantitative analyses of \ac{TFT} and \ac{DFT}\label{question:analyses}?
   \item is at least as efficient as current approaches to reduce structure expressions to a normal form\label{question:efficiency}?
 \end{alineas}
 
 \section{Proposed solution}
 
-In this work we present a denotational semantics and an associated algebra, called \ac{algebra}, to analyse ordering of fault events.
-Fault events are either extracted from a nominal model with injected faults as in~\cite{DM2012,Didier2012}, or modelled using a proposed notation, called \ac{activation}.
-\Cref{fig:strategy-overview} show the strategy overview.
-``Faults injection'' block is obtained from part of the work reported in~\cite{Didier2012}.
-It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault events sequences.
-The fault events sequences are then mapped to \theac{algebra}.
-As fault names are obtained directly from components and subsystems in a \simulink model, \theac{activation} (in the ``Faults Modelling'' group) allows them to be modified or complemented.
-\Theac{activation} also allows reasoning about faults that are not modelled in \simulink as, for example, common cause or environmental faults.
-\Ac{activation} can be used to model faults formally, reasoning about basic fault events and top-event failures.
-Each predicate in \ac{activation} generates an expression in \theac{algebra}, which allows expressions reduction to obtain a canonical form that enables finding \acp{MCSeq} and calculating top-events probability.
-
-\Theac{FTA} has associated system requirements which are in fact acceptance criteria.
-Once \acg{FT} acceptance criteria is modelled as expressions in \ac{algebra}, we formally check whether they are accepted by system models' expressions.
+In this work we present a denotational semantics and an associated algebra, called \acf{algebra}, to analyse acceptance criteria of \ac{FT} with ordering of fault events (\ac{TFT} and \ac{DFT}).
+\Theac{algebra} aims at answering the \ref{question:ordering-representation}.
+The analysis of acceptance criteria is a decision problem and we use first-order logic and Isabelle/HOL as verification tool.
+\Cref{fig:strategy-overview} shows the strategy overview.
+It starts in the top (green) node and ends in the bottom (red) node.
+Fault events are either extracted from a nominal model with injected faults (\cref{fig:strategy-overview}, path A), or modelled using a proposed notation, called \ac{activation} (\cref{fig:strategy-overview}, path B).
+We depict traditional \ac{FTA} in path C to show that we still need the acceptance criteria, which are the expected properties of system's \acp{FT}.
 
 \begin{figure}[t]
   \centering
@@ -650,6 +646,27 @@ Once \acg{FT} acceptance criteria is modelled as expressions in \ac{algebra}, we
   \caption{Strategy overview}
   \label{fig:strategy-overview}
 \end{figure}
+
+System and fault modelling is an essential step towards safety analysis. 
+Architectural modelling is the first step of the strategy and can be executed either in a graphical tool, or as requirements in natural language.
+
+``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtained from part of the work reported in~\cite{DM2012,Didier2012}.
+It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault events sequences.
+The fault events sequences are then mapped to \theac{algebra}.
+As fault names are obtained directly from components and subsystems in a \simulink model, \theac{activation} (in the ``Faults Modelling'' group) allows them to be modified or complemented.
+\Theac{activation} also allows reasoning about faults that are not modelled in \simulink as, for example, common cause or environmental faults.
+Path A aims at answering the \ref{question:gap}.
+Given the flexibility of \ac{activation} notation, it can be used directly (path B) to model faults formally, reasoning about basic fault events and top-event failures.
+Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability.
+%Paths A and B aim at answering the \ref{question:gap}.
+
+\Theac{FTA} has associated non-functional system requirements which are in fact acceptance criteria for \acp{FT}.
+Once acceptance criteria are modelled as expressions in \ac{algebra}, we formally check whether they are accepted by system models' expressions.
+The acceptance criteria can be either qualitative or quantitative.
+An example of qualitative acceptance criteria is: ``\iac{FT} cannot have \ac{MCS} with less than three basic events''. 
+A quantitative acceptance criteria example is: ``the top-level event probability shall be less than $10^{-8}$''.
+The acceptance criteria analysis aims at answering the \ref{question:analyses}.
+\adnote{The work reported in SAE1996b states that Markov chains is more appropriate to represent several states than FTs. So the use of patterns to propose changes would be more efficient if used for DFT.}
 
 \section{Contributions}
 
