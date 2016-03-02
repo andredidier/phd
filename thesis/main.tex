@@ -240,6 +240,8 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \Crefname{Def}{Definition}{Definitions}
 \Crefname{figure}{Figure}{Figures}
 %\crefname{Def}{Def.}{Defs.}
+\newlist{alineasinline}{enumerate*}{1}
+\setlist[alineasinline]{label=(\roman*)}
 
 \newcommand{\textsim}[1]{$#1$}
 \newenvironment{snippetcspm}[1][2]
@@ -441,7 +443,11 @@ Tradicionalmente, Árvores de Defeitos Estáticas são empregadas para este fim,
 
 Em um trabalho anterior, mostramos uma estratégia baseada na álgebra de processos CSP e modelos Simulink para obter rastros (propagações) de defeitos que levam a uma falha.
 Apesar de o trabalho usar Árvores de Defeitos Estáticas, poderíamos ter usado Árvores de Defeitos Temporais ou Dinâmicas.
-No presente trabalho, apresentamos duas álgebras: (i) uma para modelar formalmente defeitos a partir de modelos arquiteturais, racionalizando sobre combinações de defeitos, e (ii) uma álgebra temporal de defeitos (com noção de propagação de defeitos) e provar que ela é de fato uma álgebra Booleana.
+No presente trabalho, apresentamos duas álgebras: 
+\begin{alineasinline}
+  \item uma para modelar formalmente defeitos a partir de modelos arquiteturais, racionalizando sobre combinações de defeitos, e 
+  \item uma álgebra temporal de defeitos (com noção de propagação de defeitos) e provar que ela é de fato uma álgebra Booleana.
+\end{alineasinline}
 Isso permite herdar as propriedades de álgebras Booleanas, leis e técnicas de redução existentes, as quais são muito benéficas para a modelagem e análise de defeitos.
 Nós ilustramos nosso trabalho com alguns estudos de caso simples, mas reais, fornecidos pelo nosso parceiro industrial, a EMBRAER.
 
@@ -462,7 +468,11 @@ Traditionally, Static Fault Trees are employed to this end, but Temporal and Dyn
 
 In previous work, we showed a strategy based on the process algebra CSP and Simulink models to obtain fault traces that lead to a failure.
 Although that work used Static Fault Trees, it could be used Temporal or Dynamic Fault Trees.
-In this work we present two algebras: (i) one to model faults from architectural models formally, reasoning about faults combinations, and (ii) an algebra of temporal faults (with a notion of fault propagation) and prove that it is indeed a Boolean algebra.
+In this work we present two algebras: 
+\begin{alineasinline}
+  \item one to model faults from architectural models formally, reasoning about faults combinations, and 
+  \item an algebra of temporal faults (with a notion of fault propagation) and prove that it is indeed a Boolean algebra.
+\end{alineasinline}
 \hl{This allows us to inherit Boolean algebra's properties, laws and existing reduction techniques, which are very beneficial for faults modelling and analysis.}\amnote{Qual a conexão com Temporal e Dynamic Fault Trees?? E as propagações complexas}
 We illustrate our work on simple but real case studies, some supplied by our industrial partner EMBRAER.
 
@@ -558,7 +568,11 @@ The work reported in~\cite{MRL2011} shows an algebraic framework to compositiona
 
 \begin{sloppypar}
 The NOT operator is absent in the algebras reported in~\cite{WP2009,Walker2009,Merle2010,MRL2011b}.
-There is no consensus about the relevance of its use: (i) it can be misleading, generating non-coherent analysis~\cite{Oliv2006}, or (ii) it can be essential in practical use~\cite{Andrews2001}.
+There is no consensus about the relevance of its use: 
+\begin{alineasinline}
+  \item it can be misleading, generating non-coherent analysis~\cite{Oliv2006}, or 
+  \item it can be essential in practical use~\cite{Andrews2001}.
+\end{alineasinline}
 Our concern is that the decision of the relevance of its use should not be due to the choice of events-occurrence representation.
 The algebra created in this work defines the NOT operator and allows its use, as we show in \cref{sec:strategy}.
 \end{sloppypar}
@@ -587,18 +601,28 @@ For two case studies provided by our industrial partner, we showed that our auto
 Both \ac{TFT} and \ac{DFT} lack a first-order logic mathematical model as there is to \ac{SFT}.
 For \acp{SFT}, mathematical models to reduce structure expressions is either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}.
 Both are very efficient.
-One important concern on employing \ac{FTA} is whether a \ac{FT} indeed represents a system behaviour.
+One important concern on employing \ac{FTA} is whether \iac{FT} indeed represents a system behaviour.
 The work reported in~\cite{MCS+1999} exposes this concern for \acp{DFT}, and the \ac{hiphops} framework---related to \acp{SFT} and \acp{TFT}---aims at getting this issued sorted.
 Our contribution to this issue for \ac{SFT} is shown in~\cite{DM2012,Didier2012}.
 
-The mathematical model for \ac{TFT} has a discontinuity between two activation states: (i) non-occurrence, and (ii) occurrence some time later.
-Such a discontinuity has some drawbacks, as for example, the impossibility to use \ac{NOT} gates and handling the specific case of non-occurrence with zeros in \acp{TTT}.
-The reduction of structure expressions in \ac{TFT} is based in a combination of: (i) algebraic reduction---that can lead to an ever-growing rules application---, (ii) modularisation of independent subtrees (not always subtree are independent), and (iii) \ac{TDT}---which are limited to seven basic events, due to exponential grow of the tree.
+The mathematical model for \ac{TFT} has a discontinuity between two activation states: 
+\begin{alineasinline}
+  \item non-occurrence, and 
+  \item occurrence some time later.
+\end{alineasinline}
+Such a discontinuity has some drawbacks, as for example, the impossibility to use \ac{NOT} gates, and handling the specific case of non-occurrence with zeros in \acp{TTT}.
+The reduction of structure expressions in \ac{TFT} is based in a combination of: 
+\begin{alineasinline}
+  \item algebraic reduction---that can lead to an ever-growing rules application---, 
+  \item modularisation of independent subtrees (not always subtrees are independent), and 
+  \item \ac{TDT}---which are limited to seven basic events, due to exponential grow of the tree.
+\end{alineasinline}
+
 
 \begin{sloppypar}
 Most of the mathematical models~\cite{LHT2013,CSD2000,BRM+2005} for \ac{DFT} are based on the formalisation of \ac{DTMC} or \ac{CTMC}, because \acp{DFT} were initially conceived to be a visual representation of such models.
-As both \ac{DTMC} and \ac{CTMC} are state-based, they suffer the state-space explosion problem~\cite{BKK+2003,BHH+2003}.
-The work reported in~\cite{SAE1996b} shows some techniques to overcome this problem, but the reduction depends on systems' models, whether they are independent or not, which can be impracticable.
+As both \ac{DTMC} and \ac{CTMC} are state-based, they suffer the state-space explosion problem.
+The works reported in~\cite{BKK+2003,BHH+2003,SAE1996b} shows techniques to overcome this problem, but the reduction depends on systems' models, whether they are independent or not, which can be impracticable.
 \end{sloppypar}
 
 There are other approaches, however.
@@ -642,21 +666,22 @@ We depict traditional \ac{FTA} in path C to show that we still need the acceptan
 
 \begin{figure}[t]
   \centering
-  \includegraphicsaspectratio[0.8]{StrategyOverview}
+  \includegraphicsaspectratio[0.9]{StrategyOverview}
   \caption{Strategy overview}
   \label{fig:strategy-overview}
 \end{figure}
 
 System and fault modelling is an essential step towards safety analysis. 
 Architectural modelling is the first step of the strategy and can be executed either in a graphical tool, or as requirements in natural language.
+For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling to verify fault tolerance of \acp{SoS}.
 
-``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtained from part of the work reported in~\cite{DM2012,Didier2012}.
+``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
 It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault events sequences.
 The fault events sequences are then mapped to \theac{algebra}.
 As fault names are obtained directly from components and subsystems in a \simulink model, \theac{activation} (in the ``Faults Modelling'' group) allows them to be modified or complemented.
 \Theac{activation} also allows reasoning about faults that are not modelled in \simulink as, for example, common cause or environmental faults.
 Path A aims at answering the \ref{question:gap}.
-Given the flexibility of \ac{activation} notation, it can be used directly (path B) to model faults formally, reasoning about basic fault events and top-event failures.
+Given the flexibility of \ac{activation} notation, it can be used directly (path B) to model faults formally, reasoning about basic fault events and top-event failures, which is related to~\ref{question:ordering-representation}.
 Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability.
 %Paths A and B aim at answering the \ref{question:gap}.
 
@@ -666,28 +691,27 @@ The acceptance criteria can be either qualitative or quantitative.
 An example of qualitative acceptance criteria is: ``\iac{FT} cannot have \ac{MCS} with less than three basic events''. 
 A quantitative acceptance criteria example is: ``the top-level event probability shall be less than $10^{-8}$''.
 The acceptance criteria analysis aims at answering the \ref{question:analyses}.
-\adnote{The work reported in SAE1996b states that Markov chains is more appropriate to represent several states than FTs. So the use of patterns to propose changes would be more efficient if used for DFT.}
 
 \section{Contributions}
 
 The main contributions of this work are:
 
 \begin{enumerate}
-  \item Define a denotational and algebraic model to express fault events order with \theac{algebra}, and formally verify \acg{FT} acceptance;
-  \item Reusing \simulink models, obtaining fault event sequences and mapping to \ac{algebra};
-  \item Reasoning about faults modelling in \ac{activation}, obtaining formal expressions of top-event failures;
-  \item Illustrating the application of the laws on real case studies, two provided by our industrial partner.
+  \item Define a denotational and algebraic model to express fault events order with \theac{algebra}, and formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance;
+  \item Reuse \simulink models, obtaining fault event sequences and mapping to \ac{algebra};
+  \item Reason about faults modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures);
+  \item Illustrate the application of the laws on \hl{two}\adnote{Pensei em usar mais estudos de caso, se der tempo, claro.} real case studies, provided by our industrial partner.
 \end{enumerate}
 
 Other contributions of this work are:
 
 \begin{enumerate}
-  \item Defining a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016});
+  \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016});
   \todo{When accepted, add work submitted to ISF}
-  \item Generalising laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}.
+  \item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}.
 \end{enumerate}
 
-We used Isabelle/HOL\index{Isabelle/HOL} 2015\footnote{The 2002 tutorial is reported in~\cite{NPW2002}, but there is a newer version published with the tool itself.
+We use Isabelle/HOL\index{Isabelle/HOL} 2015\footnote{The 2002 tutorial is reported in~\cite{NPW2002}, but there is a newer version published with the tool itself.
 The tool and the tutorial are available on their website at http://isabelle.in.tum.de .}, theories in Isabelle's library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
 %We omit the proofs in the paper, but they are available in Online Resource 1.\todo{publish theory files online: ``Specialized format such as .pdb (chemical), .wrl (VRML), .nb (Mathematica notebook), and .tex can also be supplied.''}
 
@@ -743,7 +767,12 @@ A system is the total state of its atomic components.
 
 \subsection{Dependability}
 
-The concepts of dependability\index{dependability} are: (i) threats to, (ii) attributes of, and (iii) means to attain.
+The concepts of dependability\index{dependability} are: 
+\begin{alineasinline}
+  \item threats to, 
+  \item attributes of, and 
+  \item means to attain.
+\end{alineasinline}
 
 \emph{Threats to dependability}\index{dependability!threats to} are the so-called \emph{fault-error-failure} chain.
 A failure is a service deviation perceived on systems' boundary.
@@ -823,7 +852,12 @@ The techniques to attain fault tolerance are summarized as follows:
   Techniques range from rollback to a previously saved state without errors, error masking, isolation of faulty components, to reconfiguration using spare components.
 \end{description}
 
-In this work, we use a combination of: (i) fault-injection, (ii) theorem proving, and (iii) symbolic execution.
+In this work, we use a combination of: 
+\begin{alineasinline}
+  \item fault-injection, 
+  \item theorem proving, and 
+  \item symbolic execution.
+\end{alineasinline}
 We use these methods to obtain an erroneous behaviour of the system which is compared to system's dependability attributes (safety).
 We explain how these methods combine in \cref{sec:strategy}.
 
@@ -839,7 +873,13 @@ Fault, error, failures, and fault propagation have structural views, which are r
 These works map \ac{SysML} to two formal languages---\ac{CML} and \ac{CSP}, respectively---to verify fault tolerance.
 
 In~\cite{SAE1996b} the safety assessment process for civil airborne systems and equipment describes development cycles and methods to ``clearly identify each failure condition''.
-The methods that involves failure identification are: (i) \ac{SFT}, (ii) \ac{DD}, (iii) \aca{DTMC}, and (iv) \ac{FMEA}.
+The methods that involves failure identification are: 
+\begin{alineasinline}
+  \item \ac{SFT}, 
+  \item \ac{DD}, 
+  \item \aca{DTMC}, and 
+  \item \ac{FMEA}.
+\end{alineasinline}
 The first three are top-down methods, that starts with undesired failure conditions and moves to lower levels to obtain more detailed conditions that causes the top-level event.
 \Acp{DD} are an alternate method of representing the data in \ac{SFT}.
 \Ac{FMEA} is a bottom-up method that identifies failure modes of a component and determines the effects on the next higher level.
@@ -892,7 +932,11 @@ In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their 
 Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{sec:strategy}).
 We explain \acp{BDD} and derived techniques in \cref{sec:structure-expressions-analysis}, and \acp{FBA} in \cref{sec:fba}.
 
-The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}: (i) can be misleading, generating non-coherent \aclp{FT}, or (ii) can be essential in practical use.
+The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}: 
+\begin{alineasinline}
+  \item can be misleading, generating non-coherent \aclp{FT}, or 
+  \item can be essential in practical use.
+\end{alineasinline}
 We discuss such cases in \cref{sec:not-operator}.
 
 To reuse a nominal model to analyse faults we need fault injection.
@@ -959,7 +1003,11 @@ We summarize them as:
     Quantitative rankings on contributions to system failure.
     Ranking \acp{MCS} is the same as ordering them in descending order of some unreliability formula (higher first).
     These formulas used to calculate importance vary.
-    The most commons are: (i) system unavailability, and (ii) system failure occurrence rate.
+    The most commons are: 
+    \begin{alineasinline}
+      \item system unavailability, and 
+      \item system failure occurrence rate.
+    \end{alineasinline}
     \item[Sensitivity evaluation\index{Fault Tree Analysis!sensitivity evaluation}:]
     Modifying characteristics of components and evaluate their impact.
     For a particular event in a tree, a higher and a lower failure probability value are assigned.
@@ -1112,7 +1160,11 @@ Value zero means that the event is not active on the combination.
 Similar to Boolean's truth tables, the \pandora methodology defines \acp{TTT}.
 They represent formula values for every combination of events.
 \Cref{tbl:tft-operators} shows the \ac{TTT} of all \ac{TFT} operators, and \cref{fig:tft-symbols} shows \ac{TFT}-specific symbols used in this work.
-To illustrate \acp{TFT}, for the formula $\parsin{A \pand C} \lor \parsin{A \land B}$, we show: (i) the \ac{TFT} in \cref{fig:tft-small-example}, and (ii) its corresponding \ac{TTT} in \cref{tbl:ttt-small-example} (the column `\#' indicates the \ac{MCSeq} number).
+To illustrate \acp{TFT}, for the formula $\parsin{A \pand C} \lor \parsin{A \land B}$, we show: 
+\begin{alineasinline}
+  \item the \ac{TFT} in \cref{fig:tft-small-example}, and 
+  \item its corresponding \ac{TTT} in \cref{tbl:ttt-small-example} (the column `\#' indicates the \ac{MCSeq} number).
+\end{alineasinline}
 
 \begin{table}
 % table caption is above the table
@@ -1350,7 +1402,12 @@ In~\cite{Merle2010,MRL+2010,MRL2011} fault events occur in a specific time and a
 As the ``date-of-occurrence'' function is stated in continuous time, the probability of two events occurring at the same time is negligible.
 In fact, useful information is obtained from the possibilities of relation in time of the occurrence of the events.
 \Ac{DFT} gates' algebraic model is summarized in \cref{tbl:merle-dft-algebraic-model}.
-Structure expressions\index{structure expression} are written with an algebra that has operators \ac{OR} and \ac{AND}, and three new operators to express events ordering: (i) \ac{NIBefore}, (ii) \ac{SIMLT}, and (iii) \ac{IBefore}.
+Structure expressions\index{structure expression} are written with an algebra that has operators \ac{OR} and \ac{AND}, and three new operators to express events ordering: 
+\begin{alineasinline}
+  \item \ac{NIBefore}, 
+  \item \ac{SIMLT}, and 
+  \item \ac{IBefore}.
+\end{alineasinline}
 The \ac{NIBefore} and the \ac{SIMLT} operators are similar to \ac{TFT}'s \ac{POR} and \ac{SAND} operators, respectively.
 The \ac{IBefore} is a composition of \ac{NIBefore} and \ac{SIMLT} operators.
 \Cref{tbl:date-of-occurrence-for-operators} summarizes the date-of-occurrence function for all operators.
@@ -1505,7 +1562,11 @@ Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bd
 
 \Acp{BDD} are directed acyclic graphs that represents a Boolean expression.
 They are still referred to as \ac{BDD}, but the more spread version is the \ac{ROBDD}, which is an optimisation.
-There are two ways to generate \iac{BDD} for an expression: (i) derive a diagram from the truth-table, or (ii) expand the paths based on Shannon's method (described in \FThandbook).
+There are two ways to generate \iac{BDD} for an expression: 
+\begin{alineasinline}
+  \item derive a diagram from the truth-table, or 
+  \item expand the paths based on Shannon's method (described in \FThandbook).
+\end{alineasinline}
 
 To demonstrate the expressiveness of \iac{BDD}, \cref{fig:bdd-diagram-for-a-truth-table} shows a diagram for a truth table with three variables (\cref{tbl:bdd-truth-table-with-three-variable}).
 In a node, when a path is chosen, the variable of the node assumes the edge value.
@@ -1614,10 +1675,14 @@ A backup system in \ac{CSp} gets activated slower than in \ac{WSp}, which implie
 One kind of operation expresses the slowness of the relation of the fault events of \ac{CSp}, and another one expresses the readiness of the \ac{WSp}.
 The latter semantics is similar to the semantics of \ac{PAND} and \ac{IBefore} (combined with \ac{AND}) gates.
 
-\Ac{SBDD} creation has two steps: (i) \ac{CSp} or \ac{WSp} \ac{DFT} conversion, and (ii) \ac{SBDD} model generation.
-In (i), it is a \ac{DFT}-to-\ac{DFT} conversion.
+\Ac{SBDD} creation has two steps: 
+\begin{alineasinline}
+  \item \ac{CSp} or \ac{WSp} \ac{DFT} conversion, and \label{item:sbdd-creation-spare}
+  \item \ac{SBDD} model generation.\label{item:sbdd-model-generation}
+\end{alineasinline}
+In \ref{item:sbdd-creation-spare}, it is a \ac{DFT}-to-\ac{DFT} conversion.
 \Ac{CSp} and \ac{WSp} gates are converted to a new, but equivalent \ac{DFT} without \ac{CSp} and \ac{WSp} gates, where the operations appear as basic events and are combined using other gates.
-In (ii), the \ac{SBDD} model is created.
+In \ref{item:sbdd-model-generation}, the \ac{SBDD} model is created.
 The model may contain nodes that are contradictory as, for example, nodes that assumes that an event $A$ is false and a binary operation that contains $A$ is true.
 This step ends when all contradictions are removed.
 The evaluation is similar to \acg{BDD}: each path ending in true is a minimal term in the \ac{DNF} that may contain one of the binary operations and individual events.
@@ -1735,7 +1800,11 @@ Although the \FThandbook introduces several gates, the vast majority of \ac{SFT}
 Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when NOT gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}).
 Such a reduction can cause the interpretation of failure logic to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
 The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} shows how to solve it using \acp{BDD}.
-In the following we show: (i) the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and (ii) the second example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates in a multitasking system (\cref{sec:non-coherent-usefulness}).
+In the following we show: 
+\begin{alineasinline}
+  \item the second example presented in~\cite{Oliv2006}, which highlights the problem when using NOT gates (\cref{sec:non-coherent-misleads-example}), and 
+  \item the second example presented in~\cite{Andrews2001}, which defends the usefulness of NOT gates in a multitasking system (\cref{sec:non-coherent-usefulness}).
+\end{alineasinline}
 
 Negated events in non-coherent analysis are in fact the working state of a component.
 The probability contribution of a negated basic event is close to 1.
@@ -2545,7 +2614,11 @@ We present the \simulink model for this monitor in \cref{fg:blockDiagramMonitorI
 
 %As we mentioned in~\cref{sec:faults-injection} we translated the monitor to \ac{CSPm} according to our strategy and modified the observer to make \acs{fdr} generate more counter-examples.
 
-Now we show two contributions: (i) using only Boolean operators, thus ignoring ordering, we can obtain the same results obtained in~\cite{DM2012}, and (ii) we represent each of the fault traces reported in~\cite{DM2012} as a term in our proposed algebra of temporal faults.
+Now we show two contributions: 
+\begin{alineasinline}
+  \item using only Boolean operators, thus ignoring ordering, we can obtain the same results obtained in~\cite{DM2012}, and 
+  \item we represent each of the fault traces reported in~\cite{DM2012} as a term in our proposed algebra of temporal faults.
+\end{alineasinline}
 Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cref{sec:faults-injection}, we associate the fault events as:
 %
 \begin{align*}
@@ -2639,12 +2712,14 @@ M_A = & \parsin{\parsin{\xbefore{S}{B}} \inter -A} \union \parsin{\parsin{\xbefo
 = &\parsin{B \inter S \inter -A} \union \parsin{B \inter A \inter -S} \union \parsin{\xbefore{A}{S}} & \text{by absorption}
 \end{align*}
 
-The semantics of the above expression is: (i) fault $b$ ($\var{b}$) occurs and fault $a$ ($\var{a}$) or fault $s$ ($\var{s}$) occurs (but not both $a$ and $s$), or (ii) fault $a$ occurs before fault $s$, which is more precise than the expression found without considering order of events.
+The semantics of the above expression is: 
+\begin{alineasinline}
+  \item fault $b$ ($\var{b}$) occurs and fault $a$ ($\var{a}$) or fault $s$ ($\var{s}$) occurs (but not both $a$ and $s$), or 
+  \item fault $a$ occurs before fault $s$, which is more precise than the expression found without considering order of events.
+\end{alineasinline}
 
 \chapter{Conclusion}
 \label{sec:conclusion}
-
-\todo{Add a schedule of activities to conclude.}
 
 In this work we presented a foundational theory to support a more precise representation of fault events as compared to our previous strategy for injecting faults~\cite{DM2012}.
 %
@@ -2654,41 +2729,83 @@ The failure logic is essential for system safety assessment because it is used a
 %
 Furthermore, we still connect the strategy presented in~\cite{MJG+2010} with the works reported in~\cite{JMS+2011} (functional analysis) and in~\cite{GMS+2010,PMS+2001} (safety assessment) because our new algebra is at least a Boolean algebra.
 
-
-%The work reported in~\cite{Huffm2010} was used as a basis for all proofs.
-%
-%It contains a complete theory of Free Boolean Algebras, including a homomorphism from an FBA to any Boolean algebra.
-%
-%Proving that there is also a homomorphism from \ac{algebra} to any Boolean algebra is left as future work.
-
 \begin{sloppypar}
 The work reported in~\cite{Walker2009,WP2009,WP2010} tackles simultaneity with ``nearly simultaneous'' events~\cite{EWG2013}.
 But we consider instantaneous events, like the work reported in~\cite{MRL2014}, because we assume that simultaneity is probabilistically impossible.
 \end{sloppypar}
-%Another future To show the relation of the exclusive before operator to the operators shown in~\cite{MRL2014} and~\cite{WP2009}.
 
-%As future work we will complete the analysis including verification of a formula acceptance criteria.
-%
-%The objective of finding failure logic is to create fault trees and then performing qualitative and quantitative analyses to check if the fault trees meet safety requirements (for static and dynamic fault trees).
-%
-%We plan to verify safety requirements directly from the failure logic expressed by our TFA.
-%
-%It means we need a reduction technique that includes the exclusive before operator to analyse large-scale systems (say with 1000 or more fault events) without using \ac{TDT}s~\cite{WP2010}.
-%
-%We believe that the direct analysis on failure logic expressed by our TFA can also accelerate temporal fault trees analysis as it is a subclass of dynamic fault trees.
+\section{Status}
 
-The distinct lists representation in our algebra does not allow obtaining minimal cut sequences\index{Minimal Cut!Sequences} directly from the formula, similar to \acp{FBA}\index{Boolean Algebra!Free}.
-The sets in \iac{FBA}\index{Boolean Algebra!Free} formula are already the minimal cut sets\index{Minimal Cut!Sets}.
-In our work, \ac{algebra} allows us to find minimal cut sequences\index{Minimal Cut!Sequences} (with XBefore) from the formulas in DNF algebraically: each sub-expression is a minimal cut sequence\index{Minimal Cut!Sequences}.
+In \cref{fig:status-of-thesis} we show what: 
+\begin{alineasinline}
+  \item was done in previous work and is used as input in this thesis, 
+  \item is already done in this thesis, 
+  \item will be done in the next months (see \cref{tbl:tasks-schedule} for tasks schedule), and 
+  \item will be done in future work, after the thesis' defence.
+\end{alineasinline}
+Many of the tasks shown in \cref{tbl:tasks-schedule} already started. 
+The effort shown in the ``Days'' column is the estimated remaining time to finish the task.
 
-Boolean formulas reduction can be achieved by: (i) application of Boolean laws, (ii) \ac{BDD}\index{Binary Decision Diagrams}, or (iii) \acp{FBA}\index{Boolean Algebra!Free}.
-We used Boolean and XBefore laws to reduce \ac{algebra} formulas.
-%
-The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs\index{Binary Decision Diagrams!Sequential} to reduce formulas with order-based operators.
-%
-We plan to use similar concepts in a future work.
 
-Although we do not use negation (\ac{NOT} operator) with XBefore in our case study it is part of \ac{algebra}, so it could be used.
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.9]{StrategyOverview-Status}
+  \caption{Status of this thesis using the strategy overview (see \cref{fig:strategy-overview})}
+  \label{fig:status-of-thesis}
+\end{figure}
+
+\begin{table}[htb]
+\IBGEtab{%
+  \caption{Tasks schedule}%
+  \label{tbl:tasks-schedule}%
+}{%
+  \begin{tabular}{p{10.1cm}ccc}
+  \toprule
+    Task & Start & Days & Days total \\
+  \midrule \midrule
+    Qualification & 04/04/2016 & 1 & 0 \\
+  \midrule
+    Elaborate theory for the \ac{activation} & 05/04/2016 & 45 & 1 \\
+  \midrule
+    Elaborate theory for the acceptance criteria & 20/05/2016 & 30 & 46 \\
+  \midrule
+    Prepare paper about \ac{activation} and acceptance criteria & 19/06/2016 & 30 & 76 \\
+  \midrule
+    Submit paper about \ac{activation} and acceptance criteria & 19/07/2016 & 1 & 106 \\
+  \midrule
+    Prove soundness and completeness theorems for the DNF of \ac{algebra} & 20/07/2016 & 75 & 107 \\
+  \midrule
+    Define the mapping rules from traces to \ac{algebra} & 03/10/2016 & 15 & 182 \\
+  \midrule
+    Demonstrate the relations of \ac{NOT} and \ac{XBefore} and other operators & 18/10/2016 & 15 & 197 \\
+  \midrule
+    Define the conditions that cause non-coherent analysis with \ac{NOT} & 02/11/2016 & 15 & 212 \\
+  \midrule
+    Write the results in the thesis & 17/11/2016 & 60 & 227 \\
+  \midrule
+    Prepare thesis' defence & 16/01/2017 & 30 & 287 \\
+  \midrule
+    Defence & 15/02/2017 & 1 & 317 \\
+  \bottomrule
+  \end{tabular}%
+}{%
+}
+\end{table}
+
+\section{Next steps in this thesis}
+
+The next steps in this thesis are to conclude the work-in-progress of the ``Faults Modelling'' and ``Automatic FTA'' blocks in \cref{fig:status-of-thesis}.
+An initial version of the theory of the \ac{activation} is done, but we need to adapt the failure predicates to \theac{algebra}.
+It may require a full refactoring of the theory of \ac{activation}.
+We developed a small set of rules for the acceptance criteria verification, but we need to add more sophisticated rules, as for example, to consider phase and latency.
+%In both cases, we will update the case studies.
+
+We showed the DNF for \ac{algebra}, but did not demonstrate that every formula can be converted into DNF.
+The laws shown in this work should be sufficient to this demonstration.
+Also, we did not show the mapping rules from traces to \ac{algebra} (with Boolean operators only and with XBefore).
+The mapping rules follow the traces: XBefore is obtained by the order of occurrence and the absence of an event is the complement ($-$).
+
+Although we do not use negation (\ac{NOT} operator) with XBefore in our case study, it is part of \ac{algebra}, so it could be used.
 As future work we will demonstrate the relations of \ac{NOT} and \ac{XBefore}, as we did for \ac{AND} and \ac{OR}.
 We will also define laws to avoid the conditions that cause non-coherent analysis~\cite{Oliv2006}.
 The issue with negated events comes up when both an event and its negation appear on the same tree.
@@ -2696,17 +2813,28 @@ One very restrictive solution to this issue is applying the \emph{generators ind
 We look forward to obtain a less restrictive law.
 
 
-We showed the DNF for \ac{algebra}, but did not demonstrate that every formula can be converted into DNF.
-The laws shown in this work should be sufficient to this demonstration.
-Also, we did not show the mapping rules from traces to \ac{algebra} (with Boolean operators only and with XBefore).
-The mapping rules follow the traces: XBefore is obtained by the order of occurrence and the absence of an event is the complement ($-$).
-We leave these demonstrations as future work.
+\section{Future work, out of the scope of this thesis}
 
+%The distinct lists representation in our algebra does not allow obtaining minimal cut sequences\index{Minimal Cut!Sequences} directly from the formula, similar to \acp{FBA}\index{Boolean Algebra!Free}.
+%The sets in \iac{FBA}\index{Boolean Algebra!Free} formula are already the minimal cut sets\index{Minimal Cut!Sets}.
+%In our work, \ac{algebra} allows us to find minimal cut sequences\index{Minimal Cut!Sequences} (with XBefore) from the formulas in DNF algebraically: each sub-expression is a minimal cut sequence\index{Minimal Cut!Sequences}.
 
-%\include{chapters/introduction}
-%\include{chapters/background}
-%\include{chapters/desenv}
-%\include{chapters/conclusion}
+Boolean formulas reduction can be achieved by: 
+\begin{alineasinline}
+  \item application of Boolean laws, 
+  \item \ac{BDD}\index{Binary Decision Diagrams}, or 
+  \item \acp{FBA}\index{Boolean Algebra!Free}.
+\end{alineasinline}
+We used Boolean and \ac{XBefore} laws to reduce \ac{algebra} formulas.
+%
+The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs\index{Binary Decision Diagrams!Sequential} to reduce formulas with order-based operators.
+%
+We plan to use similar concepts in a future work.
+
+The work reported in~\cite{SAE1996b} states that \acp{DTMC} (\aca{DTMC}) is more appropriate to represent several states than \acp{SFT}. 
+Considering that \acp{DFT} were conceived as a visual representation of \aca{DTMC}, then we may say that \acp{DFT} can be used to represent several states, thus they are suitable to propose the architectural model modifications as shown in \cref{fig:strategy-overview,fig:status-of-thesis}.
+The definition of ``Faults Modelling and Fault Tolerance Patterns'' and the automatic proposal of ``Architectural Model Modifications'' are left as future work.
+
 
 % References
 \postextual
@@ -2727,7 +2855,7 @@ We leave these demonstrations as future work.
 \phantompart
 \printindex
 \todo{Verify indexes again (search again for words already in the index)}
-\todo{Run makeindex main on this directory}
+\todo{Run ``makeindex main'' on this directory}
 \cleardoublepage
 
 \listoftodos[Notes]{}

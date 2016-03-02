@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"table",
+				"tableabntibge	Table ABNT IBGE"
+			],
+			[
 				"clear",
 				"cleardoublepage"
 			],
@@ -243,7 +247,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 152641,
+				"buffer_size": 155756,
 				"line_ending": "Windows"
 			}
 		},
@@ -251,15 +255,7 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 7766,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "risethesis.cls",
-			"settings":
-			{
-				"buffer_size": 26911,
+				"buffer_size": 7771,
 				"line_ending": "Windows"
 			}
 		}
@@ -271,10 +267,14 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 104.0,
-		"last_filter": "remove",
+		"height": 392.0,
+		"last_filter": "Package Control: ",
 		"selected_items":
 		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
 			[
 				"remove",
 				"Package Control: Remove Package"
@@ -282,10 +282,6 @@
 			[
 				"fr",
 				"File: Rename"
-			],
-			[
-				"Package Control: ",
-				"Package Control: List Packages"
 			],
 			[
 				"enable",
@@ -351,6 +347,11 @@
 	],
 	"file_history":
 	[
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Table ABNT IBGE.sublime-snippet",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.sublime-snippet",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.xml",
+		"/C/Users/andre/Desktop/Mesa/Sub/Sub.output.txt.txt",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
@@ -377,7 +378,6 @@
 		"/C/Users/andre/Dropbox/todo/todo (Cópia em conflito de Reis 2016-01-20).txt",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acro.sty",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
 		"/C/Users/andre/Desktop/Set_Theory_and_Logic.bibtex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.log",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acronyms.tex",
@@ -474,11 +474,7 @@
 		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/entrada.txt",
 		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/output.txt",
 		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/saida.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/alrd.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes CN.csv",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/teste-andreia.c",
-		"/C/Users/andre/Desktop/10.1007%2Fs100090050035.bib",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes Est.csv"
+		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/alrd.c"
 	],
 	"find":
 	{
@@ -496,6 +492,27 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"planning",
+			"NOT",
+			"ATF",
+			"ActA",
+			"midrow",
+			"\\(i\\)",
+			"(",
+			"\\(i\\)",
+			"(",
+			"item",
+			"  \n",
+			"(",
+			"\\(i\\)",
+			"alineas",
+			"mylist",
+			"alineas",
+			"tabular",
+			"paper",
+			"tabularx",
+			"table",
+			"sec:conclusion",
 			"researchquestion",
 			"alineas",
 			"isabelle",
@@ -602,28 +619,7 @@
 			"l__acro_.*_form_prop",
 			"l__acro_long_.*_prop",
 			"l__acro_long_#1_prop",
-			"l__acro_long_#1_form_prop",
-			"l__acro_long.*_form_prop",
-			"l__acro_long_",
-			"l__acro_long_#1_form_prop",
-			"-plural",
-			"-form",
-			"plural-form",
-			"-form",
-			"plural-form",
-			"plural",
-			"fault tree",
-			"item",
-			"begin",
-			"next",
-			"go to",
-			"section",
-			"jump",
-			"BDD",
-			"minimal cut sequence[s]?",
-			"\\index{Minimal Cut!Sequences}",
-			"\\index{Minimal Cut Sets}\\index{Minimal Cut!Sets}",
-			"\\index{Minimal Cut Sets}"
+			"l__acro_long_#1_form_prop"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -682,7 +678,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 152641,
+						"buffer_size": 155756,
 						"regions":
 						{
 							"bookmarks":
@@ -692,24 +688,32 @@
 								"regions":
 								[
 									[
-										6675,
-										6675
+										6909,
+										6909
 									],
 									[
-										29438,
-										29438
+										29767,
+										29767
 									],
 									[
-										30223,
-										30223
+										149722,
+										149722
 									],
 									[
-										31005,
-										31005
+										151692,
+										151692
 									],
 									[
-										31945,
-										31945
+										153584,
+										153584
+									],
+									[
+										153586,
+										153586
+									],
+									[
+										154855,
+										154855
 									]
 								],
 								"scope": "bookmarks"
@@ -718,8 +722,8 @@
 						"selection":
 						[
 							[
-								29677,
-								29677
+								150463,
+								150463
 							]
 						],
 						"settings":
@@ -731,7 +735,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 12881.0,
+						"translation.y": 60808.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -743,15 +747,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7766,
+						"buffer_size": 7771,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4493,
-								4496
+								6547,
+								6547
 							]
 						],
 						"settings":
@@ -760,40 +764,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4531.0,
+						"translation.y": 6655.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "risethesis.cls",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 26911,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX/TeX.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
 					"type": "text"
 				}
 			]
