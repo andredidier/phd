@@ -4,8 +4,8 @@
 		"selected_items":
 		[
 			[
-				"table",
-				"tableabntibge	Table ABNT IBGE"
+				"simu",
+				"simulink"
 			],
 			[
 				"clear",
@@ -247,7 +247,23 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 155756,
+				"buffer_size": 161451,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "abnt.bst",
+			"settings":
+			{
+				"buffer_size": 28656,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "abntex2-num.bst",
+			"settings":
+			{
+				"buffer_size": 59944,
 				"line_ending": "Windows"
 			}
 		},
@@ -255,7 +271,23 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 7771,
+				"buffer_size": 7793,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/Andre/Desktop/Mesa/acro/acro.sty",
+			"settings":
+			{
+				"buffer_size": 120283,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "risethesis.cls",
+			"settings":
+			{
+				"buffer_size": 26911,
 				"line_ending": "Windows"
 			}
 		}
@@ -267,14 +299,10 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 392.0,
-		"last_filter": "Package Control: ",
+		"height": 104.0,
+		"last_filter": "remove",
 		"selected_items":
 		[
-			[
-				"Package Control: ",
-				"Package Control: Install Package"
-			],
 			[
 				"remove",
 				"Package Control: Remove Package"
@@ -282,6 +310,10 @@
 			[
 				"fr",
 				"File: Rename"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
 			],
 			[
 				"enable",
@@ -343,17 +375,16 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis"
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis"
 	],
 	"file_history":
 	[
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Table ABNT IBGE.sublime-snippet",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.sublime-snippet",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.xml",
-		"/C/Users/andre/Desktop/Mesa/Sub/Sub.output.txt.txt",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/abnt.bst",
+		"/C/Users/Andre/Desktop/Mesa/abntex2/bibtex/bst/abntex2/abntex2-num.bst",
+		"/C/Users/Andre/Desktop/Mesa/acro/example_one.tex",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
 		"/C/Users/andre/Desktop/Mesa/2015-12-12 Concurso UFRPE/2016-01-11_resumos-ufrpe.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/ficha-catalografica.tex",
@@ -378,6 +409,7 @@
 		"/C/Users/andre/Dropbox/todo/todo (Cópia em conflito de Reis 2016-01-20).txt",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acro.sty",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
 		"/C/Users/andre/Desktop/Set_Theory_and_Logic.bibtex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.log",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acronyms.tex",
@@ -478,7 +510,7 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 36.0
 	},
 	"find_in_files":
 	{
@@ -492,31 +524,51 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"planning",
-			"NOT",
-			"ATF",
-			"ActA",
-			"midrow",
-			"\\(i\\)",
-			"(",
-			"\\(i\\)",
-			"(",
-			"item",
-			"  \n",
-			"(",
-			"\\(i\\)",
-			"alineas",
-			"mylist",
-			"alineas",
-			"tabular",
-			"paper",
-			"tabularx",
-			"table",
-			"sec:conclusion",
-			"researchquestion",
-			"alineas",
-			"isabelle",
-			"subcaption",
+			"if\\$",
+			", thus",
+			"sequences",
+			"part:contributions",
+			"part:results",
+			"fdr",
+			"failure",
+			"failure logic",
+			" an \\\\ac",
+			"an \\\\ac",
+			"rq",
+			"extra",
+			"\\\\xbeforetext",
+			"\\\\simultaneoustext",
+			"\\\\ibeforetext",
+			"\\\\nibeforetext",
+			"\\\\nottext",
+			"\\\\sandtext",
+			"\\\\portext",
+			"\\\\sandtext",
+			"\\\\portext",
+			"\\\\pandtext",
+			"\\\\ac\\{AND",
+			"\\\\andtext",
+			"\\\\acp\\{OR",
+			"\\\\ortext",
+			"ortext",
+			"and",
+			"gate",
+			"printacr",
+			"enumerate",
+			"itemize",
+			"alinea",
+			"sbdd",
+			"acro_first_instance",
+			"UseInstance",
+			"acro_first_instance",
+			"l__acro_first_instance_tl",
+			"acro_use",
+			"plural",
+			"cite",
+			"input $i",
+			"math",
+			"dependency tree",
+			"dependenc",
 			"limited",
 			"failure expression",
 			"todo",
@@ -599,27 +651,7 @@
 			"definition",
 			"FBA",
 			"Boolean",
-			"boolean",
-			"\\{cspm\\}",
-			"\\{csp\\}",
-			"csp",
-			"BDD!",
-			"fba",
-			"FBA",
-			"tracetoFBA",
-			"fba",
-			"FBA",
-			"Shannon",
-			"\\\\l__acro_custom_long_format_tl",
-			"\\\\acro_write_long",
-			"\\\\acro_write_expanded",
-			"\\\\acro_plural",
-			"l__acro_.*_form_prop",
-			"´",
-			"l__acro_.*_form_prop",
-			"l__acro_long_.*_prop",
-			"l__acro_long_#1_prop",
-			"l__acro_long_#1_form_prop"
+			"boolean"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -627,6 +659,20 @@
 		"regex": true,
 		"replace_history":
 		[
+			"failure expression",
+			"\\\\ac{XBefore}",
+			"\\\\ac{SIMLT}",
+			"\\\\ac{IBefore}",
+			"\\\\ac{NIBefore}",
+			"\\\\ac{NOT}",
+			"\\\\ac{SAND}",
+			"\\\\ac{POR}",
+			"\\\\ac{AND}",
+			"\\\\ac{OR}",
+			"\\\\ac{PAND}",
+			"\\\\ac{AND}",
+			"\\\\ac{OR}",
+			"\\ac{OR}",
 			"\\\\$1c$2*\\{",
 			"\\$1c$2*\\{",
 			"\\{CSPm\\}",
@@ -678,7 +724,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 155756,
+						"buffer_size": 161451,
 						"regions":
 						{
 							"bookmarks":
@@ -688,32 +734,16 @@
 								"regions":
 								[
 									[
-										6909,
-										6909
+										2579,
+										2579
 									],
 									[
-										29767,
-										29767
+										51225,
+										51225
 									],
 									[
-										149722,
-										149722
-									],
-									[
-										151692,
-										151692
-									],
-									[
-										153584,
-										153584
-									],
-									[
-										153586,
-										153586
-									],
-									[
-										154855,
-										154855
+										128280,
+										128280
 									]
 								],
 								"scope": "bookmarks"
@@ -722,8 +752,8 @@
 						"selection":
 						[
 							[
-								150463,
-								150463
+								161032,
+								161032
 							]
 						],
 						"settings":
@@ -735,7 +765,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 60808.0,
+						"translation.y": 68945.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -743,19 +773,78 @@
 				},
 				{
 					"buffer": 1,
-					"file": "acronyms.tex",
-					"semi_transient": false,
+					"file": "abnt.bst",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 7771,
+						"buffer_size": 28656,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6547,
-								6547
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 240.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "abntex2-num.bst",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 59944,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8663,
+								8663
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5713.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "acronyms.tex",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7793,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -764,10 +853,70 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 6655.0,
+						"translation.y": 1833.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/Users/Andre/Desktop/Mesa/acro/acro.sty",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 120283,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20029,
+								20048
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LaTeX/TeX.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 9553.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "risethesis.cls",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26911,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LaTeX/TeX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
