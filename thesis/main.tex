@@ -526,7 +526,6 @@ We illustrate our work on simple but real case studies, some supplied by our ind
 
 \adnote{use all figure captions before figures (ABNT)}
 \adnote{fix table lines (ABNT)}
-\adnote{use alineas and subalineas for itemize}
 
 The development process of critical control systems is based essentially on the rigorous execution of guides and regulations~\cite{ANAC2011,FAA1993,FAA2007,SAE1996b}.
 Specialized agencies (like FAA, EASA and ANAC in the aviation field) use these guides and regulations to certify such systems.
@@ -701,20 +700,20 @@ The acceptance criteria analysis aims at answering the \ref{question:analyses}.
 
 The main contributions of this work are:
 
-\begin{enumerate}
+\begin{alineas}
   \item Define a denotational and algebraic model to express fault events order with \theac{algebra}, and formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance;
   \item Reuse \simulink models, obtaining fault event sequences and mapping to \ac{algebra};
   \item Reason about faults modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures);
   \item Illustrate the application of the laws on \hl{two}\adnote{Pensei em usar mais estudos de caso, se der tempo, claro.} real case studies, provided by our industrial partner, \EMBRAER.
-\end{enumerate}
+\end{alineas}
 
 Other contributions of this work are:
 
-\begin{enumerate}
+\begin{alineas}
   \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016});
   \adnote{When accepted, add work submitted to ISF}
   \item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}.
-\end{enumerate}
+\end{alineas}
 
 We use Isabelle/HOL\index{Isabelle/HOL} 2015\footnote{The 2002 tutorial is reported in~\cite{NPW2002}, but there is a newer version published with the tool itself.
 The tool and the tutorial are available on their website at http://isabelle.in.tum.de .}, theories in Isabelle's library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
@@ -1112,12 +1111,12 @@ For example, if a system contains fault events \emph{a}, \emph{b}, and \emph{c},
 %The occurrence of a single event $a$ may be associated with the occurrence (or not) of the other events in any order.
 The occurrence of the fault event $a$ is denoted by a set of sets $A$, which contains the following sets:
 %
-\begin{enumerate}
+\begin{alineas}
   \item\label{item:fta-only-a-occurs} $\left\{a\right\}$: only \emph{a} occurs;
   \item\label{item:fta-a-and-b-occur} $\left\{a,b\right\}$: \emph{a} and \emph{b} occur in any order;
   \item\label{item:fta-a-and-c-occur} $\left\{a,c\right\}$: \emph{a} and \emph{c} occur in any order;
   \item\label{item:fta-all-occur} $\left\{a,b,c\right\}$: all three events occur in any order.
-\end{enumerate}
+\end{alineas}
 All sets of $A$ contain the fault event $a$.
 Similarly, the sets of sets $B$---that represents the occurrence of $b$---contains all sets that contain the fault event $b$ (it includes the set $\setsin{a,b,c}$, for example).
 %
@@ -1606,7 +1605,7 @@ Still on the state-based approaches, the work reported in~\cite{SLD2011} maps \a
 
 In the following we show specific methods that are designed to reduce structure expressions.
 In essence, the methods are very similar.
-Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{TDT} (\cref{sec:dependency-trees}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD} (\cref{sec:sbdd}).
+Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{TDT} (\cref{sec:dependency-trees}), \acp{MCSeq} of \acp{DFT} can be obtained using \ac{ZBDD} (\cref{sec:zbdd}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD} (\cref{sec:sbdd}).
 
 \subsection{\Aclp*{BDD}\index{Binary Decision Diagrams}}
 \label{sec:bdd}
@@ -1671,11 +1670,11 @@ If $A$ is false, and $B$ is false, the expression is only true if $C$ is true.
 \Cref{fig:bdd-diagram-for-example-expression} is \iac{ROBDD}.
 To be considered \iac{ROBDD}, the \ac{BDD} must meet the following constraints~\cite{BRB1990}:
 %
-\begin{itemize}
+\begin{alineas}
   \item the variables are assigned a constant ordering;
   \item every path to sink nodes visit the input variables in ascending order;
   \item each node represents a distinct logic function.
-\end{itemize}
+\end{alineas}
 %
 The size of \iac{ROBDD}, for a given expression, depends on the chosen variables ordering.
 The work reported in~\cite{Rudell1993} shows initial findings on variable ordering, and the work reported in~\cite{KH2014} shows heuristics to improve the performance for optimal order search.
@@ -1715,6 +1714,34 @@ The final expression is obtained by the active higher level node, which is $X \l
   \caption{\acs*{TDT} for the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$}
   \label{fig:dependency-tree-reduction}
 \end{figure}
+
+\subsection{\Aclp*{ZBDD}\index{Zero-suppressed Binary Decision Diagrams}}
+
+The work reported in~\cite{TD2004} proposes \acl{ZBDD}, which is a variant of \ac{BDD}, and uses set manipulations (union, intersection, difference, and product) to obtain \acp{MCSeq} of \acp{DFT}.
+
+To reduce \iac{BDD} to \iac{ZBDD}, the nodes that have the ``true'' (`1') path pointing to the ``false'' (`0') sink node are removed, and the parent node is connected directly to the ``false'' subgraph of the removed node.
+\Cref{fig:zbdd-example} shows an example of \ac{ZBDD} for the combination set $\setsin{a,b}$, as shown in~\cite{TD2004}.
+The idea of the reduction is to remove irrelevant variables and nodes.
+The irrelevant variables are set to ``false''.
+The method obtains the \acp{MCSeq} by navigating the paths to sink node ``true''.
+
+\begin{figure}[t]
+  \centering
+  \includegraphicsaspectratio[0.7]{bdd-zbdd-example}
+  \caption{\acs*{ZBDD} example of combination set $\setsin{a,b}$}
+  \label{fig:zbdd-example}
+\end{figure}
+
+Although the work reported in~\cite{TD2004} shows \theac{ZBDD}, the final solution does not use them directly. Instead, it defines a hierarchical manipulation of \ac{DFT} to obtain the \acp{MCSeq} when traversing the \iac{DFT}.
+The order-related operators in \iac{DFT} are replaced by a new event, which takes ordering into account.
+The idea is to transform the \ac{DFT} into \iac{SFT}, in a very similar way as the one shown in~\cite{TXD2011}.
+Finally, the \acp{MCSeq} are obtained using set manipulation with elements that are basic events alone or order-related operators.
+These order-related operators are event-to-event only, so they cannot be combined with other sets.
+
+The use of sets in~\cite{TD2004} is very related to our \ac{algebra}.
+We use sets of sequences to define the \ac{algebra}, but keep the analysis with set operators.
+In \ac{algebra} we do not create new events that represent an order-related operator.
+Our order-related operator has a set-based semantics that can be combined with other non-order-related (Boolean) operators.
 
 \subsection{\Aclp*{SBDD}\index{Sequential Binary Decision Diagrams}}
 \label{sec:sbdd}
@@ -1768,12 +1795,12 @@ For example, ``valve A is stuck closed'' and ``motor X is malfunctioning'' are v
 A \acl{FBA} is constructed from $\powerset{E}$, where $\powersetop$ is the power set\index{Power Set}.
 Note that if $E$ has $n$ symbols, $\powerset{E}$ has $2^{n}$ elements, called \emph{atoms}\index{Boolean algebra!atoms} of a finite Boolean algebra.
 For the two statements above, the atoms\index{Boolean algebra!atoms} are:
-\begin{itemize}
+\begin{alineas}
   \item ``Valve A is stuck closed'' and ``motor X is malfunctioning''
   \item ``Valve A is stuck closed'' and ``motor X is \emph{not} malfunctioning''
   \item ``Valve A is \emph{not} stuck closed'' and ``motor X is malfunctioning''
   \item ``Valve A is \emph{not} stuck closed'' and ``motor X is \emph{not} malfunctioning''
-\end{itemize}
+\end{alineas}
 Such a Boolean algebra has $2^{2^{n}}$ formulas~\cite[p. 261]{GH2009}.
 For example, if $E = \setsin{a,b}$, then $\powerset{E} = \setsin{ \setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b} }$, hence the Boolean algebra generated by $E$ contains sixteen ($2^{2^{2}}$) formulas:
 $\setsin{}$,
@@ -2129,9 +2156,10 @@ where \verb$N04$ is the subsystem name of the monitor in the \simulink diagram, 
 We only show eight counter-examples, but \acs{FDR} generates a total of 64 counter-examples for this system.
 The other counter-examples are similar to the traces shown with different internal events.
 
-To reuse \ac{hiphops}, which is based on \acp{SFT}, each fault trace is abstracted as a conjunction (\ac{AND} combination of the inner events), and the several conjunction-based fault events are combined using \ac{OR}\ s (disjunctions).
-%
+To reuse \ac{hiphops}, which is based on \acp{SFT}, we ``remove'' the ordering information of the traces to generate a failure expression.
+Each fault trace is abstracted as a conjunction (\ac{AND} combination of the inner events, thus losing the ordering information), and the several conjunction-based fault events are combined using \acp{OR} (disjunctions).
 The result of the combination is a Boolean expression that represents the conditions that cause an undesirable output, the failure expression of the model.
+With the \ac{algebra} proposed in this work we do not ``remove'' the ordering information, so we are able to use this information to generate or perform \ac{DFT} and \ac{TFT} analyses (\acp{TFT} have order-related operators, and it is shown in \cite{Merle2010,MRL2011b,MRL2011} that \acp{DFT} can be expressed by order-related operators).
 
 If the failure expression is obtained for a whole system, it is indeed the structure expression\index{structure expression} of a \acl{FT} for a general failure as the top-level event.
 Although it is possible to obtain the failure expression for a larger system, it may be impractical due to state-space explosion in \ac{CSPm} model analysis.
@@ -2221,6 +2249,10 @@ Our strategy avoids this kind of issue by being completely systematic.
 \section{Isabelle/HOL}
 \label{sec:isabelle}
 
+%To generate the file:
+%Start an Isabelle session (Cygwin terminal in Windows)
+%Go to dir isabelle-hol-basic
+%Run isabelle build -D .
 \input{isabelle-hol-basic/output/document/Basic}
 
 \part{Contributions}
@@ -2233,12 +2265,6 @@ Our strategy avoids this kind of issue by being completely systematic.
 \label{sec:strategy}
 
 \todo{Explain the interaction of (i) fault-injection, (ii) theorem proving, and (iii) symbolic execution.}
-
-There are some hints to use sets of sequences mixed with sets of variables (as in \acp{SFT}) as shown in~\cite{TD2004}.
-Differently, we use a uniform representation of sets of sequences.
-Considering performance, instead of using the sets of sequences directly, we use a symbolic representation using propositions for systems and \acp{FT}.
-\todo{Elaborate this paragraph}
-
 \todo{dizer que nossa abordagem usa a abordagem similar à de expressões de estrutura, mas que tem o objetivo de dar uma semântica denotacional baseada em conjuntos}
 
 Recall from \cref{sec:time-relations,sec:fault-trees} that fault events are independent on one another if the events are not susceptible to a common cause.
@@ -2298,7 +2324,7 @@ The \ac{algebra} form a free algebra, similarly to \acp{FBA}\index{Boolean Algeb
 The order within the algebra is defined with set inclusion ($\subseteq$).
 
 To distinguish the permutations that are not defined in \ac{FBA}\index{Boolean Algebra!Free}, we need a new operator.
-We give the definition of XBefore ($\xbeforeop$) in terms of list concatenation, similar to the work reported in~\cite{DM2015}:
+We give the definition of \ac{XBefore} ($\xbeforeop$) in terms of list concatenation, similar to the work reported in~\cite{DM2015}:
 %
 \begin{equation}
 \label{def:xbefore-append}
@@ -2311,7 +2337,7 @@ We give the definition of XBefore ($\xbeforeop$) in terms of list concatenation,
 %
 where the $\listset{}$ function returns the set of the elements of a list, and $\append{}{}$ concatenates two lists.
 
-In some cases it is more intuitive to use the XBefore definition in terms of lists slicing because it uses indexes explicitly.
+In some cases it is more intuitive to use the \ac{XBefore} definition in terms of lists slicing because it uses indexes explicitly.
 %\Cref{thm:xbefore} shows that the two definitions are equivalent.
 Lists slicing is the operation of taking or dropping elements, obtaining a sublist.
 In slicing, the starting index is inclusive, and the ending is exclusive.
@@ -2332,7 +2358,7 @@ List slicing and concatenation are complementary: concatenating two consecutive 
 \forall i \bullet \append{\sliceright{xs}{i}}{\sliceleft{xs}{i}} = xs
 \end{equation}
 
-There is an equivalent definition of XBefore with concatenation using lists slicing:
+There is an equivalent definition of \ac{XBefore} with concatenation using lists slicing:
 %
 \begin{equation}
 \xbefore{S}{T} =
@@ -2356,10 +2382,10 @@ The following expressions are sufficient to define the \ac{algebra} in terms of 
 \begin{subequations}
 \label{def:algebraset}
 \begin{align}
-\var x & \in \ac{algebra}set & \text{Variable}\label{def:algebraset-var}\\
+\var x & \in \algebraset & \text{Variable}\label{def:algebraset-var}\\
 S \in \algebraset \implies -S & \in \algebraset & \text{Complement, Negation}\label{def:algebraset-compl}\\
 S \in \algebraset \land T \in \algebraset \implies S \inter T & \in \algebraset & \text{Intersection, \emph{Infimum}}\label{def:algebraset-inf}\\
-S \in \algebraset \land T \in \algebraset \implies \xbefore{S}{T} & \in \algebraset & \text{XBefore}\label{def:algebraset-xbefore}\\
+S \in \algebraset \land T \in \algebraset \implies \xbefore{S}{T} & \in \algebraset & \text{\ac{XBefore}}\label{def:algebraset-xbefore}\\
 \intertext{Following the definitions, the expressions below are also valid for $\algebraset$:}
 \True &\in \algebraset & \text{Universal set, True}\label{def:algebraset-true}\\
 \False &\in \algebraset & \text{Empty set, False}\label{def:algebraset-false}\\
@@ -2381,19 +2407,19 @@ The following expressions are valid for generators $a$ and $b$ and are sufficien
 \end{align}
 \end{subequations}
 
-Expressions \eqref{def:algebraset-var} to \eqref{def:algebraset-sup} and \eqref{eqs:generators-independence-subseteq-eq} to \eqref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the XBefore operator \eqref{def:xbefore-append} forms a Boolean algebra based on sets of lists.
+Expressions \eqref{def:algebraset-var} to \eqref{def:algebraset-sup} and \eqref{eqs:generators-independence-subseteq-eq} to \eqref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \eqref{def:xbefore-append} forms a Boolean algebra based on sets of lists.
 And this is also equivalent to \iac{FBA}\index{Boolean Algebra!Free} with the same generators.
 
-In our previous work~\cite{DM2015} we stated a relation of XBefore and \emph{supremum}, provided the operands are variables \eqref{def:var}.
-Now we generalise this relation in terms of abstract properties of the operands of the XBefore.
+In our previous work~\cite{DM2015} we stated a relation of \ac{XBefore} and \emph{supremum}, provided the operands are variables \eqref{def:var}.
+Now we generalise this relation in terms of abstract properties of the operands of the \ac{XBefore}.
 We name these properties as \emph{temporal properties}.
 %and show them in \cref{sec:temporal-properties}.
 
 \section{Temporal properties (\emph{\tempotext})}
 \label{sec:temporal-properties}
 
-Temporal properties give a more abstract and less restrictive shape\todo{touch?} on the XBefore laws.
-These properties avoid the requirement that every operand of XBefore should be a variable \eqref{def:var}.
+Temporal properties give a more abstract and less restrictive shape on the \ac{XBefore} laws.
+These properties avoid the requirement that every operand of \ac{XBefore} should be a variable \eqref{def:var}.
 %The properties are: $\tempo[1]{}$ (\cref{def:tempo1}), $\tempo[2]{}$ (\cref{def:tempo2}), $\tempo[3]{}$ (\cref{def:tempo3}), and $\tempo[4]{}$ (\cref{def:tempo4}).
 
 The first temporal property is about disjoint split.
@@ -2459,8 +2485,8 @@ Variables have all four temporal properties. For a generator $x$, the following 
 \]
 
 \begin{sloppypar}
-In our previous work~\cite{DM2015} we used set difference to specify the XBefore operator.
-Provided $\tempo[1]{S}$ and $\tempo[1]{T}$, XBefore in~\cite{DM2015} is equivalent to \eqref{def:xbefore-append}:
+In our previous work~\cite{DM2015} we used set difference to specify the \ac{XBefore} operator.
+Provided $\tempo[1]{S}$ and $\tempo[1]{T}$, \ac{XBefore} in~\cite{DM2015} is equivalent to \eqref{def:xbefore-append}:
 %
 \begin{equation}
 \xbefore{S}{T} = \left\{ zs | \exists xs, ys \bullet xs \in S-T \land ys \in T-S \land \distinct{zs} \land zs = \append{xs}{ys}  \right\}
@@ -2477,17 +2503,17 @@ Other expressions also meet one or more temporal properties:
 \end{align}
 \end{subequations}
 
-\section{XBefore laws}
+\section{\acs*{XBefore} laws}
 \label{sec:xbefore-laws}
 
 We now show some laws to be used in the algebraic reduction of \ac{algebra} formulas.
-The laws follow from the definition of XBefore, from events independence, and from the temporal properties.
+The laws follow from the definition of \ac{XBefore}, from events independence, and from the temporal properties.
 
-We use a normal form similar to the disjunctive normal form (DNF) of Boolean algebra.
-In DNF each sub-expression is a minimal cut set\index{Minimal Cut!Sets} for \ac{SFT}.
-In our normal form, also called DNF, we allow \acp{AND}, \acp{NOT}, and \acp{XBefore} to be in the sub-expressions.
+We use a normal form similar to the \ac{DNF} of Boolean algebra.
+In \ac{DNF} each sub-expression is a minimal cut set\index{Minimal Cut!Sets} for \ac{SFT}.
+In our normal form, also called \ac{DNF}, we allow \acp{AND}, \acp{NOT}, and \acp{XBefore} to be in the sub-expressions.
 Each sub-expression is a set of minimal cut sequences\index{Minimal Cut!Sequences} for \ac{TFT} and \ac{DFT}.
-The following formulas are in DNF:
+The following formulas are in \ac{DNF}:
 %
 \begin{align*}
 &\parsin{A \inter -B} \union \parsin{\parsin{\xbefore{A}{B}} \inter C}\\
@@ -2497,7 +2523,7 @@ The following formulas are in DNF:
 &\xbefore{\xbefore{A}{B}}{C}
 \end{align*}
 %
-The following formulas are \emph{not} in DNF:
+The following formulas are \emph{not} in \ac{DNF}:
 %
 \begin{align*}
 &-\parsin{A \union B}\\
@@ -2507,11 +2533,11 @@ The following formulas are \emph{not} in DNF:
 \end{align*}
 
 \begin{sloppypar}
-But to transform the last two formulas into DNF, one can use Laws \eqref{thm:xbefore-sup-1},~\eqref{thm:xbefore-sup-2},~\eqref{thm:xbefore-inf-1} and~\eqref{thm:xbefore-inf-2}, for instance.
+But to transform the last two formulas into \ac{DNF}, one can use Laws \eqref{thm:xbefore-sup-1},~\eqref{thm:xbefore-sup-2},~\eqref{thm:xbefore-inf-1} and~\eqref{thm:xbefore-inf-2}, for instance.
 \end{sloppypar}
 
 We define events independence ($\independenteventsop$) as the property that one operand does not imply the other.
-For example, we need to avoid that the operands of XBefore are $\var{a}$ and $\var{a} \union \var{b}$ (it results in $\False$, see \eqref{thm:xbefore-not-idempotent}).
+For example, we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \union \var{b}$ (it results in $\False$, see \eqref{thm:xbefore-not-idempotent}).
 %
 \begin{equation}
 \independentevents{S}{T} = \forall i, zs \bullet
@@ -2521,7 +2547,7 @@ For example, we need to avoid that the operands of XBefore are $\var{a}$ and $\v
   \right)
 \end{equation}
 
-The absence of occurrences ($\False$, the empty set of $\algebraset$) is a ``0'' for the XBefore operator.
+The absence of occurrences ($\False$, the empty set of $\algebraset$) is a ``0'' for the \ac{XBefore} operator.
 %
 \begin{subequations}
 \begin{align}
@@ -2557,12 +2583,12 @@ The absence of occurrences ($\False$, the empty set of $\algebraset$) is a ``0''
 \end{align}
 \end{subequations}
 %
-The XBefore is absorbed by one of the operands: if one of the operands may happen alone, thus the order with any other operand is irrelevant.
-However, an event cannot come before itself, thus XBefore is not idempotent.
-The XBefore but is associative.
+The \ac{XBefore} is absorbed by one of the operands: if one of the operands may happen alone, thus the order with any other operand is irrelevant.
+However, an event cannot come before itself, thus \ac{XBefore} is not idempotent.
+The \ac{XBefore} but is associative.
 
-To allow formula reduction we need the relation of XBefore to the other Boolean operators.
-First we use the XBefore as operands of union and intersection.
+To allow formula reduction we need the relation of \ac{XBefore} to the other Boolean operators.
+First we use the \ac{XBefore} as operands of union and intersection.
 %
 \begin{subequations}
 \begin{align}
@@ -2581,7 +2607,7 @@ First we use the XBefore as operands of union and intersection.
 \end{align}
 \end{subequations}
 %
-As the XBefore is not symmetric, the intersection of symmetrical sets is empty.
+As the \ac{XBefore} is not symmetric, the intersection of symmetrical sets is empty.
 The union of the symmetric is a partition of the intersection of the operands.
 
 In our previous work~\cite{DM2015}, we stated that $S$ and $T$ had to be variables.
@@ -2589,7 +2615,7 @@ For example, of the form $\var{s}$ and $\var{t}$.
 Now, each law requires that the operands satisfy some of the temporal properties, avoiding using variables explicitly.
 %So, as variables satisfy all temporal properties and by \eqref{thm:xbefore-sup-equiv-inf}, our theorem ``Exclusive before \emph{supremum}'' is still valid.
 
-Boolean operators are used as operands of the XBefore in the following laws.
+Boolean operators are used as operands of the \ac{XBefore} in the following laws.
 %
 \begin{subequations}
 \begin{align}
@@ -2625,10 +2651,10 @@ Boolean operators are used as operands of the XBefore in the following laws.
 \end{align}
 \end{subequations}
 %
-XBefore is distributive over union.
+\ac{XBefore} is distributive over union.
 On the other hand, the intersection is related to order.
-Thus it is not distributive with XBefore.
-Finally, the intersection of an event with an XBefore states that such an event can occur in any order within the events in the XBefore.
+Thus it is not distributive with \ac{XBefore}.
+Finally, the intersection of an event with an \ac{XBefore} states that such an event can occur in any order within the events in the \ac{XBefore}.
 
 The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer if we expand \eqref{thm:and_xbefore_equiv_or_xbefore} with \eqref{thm:xbefore-inf-1} and ~\eqref{thm:xbefore-inf-2}:
 %
@@ -2655,8 +2681,81 @@ The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer 
 \end{align}
 %\end{subequations}
 %
-%From \eqref{thm:xbefore-not-idempotent} and~\eqref{thm:and_xbefore_equiv_or_xbefore}, intersection and XBefore also have an absorption law.
+%From \eqref{thm:xbefore-not-idempotent} and~\eqref{thm:and_xbefore_equiv_or_xbefore}, intersection and \ac{XBefore} also have an absorption law.
 
+\section{Propositions}
+\label{sec:propositions}
+
+In this section we discuss the theorems and definitions the still need to be proved.
+We present them as propositions.
+
+Soundness and completeness of the \ac{algebra} is given in terms of the algebraic form and its denotational semantics (\cref{sec:soundness-completeness-algebra}).
+The \ac{activation} is defined in terms of a logic that is solved by decision and some output value (\cref{sec:activation}).
+
+\subsection{Soundness and completeness of \acs*{algebra}}
+\label{sec:soundness-completeness-algebra}
+
+%Soundness: if it is wrong, we cannot prove
+%Completeness: everything that is right can be proved
+
+Given the semantics of a formula of~\ac{algebra}, there is always a set of sequences that represents exactly the formula.
+To guarantee the completeness we show that for every set of sequences there is a corresponding formula in \ac{algebra}.
+
+\begin{Prop}[Soundness and completeness of \ac{algebra}]
+Let $F$ be the set of all formula in \ac{algebra}, and $SS$ be the set of all sets of sequences:
+%
+\begin{subequations}
+  \begin{align}
+    \forall f \in F \ldotp \exists S \in SS \ldotp f & = S & \text{Soundness}\\
+    \forall S \in SS \ldotp \exists f \in F \ldotp f & = S & \text {Completeness}
+  \end{align}
+\end{subequations}
+\end{Prop}
+%
+The equality in the proposition is set-based, thus, in both cases, $f \subseteq S \land S \subseteq f$.
+
+\subsection{\acs*{activation} concepts}
+\label{sec:activation}
+
+The \acf{activation} is used to model systems faults.
+When reasoning about faults, the engineer analyse component by component, defining its outputs in the presence of each possible fault.
+The \ac{activation} is nothing more than this: the output of the components in the presence of (some combination of) faults.
+To ensure that all possibilities are perfectly passed through (the engineer reasoned about them), the formula that results from the output conditions shall be a \emph{tautology}.
+For example, if the engineer defines that a component has output:
+\begin{alineasinline}
+  \item $A$ if $F_1$ occurs, and
+  \item $B$ if $F_2$ occurs,
+\end{alineasinline}
+then there should be an output for condition $\lnot F_1 \land \lnot F_2$, and $A$ and $B$ must converge when both $F_1$ and $F_2$ occur.
+By convergence, an initial idea is that $A = B$ in this case.
+To connect components and to generate \acp{FT}, we ask questions to the \ac{activation} formulas: we define a \emph{predicate}.
+
+A nominal value is required to handle the conditions that do not result in a failure.
+In the previous example, if $F_1$ and $F_2$ do not occur, then the system should be in a normal state, and its output is signalled as nominal with some nominal value.
+Nominal values are used to analyse value-based failures.
+In general, failure outputs do not have an associated value.
+
+In some cases a degraded state can be an undesired state, as for example, if one wants to check the probability of operating in high-cost conditions.
+For these situations, the output values are signalled as degraded, but they have an associated value.
+
+To connect components, instead of using a fixed condition like $F_1$ and $F_2$, we use as predicate, as for example: if an omission is detected in the first input, the output of this component is $A$; the component outputs $B$ if $F_1$ occurs, and it outputs its nominal value, otherwise.
+
+To obtain a fault tree from \ac{activation} we define a predicate over a whole \ac{activation} formula of a system.
+For example: what are the conditions that generates and output \emph{omission}?
+
+The underlying conditions in \ac{activation} can be in Boolean algebra or in \ac{algebra}.
+In any case, soundness and completeness in \ac{activation} is given in terms of the underlying algebra: given a formula in \ac{activation}, any predicate generates a valid expression in the underlying algebra, and there exists a formula and a predicate for any expression in the underlying algebra.
+
+\begin{Prop}[Soundness and completeness of \ac{activation}]
+Let $F$ be the set of all formulas in \ac{activation}, $G$ be the set of all formulas in its underlying algebra, and $P$ a predicate over output values of \ac{activation}, then:
+%
+\begin{subequations}
+  \begin{align}
+    \forall f \in F \ldotp \exists g \in G \ldotp P\parsin{f} & \equiv g & \text{Soundness} \\
+    \forall g \in G \ldotp \exists f \in F, P \ldotp P\parsin{f} & \equiv g & \text{Completeness}
+  \end{align}
+\end{subequations}
+\end{Prop}
 
 \chapter{Case study}
 \label{sec:case-study}
@@ -2689,9 +2788,9 @@ s &= \text{SwitchFailure}& S = \var s
 \section{Structure expressions with Boolean operators}
 \index{structure expression}
 
-In this section we show that the same result reported in~\cite{DM2012} in terms of static failure expression (or Boolean propositions) can be obtained with our Boolean operator without using XBefore.
-For each trace shown in \cref{sec:faults-injection}, a mapping function\footnote{In this work we do not show the mapping function from traces to \ac{algebra} (and the mapping function with XBefore in \cref{sec:case-study-xbefore}).
-The mapping rules follow the traces: XBefore is obtained by the order of occurrence and the absence of an event is the complement ($-$).} ($\tracetobool$) generates the following sets of lists:
+In this section we show that the same result reported in~\cite{DM2012} in terms of static failure expression (or Boolean propositions) can be obtained with our Boolean operator without using \ac{XBefore}.
+For each trace shown in \cref{sec:faults-injection}, a mapping function\footnote{In this work we do not show the mapping function from traces to \ac{algebra} (and the mapping function with \ac{XBefore} in \cref{sec:case-study-xbefore}).
+The mapping rules follow the traces: \ac{XBefore} is obtained by the order of occurrence and the absence of an event is the complement ($-$).} ($\tracetobool$) generates the following sets of lists:
 %
 \begin{align*}
 \text{\texttt{TRACE 1: }}&[s,b] \tracetobool S \inter B \inter -A & \setsin{\listsin{s,b},\listsin{b,s}}\\
@@ -2722,11 +2821,11 @@ which is equivalent to the set of sets above and is equivalent to \EMBRAER failu
 %
 This shows that \ac{algebra} can represent (static) failure expression as in our previous work~\cite{DM2012}.
 
-\section{Structure expressions with XBefore}
+\section{Structure expressions with \ac{XBefore}}
 \label{sec:case-study-xbefore}
 \index{structure expression}
 
-Now, by using TFA with the XBefore operator and a mapping function ($\tracetoalgebra$), we can capture each possible individual sequences as generated by the work~\cite{DM2012}:
+Now, by using \ac{algebra} with the \ac{XBefore} operator and a mapping function ($\tracetoalgebra$), we can capture each possible individual sequences as generated by the work~\cite{DM2012}:
 %
 \begin{align*}
 \text{\texttt{TRACE 1: }}&[s,b] \tracetoalgebra \parsin{\xbefore{S}{B}} \inter -A & \left\{[s,b]\right\}\\
@@ -2739,7 +2838,7 @@ Now, by using TFA with the XBefore operator and a mapping function ($\tracetoalg
 \text{\texttt{TRACE 8: }}&[b,a,s] \tracetoalgebra \xbefore{\xbefore{B}{A}}{S} & \left\{[b,a,s]\right\}
 \end{align*}
 
-Using \ac{algebra} and combining each trace with ORs (unions), we obtain the following set:
+Using \ac{algebra} and combining each trace with \acp{OR} (unions), we obtain the following set:
 %
 \[
 M_L =
@@ -2749,7 +2848,7 @@ M_L =
   \right\}
 \]
 
-From the above traces, we also build \iac{algebra} expression by mapping each trace to an XBefore expression, composing all resulting XBefore expressions with ORs and reducing them using the XBefore laws (\cref{sec:xbefore-laws}), resulting in an expression ($M_A$) that is equivalent to the above set of lists ($M_L \equiv M_A$).
+From the above traces, we also build \iac{algebra} expression by mapping each trace to an \ac{XBefore} expression, composing all resulting \ac{XBefore} expressions with ORs and reducing them using the \ac{XBefore} laws (\cref{sec:xbefore-laws}), resulting in an expression ($M_A$) that is equivalent to the above set of lists ($M_L \equiv M_A$).
 The failure expression of the monitor\footnote{In the final formula, $\parsin{B \inter S \inter -A} \union \parsin{A \inter B \inter -S}$ is equivalent to $\parsin{B \inter \parsin{S \oplus A}}$. There is a typo in our previous work \cite{DM2015}. The expression was written with an OR ($\lor$) but it should an XOR ($\oplus$).} is:
 %
 \begin{align*}
@@ -2832,7 +2931,7 @@ The effort shown in the ``Days'' column is the estimated remaining time to finis
   \midrule
     Submit paper about \ac{activation} and acceptance criteria & 19/07/2016 & 1 & 106 \\
   \midrule
-    Prove soundness and completeness theorems for the DNF of \ac{algebra} & 20/07/2016 & 75 & 107 \\
+    Prove soundness and completeness theorems for the \ac{DNF} of \ac{algebra} & 20/07/2016 & 75 & 107 \\
   \midrule
     Define the mapping rules from traces to \ac{algebra} & 03/10/2016 & 15 & 182 \\
   \midrule
@@ -2862,7 +2961,7 @@ It may require a full refactoring of the theory of \ac{activation}.
 We developed a small set of rules for the acceptance criteria verification, but we need to add more sophisticated rules, as for example, to consider phase and latency.
 %In both cases, we will update the case studies.
 
-We showed the DNF for \ac{algebra}, but did not demonstrate that every formula can be converted into DNF.
+We showed the \ac{DNF} for \ac{algebra}, but did not demonstrate that every formula can be converted into \ac{DNF}.
 The laws shown in this work should be sufficient to this demonstration.
 Also, we did not show the mapping rules from traces to \ac{algebra} (with Boolean operators only \ac{AND} with \ac{XBefore}).
 The mapping rules follow the traces: \ac{XBefore} is obtained by the order of occurrence and the absence of an event is the complement ($-$).
@@ -2879,7 +2978,7 @@ We look forward to obtain a less restrictive law.
 
 %The distinct lists representation in our algebra does not allow obtaining minimal cut sequences\index{Minimal Cut!Sequences} directly from the formula, similar to \acp{FBA}\index{Boolean Algebra!Free}.
 %The sets in \iac{FBA}\index{Boolean Algebra!Free} formula are already the minimal cut sets\index{Minimal Cut!Sets}.
-%In our work, \ac{algebra} allows us to find minimal cut sequences\index{Minimal Cut!Sequences} (with XBefore) from the formulas in DNF algebraically: each sub-expression is a minimal cut sequence\index{Minimal Cut!Sequences}.
+%In our work, \ac{algebra} allows us to find minimal cut sequences\index{Minimal Cut!Sequences} (with XBefore) from the formulas in \ac{DNF} algebraically: each sub-expression is a minimal cut sequence\index{Minimal Cut!Sequences}.
 
 Boolean formulas reduction can be achieved by:
 \begin{alineasinline}

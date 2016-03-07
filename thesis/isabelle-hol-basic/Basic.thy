@@ -23,18 +23,19 @@ text {*
 Isabelle/HOL\index{Isabelle/HOL} is the most widespread instance of Isabelle. 
 \acs{HOL} stands for \acl{HOL}.
 %
-Isabelle/HOL provides a \ac{HOL} proving environment ready to use, which include: (co)datatypes, 
+Isabelle/HOL provides a \ac{HOL} proving environment ready to use, which includes: (co)datatypes, 
 inductive definitions, recursive functions, locales, custom syntax definition, etc.
 %
 Proofs can be written in both human\footnote{By human we mean that anyone with mathematics and logic 
 basic knowledge---it means that deep programming knowledge is not essential.} and machine-readable 
-language based in \ac{Isar}.
+language based on \ac{Isar}.
 %
 The tool also includes the \emph{sledgehammer}, a port to call external first-order provers to find
-proofs automatically.
+proofs fully automatically.
 %
-The user interface is based in jEdit\footnote{Accessed 27/jan/2016: \url{http://www.jedit.org/}}, 
-which provides a text editor, syntax parser, shortcuts, etc (see \cref{fig:basic-symmetry-isabelle-window}).
+The user interface is based on jEdit\footnote{Accessed 27/jan/2016: \url{http://www.jedit.org/}}, 
+which provides a text editor, syntax parser, shortcuts, etc. (see 
+\cref{fig:basic-symmetry-isabelle-window}).
 
 \begin{figure}[t]
   \centering
@@ -43,9 +44,9 @@ which provides a text editor, syntax parser, shortcuts, etc (see \cref{fig:basic
   \label{fig:basic-symmetry-isabelle-window}
 \end{figure}
 
-Theories in Isabelle/HOL are based in a few axioms.
+Theories on Isabelle/HOL are based in a few axioms.
 %
-Isabelle/HOL Library's theories---that comes with the installer---and user's theories are based on 
+Isabelle/HOL Library's theories---which comes with the installer---and user's theories are based on 
 these axioms.
 %
 This design decision avoids inconsistencies and paradoxes (similar as it is in \ac{Z}).
