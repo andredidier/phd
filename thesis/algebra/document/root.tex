@@ -1,0 +1,154 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass{svjour3}
+\smartqed  % flush right qed marks, e.g. at end of proof
+\usepackage{graphicx}
+\usepackage{mathptmx}      % use Times fonts if available on your TeX system
+%INSERT OTHER PACKAGES
+\usepackage[british]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{xspace}
+\usepackage{tabularx}
+%\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{ifthen}
+\usepackage{verbatim}
+\usepackage{environ}
+\usepackage{amsmath}
+\usepackage{isabelle,isabellesym}
+% further packages required for unusual symbols (see also
+% isabellesym.sty), use only when needed
+\usepackage{amssymb}
+  %for \<leadsto>, \<box>, \<diamond>, \<sqsupset>, \<mho>, \<Join>,
+  %\<lhd>, \<lesssim>, \<greatersim>, \<lessapprox>, \<greaterapprox>,
+  %\<triangleq>, \<yen>, \<lozenge>
+%\usepackage{eurosym}
+  %for \<euro>
+%\usepackage[only,bigsqcap]{stmaryrd}
+  %for \<Sqinter>
+%\usepackage{eufrak}
+  %for \<AA> ... \<ZZ>, \<aa> ... \<zz> (also included in amssymb)
+\usepackage{textcomp}
+  %for \<onequarter>, \<onehalf>, \<threequarters>, \<degree>, \<cent>,
+  %\<currency>
+% this should be the last package used
+\usepackage{pdfsetup}
+%INSERT OTHER PACKAGES - END
+\usepackage{latexsym}
+%INSERT NEW DEFINITIONS
+%FROM http://phaseportrait.blogspot.com.br/2007/08/cleveref-incompatibilities-with.html: 
+\makeatletter \let\cl@chapter\relax \makeatother
+
+%\graphicspath{{./image-sources/},{./}}
+\DeclareGraphicsExtensions{.pdf,.png}
+
+\def\subclassname{{\bfseries Mathematics Subject Classification
+(2010)}\xspace}
+\newcommand{\simulink}{Simulink\xspace}
+\newcommand{\csp}{Communicating Sequential Processes (CSP)\renewcommand{\csp}{CSP}\xspace}
+\newcommand{\cspm}{Communicating Sequential Processes (CSP{$_M$}\footnote{This variant ``M'' is the machine-readable version of CSP.})\renewcommand{\csp}{CSP\xspace}\renewcommand{\cspm}{CSP{$_M$}\xspace}\xspace}
+\newcommand{\fdr}{FDR\xspace}
+\newcommand{\EMBRAER}{EMBRAER\xspace}
+\newcommand\ACSEMBRAER{ACS\xspace}
+\newcommand{\FMEA}{FMEA (Failure Mode and Effects Analysis)\xspace\renewcommand{\FMEA}{FMEA\xspace}}
+\newcommand{\IFFMEA}{IF-FMEA\xspace}
+\newcommand{\hiphops}{HiP-HOPS\xspace}
+\newcommand{\FTA}{Fault Tree Analysis (FTA)\renewcommand{\FTA}{FTA\xspace}\xspace}
+\newcommand{\BDD}{Binary Decision Diagram (BDD)\renewcommand{\BDD}{BDD\xspace}\renewcommand{\BDDs}{BDDs\xspace}\xspace}
+\newcommand{\BDDs}{Binary Decision Diagrams (BDDs)\renewcommand{\BDD}{BDD\xspace}\renewcommand{\BDDs}{BDDs\xspace}\xspace}
+\newcommand{\TFT}{Temporal Fault Tree (TFT)\renewcommand{\TFT}{TFT\xspace}\renewcommand{\TFTs}{TFTs\xspace}\xspace}
+\newcommand{\TFTs}{Temporal Fault Trees (TFTs)\renewcommand{\TFT}{TFT\xspace}\renewcommand{\TFTs}{TFTs\xspace}\xspace}
+\newcommand{\DFT}{Dynamic Fault Tree (DFT)\renewcommand{\DFT}{DFT\xspace}\renewcommand{\DFTs}{DFTs\xspace}\xspace}
+\newcommand{\DFTs}{Dynamic Fault Trees (DFTs)\renewcommand{\DFT}{DFT\xspace}\renewcommand{\DFTs}{DFTs\xspace}\xspace}
+\newcommand{\FThandbook}{Fault Tree Handbook~\cite{VGR+1981}\renewcommand{\FThandbook}{Fault Tree Handbook\xspace}\xspace}
+\newcommand{\fba}{\Fba~\cite[pp. 256-266]{GH2009} (FBA)\renewcommand{\fba}{FBA\xspace}\renewcommand{\fbas}{FBAs\xspace}\xspace}
+\newcommand{\fbas}{\Fbas~\cite[pp. 256-266]{GH2009} (FBAs)\renewcommand{\fba}{FBA\xspace}\renewcommand{\fbas}{FBAs\xspace}\xspace}
+\newcommand{\Fba}{Free Boolean Algebra\xspace}
+\newcommand{\Fbas}{Free Boolean Algebras\xspace}
+\newcommand{\matlab}{\textsf{Matlab}\xspace}
+\newcommand{\textsim}[1]{$#1$}
+\newenvironment{snippetcspm}[1][2]
+{
+\ifthenelse{\equal{#1}{0}}
+    {\tiny}
+    {
+    \ifthenelse{\equal{#1}{1}}
+        {\scriptsize}
+        {
+        \ifthenelse{\equal{#1}{2}}
+            {\footnotesize}
+            {\small}
+        }
+    }
+%\begin{samepage}
+\verbatim
+}
+{
+\endverbatim
+%\end{samepage}
+}
+%%%%%%%%%%% MATH definitions
+\newcommand{\var}[1]{\ensuremath\operatorname{var} #1}
+\newcommand{\vardef}[1]{\ensuremath\left\{ l \bullet #1 \in l \right\}}
+\newcommand{\xbefore}[2]{\ensuremath #1 \rightarrow #2 }
+\newcommand{\xbeforedef}[2]{\ensuremath \left\{ l \bullet \ldots  \right\}}
+\def\True{\ensuremath\operatorname{True}}
+\def\False{\ensuremath\operatorname{False}}
+\newcommand{\distinct}[1]{\ensuremath\operatorname{distinct}}
+\newcommand{\emptylist}{\ensuremath[]}
+% urls in roman style, theory text in math-similar italics
+\urlstyle{rm}
+\isabellestyle{it}
+
+% for uniform font size
+\renewcommand{\isastyle}{\isastyleminor}
+%\newtheorem{definition}{Definition}
+%\newtheorem{lemma}{Lemma}
+%\newtheorem{theorem}{Theorem}
+
+%INSERT NEW DEFINITIONS - END
+\journalname{Information System Frontiers}
+
+
+\begin{document}
+\title{From the deduction of fault events order in a nominal system to an abstract formal algebra\thanks{This work is partially supported by FACEPE's grant IBPG-0408-1.03/11 and CNPq's grant 246956/2012-7.}}
+
+\author{André Didier \and Alexandre Mota}
+\institute{A. Didier \at
+              Av. Jornalista Anibal Fernandes, Cidade Universitária, s/n, ZIP 50740-560, Recife, PE, Brazil \\
+              Tel.: +55-81-2126-8430\\
+              Fax: +55-81-2126-8438\\
+              Mobile: +55-81-98841-4907\\
+              \email{alrd@cin.ufpe.br}%\\
+           %\and%
+           %A. Mota \at
+              %\email{acm@cin.ufpe.br}
+}
+
+\date{Received: date / Accepted: date}
+%\maketitle
+
+
+%\input{before_theory}
+% sane default for proof documents
+\parindent 0pt\parskip 0.5ex
+
+% generated text of all theories
+\input{session}
+
+%\input{after_theory}
+
+%\bibliographystyle{spbasic}      % basic style, author-year citations
+\bibliographystyle{spmpsci}
+\bibliography{root}   % name your BibTeX data base
+
+% optional bibliography
+%\bibliographystyle{abbrv}
+%\bibliography{root}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
