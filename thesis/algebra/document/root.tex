@@ -1,6 +1,6 @@
 %%This is a very basic article template.
 %%There is just one section and two subsections.
-\documentclass{svjour3}
+\documentclass{article}
 \smartqed  % flush right qed marks, e.g. at end of proof
 \usepackage{graphicx}
 \usepackage{mathptmx}      % use Times fonts if available on your TeX system
@@ -36,7 +36,7 @@
 %INSERT OTHER PACKAGES - END
 \usepackage{latexsym}
 %INSERT NEW DEFINITIONS
-%FROM http://phaseportrait.blogspot.com.br/2007/08/cleveref-incompatibilities-with.html: 
+%FROM http://phaseportrait.blogspot.com.br/2007/08/cleveref-incompatibilities-with.html:
 \makeatletter \let\cl@chapter\relax \makeatother
 
 %\graphicspath{{./image-sources/},{./}}
@@ -107,8 +107,6 @@
 %\newtheorem{theorem}{Theorem}
 
 %INSERT NEW DEFINITIONS - END
-\journalname{Information System Frontiers}
-
 
 \begin{document}
 \title{From the deduction of fault events order in a nominal system to an abstract formal algebra\thanks{This work is partially supported by FACEPE's grant IBPG-0408-1.03/11 and CNPq's grant 246956/2012-7.}}
@@ -139,7 +137,7 @@
 %\input{after_theory}
 
 %\bibliographystyle{spbasic}      % basic style, author-year citations
-\bibliographystyle{spmpsci}
+\bibliographystyle{plain}
 \bibliography{root}   % name your BibTeX data base
 
 % optional bibliography

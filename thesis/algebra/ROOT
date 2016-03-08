@@ -17,11 +17,6 @@ session "events-occurrence-theory" = "HOL" +
     (*"before_theory.tex"
     "after_theory.tex"*)
     "root.bib"
-    "svjour3.cls"
-    "svglov3.clo"
-    "spphys.bst"
-    "spmpsci.bst"
-    "spbasic.bst"
     (*"acsBlockDiagrams.png"
     "article-overview.pdf"
     "blockDiagramMonitorInternals.png"
