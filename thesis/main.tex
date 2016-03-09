@@ -88,6 +88,8 @@
 % alterando o aspecto da cor azul
 \definecolor{blue}{RGB}{41,5,195}
 
+\citebrackets[]
+
 \acsetup{%
   hyperref=true,
   index=true,
@@ -246,6 +248,12 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 %\crefname{Def}{Def.}{Defs.}
 \newlist{alineasinline}{enumerate*}{1}
 \setlist[alineasinline]{label=(\roman*)}
+
+\newlist{rqenum}{enumerate}{1} % also creates a counter called 'propenumi'
+\setlist[rqenum]{label=\alph*), ref=\alph*)}
+%\crefalias{rqenumi}{researchquestion} 
+\Crefname{rqenumi}{Research question}{Research questions}
+\crefname{rqenumi}{research question}{research questions}
 
 \newcommand{\textsim}[1]{$#1$}
 \newenvironment{snippetcspm}[1][2]
@@ -578,11 +586,21 @@ There is no consensus about the relevance of its use:
   \item it can be essential in practical use~\cite{Andrews2001}.
 \end{alineasinline}
 Our concern is that the decision of the relevance of its use should not be due to the choice of events-occurrence representation.
-The algebra created in this work defines the NOT operator and allows its use, as we show in \cref{sec:strategy}.
+The algebra created in this work defines the NOT operator and allows its use\amnote{without introducing incoerence?} \adnote{Prefiro deixar assim mesmo...}, as we show in \cref{sec:strategy}.
 \end{sloppypar}
 
+\Ac{hiphops} is a set of methods and tools to analyse \acp{FT}.
+The semi-automatic generation of \acp{FT} has architectural models and failure expressions as inputs.
+The failure expressions are in fact structure expressions of components or subsystems.
+These expressions are annotated in components and subsystems and describe how they fail.
+The tool combines these expressions with regard to the architecture to generate \acp{FT}.
+The work reported in~\cite{WP2008} shows a strategy to use the semi-automatic \ac{FT} generation of \ac{hiphops} with \pandora to generate structure expressions of \acp{TFT}.
+
 In previous work~\cite{Didier2012,DM2012}, we proposed a systematic hardware-based faults identification strategy to obtain failure expressions as defined in \acifused{hiphops}{\acs{hiphops}}{\acscite{hiphops}} for \acp{SFT}.
+%
 We considered faults in components or subsystems, but if we obtain failure expressions of a whole system, they are in fact structure expressions\index{structure expression} of \iac{FT}.
+%
+Our strategy throws away the ordering information of the fault events sequences to generate failure expressions for components or subsystems for \acp{SFT}.
 %
 %Using our strategy as input for \ac{hiphops} we obtain a failure expression of a fault tree.
 %
@@ -602,8 +620,8 @@ For two case studies provided by our industrial partner, \EMBRAER, we showed tha
 
 \section{Research questions}
 
-Both \ac{TFT} and \ac{DFT} lack a first-order logic mathematical model as there is to \ac{SFT}.
-For \acp{SFT}, mathematical models to reduce structure expressions is either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}.
+Both \ac{TFT} and \ac{DFT} lack a first-order logic mathematical model like the one defined for \ac{SFT}.
+For \acp{SFT}, mathematical models to reduce structure expressions are either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}.
 Both are efficient.
 One important concern on employing \ac{FTA} is whether \iac{FT} indeed represents a system behaviour.
 The work reported in~\cite{MCS+1999} exposes this concern for \acp{DFT}, and the \ac{hiphops} framework---related to \acp{SFT} and \acp{TFT}---aims at getting this issued sorted.
@@ -615,53 +633,58 @@ The mathematical model for \ac{TFT} has a discontinuity between two activation s
   \item occurrence some time later.
 \end{alineasinline}
 Such a discontinuity has some drawbacks, as for example, the impossibility to use \ac{NOT} gates, and handling the specific case of non-occurrence with zeros in \acp{TTT}.
-The reduction of structure expressions in \ac{TFT} is based in a combination of:
+The reduction of structure expressions in \ac{TFT} is based on a combination of:
 \begin{alineasinline}
-  \item algebraic reduction---that can lead to an ever-growing rules application---,
-  \item modularisation of independent subtrees (not always subtrees are independent), and
-  \item \ac{TDT}---which are limited to seven basic events, due to exponential grow of the tree.
+  \item algebraic reduction---which can unfortunately result in an infinite application of rules---,
+  \item modularisation of independent subtrees (subtrees not always are independent), and
+  \item \ac{TDT}---which are limited to seven basic events, due to exponential growth.
 \end{alineasinline}
 
 
 \begin{sloppypar}
-Most of the mathematical models~\cite{LHT2013,CSD2000,BRM+2005} for \ac{DFT} are based on the formalisation of \ac{DTMC} or \ac{CTMC}, because \acp{DFT} were initially conceived to be a visual representation of such models.
-As both \ac{DTMC} and \ac{CTMC} are state-based, they suffer the state-space explosion problem.
-The works reported in~\cite{BKK+2003,BHH+2003,SAE1996b} shows techniques to overcome this problem, but the reduction depends on systems' models, whether they are independent or not, which can be impracticable.
+Most mathematical models~\cite{LHT2013,CSD2000,BRM+2005} for \ac{DFT} are based on the formalisation of \ac{DTMC} or \ac{CTMC} because \acp{DFT} were initially conceived to be a visual representation of such models.
+As both \ac{DTMC} and \ac{CTMC} are state-based, they experience the state-space explosion problem.
+The works reported in~\cite{BKK+2003,BHH+2003,SAE1996b} show techniques to overcome this problem, but the reduction can be infeasible because it depends on systems' models, whether they are independent or not.
 \end{sloppypar}
 
 There are other approaches, however.
 For instance, a modified version of \ac{BDD} to tackle events ordering, called \acf{SBDD}, to reduce structure expressions, and the work reported in \cite{BRM+2005}, which proposes a conversion of \ac{DFT} into \ac{DBN} to perform probabilistic analysis.
 
 The approach to tackle events ordering with \ac{SBDD}~\cite{XTD2012} has two kinds of nodes: terminals and non-terminals (terminals are nodes with basic events, and non-terminals are nodes with two events and an operator).
-Although demonstrated in~\cite{Bryant1986} that these unconventional nodes (non-terminals) generate correct and efficient Boolean analysis, diagram nodes are of different types on the final diagram, so the analysis is still dependent on the order-related operators.
+Although demonstrated in~\cite{Bryant1986} that these unconventional nodes (non-terminals) generate correct and efficient Boolean analysis, the analysis is still dependent on the order-related operators because the relation of terminals and non-terminals is not established directly (non-terminals are seen as an independent node in~\cite{XTD2012}).
+For example, the occurrence of $A \rightarrow B$ is related to the occurrence of $A$ and $B$, but this relation is obtained in a further step, not in the \ac{SBDD}.
 
 The approach using the construction of \acp{DBN}~\cite{BRM+2005} is automatic and handles time slices as $t + \Delta t$, which implies a notion of events ordering as well.
-As it is focused in probabilistic analysis qualitative analysis is not directly supported.
+As it is focused in probabilistic analysis, qualitative analysis is not directly supported.
 
 The works reported in~\cite{Merle2010,XTD2012} show that \acg{DFT} operators can be converted into order-related operators, simplifying \ac{DFT} analysis.
-Although the mathematical model presented in~\cite{Merle2010} establishes a denotational semantics for order-related operators, it lacks a method for expression reduction based on such a model.
-It defines, instead, several algebraic laws to reduce expressions.
+Although the mathematical model presented in~\cite{Merle2010} establishes a denotational semantics for order-related operators, it lacks a formal method for expression reduction based on such a model.
+It defines, instead, several algebraic laws to reduce expressions and an algorithm to minimize the structure function.
 
 \begin{sloppypar}
 \Ac{hiphops} proposes a hierarchical approach to model systems and perform \ac{FTA} (and \ac{FMEA}).
-Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{FT} construction is based on an algorithm (it is not formalised), so there is no proof that it is sound or correct.
+Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{FT} construction is based on an algorithm, without proofs for soundness nor completeness.
 \end{sloppypar}
 
 %The work reported in~\cite{AH2015} shows the formalisation of probabilistic analysis of \ac{SFT} and uses the same concept of date-of-occurrence shown in \adnote{cite Merle work}.
 
-From the exposed in this section, our research question is summarised as follows.
-Is there a mathematical model that is set-based and similar to \ac{FBA} that:
-\begin{alineas}[ref={research question \alph*)}]
-  \item is capable of representing events ordering of \ac{TFT} and \ac{DFT}\label{question:ordering-representation}?
-  \item represents systems behaviour by construction\label{question:gap}?
-  \item allows both qualitative and quantitative analyses of \ac{TFT} and \ac{DFT}\label{question:analyses}?
-  \item is at least as efficient as current approaches to reduce structure expressions to a normal form\label{question:efficiency}?
-\end{alineas}
+From the exposed in this section, our research question is:
+``Is there a mathematical model that is set-based and similar to \ac{FBA}?''.
+Also, does such a model:
+\begin{rqenum}
+  \item have the capacity of representing events ordering similar to \ac{TFT} and \ac{DFT}\label{question:ordering-representation}?
+  \item represent systems behaviour by construction\label{question:gap}?
+  \item allow both qualitative and quantitative analyses as supported by \ac{TFT} and \ac{DFT}\label{question:analyses}?
+  \item perform reduction of structure expressions to a normal form at least as efficient as current approaches\label{question:efficiency}?
+\end{rqenum}
+%
+In this version of the thesis we propose the mathematical model that is set-based and is similar to \ac{FBA}, and answer \cref{question:ordering-representation}.
+We open the discussion to answer \cref{question:gap}, but \cref{question:analyses,question:efficiency} are not answered in this version of the thesis.
 
 \section{Proposed solution}
 
 In this work we present a denotational semantics and an associated algebra, called \acf{algebra}, to analyse acceptance criteria of \ac{FT} with ordering of fault events (\ac{TFT} and \ac{DFT}).
-\Theac{algebra} aims at answering the \ref{question:ordering-representation}.
+\Theac{algebra} aims at answering the \cref{question:ordering-representation}.
 The analysis of acceptance criteria is a decision problem and we use first-order logic and Isabelle/HOL as verification tool.
 \Cref{fig:strategy-overview} shows the strategy overview.
 It starts in the top (green) node and ends in the bottom (red) node.
@@ -945,7 +968,6 @@ We discuss such cases in \cref{sec:not-operator}.
 
 To reuse a nominal model to analyse faults we need fault injection.
 In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to inject faults and obtain failure expressions from a nominal model.
-Failure expressions of a system are in fact \emph{structure} expressions of \iac{FT}.
 
 Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isabelle/HOL} and \ac{Isar}, which were essential to carry out the proofs presented in this thesis.
 

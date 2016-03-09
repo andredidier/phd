@@ -247,7 +247,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 168427,
+				"buffer_size": 170096,
 				"line_ending": "Windows"
 			}
 		},
@@ -263,7 +263,7 @@
 			"file": "acronyms.tex",
 			"settings":
 			{
-				"buffer_size": 7893,
+				"buffer_size": 7949,
 				"line_ending": "Windows"
 			}
 		}
@@ -500,6 +500,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"researchquestion",
+			"alineas",
+			"pandora",
+			"newcommand",
+			"failure expre",
 			"pretextual",
 			"fdr",
 			"FDR",
@@ -622,12 +627,7 @@
 			"amsmath",
 			"cref",
 			"free",
-			"parsin",
-			"setsyn",
-			"acron",
-			"acrony",
-			"listoffigures",
-			"acrony"
+			"parsin"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -678,7 +678,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -687,15 +687,44 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 168427,
+						"buffer_size": 170096,
 						"regions":
 						{
+							"bookmarks":
+							{
+								"flags": 144,
+								"icon": "bookmark",
+								"regions":
+								[
+									[
+										7257,
+										7257
+									],
+									[
+										7458,
+										7458
+									],
+									[
+										31454,
+										31454
+									],
+									[
+										32170,
+										32170
+									],
+									[
+										32172,
+										32172
+									]
+								],
+								"scope": "bookmarks"
+							}
 						},
 						"selection":
 						[
 							[
-								18639,
-								18686
+								32169,
+								32169
 							]
 						],
 						"settings":
@@ -707,10 +736,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 9126.0,
+						"translation.y": 13781.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -740,7 +769,7 @@
 						"translation.y": 128353.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -749,15 +778,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7893,
+						"buffer_size": 7949,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5948,
-								5818
+								5236,
+								5236
 							]
 						],
 						"settings":
@@ -766,10 +795,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5881.0,
+						"translation.y": 5125.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
