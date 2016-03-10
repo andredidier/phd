@@ -249,11 +249,20 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \newlist{alineasinline}{enumerate*}{1}
 \setlist[alineasinline]{label=(\roman*)}
 
-\newlist{rqenum}{enumerate}{1} % also creates a counter called 'propenumi'
-\setlist[rqenum]{label=\alph*), ref=\alph*)}
-%\crefalias{rqenumi}{researchquestion} 
+
+\newlist{rqenum}{enumerate}{2}
+\setlist[rqenum,1]{label={$RQ_{\arabic*}$)},ref={$RQ_{\arabic*}$},topsep=0pt,itemsep=0pt,leftmargin=\parindent+\labelwidth-\labelsep}%
+\setlist[rqenum,2]{label={$RQ_{\arabic{rqenumi}.\arabic*}$)},ref={$RQ_{\arabic{rqenumi}.\arabic*}$},topsep=0pt,itemsep=0pt,leftmargin=*}
 \Crefname{rqenumi}{Research question}{Research questions}
 \crefname{rqenumi}{research question}{research questions}
+\Crefname{rqenumii}{Research question}{Research questions}
+\crefname{rqenumii}{research question}{research questions}
+
+\newlist{contrenum}{enumerate}{2}
+\setlist[contrenum,1]{label={$C_{\arabic*}$)},ref={$C_{\arabic*}$},topsep=0pt,itemsep=0pt,leftmargin=\parindent+\labelwidth-\labelsep}%
+\setlist[contrenum,2]{label={--},topsep=0pt,itemsep=0pt,leftmargin=*}
+\Crefname{contrenumi}{Contribution}{Contributions}
+\crefname{contrenum}{contribution}{contributions}
 
 \newcommand{\textsim}[1]{$#1$}
 \newenvironment{snippetcspm}[1][2]
@@ -290,6 +299,11 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
   the Fault Tree Analyser\footnote{\url{http://www.fault-tree-analysis-software.com}, accessed 2/feb/2016}%
   %~\cite{ALDSoftwareFTAnalyser}%
   \gdef\theftanalyser{the Fault Tree Analyser\xspace}%
+}
+\newcommand{\isabellehol}[1][]{%
+  Isabelle/HOL{#1}\index{Isabelle/HOL}~2015\footnote{The 2002 tutorial is reported in~\cite{NPW2002}, but there is a newer version published with the tool itself.
+  The tool and the tutorial are available on their website at \url{http://isabelle.in.tum.de}.}%
+  \global\renewcommand{\isabellehol}[1][]{Isabelle/HOL{#1}\index{Isabelle/HOL}\xspace}\xspace %
 }
 %\AtEveryBibitem{%
 %  \ifentrytype{online}{%
@@ -586,7 +600,7 @@ There is no consensus about the relevance of its use:
   \item it can be essential in practical use~\cite{Andrews2001}.
 \end{alineasinline}
 Our concern is that the decision of the relevance of its use should not be due to the choice of events-occurrence representation.
-The algebra created in this work defines the NOT operator and allows its use\amnote{without introducing incoerence?} \adnote{Prefiro deixar assim mesmo...}, as we show in \cref{sec:strategy}.
+The algebra created in this work defines the NOT operator and allows its use\amnote{without introducing incoerence?} \adnote{Prefiro deixar assim mesmo...}, as we show in \cref{chap:strategy}.
 \end{sloppypar}
 
 \Ac{hiphops} is a set of methods and tools to analyse \acp{FT}.
@@ -669,24 +683,31 @@ Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{F
 %The work reported in~\cite{AH2015} shows the formalisation of probabilistic analysis of \ac{SFT} and uses the same concept of date-of-occurrence shown in \adnote{cite Merle work}.
 
 From the exposed in this section, our research question is:
-``Is there a mathematical model that is set-based and similar to \ac{FBA}?''.
+\begin{rqenum}[series=researchquestion]
+  \item Is there a mathematical model that is set-based and similar to \ac{FBA}?\label{question:mathematical-model}
+\end{rqenum}
+%
 Also, does such a model:
-\begin{rqenum}
+%
+\begin{rqenum}[resume*=researchquestion]
   \item have the capacity of representing events ordering similar to \ac{TFT} and \ac{DFT}\label{question:ordering-representation}?
   \item represent systems behaviour by construction\label{question:gap}?
   \item allow both qualitative and quantitative analyses as supported by \ac{TFT} and \ac{DFT}\label{question:analyses}?
   \item perform reduction of structure expressions to a normal form at least as efficient as current approaches\label{question:efficiency}?
 \end{rqenum}
+
 %
-In this version of the thesis we propose the mathematical model that is set-based and is similar to \ac{FBA}, and answer \cref{question:ordering-representation}.
-We open the discussion to answer \cref{question:gap}, but \cref{question:analyses,question:efficiency} are not answered in this version of the thesis.
+In this version of the thesis we propose the theory that answers \cref{question:mathematical-model,question:ordering-representation,question:gap}. \Cref{question:analyses,question:efficiency} are not answered in this version of the thesis.
 
 \section{Proposed solution}
 
+%In this work we present an algebra, called \acf{algebra}, defined  denota
+\adnote{Continue from here: what's denotational semantics?}
+
 In this work we present a denotational semantics and an associated algebra, called \acf{algebra}, to analyse acceptance criteria of \ac{FT} with ordering of fault events (\ac{TFT} and \ac{DFT}).
-\Theac{algebra} aims at answering the \cref{question:ordering-representation}.
-The analysis of acceptance criteria is a decision problem and we use first-order logic and Isabelle/HOL as verification tool.
-\Cref{fig:strategy-overview} shows the strategy overview.
+\Theac{algebra} aims at answering the \cref{question:mathematical-model,question:ordering-representation}.
+The analysis of acceptance criteria is a decision problem and we use first-order logic and \isabellehol as verification tool.
+\Cref{fig:strategy-overview} shows an overview of the strategy.
 It starts in the top (green) node and ends in the bottom (red) node.
 Fault events are either extracted from a nominal model with injected faults (\cref{fig:strategy-overview}, path A), or modelled using a proposed notation, called \ac{activation} (\cref{fig:strategy-overview}, path B).
 We depict traditional \ac{FTA} in path C to show that we still need the acceptance criteria, which are the expected properties of system's \acp{FT}.
@@ -704,11 +725,11 @@ For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling 
 
 ``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
 It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault events sequences.
-The fault events sequences are then mapped to \theac{algebra}, which have denotational semantics based in sets of lists.
+The fault events sequences are then mapped to \theac{algebra}, which have denotational semantics based on sets of lists.
 As fault names are obtained directly from components and subsystems in a \simulink model, \theac{activation} (in the ``Faults Modelling'' group) allows them to be modified or complemented.
 \Theac{activation} also allows reasoning about faults that are not modelled in \simulink as, for example, common cause or environmental faults.
-Path A aims at answering the \ref{question:gap}.
-Given the flexibility of \ac{activation} notation, it can be used directly (path B) to model faults formally, reasoning about basic fault events and top-event failures, which is related to~\ref{question:ordering-representation}.
+Path A aims at answering the \cref{question:gap}.
+Given the flexibility of the \ac{activation} notation, it can be used directly (path B) to model faults formally, reasoning about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
 Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability.
 %Paths A and B aim at answering the \ref{question:gap}.
 
@@ -723,29 +744,24 @@ The acceptance criteria analysis aims at answering the \ref{question:analyses}.
 
 The main contributions of this work are:
 
-\begin{alineas}
-  \item Define a denotational and algebraic model to express fault events order with \theac{algebra}, and formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance;
-  \item Reuse \simulink models, obtaining fault event sequences and mapping to \ac{algebra};
-  \item Reason about faults modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures);
-  \item Illustrate the application of the laws on \hl{two}\adnote{Pensei em usar mais estudos de caso, se der tempo, claro.} real case studies, provided by our industrial partner, \EMBRAER.
-\end{alineas}
-
-Other contributions of this work are:
-
-\begin{alineas}
-  \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016});
+\begin{contrenum}[series=contributions]
+  \item Define a denotational and algebraic model to express fault events order with \theac{algebra}---see \cref{chap:strategy};
+  %\item Formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance---to do;
+  \item Reuse \simulink models, obtaining fault event sequences and mapping to \ac{algebra}---partially done, see \cref{chap:strategy};
+  \item Reason about faults modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures)---see discussion in~\cref{sec:activation};
+  \item Illustrate the application of the laws on a real case study, provided by our industrial partner, \EMBRAER---see \cref{chap:case-study}.
+  \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016})---see \cref{chap:strategy};
   \adnote{When accepted, add work submitted to ISF}
-  \item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}.
-\end{alineas}
+  %\item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}---to do.
+\end{contrenum}
 
-We use Isabelle/HOL\index{Isabelle/HOL} 2015\footnote{The 2002 tutorial is reported in~\cite{NPW2002}, but there is a newer version published with the tool itself.
-The tool and the tutorial are available on their website at http://isabelle.in.tum.de .}, theories in Isabelle's library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
+We use \isabellehol, theories in \isabellehol{'s} library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
 %We omit the proofs in the paper, but they are available in Online Resource 1.\todo{publish theory files online: ``Specialized format such as .pdb (chemical), .wrl (VRML), .nb (Mathematica notebook), and .tex can also be supplied.''}
 
 \section{Thesis organization}
 
 This thesis is organized as follows: in \cref{part:background} we show the concepts and tools used as basis for this work.
-\Cref{part:contributions} describes the results: \cref{sec:strategy} presents our strategy, \cref{sec:case-study} the case study and the application of the proposed strategy, and we present our conclusions and future work in \cref{sec:conclusion}.
+\Cref{part:contributions} describes the results: \cref{chap:strategy} presents our strategy, \cref{chap:case-study} the case study and the application of the proposed strategy, and we present our conclusions and future work in \cref{part:final-remarks}.
 
 \part{Background}
 \label{part:background}
@@ -887,7 +903,7 @@ In this work, we use a combination of:
   \item symbolic execution.
 \end{alineasinline}
 We use these methods to obtain an erroneous behaviour of the system which is compared to system's dependability attributes (safety).
-We explain how these methods combine in \cref{sec:strategy}.
+We explain how these methods combine in \cref{chap:strategy}.
 
 \subsection{Fault Modelling}
 
@@ -937,7 +953,7 @@ In \cref{fig:time-relations} we show all possibilities of events relations in a 
 Although the occurrence of fault events has at least seven possibilities, what really matters when analysing systems is when a fault is \emph{detected}.
 Considering that fault detection corresponds to the start of a fault event, from \cref{fig:time-relations} we clearly identify which event comes first: $A$ comes before than $B$, except in the cases (d) and (f), where they start exactly at the same time.
 If fault events are independent (they are not susceptible to have a common cause) then the probability of they are starting at the same time is very low.
-In \cref{sec:strategy} we abstract events relation in continuous time as an \emph{exclusive before} relation, based on fault \emph{detection} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
+In \cref{chap:strategy} we abstract events relation in continuous time as an \emph{exclusive before} relation, based on fault \emph{detection} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
 
 
 \begin{figure}[t]
@@ -956,7 +972,7 @@ Basic events become variables and gates become operators (a gate may become one 
 In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their respective structure expressions\index{structure expression}.
 
 \Acp{FBA} and \acp{BDD} are the basis to analyse structure expressions.
-Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{sec:strategy}).
+Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{chap:strategy}).
 We explain \acp{BDD} and derived techniques in \cref{sec:structure-expressions-analysis}, and \acp{FBA} in \cref{sec:fba}.
 
 The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}:
@@ -1738,6 +1754,7 @@ The final expression is obtained by the active higher level node, which is $X \l
 \end{figure}
 
 \subsection{\Aclp*{ZBDD}\index{Zero-suppressed Binary Decision Diagrams}}
+\label{sec:zbdd}
 
 The work reported in~\cite{TD2004} proposes \acl{ZBDD}, which is a variant of \ac{BDD}, and uses set manipulations (union, intersection, difference, and product) to obtain \acp{MCSeq} of \acp{DFT}.
 
@@ -2079,7 +2096,7 @@ The \textsim{Sensor} detects the actual position of the \textsim{Actuator} and s
   \label{fg:blockDiagramMonitorInternals}
 \end{figure}
 
-\Cref{fg:blockDiagramMonitorInternals} shows the internal elements of the monitor component (\cref{fg:acsBlockDiagrams}~(A)), which is used as case study in \cref{sec:case-study} to illustrate our
+\Cref{fg:blockDiagramMonitorInternals} shows the internal elements of the monitor component (\cref{fg:acsBlockDiagrams}~(A)), which is used as case study in \cref{chap:case-study} to illustrate our
 strategy.
 The outputs of the hardware elements are annotated with \textsim{HW}, which are the two power sources and an internal component of the monitor (switch command).
 
@@ -2199,7 +2216,7 @@ But we already knew that we had a richer fault modelling information than that p
 %Each injected fault appears on the trace as two events: the expected (\verb$EXP$) value of the nominal system and the actual (\verb$ACT$) value used on the breakable system.
 %For example, in \verb$TRACE 1$, the expected output of the switcher (\verb$N04_RelationalOperator$) is true, but the actual value is false.
 
-To show how these traces become failure expression, let us abbreviate fault names as:
+To show how these traces become failure expression, let us abbreviate fault names as:\amnote{Verificar espaçamento deste parágrafo.}
 %
 \begin{snippetcspm}[2]
 A = failure.Hardware.N04_MonIn1.1
@@ -2284,7 +2301,7 @@ Our strategy avoids this kind of issue by being completely systematic.
 \adnote{Write the problem: simple mathematical notation for all fault trees. Include direct DFT-to-ATF mapping.}
 
 \chapter{A free algebra to express structure expressions of ordered events}
-\label{sec:strategy}
+\label{chap:strategy}
 
 \todo{Explain the interaction of (i) fault-injection, (ii) theorem proving, and (iii) symbolic execution.}
 \todo{dizer que nossa abordagem usa a abordagem similar à de expressões de estrutura, mas que tem o objetivo de dar uma semântica denotacional baseada em conjuntos}
@@ -2723,7 +2740,9 @@ The \ac{activation} is defined in terms of a logic that is solved by decision an
 Given the semantics of a formula of~\ac{algebra}, there is always a set of sequences that represents exactly the formula.
 To guarantee the completeness we show that for every set of sequences there is a corresponding formula in \ac{algebra}.
 
-\begin{Prop}[Soundness and completeness of \ac{algebra}]
+\begin{Prop}[\hl{Soundness and completeness} of \ac{algebra}]
+\amnote{Está de acordo com os livros de lógica?}
+\adnote{Não tive muito tempo para pensar, mas sim. Eu olhei o significado de ambos e montei a proposição.}
 Let $F$ be the set of all formula in \ac{algebra}, and $SS$ be the set of all sets of sequences:
 %
 \begin{subequations}
@@ -2740,30 +2759,31 @@ The equality in the proposition is set-based, thus, in both cases, $f \subseteq 
 \label{sec:activation}
 
 The \acf{activation} is used to model systems faults.
-When reasoning about faults, the engineer analyse component by component, defining its outputs in the presence of each possible fault.
-The \ac{activation} is nothing more than this: the output of the components in the presence of (some combination of) faults.
-To ensure that all possibilities are perfectly passed through (the engineer reasoned about them), the formula that results from the output conditions shall be a \emph{tautology}.
-For example, if the engineer defines that a component has output:
+When reasoning about faults, engineers analyse component by component, defining its outputs in the presence of each possible fault.
+The \ac{activation} is nothing more than this: the outputs of the components in the presence of (some combination of) faults.
+To ensure that all possibilities are considered (those that the engineer reasoned about them), the formula that results from the output conditions shall be a \emph{tautology}.
+For example, if the engineer defines that a component produces as outputs:
 \begin{alineasinline}
   \item $A$ if $F_1$ occurs, and
   \item $B$ if $F_2$ occurs,
 \end{alineasinline}
 then there should be an output for condition $\lnot F_1 \land \lnot F_2$, and $A$ and $B$ must converge when both $F_1$ and $F_2$ occur.
 By convergence, an initial idea is that $A = B$ in this case.
-To connect components and to generate \acp{FT}, we ask questions to the \ac{activation} formulas: we define a \emph{predicate}.
+To connect components and to generate \acp{FT}, we ask questions to the \ac{activation} formulas: we define \emph{predicates}.
 
 A nominal value is required to handle the conditions that do not result in a failure.
-In the previous example, if $F_1$ and $F_2$ do not occur, then the system should be in a normal state, and its output is signalled as nominal with some nominal value.
+Recall from previous example, if $F_1$ and $F_2$ do not occur, then the system should be in a normal state, and its output is signalled as nominal with some nominal value.
 Nominal values are used to analyse value-based failures.
 In general, failure outputs do not have an associated value.
 
 In some cases a degraded state can be an undesired state, as for example, if one wants to check the probability of operating in high-cost conditions.
 For these situations, the output values are signalled as degraded, but they have an associated value.
 
-To connect components, instead of using a fixed condition like $F_1$ and $F_2$, we use as predicate, as for example: if an omission is detected in the first input, the output of this component is $A$; the component outputs $B$ if $F_1$ occurs, and it outputs its nominal value, otherwise.
+To connect components, instead of using a fixed condition like $F_1$ and $F_2$, we use a predicate.
+For example: if an omission is detected in the first input, the output of this component is $A$; the component outputs $B$ if $F_1$ occurs, and it outputs its nominal value, otherwise.
 
 To obtain a fault tree from \ac{activation} we define a predicate over a whole \ac{activation} formula of a system.
-For example: what are the conditions that generates and output \emph{omission}?
+For example: what are the conditions that generate and output \emph{omission}?
 
 The underlying conditions in \ac{activation} can be in Boolean algebra or in \ac{algebra}.
 In any case, soundness and completeness in \ac{activation} is given in terms of the underlying algebra: given a formula in \ac{activation}, any predicate generates a valid expression in the underlying algebra, and there exists a formula and a predicate for any expression in the underlying algebra.
@@ -2780,7 +2800,7 @@ Let $F$ be the set of all formulas in \ac{activation}, $G$ be the set of all for
 \end{Prop}
 
 \chapter{Case study}
-\label{sec:case-study}
+\label{chap:case-study}
 
 \EMBRAER provided us with the \simulink model of an Actuator Control System (depicted in \cref{fg:acsBlockDiagrams}).
 The failure expression of this system (that is, for each of its constituent components) was also provided by \EMBRAER (we show some of them in \cref{tbl:acsAnnotations}).
@@ -2898,6 +2918,9 @@ The semantics of the above expression is:
   \item fault $a$ occurs before fault $s$, which is more precise than the expression found without considering order of events.
 \end{alineasinline}
 
+\part{Final remarks}
+\label{part:final-remarks}
+
 \chapter{Conclusion}
 \label{sec:conclusion}
 
@@ -2919,12 +2942,12 @@ But we consider instantaneous events, like the work reported in~\cite{MRL2014}, 
 In \cref{fig:status-of-thesis} we show:
 \begin{alineasinline}
   \item what was done in previous work and is used as input,
-  \item what is already done,
+  \item what was done in the current work,
   \item what will be done in the next months (see \cref{tbl:tasks-schedule} for tasks schedule), and
   \item what will be done in future work, after the thesis' defence.
 \end{alineasinline}
 Many of the tasks shown in \cref{tbl:tasks-schedule} already started.
-The effort shown in the ``Days'' column is the estimated remaining time to finish the task.
+The effort shown in the ``Weeks'' column is the estimated remaining time to finish the task.
 
 
 \begin{figure}[t]
@@ -2939,34 +2962,34 @@ The effort shown in the ``Days'' column is the estimated remaining time to finis
   \caption{Tasks schedule}%
   \label{tbl:tasks-schedule}%
 }{%
-  \begin{tabular}{p{10.1cm}ccc}
-  \toprule
-    Task & Start & Days & Days total \\
-  \midrule \midrule
-    Qualification & 04/04/2016 & 1 & 0 \\
-  \midrule
-    Elaborate theory for the \ac{activation} & 05/04/2016 & 45 & 1 \\
-  \midrule
-    Elaborate theory for the acceptance criteria & 20/05/2016 & 30 & 46 \\
-  \midrule
-    Prepare paper about \ac{activation} and acceptance criteria & 19/06/2016 & 30 & 76 \\
-  \midrule
-    Submit paper about \ac{activation} and acceptance criteria & 19/07/2016 & 1 & 106 \\
-  \midrule
-    Prove soundness and completeness theorems for the \ac{DNF} of \ac{algebra} & 20/07/2016 & 75 & 107 \\
-  \midrule
-    Define the mapping rules from traces to \ac{algebra} & 03/10/2016 & 15 & 182 \\
-  \midrule
-    Demonstrate the relations of \ac{NOT} and \ac{XBefore} and other operators & 18/10/2016 & 15 & 197 \\
-  \midrule
-    Define the conditions that cause non-coherent analysis with \ac{NOT} & 02/11/2016 & 15 & 212 \\
-  \midrule
-    Write the results in the thesis & 17/11/2016 & 60 & 227 \\
-  \midrule
-    Prepare thesis' defence & 16/01/2017 & 30 & 287 \\
-  \midrule
-    Defence & 15/02/2017 & 1 & 317 \\
-  \bottomrule
+  \begin{tabular}{p{9.9cm}ccc}
+    \toprule
+    Task & Start & Weeks & Weeks total\\
+    \midrule \midrule
+    Qualification & 04/04/2016 & 0 & 0\\
+    \midrule
+    Elaborate a theory for the \ac{activation} & 04/04/2016 & 7 & 0\\
+    \midrule
+    Elaborate a theory for the acceptance criteria & 23/05/2016 & 4 & 7\\
+    \midrule
+    Prepare a paper about \ac{activation} and acceptance criteria & 20/06/2016 & 4 & 11\\
+    \midrule
+    Submit paper about \ac{activation} and acceptance criteria & 18/07/2016 & 0 & 15\\
+    \midrule
+    Prove soundness and completeness theorems for the \ac{DNF} of \ac{algebra} & 18/07/2016 & 1 & 15\\
+    \midrule
+    Define the mapping rules from traces to \ac{algebra} & 03/10/2016 & 2 & 26\\
+    \midrule
+    Demonstrate the relations of \ac{NOT} and \ac{XBefore} and other operators & 17/10/2016 & 2 & 28\\
+    \midrule
+    Define the conditions that cause non-coherent analysis with \ac{NOT} & 31/10/2016 & 2 & 30\\
+    \midrule
+    Write the results in the thesis & 14/11/2016 & 8 & 32\\
+    \midrule
+    Prepare thesis' defence & 09/01/2017 & 4 & 40\\
+    \midrule
+    Defence & 06/02/2017 & 0 & 44\\
+    \bottomrule
   \end{tabular}%
 }{%
 }
@@ -2983,16 +3006,16 @@ It may require a full refactoring of the theory of \ac{activation}.
 We developed a small set of rules for the acceptance criteria verification, but we need to add more sophisticated rules, as for example, to consider phase and latency.
 %In both cases, we will update the case studies.
 
-We showed the \ac{DNF} for \ac{algebra}, but did not demonstrate that every formula can be converted into \ac{DNF}.
-The laws shown in this work should be sufficient to this demonstration.
+We showed the \ac{DNF} for \ac{algebra}, but we did not demonstrate that every formula can be converted into \ac{DNF}.
+The laws shown in this work should be sufficient for this demonstration.
 Also, we did not show the mapping rules from traces to \ac{algebra} (with Boolean operators only \ac{AND} with \ac{XBefore}).
-The mapping rules follow the traces: \ac{XBefore} is obtained by the order of occurrence and the absence of an event is the complement ($-$).
+The mapping rules follow those for the traces: \ac{XBefore} is obtained by the order of occurrence and the absence of an event is the complement ($-$).
 
 Although we do not use negation (\ac{NOT} operator) with \ac{XBefore} in our case study, it is part of \ac{algebra}, so it could be used.
 As future work we will demonstrate the relations of \ac{NOT} and \ac{XBefore}, as we did for \ac{AND} and \ac{OR}.
 We will also define laws to avoid the conditions that cause non-coherent analysis~\cite{Oliv2006}.
 The issue with negated events comes up when both an event and its negation appear on the same tree.
-One very restrictive solution to this issue is applying the \emph{generators independence} laws (\ref{eqs:generators-independence-subseteq-neq-compl}, \ref{eqs:generators-independence-subseteq-compl-neq}) on basic events of a tree, by actually considering the negation of an event a different event (for instance, $\var a= \var e$ and $\var b=-\var e$).
+One very restrictive solution to this issue is applying the \emph{generators independence} laws (\ref{eqs:generators-independence-subseteq-neq-compl}, \ref{eqs:generators-independence-subseteq-compl-neq}) on basic events of a tree, by actually considering a new event $ne$ in place of the negation of another event $e$ (for instance, $\var e$ and $\var ne = -\var e$).
 We look forward to obtain a less restrictive law.
 
 
@@ -3015,7 +3038,8 @@ The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs\index{Binary De
 We plan to use similar concepts in a future work.
 
 The work reported in~\cite{SAE1996b} states that \acp{DTMC} (\aca{DTMC}) is more appropriate to represent several states than \acp{SFT}.
-Considering that \acp{DFT} were conceived as a visual representation of \acap{DTMC}, then we may say that \acp{DFT} can be used to represent several states, thus they are suitable to propose the architectural model modifications as shown in \cref{fig:strategy-overview,fig:status-of-thesis}.
+Considering that \acp{DFT} were conceived as a visual representation of \acap{DTMC}, then we may say that \acp{DFT} can be used to represent several states.
+Thus they are suitable to propose the architectural model modifications as shown in \cref{fig:strategy-overview,fig:status-of-thesis}.
 The definition and the theory of ``Faults Modelling and Fault Tolerance Patterns'' and the automatic proposal of ``Architectural Model Modifications'' blocks are left as future work.
 
 
@@ -3030,7 +3054,7 @@ The definition and the theory of ``Faults Modelling and Fault Tolerance Patterns
 %\theappendix
 \begin{apendicesenv}
 \partapendices
-\chapter{Formal proofs in Isabelle/HOL}
+\chapter{Formal proofs in \isabellehol}
 \label{app:formal-proofs-isabelle-hol}
 
 \end{apendicesenv}
