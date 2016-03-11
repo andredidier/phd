@@ -36,7 +36,7 @@
 %Quantas vezes e em quais páginas a referência foi citada
 %\usepackage[english,hyperpageref]{backref}
 %\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm]{todonotes} % NOTAS
-\usepackage[draft]{fixme}
+\usepackage[final]{fixme}
 \usepackage{soul}
 
 \usepackage{indentfirst}
@@ -104,6 +104,7 @@
 \captionsetup[lstlisting]{position=top,justification=centering,width=.85\textwidth,labelfont=bf,font=small}
 \captionsetup[figure]{position=bottom,justification=centering,width=.85\textwidth,labelfont=bf,font=small}
 \usepackage[capitalise]{cleveref}
+%\usepackage{cleveref}
 
 \addto\captionsenglish{% ingles
   %% adjusts names from abnTeX2
@@ -123,6 +124,8 @@
   \renewcommand{\resumoname}{Abstract}
   \renewcommand{\listadesiglasname}{List of abbreviations and acronyms}
   \renewcommand{\listadesimbolosname}{List of symbols}
+  \renewcommand{\listfigurename}{List of figures}
+  \renewcommand{\listtablename}{List of tables}
   \renewcommand{\fontename}{Source}
   \renewcommand{\notaname}{Note}
   %% adjusts names used by \autoref
@@ -132,7 +135,12 @@
   \renewcommand{\subsubsectionautorefname}{subsubsection}
   \renewcommand{\paragraphautorefname}{subsubsubsection}
 }
-
+\Crefname{figure}{Figure}{Figures}
+\Crefname{table}{Table}{Tables}
+\Crefname{page}{Page}{Pages}
+\Crefname{section}{Section}{Sections}
+\Crefname{subsection}{Subsection}{Subsections}
+\Crefname{subsubsection}{Subsubsection}{Subsubsections}
 \input{capa}
 
 %% Change the following pdf author attribute name to your name.
@@ -202,14 +210,11 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 % Macros (defines your own macros here, if needed)
 %\def\x{\checkmark}
 
-\newtheorem{Def}{Definition}[chapter]
+\newtheorem{definition}{Definition}[chapter]
 \theoremstyle{theo}
-\newtheorem{Axi}{Axiom}[chapter]
-\newtheorem{Conj}{Conjecture}[chapter]
-\newtheorem{Lem}{Lemma}[chapter]
+\newtheorem{lemma}{Lemma}[chapter]
 \newtheorem{Theo}{Theorem}[chapter]
-\newtheorem{Prop}{Proposition}[chapter]
-\newtheorem{Cor}{Corollary}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
 
 \hyphenation{EMBRAER}
 \newcommand{\includegraphicsaspectratio}[2][1]{%
@@ -240,12 +245,6 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TEXT
-%\Crefname{chapter}{Chapter}{Chapters}
-%\Crefname{section}{Chapter}{Chapters}
-\Crefname{Lem}{Lemma}{Lemmas}
-\Crefname{Def}{Definition}{Definitions}
-\Crefname{figure}{Figure}{Figures}
-%\crefname{Def}{Def.}{Defs.}
 \newlist{alineasinline}{enumerate*}{1}
 \setlist[alineasinline]{label=(\roman*)}
 
@@ -428,7 +427,7 @@ I have no words to express how much I thank them.
 CNPq and FACEPE were keen to guarantee my existential needs.
 The former with the trip to Newcastle upon Tyne, and the latter during the time I stayed in Recife, before and after the trip.
 
-I thank to Sascha Romanovsky for accepting me as his \hl{advisee}\adnote{Advisee estaria correto, não? Não entendi\ldots} while I was a Research Assistant of the COMPASS project.
+I thank to Sascha Romanovsky for accepting me as his advisee while I was a Research Assistant of the COMPASS project.
 His comments, instructions, and knowledge were of great importance for this work.
 
 My stay in Newcastle upon Tyne could be as good as it was without the hospitality, useful discussions, and support of my colleagues at Newcastle University.
@@ -465,16 +464,18 @@ In special, my two girls and my wife.
 \begin{resumo}[Resumo]
 \begin{otherlanguage*}{brazil}
 A modelagem de defeitos é essencial na antecipação de falhas em sistemas críticos.
-Tradicionalmente, Árvores de Defeitos Estáticas são empregadas para este fim, mas Árvores de Defeitos Temporais e Dinâmicas têm ganho evidência devido ao seu maior poder para modelar e detectar propagações complexas de defeitos que levam a uma falha.
+Tradicionalmente, Árvores de Defeitos Estáticas são empregadas para este fim, mas Árvores de Defeitos Temporais e Dinâmicas têm ganhado evidência devido ao seu maior poder para modelar e detectar propagações complexas de defeitos que levam a uma falha.
 
-Em um trabalho anterior, mostramos uma estratégia baseada na álgebra de processos CSP e modelos Simulink para obter rastros (propagações) de defeitos que levam a uma falha.
-Apesar de o trabalho usar Árvores de Defeitos Estáticas, poderíamos ter usado Árvores de Defeitos Temporais ou Dinâmicas.
+Em um trabalho anterior, mostramos uma estratégia baseada na álgebra de processos CSP e modelos Simulink para obter rastros (sequências) de defeitos que levam a uma falha.
+A partir dos rastros de defeitos nós descartamos a informação de ordenamento para obter expressões de estrutura  para Ávores de Defeitos Estáticas.
+Ao contrário de descartar tal informação de ordenamento, ela poderia ser usada para obter expressões de estrutura para Árvores de Defeitos Temporais ou Dinâmicas.
 No presente trabalho, apresentamos duas álgebras:
 \begin{alineasinline}
   \item uma para modelar formalmente defeitos a partir de modelos arquiteturais, racionalizando sobre combinações de defeitos, e
   \item uma álgebra temporal de defeitos (com noção de propagação de defeitos) e provar que ela é de fato uma álgebra Booleana.
 \end{alineasinline}
 Isso permite herdar as propriedades de álgebras Booleanas, leis e técnicas de redução existentes, as quais são muito benéficas para a modelagem e análise de defeitos.
+Com expressões na álgebra temporal de defeitos nós permitimos a verificação de propriedades de segurança (\emph{safety}) baseadas em Árvores de Defeitos Estáticas, Temporais ou Dinâmicas.
 Nós ilustramos nosso trabalho com alguns estudos de caso simples, mas reais, fornecidos pelo nosso parceiro industrial, a EMBRAER.
 
 \vspace{\onelineskip}
@@ -490,16 +491,18 @@ Nós ilustramos nosso trabalho com alguns estudos de caso simples, mas reais, fo
 
 \begin{resumo}
 Faults modelling is essential to anticipate failures in critical systems.
-Traditionally, Static Fault Trees are employed to this end, but Temporal and Dynamic Fault Trees are gaining evidence due to their enriched power to model and detect intricate propagation of faults that lead to a failure.
+Traditionally, Static Fault Trees are employed to this end, but Temporal and Dynamic Fault Trees have gained evidence due to their enriched power to model and detect intricate propagation of faults that lead to a failure.
 
 In previous work, we showed a strategy based on the process algebra CSP and Simulink models to obtain fault traces that lead to a failure.
-Although that work used Static Fault Trees, it could be used Temporal or Dynamic Fault Trees.
+From the fault traces we discarded the ordering information to obtain structure expressions for Static Fault Trees.
+Instead of discarding such an ordering information, it could be used to obtain structure expressions of Temporal or Dynamic Fault Trees.
 In this work we present two algebras:
 \begin{alineasinline}
   \item one to model faults from architectural models formally, reasoning about faults combinations, and
   \item an algebra of temporal faults (with a notion of fault propagation) and prove that it is indeed a Boolean algebra.
 \end{alineasinline}
-\hl{This allows us to inherit Boolean algebra's properties, laws and existing reduction techniques, which are very beneficial for faults modelling and analysis.}\amnote{Qual a conexão com Temporal e Dynamic Fault Trees?? E as propagações complexas}
+This allows us to inherit Boolean algebra's properties, laws and existing reduction techniques, which are very beneficial for faults modelling and analysis.
+With expressions in the algebra of temporal faults we allow the verification of safety properties based on Static, Temporal or Dynamic Fault Trees.
 We illustrate our work on simple but real case studies, some supplied by our industrial partner EMBRAER.
 
 \vspace{\onelineskip}
@@ -511,10 +514,12 @@ We illustrate our work on simple but real case studies, some supplied by our ind
 \end{resumo}
 
 % List of figures
+\pdfbookmark[0]{\listfigurename}{lof}
 \listoffigures*
 \cleardoublepage
 
 % List of tables
+\pdfbookmark[0]{\listtablename}{lot}
 \listoftables*
 \cleardoublepage
 
@@ -534,6 +539,7 @@ We illustrate our work on simple but real case studies, some supplied by our ind
 
 
 % Summary (tables of contents)
+\pdfbookmark[0]{\contentsname}{toc}
 \tableofcontents*
 \acresetall
 \cleardoublepage
@@ -557,7 +563,7 @@ To employ such a process, dependable systems taxonomy and safety assessment tech
 Clarification of concepts of dependable systems can be surprisingly difficult when systems are complex, because the determination of possible causes or consequences of failure can be a very subtle process~\cite{ALR+2004}.
 
 ARP-4761~\cite{SAE1996b} defines several techniques to perform safety assessment.
-One of them is \ac{FTA}\index{Fault Tree!Analysis}.
+One of them is \ac{FTA}\index{Fault Tree Analysis}.
 It is a deductive method that uses trees to model faults and their dependencies and propagation.
 In such trees, the premises are the leaves (basic events) and the conclusions are the roots (top events).
 Intermediary events use gates to combine basic events and each kind of gate has its own combination semantics definition.
@@ -567,7 +573,7 @@ To analyse \acp{FT}, their structures are abstracted as Boolean\index{Boolean Al
 The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method} to obtain \acp{MCS} from the structure expressions\index{structure expression}, and a general formula to calculate the probability of top events.
 The \acp{MCS} are obtained by reducing structure expressions to a normal form, in which each term is a combination of variables (basic events) with \ac{AND} gates, and the terms are combined as \ac{OR} gates.
 These minimal terms are also called \emph{prime implicants} or \emph{minterms}.
-The Shannon's method originated a formalism to reduce structure expressions called \ac{BDD}\index{Binary Decision Diagrams}.
+The Shannon's method\index{Binary Decision Diagrams!Shannon's method} originated a formalism to reduce structure expressions called \ac{BDD}\index{Binary Decision Diagrams}.
 Another approach to reduce structure expressions is to use a mathematical model---called \acf{FBA}---that uses sets of sets to represent Boolean expressions.
 
 Besides the traditional \ac{OR} and \ac{AND} gates, the \FThandbook defines other gates.
@@ -593,22 +599,24 @@ The readiness of the backup system in \iac{WSp} gate is higher than in \iac{CSp}
 The work reported in~\cite{MRL2011} shows an algebraic framework to compositionally reduce \ac{DFT} gates to order-based gates and perform probabilistic analysis of structure expressions\index{structure expression}. Thus, despite some limitations for spare gates~\cite{MRL2014}, the structure expressions\index{structure expression} used in \acp{TFT} and \acp{DFT} can be formulated in terms of a generic order-based operator.
 
 \begin{sloppypar}
-The NOT operator is absent in the algebras reported in~\cite{WP2009,Walker2009,Merle2010,MRL2011b}.
+The \ac{NOT} operator is absent in the algebras reported in~\cite{WP2009,Walker2009,Merle2010,MRL2011b}.
 There is no consensus about the relevance of its use:
 \begin{alineasinline}
   \item it can be misleading, generating non-coherent analysis~\cite{Oliv2006}, or
   \item it can be essential in practical use~\cite{Andrews2001}.
 \end{alineasinline}
 Our concern is that the decision of the relevance of its use should not be due to the choice of events-occurrence representation.
-The algebra created in this work defines the NOT operator and allows its use\amnote{without introducing incoerence?} \adnote{Prefiro deixar assim mesmo...}, as we show in \cref{chap:strategy}.
+The algebra created in this work defines the \ac{NOT} operator and allows its use, as we show in \cref{chap:strategy}.
 \end{sloppypar}
 
+\begin{sloppypar}
 \Ac{hiphops} is a set of methods and tools to analyse \acp{FT}.
 The semi-automatic generation of \acp{FT} has architectural models and failure expressions as inputs.
 The failure expressions are in fact structure expressions of components or subsystems.
 These expressions are annotated in components and subsystems and describe how they fail.
 The tool combines these expressions with regard to the architecture to generate \acp{FT}.
 The work reported in~\cite{WP2008} shows a strategy to use the semi-automatic \ac{FT} generation of \ac{hiphops} with \pandora to generate structure expressions of \acp{TFT}.
+\end{sloppypar}
 
 In previous work~\cite{Didier2012,DM2012}, we proposed a systematic hardware-based faults identification strategy to obtain failure expressions as defined in \acifused{hiphops}{\acs{hiphops}}{\acscite{hiphops}} for \acp{SFT}.
 %
@@ -635,7 +643,7 @@ For two case studies provided by our industrial partner, \EMBRAER, we showed tha
 \section{Research questions}
 
 Both \ac{TFT} and \ac{DFT} lack a first-order logic mathematical model like the one defined for \ac{SFT}.
-For \acp{SFT}, mathematical models to reduce structure expressions are either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}.
+For \acp{SFT}, mathematical models to reduce structure expressions are either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}\index{Binary Decision Diagrams}.
 Both are efficient.
 One important concern on employing \ac{FTA} is whether \iac{FT} indeed represents a system behaviour.
 The work reported in~\cite{MCS+1999} exposes this concern for \acp{DFT}, and the \ac{hiphops} framework---related to \acp{SFT} and \acp{TFT}---aims at getting this issued sorted.
@@ -662,11 +670,11 @@ The works reported in~\cite{BKK+2003,BHH+2003,SAE1996b} show techniques to overc
 \end{sloppypar}
 
 There are other approaches, however.
-For instance, a modified version of \ac{BDD} to tackle events ordering, called \acf{SBDD}, to reduce structure expressions, and the work reported in \cite{BRM+2005}, which proposes a conversion of \ac{DFT} into \ac{DBN} to perform probabilistic analysis.
+For instance, a modified version of \ac{BDD}\index{Binary Decision Diagrams} to tackle events ordering, called \acf{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}, to reduce structure expressions, and the work reported in \cite{BRM+2005}, which proposes a conversion of \ac{DFT} into \ac{DBN} to perform probabilistic analysis.
 
-The approach to tackle events ordering with \ac{SBDD}~\cite{XTD2012} has two kinds of nodes: terminals and non-terminals (terminals are nodes with basic events, and non-terminals are nodes with two events and an operator).
+The approach to tackle events ordering with \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}~\cite{XTD2012} has two kinds of nodes: terminals and non-terminals (terminals are nodes with basic events, and non-terminals are nodes with two events and an operator).
 Although demonstrated in~\cite{Bryant1986} that these unconventional nodes (non-terminals) generate correct and efficient Boolean analysis, the analysis is still dependent on the order-related operators because the relation of terminals and non-terminals is not established directly (non-terminals are seen as an independent node in~\cite{XTD2012}).
-For example, the occurrence of $A \rightarrow B$ is related to the occurrence of $A$ and $B$, but this relation is obtained in a further step, not in the \ac{SBDD}.
+For example, the occurrence of $A \rightarrow B$ is related to the occurrence of $A$ and $B$, but this relation is obtained in a further step, not in the \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}.
 
 The approach using the construction of \acp{DBN}~\cite{BRM+2005} is automatic and handles time slices as $t + \Delta t$, which implies a notion of events ordering as well.
 As it is focused in probabilistic analysis, qualitative analysis is not directly supported.
@@ -707,12 +715,12 @@ In this version of the thesis we propose the theory that answers \cref{question:
 In this work we present a denotational semantics and an associated algebra, called \acf{algebra}, to analyse acceptance criteria of \ac{FT} with ordering of fault events (\ac{TFT} and \ac{DFT}).
 \Theac{algebra} aims at answering the \cref{question:mathematical-model,question:ordering-representation}.
 The analysis of acceptance criteria is a decision problem and we use first-order logic and \isabellehol as verification tool.
-\Cref{fig:strategy-overview} shows an overview of the strategy.
-It starts in the top (green) node and ends in the bottom (red) node.
+Indeed, \ac{algebra} is part of a bigger strategy the relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
+In \cref{fig:strategy-overview} the strategy starts in the top (green) node and ends in the bottom (red) node.
 Fault events are either extracted from a nominal model with injected faults (\cref{fig:strategy-overview}, path A), or modelled using a proposed notation, called \ac{activation} (\cref{fig:strategy-overview}, path B).
 We depict traditional \ac{FTA} in path C to show that we still need the acceptance criteria, which are the expected properties of system's \acp{FT}.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.9]{StrategyOverview}
   \caption{Strategy overview}
@@ -762,6 +770,10 @@ We use \isabellehol, theories in \isabellehol{'s} library, and a theory in the A
 
 This thesis is organized as follows: in \cref{part:background} we show the concepts and tools used as basis for this work.
 \Cref{part:contributions} describes the results: \cref{chap:strategy} presents our strategy, \cref{chap:case-study} the case study and the application of the proposed strategy, and we present our conclusions and future work in \cref{part:final-remarks}.
+The contributions presented in this work are summarized in terms of proved results.
+To facilitate the understanding of the presented strategy the effort to build laws and theirs (mechanized) proofs are shown in \cref{app:formal-proofs-isabelle-hol}.
+
+\isabellehol{'s} theory files with all proofs are available at \url{http://www.cin.ufpe.br/~alrd/phd/phd-alrd-theory.zip}
 
 \part{Background}
 \label{part:background}
@@ -769,11 +781,11 @@ This thesis is organized as follows: in \cref{part:background} we show the conce
 \chapter{Basic concepts}
 \label{chap:basic-concepts}
 
-\hl{Means to dependability}\amnote{Está muito filosófico isto. É assim mesmo ou seja, não há uma definição para dependebilidade?} \adnote{Eu explico dependabilidade a seguir.} are obtained by modelling and analysing a system.
+Means to dependability\index{Dependability}\amnote{Está muito filosófico isto. É assim mesmo ou seja, não há uma definição para dependebilidade?} \adnote{Eu explico dependabilidade a seguir.} are obtained by modelling and analysing a system.
 It is strongly related to faults modelling, which depends on the kinds of analyses we want to perform.
 %For instance, in \aclp{FT}, even if a fault can be repaired, it is considered as a non-repairable fault.
 \Acp{FT} are present in several stages of systems' modelling.
-We introduce dependability and faults modelling in \cref{sec:dependability}.
+We introduce dependability\index{Dependability} and faults modelling in \cref{sec:dependability}.
 
 \Iac{SFT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occur, then it will.} of a faults topology of a system, subsystem or component.
 %\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
@@ -784,21 +796,21 @@ We discuss these time relations in \cref{sec:time-relations}.
 \label{sec:dependability}
 
 \begin{sloppypar}
-Computing systems are characterized by five properties: functionality, performance, cost, dependability\index{dependability}, security.
-The work reported in~\cite[p. 289--302]{Sommerville2011} explain these properties---including dependability---with a focus in software.
+Computing systems are characterized by five properties: functionality, performance, cost, dependability\index{Dependability}, security.
+The work reported in~\cite[p. 289--302]{Sommerville2011} explain these properties---including dependability\index{Dependability}---with a focus in software.
 Hardware and software are connected, as software faults may cause a failure in a software-controlled hardware, and hardware faults may send incorrect data, causing a failure in the software.
 \end{sloppypar}
 
-The work reported in~\cite{ALR+2004} summarizes all concepts of and related to dependability for computing systems that contains software and hardware.
+The work reported in~\cite{ALR+2004} summarizes all concepts of and related to dependability\index{Dependability} for computing systems that contains software and hardware.
 In the following, we show these concepts and highlight those used in this work.
 
 \subsection{Systems}
 
-Before introducing systems' dependability, we first describe what a system is and its characteristics.
+Before introducing systems' dependability\index{Dependability}, we first describe what a system is and its characteristics.
 A \emph{system} is an entity that interacts with other systems (software and hardware as well), users (humans), and the physical world.
 These other entities are the \emph{environment} of the given system, and its \emph{boundary} is the frontier between the system and its environment.
 
-\hl{The \emph{function} of a system is what the system is intended to do, and its \emph{behaviour} is what the system does to implement its function.}\amnote{Você continua muito filosófico aqui. Quero ver para onde vamos (uso)...} \adnote{Isso faz parte do contexto para quando mencionar os termos eles terem sido introduzidos.}
+The \emph{function} of a system is what the system is intended to do, and its \emph{behaviour} is what the system does to implement its function.\amnote{Você continua muito filosófico aqui. Quero ver para onde vamos (uso)...} \adnote{Isso faz parte do contexto para quando mencionar os termos eles terem sido introduzidos.}
 The \emph{total state} of a system are the means to implement its function and is defined as the set of the following states: computation, communication, stored information, interconnection, and physical condition.
 The \emph{service} delivered by a system is its behaviour as it is perceived by its boundary.
 A system can both provide and consume services.
@@ -809,15 +821,16 @@ Such a recursion (of a system containing other systems) stops when a component--
 A system is the total state of its atomic components.
 
 \subsection{Dependability}
+\index{Dependability}
 
-The concepts that creates the basis for dependability\index{dependability} are:
+The concepts that creates the basis for dependability\index{Dependability} are:
 \begin{alineasinline}
   \item threats to,
   \item attributes of, and
   \item means to attain.
 \end{alineasinline}
 
-\emph{Threats to dependability}\index{dependability!threats to} are the so-called \emph{fault-error-failure} chain.
+\emph{Threats to dependability}\index{Dependability!threats to} are the so-called \emph{fault-error-failure} chain.
 A failure is a service deviation perceived on systems' boundary.
 An error is the part of the total state of a system that leads to subsequent service failure.
 Depending on how a system tolerate internal errors, many errors may not reach system's boundary.
@@ -826,25 +839,25 @@ In this case, we say that the fault \emph{occurred} (the fault is active).
 Otherwise, the fault is dormant, and has not occurred (yet).
 A \emph{degraded} mode of a system is when there are active faults, so some functions of the system are inoperative, but the system still delivers its service.
 
-There are two acceptable definitions of dependability reported in~\cite{ALR+2004}.
+There are two acceptable definitions of dependability\index{Dependability} reported in~\cite{ALR+2004}.
 One is more general, difficult to measure: ``the ability to deliver service that can justifiably be \emph{trusted}''.
 A more precise definition that uses the definition of service failure is: ``the ability to avoid service failures that are more frequent and more severe than is acceptable''.
 This definition has two implications about system's requirements: there should be how it can fail, and what are the acceptable severity and frequency of its failures.
 
-The following systems' dependability attributes\index{dependability!attributes of} enlightens such requirements:
+The following systems' dependability attributes\index{Dependability!attributes of} enlightens such requirements:
 \begin{description}
   \item[Availability:] the readiness for correct service;
   \item[Reliability:] continuity of correct service;
   \item[Safety:] absence of catastrophic consequences on the environment (other systems, users, and the physical world).
   Safety can be verified using \acp{FT}, which is part of the objective of this work;
-  \item[Integrity:] absence of improper systems \hl{alterations}\adnote{Em \cite{ALR+2004}, se usa essa expressão ``alterations'', mas acredito que seja sinônimo de ``change'', como mostrado em \url{http://www.merriam-webster.com/thesaurus/alteration}.};
+  \item[Integrity:] absence of improper systems alterations;
   \item[Maintainability:] ability to be modified and repaired.
 \end{description}
 %
 A system description should mention all or most of these attributes, at least the first three of them.
 
 The implementation of these attributes requires a deep analysis of system's models.
-The \emph{means to attain dependability}\index{dependability!means to attain} are summarized as follows:
+The \emph{means to attain dependability}\index{Dependability!means to attain} are summarized as follows:
 
 \begin{description}
   \item[Prevention] is about avoiding incorporate faults during development.
@@ -853,7 +866,8 @@ The \emph{means to attain dependability}\index{dependability!means to attain} ar
   \item[Forecasting] is about predicting likely faults so they can removed, or tackling their effects.
 \end{description}
 
-The intersection of the current work with dependability is in fault removal during development and fault tolerance (analysis).
+\begin{sloppypar}
+The intersection of the current work with dependability\index{Dependability} is in fault removal during development and fault tolerance (analysis).
 Following the taxonomy presented in~\cite{ALR+2004}, there are some techniques for fault removal, summarized as follows:
 \begin{alineas}
   \item Static verification:
@@ -882,10 +896,11 @@ Following the taxonomy presented in~\cite{ALR+2004}, there are some techniques f
     \end{description}
   \end{subalineas}
 \end{alineas}
+\end{sloppypar}
 
 
 Verification methods are often used in combination.
-For example, symbolic execution may be used to obtain testing patterns, test inputs can be obtained by model-checking as in~\cite{CBC+2015}, faults can be used as symbolic inputs, and system behaviour can be observed using model-checking as in~\cite{DM2012,Didier2012} (\hl{This}\adnote{Não entendi porque aqui começa em maiúsculas} technique is called fault injection; see also~\cite{AAL+1996}).
+For example, symbolic execution may be used to obtain testing patterns, test inputs can be obtained by model-checking as in~\cite{CBC+2015}, faults can be used as symbolic inputs, and system behaviour can be observed using model-checking as in~\cite{DM2012,Didier2012} (This technique is called fault injection; see also~\cite{AAL+1996}).
 
 The techniques to attain fault tolerance are summarized as follows:
 \begin{description}
@@ -902,7 +917,7 @@ In this work, we use a combination of:
   \item theorem proving, and
   \item symbolic execution.
 \end{alineasinline}
-We use these methods to obtain an erroneous behaviour of the system which is compared to system's dependability attributes (safety).
+We use these methods to obtain an erroneous behaviour of the system which is compared to system's dependability attributes\index{Dependability!attributes of} (safety).
 We explain how these methods combine in \cref{chap:strategy}.
 
 \subsection{Fault Modelling}
@@ -956,7 +971,7 @@ If fault events are independent (they are not susceptible to have a common cause
 In \cref{chap:strategy} we abstract events relation in continuous time as an \emph{exclusive before} relation, based on fault \emph{detection} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
 
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.5]{time-relations}
   \caption{Relation of two events with duration}
@@ -971,9 +986,9 @@ In general, a structure expression\index{structure expression} comes from gates 
 Basic events become variables and gates become operators (a gate may become one or more operators).
 In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their respective structure expressions\index{structure expression}.
 
-\Acp{FBA} and \acp{BDD} are the basis to analyse structure expressions.
+\Acp{FBA} and \acp{BDD}\index{Binary Decision Diagrams} are the basis to analyse structure expressions.
 Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{chap:strategy}).
-We explain \acp{BDD} and derived techniques in \cref{sec:structure-expressions-analysis}, and \acp{FBA} in \cref{sec:fba}.
+We explain \acp{BDD}\index{Binary Decision Diagrams} and derived techniques in \cref{sec:structure-expressions-analysis}, and \acp{FBA} in \cref{sec:fba}.
 
 The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}:
 \begin{alineasinline}
@@ -987,7 +1002,7 @@ In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to
 
 Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isabelle/HOL} and \ac{Isar}, which were essential to carry out the proofs presented in this thesis.
 
-\section{\Acl{FTA} and structure expressions}
+\section{\Acl*{FTA} and structure expressions}
 \label{sec:fault-trees}
 
 \Ac{FTA} was introduced in the \FThandbook~\cite{VGR+1981} with \aclp{SFT}.
@@ -996,7 +1011,7 @@ The method starts with the top-level event as the unwanted event and the combina
 Events are combined using gates, and each gate has a well defined semantics.
 It continues until basic (atomic) events are reached.
 \Iac{SFT} represents, in a single view---very often considering faults outside of the boundaries of a system---, different states in which a particular failure is active in a system.
-The most traditional gates are \ac{AND} and \ac{OR}, which are equivalent to Boolean operators.
+The most traditional gates are \ac{AND} and \ac{OR}, which are equivalent to Boolean\index{Boolean Algebra} operators.
 These gates are also called coherent gates\index{coherent gates} because they construct coherent trees (see \cref{sec:not-operator} about the use of \ac{NOT} gates).
 %A Boolean expression represents the structure of \iac{SFT}.
 %Qualitative and quantitative analysis are evaluated on these Boolean expressions, that are referred to as \emph{structure expressions}.
@@ -1017,7 +1032,7 @@ We explain them and \acg{DFT} analysis in \cref{sec:dynamic-fault-trees}.
 The structure of \iac{FT} (or the structure of \iac{MCS}, explained further) is represented with a formula.
 The variables represent occurrences of basic events.
 Unary and binary relation symbols capture the semantics of gates.
-A formula with these characteristics is called \emph{structure expression}\index{structure expression} or \emph{structure function}\index{structure expressions!function} (as the expression depends on the variables).
+A formula with these characteristics is called \emph{structure expression}\index{structure expression} or \emph{structure function}\index{structure expression!function} (as the expression depends on the variables).
 The semantics of a structure expression is that the top-level event occurs if some combination of basic events occur.
 
 \begin{sloppypar}
@@ -1066,7 +1081,7 @@ This removes components without impacting the overall failure probability, which
 
 \begin{sloppypar}
 In important stages of critical systems, \ac{FTA} plays an essential role.
-At least three dependability means can be achieved using \acp{FT}:
+At least three dependability means\index{Dependability!means to attain} can be achieved using \acp{FT}:
 %
 \todo{Improve the relations of dependability and FTA}
 \begin{description}
@@ -1083,7 +1098,7 @@ At least three dependability means can be achieved using \acp{FT}:
 In \cref{sec:static-fault-trees,sec:temporal-fault-trees,sec:dynamic-fault-trees} we briefly show \acpg{FT} symbology and means to analyse \acp{FT}.
 We will detail its structure expressions extraction because they are a common means to perform both qualitative and quantitative analysis.
 
-\subsection{\Aclp{SFT}}
+\subsection{\Aclp*{SFT}}
 \label{sec:static-fault-trees}
 
 \Acg{SFT} gates and structure expressions were used as basis for other kinds of tree, as in \acp{TFT} and \acp{DFT}.
@@ -1097,19 +1112,21 @@ They are usually drawn as triangles with a letter or a number.
 \Cref{fig:sft-example-traditional-gates} depicts traditional gates as specified in the \FThandbook, and \cref{fig:sft-example-ald-software} shows \iac{FT} using \theftanalyser{}---a free commercial tool.
 In this work, to keep a visual identity with other \acp{FT}, and to avoid symbols confusion, we use gates symbols as shown in~\cref{fig:sft-gates}.
 
-\begin{figure}[t]
+\begin{figure}[htb]
+  \centering
   \includegraphicsaspectratio[1]{sft-example-ald-software}
   \caption{\Ac{SFT} symbols using a free commercial tool}
   \label{fig:sft-example-ald-software}
 \end{figure}
 
-\begin{figure}[t]
-\includegraphicsaspectratio[0.9]{sft-symbols-ft-handbook}
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.9]{sft-symbols-ft-handbook}
   \caption{\acs{SFT} symbols as in the \FThandbook}
   \label{fig:sft-example-traditional-gates}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \subcaptionbox{Basic event\label{fig:sft-basic-event}}
     [.25\textwidth]{%
@@ -1167,7 +1184,7 @@ Similarly, the sets of sets $B$---that represents the occurrence of $b$---contai
 The \acl{FT} in \cref{fig:ex-fault-tree1} contains only two events and the resulting structure expression\index{structure expression} for this \ac{FT} is the expression $A \inter B$ ($TOP$), where $A$ and $B$ are the sets of sets that contain $a$ and $b$, respectively.
 The resulting combinations for $TOP$ are $\left\{a,b\right\}$ and $\left\{a,b,c\right\}$ (fault events \emph{a} and \emph{b} occur in all possibilities).
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.45]{ex-fault-tree1}
   \caption{Very simple example of a \acl{FT}}
@@ -1180,9 +1197,9 @@ Probabilistic analysis is then performed on these events to obtain the overall p
 The \FThandbook shows an algorithm based on Shannon's method\index{Binary Decision Diagrams!Shannon's method} to reduce structure expressions\index{structure expression} to obtain minimal cut sets\index{Minimal Cut!Sets}.
 %BDDs are essentially the diagrams of Shannon's method.
 The Boolean\index{Boolean Algebra} expression of the tree shown in \cref{fig:ex-fault-tree1} is $TOP = A \wedge B$.
-A technique called \ac{BDD}---which derives from Shannon's method---is explained in \cref{sec:bdd}.
+A technique called \ac{BDD}\index{Binary Decision Diagrams}---which derives from Shannon's method\index{Binary Decision Diagrams!Shannon's method}---is explained in \cref{sec:bdd}.
 
-\subsection{\Aclp{TFT}}
+\subsection{\Aclp*{TFT}}
 \label{sec:temporal-fault-trees}
 
 There are at least two versions of \acp{TFT}.
@@ -1205,7 +1222,7 @@ An invariant on sequence values is that there are no gaps for assigned values.
 For example, if faults A and B occur at the same time and there are only these two events, then they should both be assigned value $1$.
 On the other hand, if A occurs before B, then the assigned values are 1 and 2, respectively.
 Value zero means that the event is not active on the combination.
-Similar to Boolean's truth tables, the \pandora methodology defines \acp{TTT}.
+Similar to Boolean's\index{Boolean Algebra} truth tables, the \pandora methodology defines \acp{TTT}.
 They represent formula values for every combination of events.
 \Cref{tbl:tft-operators} shows the \ac{TTT} of all \ac{TFT} operators accordingly to the semantics described in terms of a sequence value function $S$ as follows:
 %
@@ -1270,36 +1287,36 @@ A & B & \ac{AND} & \ac{OR} & \ac{PAND} & \ac{POR} & \ac{SAND}  \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
-  \begin{subfigure}[b]{0.15\linewidth}
+  \begin{subfigure}[b]{0.20\linewidth}
     \centering
     \includegraphicsaspectratio[0.75]{ft-symbol-pand-gate}
-    \caption{\ac{PAND} gate}\label{fig:tft-pand-gate}
+    \caption{\acs*{PAND} gate}\label{fig:tft-pand-gate}
   \end{subfigure}
-  \begin{subfigure}[b]{0.15\linewidth}
+  \begin{subfigure}[b]{0.20\linewidth}
     \centering
     \includegraphicsaspectratio[0.75]{ft-symbol-por-gate}
-    \caption{\ac{POR} gate}\label{fig:tft-por-gate}
+    \caption{\acs*{POR} gate}\label{fig:tft-por-gate}
   \end{subfigure}
-  \begin{subfigure}[b]{0.15\linewidth}
+  \begin{subfigure}[b]{0.20\linewidth}
     \centering
     \includegraphicsaspectratio[0.75]{ft-symbol-sand-gate}
-    \caption{\ac{SAND} gate}\label{fig:tft-sand-gate}
-  \end{subfigure}
-  \caption{\acs{TFT}-specific gates}
+    \caption{\acs*{SAND} gate}\label{fig:tft-sand-gate}
+  \end{subfigure}  
+  \caption{\acs*{TFT}-specific gates}
   \label{fig:tft-symbols}
 \end{figure}
 
 \begin{figure}[t]
   \centering
   \includegraphicsaspectratio[0.55]{tft-small-example}
-  \caption{\acs{TFT} small example}
+  \caption{\acs*{TFT} small example}
   \label{fig:tft-small-example}
 \end{figure}
 
 \begin{table}
-  \caption{\acs{TTT} of a simple example}
+  \caption{\acs*{TTT} of a simple example}
   \label{tbl:ttt-small-example}
   \centering
   {\scriptsize
@@ -1366,12 +1383,12 @@ Some of these algebraic laws are:
 \end{align}
 \end{subequations}
 
-\subsection{\Aclp{DFT}}
+\subsection{\Aclp*{DFT}}
 \label{sec:dynamic-fault-trees}
 
 \begin{sloppypar}
 \Aclp{DFT} were designed with the goal of analysing complex systems with dynamic redundancy management and complex fault and recovery mechanisms~\cite{DBB1992}.
-The idea was to create easy-to-use and \hl{less error-prone modelling tools}\amnote{Interessante... Quer dizer que usar DTMCs causa erros de modelagem?? Ainda hoje? Qual o artigo que cita isto?} \adnote{Bom... como DTMCs não mudaram, as respostas são: sim, sim, o de Dugan na sentença anterior} than using \acp{DTMC}---or simply \emph{\acap{DTMC}}---directly.
+The idea was to create easy-to-use and less error-prone modelling tools than using \acp{DTMC}---or simply \emph{\acap{DTMC}}---directly.
 So, since the very beginning, \acp{DFT} were intended to be evaluated using \acap{DTMC}.
 \Cref{fig:dft-original-symbols} depicts the original gate symbols as shown in~\cite{DBB1992,Boyd1992}.
 In this work, we use gates symbols as depicted in \cref{fig:dft-symbols}.
@@ -1396,53 +1413,52 @@ The informal semantics of them are:
 \end{description}
 \end{sloppypar}
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \begin{subfigure}[b]{.32\linewidth}
     \centering
-    \includegraphicsaspectratio[1]{dft-original-fdep-symbol}
-    \caption{\Ac{FDEP} gate}\label{fig:dft-original-fdep-symbol}
+      \includegraphicsaspectratio[1]{dft-original-fdep-symbol}
+    \caption{\acs*{FDEP} gate}\label{fig:dft-original-fdep-symbol}
   \end{subfigure}%
   %
   \begin{subfigure}[b]{.45\linewidth}
     \centering
-    \includegraphicsaspectratio[1]{dft-original-csp-symbol}
-    \caption{\Ac{CSp} gate}\label{fig:dft-original-csp-symbol}
+      \includegraphicsaspectratio[1]{dft-original-csp-symbol}
+    \caption{\acs*{CSp} gate}\label{fig:dft-original-csp-symbol}
   \end{subfigure}%
   %
   \begin{subfigure}[b]{.20\linewidth}
     \centering
-    \includegraphicsaspectratio[1]{dft-original-seq-symbol}
-    \caption{\Ac{SEQ} gate}\label{fig:dft-original-seq-symbol}
+      \includegraphicsaspectratio[1]{dft-original-seq-symbol}
+    \caption{\acs*{SEQ} gate}\label{fig:dft-original-seq-symbol}
   \end{subfigure}%
-  %
-  \caption{\acspg{DFT} original gates symbols}
+  \caption{\acspg*{DFT} original gates symbols}
   \label{fig:dft-original-symbols}
 \end{figure}
 
-\begin{figure}[t]
-  \caption{\acpg{DFT} gates symbols}
-  \label{fig:dft-symbols}
+\begin{figure}[htb]
   \centering
   \begin{subfigure}[b]{.3\linewidth}
     \centering
-    \includegraphicsaspectratio[0.7]{ft-symbol-fdep-gate}
-    \caption{\Ac{FDEP} gate}\label{fig:dft-fdep-symbol}
+      \includegraphicsaspectratio[0.7]{ft-symbol-fdep-gate}
+    \caption{\acs*{FDEP} gate}\label{fig:dft-fdep-symbol}
   \end{subfigure}%
   %
   \begin{subfigure}[b]{.3\linewidth}
     \centering
     \includegraphicsaspectratio[1]{ft-symbol-csp-gate}
-    \caption{\Ac{CSp} gate}\label{fig:dft-csp-symbol}
+    \caption{\acs*{CSp} gate}\label{fig:dft-csp-symbol}
   \end{subfigure}%
   %
   \begin{subfigure}[b]{.3\linewidth}
     \centering
-    \includegraphicsaspectratio[0.8]{ft-symbol-seq-gate}
-    \caption{\Ac{SEQ} gate}\label{fig:dft-seq-symbol}
+      \includegraphicsaspectratio[0.8]{ft-symbol-seq-gate}
+    \caption{\acs*{SEQ} gate}\label{fig:dft-seq-symbol}
   \end{subfigure}%
+  \caption{\acpg*{DFT} gates symbols}
+  \label{fig:dft-symbols}
   %
-  \legend{Source: \cite{DBB1992,Boyd1992}}
+  %\legend{Source: \cite{DBB1992,Boyd1992}}
 \end{figure}
 
 
@@ -1478,7 +1494,7 @@ We increment their summary (\cref{tbl:dft-conversion-te-probability}) and catego
   \Ac{SWN} (a kind of \ac{CPN}) & \ac{CTMC} & \cite{BR2004} \\
   %
   \hline\noalign{\smallskip}
-  \Ac{SBDD} (a modified version of \ac{BDD}) & model-specific & \cite{TXD2011,XTD2012} \\
+  \Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} (a modified version of \ac{BDD}\index{Binary Decision Diagrams}) & model-specific & \cite{TXD2011,XTD2012} \\
   \hline\noalign{\smallskip}
   \end{tabular*}
   %\end{tabularx}
@@ -1591,10 +1607,10 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
 \end{align}
 \end{sloppypar}
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.65]{dft-example-mrl2014}
-  \caption{\Ac{DFT} example}
+  \caption{\acs*{DFT} example}
   \label{fig:dft-example}
 \end{figure}
 
@@ -1605,7 +1621,7 @@ In this section we detail the non-state-based methods to analyse structure expre
 %As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based
 %\todo{cite all dft works that are state-based}.
 Another common approach to analyse \iac{FT} is to perform structure expression analysis based on algebraic laws.
-Boolean laws are well-known and are used for \acp{SFT}, temporal laws~\cite{Walker2009,WP2010} for \acp{TFT}, and the works reported in~\cite{Merle2010,MRL2011} show laws for \acp{DFT}.
+Boolean\index{Boolean Algebra} laws are well-known and are used for \acp{SFT}, temporal laws~\cite{Walker2009,WP2010} for \acp{TFT}, and the works reported in~\cite{Merle2010,MRL2011} show laws for \acp{DFT}.
 An issue with algebraic laws is that, in some cases, the expression needs to be expanded before it gets reduced, so reduction automation is not trivial without a theorem prover.
 For example, the following \acg{TFT} structure expression needs to be expanded \cite{WP2010} before it gets reduced:
 \begin{align*}
@@ -1615,7 +1631,7 @@ For example, the following \acg{TFT} structure expression needs to be expanded \
   X \land Y & & \text{by \cref{law:tft-conjunctive-completion-law}}
 \end{align*}
 %
-A denotational semantics to Boolean expressions---and consequently to \ac{SFT}---is given by \acp{FBA} (\cref{sec:fba}).
+A denotational semantics to Boolean\index{Boolean Algebra} expressions---and consequently to \ac{SFT}---is given by \acp{FBA} (\cref{sec:fba}).
 
 There are several works with state-based analysis for \acp{FT} (\ac{SFT}, \ac{TFT}, and \ac{DFT}).
 We show some of them in \cref{sec:ft-state-based-analysis}.
@@ -1634,8 +1650,8 @@ Although there is formal modelling for \acp{DFT}, they do not implement a direct
 Instead, most of the works propose a formal modelling of a state-based approach.
 The work reported in~\cite{CSD2000} shows a formal model of \acap{DTMC} in \theac{Z} and each \ac{DFT} element (basic events and gates).
 The analysis uses a quantifier on states of the resulting \aca{DTMC} automaton.
-The work reported in~\cite{GD1997} shows a methodology to perform a modular analysis of \acp{DFT} based on \ac{BDD} and \aca{DTMC}.
-As \ac{DFT} extends \ac{SFT}, it identifies subtrees that are purely \ac{SFT} and uses \ac{BDD}, otherwise.
+The work reported in~\cite{GD1997} shows a methodology to perform a modular analysis of \acp{DFT} based on \ac{BDD}\index{Binary Decision Diagrams} and \aca{DTMC}.
+As \ac{DFT} extends \ac{SFT}, it identifies subtrees that are purely \ac{SFT} and uses \ac{BDD}\index{Binary Decision Diagrams}, otherwise.
 It performs \aca{DTMC} analysis.
 Still on the state-based approaches, the work reported in~\cite{SLD2011} maps \acp{DFT} to \ac{HLPN} to analyse false alarms.
 
@@ -1643,17 +1659,17 @@ Still on the state-based approaches, the work reported in~\cite{SLD2011} maps \a
 
 In the following we show specific methods that are designed to reduce structure expressions.
 In essence, the methods are very similar.
-Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{TDT} (\cref{sec:dependency-trees}), \acp{MCSeq} of \acp{DFT} can be obtained using \ac{ZBDD} (\cref{sec:zbdd}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD} (\cref{sec:sbdd}).
+Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{TDT} (\cref{sec:dependency-trees}), \acp{MCSeq} of \acp{DFT} can be obtained using \ac{ZBDD} (\cref{sec:zbdd}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} (\cref{sec:sbdd}).
 
 \subsection{\Aclp*{BDD}\index{Binary Decision Diagrams}}
 \label{sec:bdd}
 
-\Acp{BDD} are directed acyclic graphs that represent a Boolean expression.
-They are still referred to as \ac{BDD}, but the more spread version is the \ac{ROBDD}, which is an optimisation.
-There are two ways to generate \iac{BDD} for an expression:
+\Acp{BDD}\index{Binary Decision Diagrams} are directed acyclic graphs that represent a Boolean\index{Boolean Algebra} expression.
+They are still referred to as \ac{BDD}\index{Binary Decision Diagrams}, but the more spread version is the \ac{ROBDD}, which is an optimisation.
+There are two ways to generate \iac{BDD}\index{Binary Decision Diagrams} for an expression:
 \begin{alineasinline}
   \item derive a diagram from the truth-table, or
-  \item expand the paths based on Shannon's method (described in the \FThandbook).
+  \item expand the paths based on Shannon's method\index{Binary Decision Diagrams!Shannon's method} (described in the \FThandbook).
 \end{alineasinline}
 
 To demonstrate the expressiveness of \iac{BDD}, \cref{fig:bdd-diagram-for-a-truth-table} shows a diagram for a truth table with three variables (\cref{tbl:bdd-truth-table-with-three-variable}).
@@ -1662,7 +1678,7 @@ For example, the top-level node variable of \cref{fig:bdd-diagram-for-a-truth-ta
 Following the right-hand side of the node, all leaf nodes correspond to the lines of the truth table that $A$ has ``0'' values (the first four lines).
 The symbol nodes are replaced by the values assumed by a specific formula.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.5]{bdd-diagram-for-a-truth-table}
   \caption{A diagram for a truth table}
@@ -1691,14 +1707,14 @@ The symbol nodes are replaced by the values assumed by a specific formula.
   }
 \end{table}
 
-Following Shannon's method, we choose a variable and build the lower level \ac{BDD} assuming the edge value for the chosen variable.
+Following Shannon's method\index{Binary Decision Diagrams!Shannon's method}, we choose a variable and build the lower level \ac{BDD}\index{Binary Decision Diagrams} assuming the edge value for the chosen variable.
 In the remainder of the path, the variable's value is unchanged.
 For example, the expression $A \lor \parsin{\lnot B \land C}$ has value ``0'' in the lines $a$ and $c$, and value ``1'' in the other lines.
-By choosing the variable $A$ first, then $B$ and $C$, the resulting \ac{BDD} with the binary values nodes (called sink nodes ``false'' and ``true'') for this formula is depicted in \cref{fig:bdd-diagram-for-example-expression}.
-Starting from the top-level node $A$, the formula expressed by the \ac{BDD} is true if $A$ assumes value true.
+By choosing the variable $A$ first, then $B$ and $C$, the resulting \ac{BDD}\index{Binary Decision Diagrams} with the binary values nodes (called sink nodes ``false'' and ``true'') for this formula is depicted in \cref{fig:bdd-diagram-for-example-expression}.
+Starting from the top-level node $A$, the formula expressed by the \ac{BDD}\index{Binary Decision Diagrams} is true if $A$ assumes value true.
 If $A$ is false, and $B$ is false, the expression is only true if $C$ is true.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.25]{bdd-diagram-for-example-expression}
   \caption{\Iacs{BDD} for the expression $A \lor \parsin{\lnot B \land C}$}
@@ -1706,7 +1722,7 @@ If $A$ is false, and $B$ is false, the expression is only true if $C$ is true.
 \end{figure}
 
 \Cref{fig:bdd-diagram-for-example-expression} is \iac{ROBDD}.
-To be considered \iac{ROBDD}, the \ac{BDD} must meet the following constraints~\cite{BRB1990}:
+To be considered \iac{ROBDD}, the \ac{BDD}\index{Binary Decision Diagrams} must meet the following constraints~\cite{BRB1990}:
 %
 \begin{alineas}
   \item the variables are assigned a constant ordering;
@@ -1720,7 +1736,7 @@ The work reported in~\cite{Rudell1993} shows initial findings on variable orderi
 For \acp{SFT} the evaluation of \iac{BDD} is the calculation of the probability of the paths ending in \emph{true}.
 For example, the probability of the expression in \cref{fig:bdd-diagram-for-example-expression} is obtained from the formula: $\probability{A \lor \parsin{\lnot A \land \lnot B \land C}}$. Note that the formula in the probability calculation is different from the formula that originated the diagram.
 
-\subsection{\Acl{TDT}}
+\subsection{\Acl*{TDT}}
 \label{sec:dependency-trees}
 
 \Acf{TDT} is a hierarchical acyclic graph of expressions that shows all possible cut sequences for any given set of events.
@@ -1730,7 +1746,7 @@ On the lower levels are the increasingly complex expressions.
 Each node represents \iac{MCSeq}.
 \Cref{fig:simple-dependency-tree} shows \iac{TDT} with all nodes for variables $X$ and $Y$.
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.5]{simple-dependency-tree}
   \caption{\acs*{TDT} for variables $X$ and $Y$}
@@ -1746,7 +1762,7 @@ Nodes marked as ``2'' are child nodes of the ``1'''s nodes, and so forth.
 The node of the expression $\parsin{\parsin{X \pand Y} \land Z}$ is a grandchild of $X \land Y$ and thus it is not necessary.
 The final expression is obtained by the active higher level node, which is $X \land Y$.
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.7]{dependency-tree-reduction}
   \caption{\acs*{TDT} for the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$}
@@ -1756,7 +1772,7 @@ The final expression is obtained by the active higher level node, which is $X \l
 \subsection{\Aclp*{ZBDD}\index{Zero-suppressed Binary Decision Diagrams}}
 \label{sec:zbdd}
 
-The work reported in~\cite{TD2004} proposes \acl{ZBDD}, which is a variant of \ac{BDD}, and uses set manipulations (union, intersection, difference, and product) to obtain \acp{MCSeq} of \acp{DFT}.
+The work reported in~\cite{TD2004} proposes \acl{ZBDD}, which is a variant of \ac{BDD}\index{Binary Decision Diagrams}, and uses set manipulations (union, intersection, difference, and product) to obtain \acp{MCSeq} of \acp{DFT}.
 
 To reduce \iac{BDD} to \iac{ZBDD}, the nodes that have the ``true'' (`1') path pointing to the ``false'' (`0') sink node are removed, and the parent node is connected directly to the ``false'' subgraph of the removed node.
 \Cref{fig:zbdd-example} shows an example of \ac{ZBDD} for the combination set $\setsin{a,b}$, as shown in~\cite{TD2004}.
@@ -1764,7 +1780,7 @@ The idea of the reduction is to remove irrelevant variables and nodes.
 The irrelevant variables are set to ``false''.
 The method obtains the \acp{MCSeq} by navigating the paths to sink node ``true''.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.7]{bdd-zbdd-example}
   \caption{\acs*{ZBDD} example of combination set $\setsin{a,b}$}
@@ -1780,26 +1796,26 @@ These order-related operators are event-to-event only, so they cannot be combine
 The use of sets in~\cite{TD2004} is very related to our \ac{algebra}.
 We use sets of sequences to define the \ac{algebra}, but keep the analysis with set operators.
 In \ac{algebra} we do not create new events that represent an order-related operator.
-Our order-related operator has a set-based semantics that can be combined with other non-order-related (Boolean) operators.
+Our order-related operator has a set-based semantics that can be combined with other non-order-related (Boolean\index{Boolean Algebra}) operators.
 
-\subsection{\Aclp*{SBDD}\index{Sequential Binary Decision Diagrams}}
+\subsection{\Aclp*{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}}
 \label{sec:sbdd}
 
-\Ac{SBDD} is an extension of \ac{BDD} to tackle ordering of events in \acp{DFT} for \ac{CSp} and \ac{WSp} gates.
+\Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} is an extension of \ac{BDD}\index{Binary Decision Diagrams} to tackle ordering of events in \acp{DFT} for \ac{CSp} and \ac{WSp} gates.
 Ordering of events in \ac{CSp} gates~\cite{XTD2012} is slightly different compared to \ac{WSp}~\cite{TXD2011}.
-A backup system in \ac{CSp} gets activated \hl{slower}\amnote{ou lower?} \adnote{``activation'' e ``readiness'' são coisas diferentes: a ativação pode ser lenta e a prontidão pode ser baixa.} than in \ac{WSp}, which implies that there are less failure possibilities in \ac{CSp}, but its the readiness is \hl{lower} than in \ac{WSp}.
-\Ac{SBDD} adds a new node kind that contains a binary operation of fault events, which allows to express the ordering of events.
+A backup system in \ac{CSp} gets activated slower than in \ac{WSp}, which implies that there are less failure possibilities in \ac{CSp}, but its the readiness is lower than in \ac{WSp}.
+\Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} adds a new node kind that contains a binary operation of fault events, which allows to express the ordering of events.
 One kind of operation expresses the slowness of the relation of the fault events of \ac{CSp}, and another one expresses the readiness of the \ac{WSp}.
 The latter semantics is similar to the semantics of \ac{PAND} and \ac{IBefore} (combined with \ac{AND}) gates.
 
-\Ac{SBDD} creation has two steps:
+\Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} creation has two steps:
 \begin{alineasinline}
   \item \ac{CSp} or \ac{WSp} \ac{DFT} conversion, and \label{item:sbdd-creation-spare}
-  \item \ac{SBDD} model generation.\label{item:sbdd-model-generation}
+  \item \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} model generation.\label{item:sbdd-model-generation}
 \end{alineasinline}
 In \ref{item:sbdd-creation-spare}, it is a \ac{DFT}-to-\ac{DFT} conversion.
 \Ac{CSp} and \ac{WSp} gates are converted to a new, but equivalent \ac{DFT} without \ac{CSp} and \ac{WSp} gates, where the operations appear as basic events and are combined using other gates.
-In \ref{item:sbdd-model-generation}, the \ac{SBDD} model is created.
+In \ref{item:sbdd-model-generation}, the \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} model is created.
 The model may contain nodes that are contradictory as, for example, nodes that assumes that an event $A$ is false and a binary operation that contains $A$ is true.
 This step ends when all contradictions are removed.
 The evaluation is similar to \acg{BDD}: each path ending in true is a minimal term in the \ac{DNF} that may contain one of the binary operations and individual events.
@@ -1815,10 +1831,10 @@ In this section we briefly present the \ac{FBA} theory and its elements.
 Instead of using an axiomatic definition of a Boolean\index{Boolean Algebra} algebra, we follow its set-theoretical definition, as shown in~\cite[pp. 254--258]{Stoll1979} and~\cite[pp. 8--11]{GH2009}.
 This definition is more elegant because it represents a Boolean\index{Boolean Algebra} algebra as an algebra of sets and does not rely on axioms (which can be misleading, case there is an unfounded axiom).
 
-\begin{Def}[Boolean Algebra]
+\begin{definition}[Boolean Algebra]
 \label{def:boolean-algebra}
 A Boolean algebra is defined as a triple $\anglesin{B, \inter, -}$, where $B$ is a set with at least two elements, $\inter$ is the intersection (also called meet or \emph{infimum}) and $-$ is the complement (also called negation).
-\end{Def}
+\end{definition}
 %
 \noindent The other Boolean elements (union, $\bot$, and $\top$) are derived from the previous two operators:
 \begin{description}
@@ -1832,16 +1848,16 @@ A Boolean algebra is defined as a triple $\anglesin{B, \inter, -}$, where $B$ is
 A generator can be represented as a proposition in statement calculus~\cite[p. 274]{Stoll1979}.
 For example, ``valve A is stuck closed'' and ``motor X is malfunctioning'' are valid statements.
 A \acl{FBA} is constructed from $\powerset{E}$, where $\powersetop$ is the power set\index{Power Set}.
-Note that if $E$ has $n$ symbols, $\powerset{E}$ has $2^{n}$ elements, called \emph{atoms}\index{Boolean algebra!atoms} of a finite Boolean algebra.
-For the two statements above, the atoms\index{Boolean algebra!atoms} are:
+Note that if $E$ has $n$ symbols, $\powerset{E}$ has $2^{n}$ elements, called \emph{atoms}\index{Boolean Algebra!atoms} of a finite Boolean algebra.
+For the two statements above, the atoms\index{Boolean Algebra!atoms} are:
 \begin{alineas}
   \item ``Valve A is stuck closed'' and ``motor X is malfunctioning''
   \item ``Valve A is stuck closed'' and ``motor X is \emph{not} malfunctioning''
   \item ``Valve A is \emph{not} stuck closed'' and ``motor X is malfunctioning''
   \item ``Valve A is \emph{not} stuck closed'' and ``motor X is \emph{not} malfunctioning''
 \end{alineas}
-Such a Boolean algebra has $2^{2^{n}}$ formulas~\cite[p. 261]{GH2009}.
-For example, if $E = \setsin{a,b}$, then $\powerset{E} = \setsin{ \setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b} }$, hence the Boolean algebra generated by $E$ contains sixteen ($2^{2^{2}}$) formulas:
+Such a Boolean\index{Boolean Algebra} algebra has $2^{2^{n}}$ formulas~\cite[p. 261]{GH2009}.
+For example, if $E = \setsin{a,b}$, then $\powerset{E} = \setsin{ \setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b} }$, hence the Boolean\index{Boolean Algebra} algebra generated by $E$ contains sixteen ($2^{2^{2}}$) formulas:
 $\setsin{}$,
 $\setsin{\setsin{}}$,
 $\setsin{\setsin{}, \setsin{a}}$,
@@ -1851,9 +1867,9 @@ $\setsin{\setsin{b}, \setsin{a,b}}, \ldots$,
 $\setsin{\setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b}}$.
 \end{sloppypar}
 
-The Boolean algebra $B$ can be inductively defined using some constructs.
+The Boolean\index{Boolean Algebra} algebra $B$ can be inductively defined using some constructs.
 %
-\begin{Def}[Inductive \acl{FBA}]
+\begin{definition}[Inductive \acl*{FBA}]
 \label{def:inductive-fba}
 Let $s$ be a statement, then:
 %
@@ -1865,9 +1881,9 @@ X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
 \end{align}
 \end{subequations}
 %
-\end{Def}
+\end{definition}
 
-The characterisation of a ``free'' Boolean algebra comes from that, for some valuation function $a$, some of the formulas evaluates to ``1''.
+The characterisation of a ``free'' Boolean\index{Boolean Algebra} algebra comes from that, for some valuation function $a$, some of the formulas evaluates to ``1''.
 Given a function $p:B \cartesian \setsin{0,1} \rightarrow B$, such that:
 %
 \begin{equation}
@@ -1878,14 +1894,14 @@ p\parsin{i,j} =
 \end{cases}
 \end{equation}
 
-\begin{Lem}[Free generators (valuation)]
+\begin{lemma}[Free generators (valuation)]
 \label{lem:boolean-algebra-free-generators-valuation}
-Let $F$ be a finite set, such that $F \subseteq E$, and $a: F \rightarrow \setsin{0,1}$, a necessary and sufficient condition for a set $E$ of generators of a Boolean algebra B to be free is then:
+Let $F$ be a finite set, such that $F \subseteq E$, and $a: F \rightarrow \setsin{0,1}$, a necessary and sufficient condition for a set $E$ of generators of a Boolean\index{Boolean Algebra} algebra B to be free is then:
 %
 \begin{equation}
 \bigwedge_{i \in F} p\parsin{i, a \parsin{i}} \neq 0
 \end{equation}
-\end{Lem}
+\end{lemma}
 %\begin{proof}
 %See~\cite[p. 258]{GH2009}.
 %\end{proof}
@@ -1893,7 +1909,7 @@ Let $F$ be a finite set, such that $F \subseteq E$, and $a: F \rightarrow \setsi
 
 Essentially, \cref{lem:boolean-algebra-free-generators-valuation} states that there is no relation between generators, such as $a = -b$.
 
-\begin{Lem}[Free generators (algebraic)]
+\begin{lemma}[Free generators (algebraic)]
 Let $i$ and $j$ be statements, such that $i,j \in E$, hence from \cref{def:inductive-fba,lem:boolean-algebra-free-generators-valuation} it is necessary and sufficient that:
 %
 \begin{subequations}
@@ -1904,7 +1920,7 @@ Let $i$ and $j$ be statements, such that $i,j \in E$, hence from \cref{def:induc
 \end{align}
 \end{subequations}
 %
-\end{Lem}
+\end{lemma}
 %
 %\begin{proof}
 %See~\cite[p. 4]{Huffm2010}
@@ -1913,7 +1929,7 @@ Let $i$ and $j$ be statements, such that $i,j \in E$, hence from \cref{def:induc
 \section[Using the NOT operator in static fault trees]{Using the \ac{NOT} operator in \aclp*{SFT}}
 \label{sec:not-operator}
 
-Although the \FThandbook introduces several gates, the vast majority of \ac{SFT} analyses would fit in \acp{FT} with only \ac{AND} and \ac{OR} gates (coherent \acp{FT})\index{Fault tree!coherent}.
+Although the \FThandbook introduces several gates, the vast majority of \ac{SFT} analyses would fit in \acp{FT} with only \ac{AND} and \ac{OR} gates (coherent \acp{FT})\index{Fault Tree!coherent}.
 Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when \ac{NOT} gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}), such a reduction can cause the interpretation of failure expression to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
 The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} show how to solve it using \acp{BDD}.
 In the following we show:
@@ -1927,7 +1943,7 @@ The failure probability contribution of a negated basic event is close to $1$.
 The problem with non-coherent \acp{FT} is that its analysis can cause impossible situations.
 The general formula to identify coherency is given in~\cite{Andrews2001,CCR2008} in terms of a structure function\index{structure expression!function}.
 
-\begin{Def}[\ac{FT} Coherency]
+\begin{definition}[\ac{FT} Coherency]
 \label{def:ft-coherency}
 Let $\ftcoherency{x}:B^n \rightarrow B^1$ be a binary function of a vector of binary variables, such that $x = \squaresin{x_1, x_2,\ldots,x_n}$, representing the states of $n$ system's components.
 
@@ -1936,14 +1952,14 @@ A binary structure function $\ftcoherency{x}$ is coherent if all the following h
   \item $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
   \item Each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$.
 \end{alineas}%
-\end{Def}%
+\end{definition}%
 %
 \noindent where $B^1 = \setsin{0,1}$, $B^n = B^{n-1} \cartesian B^1$, $x_i = 1$ implies that component $i$ failed, and $\ftcoherency{x} = 1$ implies the system failed.
 For $y = \squaresin{y_1,y_2,\ldots,y_n}$, monotonicity of $\ftcoherencyop$ means that for \emph{all} $i$, $x_i \ge y_i$ ($y_i = 1 \implies x_i = 1$), and for \emph{some} $i$, $x_i > y_i$ ($x_i = 1$ and $y_i = 0$).
 Variable replacement ($\replace{a}{b}$) is as usual:
 $x\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, \ldots, x_n}$
 
-\subsection{Non-coherent \ac{FT} misleads}
+\subsection{Non-coherent \acl*{FT} misleads}
 \label{sec:non-coherent-misleads-example}
 
 In this section we illustrate---with the second example detailed in~\cite{Oliv2006}---how non-coherent \ac{FT} misleads.
@@ -1953,7 +1969,7 @@ The top-event failure is ``fail to visit mother'' with expression $S = \parsin{x
 Its \acl{FT} is depicted in \cref{fig:non-coherent-ft-example}.
 It is clear that the structure function is non-coherent in $x_3$ accordingly to \cref{def:ft-coherency}: $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0}$.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.55]{non-coherent-ft-example}
   \caption{Non-coherent \ac{FT} college student's example}
@@ -1978,7 +1994,7 @@ When a leakage is detected, these sensors send a signal to the logic control uni
   \item deactivates all possible ignition sources, which is the interruption of power supply by de-energizing relay $R_2$.
 \end{alineas}
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.45]{gas-detection-system}
   \caption{Gas detection system}
@@ -1997,7 +2013,7 @@ The structure expressions for the subtrees are:
   G_3 & = R_2 \lor LU \lor \parsin{D_1 \land D_2}
 \end{align*}
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[1]{ft-generic-failure-gas-detection-system}
   \caption{\ac{FT} for a generic failure in the gas detection system}
@@ -2009,7 +2025,7 @@ There are eight outcomes (given the three tasks) and the most critical one is wh
 The coherent \ac{FT} of this outcome is depicted in \cref{fig:outcome-4-coherent-ft}.
 The minimal cut sets obtained from this will be: $\setsin{R_1, R_2}$, $\setsin{D_1, D_2}$, and $\setsin{LU}$.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.5]{outcome-4-coherent-ft}
   \caption{\emph{Coherent} \ac{FT} for the most critical outcome of the gas detection system}
@@ -2019,7 +2035,7 @@ The minimal cut sets obtained from this will be: $\setsin{R_1, R_2}$, $\setsin{D
 Quantification of the coherent \ac{FT} will overestimate the probability of the critical outcome unless the part of the system that is working (lamp and siren $L$, $LU$, and sensors $D_1$ and $D_2$) is taken into account.
 The non-coherent \ac{FT} with the working part is shown in \cref{fig:outcome-4-non-coherent-ft}.
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.65]{outcome-4-non-coherent-ft}
   \caption{\emph{Non-coherent} \ac{FT} for the most critical outcome of the gas detection system}
@@ -2028,7 +2044,7 @@ The non-coherent \ac{FT} with the working part is shown in \cref{fig:outcome-4-n
 
 If the operator \emph{can} be informed, then cut sets $\setsin{D_1, D_2}$ and $\setsin{LU}$ could not have occurred (see \cref{fig:ft-generic-failure-gas-detection-system}), thus the correct qualitative analysis should consider only cut set $\setsin{R_1,R_2}$.
 Reducing the expressions of the non-coherent \ac{FT} (\cref{fig:outcome-4-non-coherent-ft}), we obtain the structure expression: $\lnot L \land \lnot LU \land R_1 \land R_2 \land \parsin{\lnot D_1 \lor \lnot D_2}$.
-\hl{The approximation for this expression, removing the negated events, gives the cut set $\setsin{R_1,R_2}$, which gives a correct quantitative analysis.}\amnote{Isto poderia ser argumentado pro exemplo anterior? Seria legal ter o mesmo exemplo e pontos de vista distintos (não coerente e coerente).} \adnote{Eu apenas reportei o exemplo. Essa análise foi o autor do exemplo quem fez. Se der vou acrescentar para a outra, não deve ser muito complicado... preciso de mais tempo apenas para analisar com calma.}
+{The approximation for this expression, removing the negated events, gives the cut set $\setsin{R_1,R_2}$, which gives a correct quantitative analysis.}\amnote{Isto poderia ser argumentado pro exemplo anterior? Seria legal ter o mesmo exemplo e pontos de vista distintos (não coerente e coerente).} \adnote{Eu apenas reportei o exemplo. Essa análise foi o autor do exemplo quem fez. Se der vou acrescentar para a outra, não deve ser muito complicado... preciso de mais tempo apenas para analisar com calma.}
 
 %The examples of the usefulness of NOT gates in \ac{FTA} are one of the following, but not limited to: (i) generally, when the probability of negated events are close to $1$, (ii) exclusive states systems as, for example, non-repairable phased mission systems.
 
@@ -2079,7 +2095,8 @@ Usually, the value for this property is set to \textsim{auto}, allowing \simulin
 %     \EMBRAER.}\texten{Block diagram of the ACS provided by \EMBRAER}}
 %     \label{fg:acsBlockDiagrams}
 % \end{figure*}
-\begin{figure}[t] \centering
+\begin{figure}[htb] 
+  \centering
   \includegraphicsaspectratio{acsBlockDiagrams}
   \caption{Block diagram of the ACS provided by \EMBRAER (nominal model)}
   \label{fg:acsBlockDiagrams}
@@ -2090,8 +2107,9 @@ Nowadays, control systems are usually composed of an electromechanical part and 
 In this system, the feedback behaviour is given by the \textsim{Controller} (1), \textsim{Actuator} (2) and \textsim{Sensor} (3). A command is received by the \textsim{Controller}, which sends a signal to the \textsim{Actuator} to start its movement.
 The \textsim{Sensor} detects the actual position of the \textsim{Actuator} and sends it back to the \textsim{Controller}, which adjusts the given command to achieve the desired position. This loop (feedback) continues until the desired position given by the original command is reached.
 
-\begin{figure}[t] \centering
-\includegraphicsaspectratio[0.6]{blockDiagramMonitorInternals}
+\begin{figure}[htb] 
+  \centering
+  \includegraphicsaspectratio[0.6]{blockDiagramMonitorInternals}
   \caption{Internal diagram of the monitor component (\cref{fg:acsBlockDiagrams}~(A)).}
   \label{fg:blockDiagramMonitorInternals}
 \end{figure}
@@ -2197,7 +2215,7 @@ The other counter-examples are similar to the traces shown with different intern
 
 To reuse \ac{hiphops}, which is based on \acp{SFT}, we ``remove'' the ordering information of the traces to generate a failure expression.
 Each fault trace is abstracted as a conjunction (\ac{AND} combination of the inner events, thus losing the ordering information), and the several conjunction-based fault events are combined using \acp{OR} (disjunctions).
-The result of the combination is a Boolean expression that represents the conditions that cause an undesirable output, the failure expression of the model.
+The result of the combination is a Boolean\index{Boolean Algebra} expression that represents the conditions that cause an undesirable output, the failure expression of the model.
 With the \ac{algebra} proposed in this work we do not ``remove'' the ordering information, so we are able to use this information to generate or perform \ac{DFT} and \ac{TFT} analyses (\acp{TFT} have order-related operators, and it is shown in \cite{Merle2010,MRL2011b,MRL2011} that \acp{DFT} can be expressed by order-related operators).
 
 If the failure expression is obtained for a whole system, it is indeed the structure expression\index{structure expression} of a \acl{FT} for a general failure as the top-level event.
@@ -2216,7 +2234,7 @@ But we already knew that we had a richer fault modelling information than that p
 %Each injected fault appears on the trace as two events: the expected (\verb$EXP$) value of the nominal system and the actual (\verb$ACT$) value used on the breakable system.
 %For example, in \verb$TRACE 1$, the expected output of the switcher (\verb$N04_RelationalOperator$) is true, but the actual value is false.
 
-To show how these traces become failure expression, let us abbreviate fault names as:\amnote{Verificar espaçamento deste parágrafo.}
+To show how these traces become failure expression, let us abbreviate fault names as:
 %
 \begin{snippetcspm}[2]
 A = failure.Hardware.N04_MonIn1.1
@@ -2236,7 +2254,7 @@ So, for each trace, we obtain an expression:
 \mathtt{TRACE\,8} &= B \land A \land S
 \end{align*}
 
-And we combine them as a single Boolean expression:
+And we combine them as a single Boolean\index{Boolean Algebra} expression:
 %
 $\mathtt{TRACE\,1} \lor \mathtt{TRACE\,2} \lor \mathtt{TRACE\,3} \lor \mathtt{TRACE\,4} \lor \mathtt{TRACE\,5} \lor \mathtt{TRACE\,6} \lor \mathtt{TRACE\,7} \lor \mathtt{TRACE\,8}$, %
 which by a traditional Boolean reduction strategy results in:
@@ -2272,7 +2290,7 @@ Reference & OmissionSignal & Out1 & ReferenceDeviceFailure OR LowPower-In1\\
 
 Note that when we combine each fault with \ac{AND} gates, we lose the information about order\footnote{In our previous work we designed the observer to ignore order as well, by making similar traces---with different ordering---the same size. Here we modified the observer specification to make similar traces with different sizes.}: $S \land B$ and $B \land S$ are equal, due to the commutative law of Boolean expressions.
 
-Our strategy finds fault combinations $S$ and $B$ (in the sense of $S$ occurring before $B$) as well as $B$ and $S$ (in the sense of $B$ occurring before $S$) but abstracts this ordering information obtaining $B$ and $S$, which is equivalent to $S$ and $B$ in Boolean Algebra.
+Our strategy finds fault combinations $S$ and $B$ (in the sense of $S$ occurring before $B$) as well as $B$ and $S$ (in the sense of $B$ occurring before $S$) but abstracts this ordering information obtaining $B$ and $S$, which is equivalent to $S$ and $B$ in Boolean\index{Boolean Algebra} Algebra.
 %
 If $A$ fails before $S$, the system fails because it should switch to $B$, but the switcher is in a faulty state.
 %
@@ -2308,7 +2326,7 @@ Our strategy avoids this kind of issue by being completely systematic.
 
 Recall from \cref{sec:time-relations,sec:fault-trees} that fault events are independent on one another if the events are not susceptible to a common cause.
 The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{FBA}\index{Boolean Algebra!Free}, where each generator in \acp{FBA}\index{Boolean Algebra!Free} corresponds to a fault event symbol in \aclp{FT}.
-In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are independent on one another and Boolean formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
+In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are independent on one another and Boolean\index{Boolean Algebra} formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
 %This is equivalent to the disjunctive normal form, where each set is a minterm (conjunction) and the formula itself is the disjunction of minterms.
 
 We showed in \cref{sec:fault-trees} that there is an omnipresence of order-based operators to analyse \acp{TFT} and \acp{DFT}.
@@ -2318,7 +2336,7 @@ From the need to tackle events ordering and from the ordering information we had
 We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra.
 The order-specific operations are expressed with a new operator ($\xbeforeop$) that we call \ac{XBefore} (or exclusive before).
 
-The set of sets for \acp{FBA}\index{Boolean Algebra!Free} are the denotational semantics for Boolean algebras.
+The set of sets for \acp{FBA}\index{Boolean Algebra!Free} are the denotational semantics for Boolean\index{Boolean Algebra} algebras.
 We use the concept of generators to propose the \ac{algebra} with a denotational semantics of a set of lists without repetition (distinct lists).
 The choice of lists is because this structure inherently associates a generator to an index, making implicit the representation of order.
 These lists are composed by non-repeated elements (distinct lists) because the events in \aclp{FT} are non-repairable, thus they do not occur more than once.
@@ -2446,7 +2464,7 @@ The following expressions are valid for generators $a$ and $b$ and are sufficien
 \end{align}
 \end{subequations}
 
-Expressions \eqref{def:algebraset-var} to \eqref{def:algebraset-sup} and \eqref{eqs:generators-independence-subseteq-eq} to \eqref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \eqref{def:xbefore-append} forms a Boolean algebra based on sets of lists.
+Expressions \eqref{def:algebraset-var} to \eqref{def:algebraset-sup} and \eqref{eqs:generators-independence-subseteq-eq} to \eqref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \eqref{def:xbefore-append} forms a Boolean\index{Boolean Algebra} algebra based on sets of lists.
 And this is also equivalent to \iac{FBA}\index{Boolean Algebra!Free} with the same generators.
 
 In our previous work~\cite{DM2015} we stated a relation of \ac{XBefore} and \emph{supremum}, provided the operands are variables \eqref{def:var}.
@@ -2548,7 +2566,7 @@ Other expressions also meet one or more temporal properties:
 We now show some laws to be used in the algebraic reduction of \ac{algebra} formulas.
 The laws follow from the definition of \ac{XBefore}, from events independence, and from the temporal properties.
 
-We use a normal form similar to the \ac{DNF} of Boolean algebra.
+We use a normal form similar to the \ac{DNF} of Boolean\index{Boolean Algebra} algebra.
 In \ac{DNF} each sub-expression is a minimal cut set\index{Minimal Cut!Sets} for \ac{SFT}.
 In our normal form, also called \ac{DNF}, we allow \acp{AND}, \acp{NOT}, and \acp{XBefore} to be in the sub-expressions.
 Each sub-expression is a set of minimal cut sequences\index{Minimal Cut!Sequences} for \ac{TFT} and \ac{DFT}.
@@ -2626,7 +2644,7 @@ The \ac{XBefore} is absorbed by one of the operands: if one of the operands may 
 However, an event cannot come before itself, thus \ac{XBefore} is not idempotent.
 The \ac{XBefore} but is associative.
 
-To allow formula reduction we need the relation of \ac{XBefore} to the other Boolean operators.
+To allow formula reduction we need the relation of \ac{XBefore} to the other Boolean\index{Boolean Algebra} operators.
 First we use the \ac{XBefore} as operands of union and intersection.
 %
 \begin{subequations}
@@ -2654,7 +2672,7 @@ For example, of the form $\var{s}$ and $\var{t}$.
 Now, each law requires that the operands satisfy some of the temporal properties, avoiding using variables explicitly.
 %So, as variables satisfy all temporal properties and by \eqref{thm:xbefore-sup-equiv-inf}, our theorem ``Exclusive before \emph{supremum}'' is still valid.
 
-Boolean operators are used as operands of the \ac{XBefore} in the following laws.
+Boolean\index{Boolean Algebra} operators are used as operands of the \ac{XBefore} in the following laws.
 %
 \begin{subequations}
 \begin{align}
@@ -2740,7 +2758,7 @@ The \ac{activation} is defined in terms of a logic that is solved by decision an
 Given the semantics of a formula of~\ac{algebra}, there is always a set of sequences that represents exactly the formula.
 To guarantee the completeness we show that for every set of sequences there is a corresponding formula in \ac{algebra}.
 
-\begin{Prop}[\hl{Soundness and completeness} of \ac{algebra}]
+\begin{proposition}[Soundness and completeness of \ac{algebra}]
 \amnote{Está de acordo com os livros de lógica?}
 \adnote{Não tive muito tempo para pensar, mas sim. Eu olhei o significado de ambos e montei a proposição.}
 Let $F$ be the set of all formula in \ac{algebra}, and $SS$ be the set of all sets of sequences:
@@ -2751,7 +2769,7 @@ Let $F$ be the set of all formula in \ac{algebra}, and $SS$ be the set of all se
     \forall S \in SS \ldotp \exists f \in F \ldotp f & = S & \text {Completeness}
   \end{align}
 \end{subequations}
-\end{Prop}
+\end{proposition}
 %
 The equality in the proposition is set-based, thus, in both cases, $f \subseteq S \land S \subseteq f$.
 
@@ -2785,10 +2803,10 @@ For example: if an omission is detected in the first input, the output of this c
 To obtain a fault tree from \ac{activation} we define a predicate over a whole \ac{activation} formula of a system.
 For example: what are the conditions that generate and output \emph{omission}?
 
-The underlying conditions in \ac{activation} can be in Boolean algebra or in \ac{algebra}.
+The underlying conditions in \ac{activation} can be in Boolean\index{Boolean Algebra} algebra or in \ac{algebra}.
 In any case, soundness and completeness in \ac{activation} is given in terms of the underlying algebra: given a formula in \ac{activation}, any predicate generates a valid expression in the underlying algebra, and there exists a formula and a predicate for any expression in the underlying algebra.
 
-\begin{Prop}[Soundness and completeness of \ac{activation}]
+\begin{proposition}[Soundness and completeness of \ac{activation}]
 Let $F$ be the set of all formulas in \ac{activation}, $G$ be the set of all formulas in its underlying algebra, and $P$ a predicate over output values of \ac{activation}, then:
 %
 \begin{subequations}
@@ -2797,7 +2815,7 @@ Let $F$ be the set of all formulas in \ac{activation}, $G$ be the set of all for
     \forall g \in G \ldotp \exists f \in F, P \ldotp P\parsin{f} & \equiv g & \text{Completeness}
   \end{align}
 \end{subequations}
-\end{Prop}
+\end{proposition}
 
 \chapter{Case study}
 \label{chap:case-study}
@@ -2816,7 +2834,7 @@ We present the \simulink model for this monitor in \cref{fg:blockDiagramMonitorI
 
 Now we show two contributions:
 \begin{alineasinline}
-  \item using only Boolean operators, thus ignoring ordering, we can obtain the same results obtained in~\cite{DM2012}, and
+  \item using only Boolean\index{Boolean Algebra} operators, thus ignoring ordering, we can obtain the same results obtained in~\cite{DM2012}, and
   \item we represent each of the fault traces reported in~\cite{DM2012} as a term in our proposed algebra of temporal faults.
 \end{alineasinline}
 Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cref{sec:faults-injection}, we associate the fault events as:
@@ -2830,7 +2848,7 @@ s &= \text{SwitchFailure}& S = \var s
 \section{Structure expressions with Boolean operators}
 \index{structure expression}
 
-In this section we show that the same result reported in~\cite{DM2012} in terms of static failure expression (or Boolean propositions) can be obtained with our Boolean operator without using \ac{XBefore}.
+In this section we show that the same result reported in~\cite{DM2012} in terms of static failure expression (or Boolean\index{Boolean Algebra} propositions) can be obtained with our Boolean\index{Boolean Algebra} operator without using \ac{XBefore}.
 For each trace shown in \cref{sec:faults-injection}, a mapping function\footnote{In this work we do not show the mapping function from traces to \ac{algebra} (and the mapping function with \ac{XBefore} in \cref{sec:case-study-xbefore}).
 The mapping rules follow the traces: \ac{XBefore} is obtained by the order of occurrence and the absence of an event is the complement ($-$).} ($\tracetobool$) generates the following sets of lists:
 %
@@ -2854,7 +2872,7 @@ Combining the above sets with unions (ORs), we obtain the following formula set:
 \left\{ \listsin{s,b}, \listsin{b,s}, \listsin{a,b}, \listsin{b,a}, \listsin{a,s}, \listsin{s,a}, \listsin{a,b,s}, \listsin{a,s,b},\ldots,\listsin{s,b,a} \right\}
 \]
 
-If we use Boolean expression reduction instead, it results in the following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
+If we use Boolean\index{Boolean Algebra} expression reduction instead, it results in the following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
 \[
 (A \inter B) \union (S \inter (A \union B))
 \]
@@ -2863,7 +2881,7 @@ which is equivalent to the set of sets above and is equivalent to \EMBRAER failu
 %
 This shows that \ac{algebra} can represent (static) failure expression as in our previous work~\cite{DM2012}.
 
-\section{Structure expressions with \ac{XBefore}}
+\section{Structure expressions with \acs*{XBefore}}
 \label{sec:case-study-xbefore}
 \index{structure expression}
 
@@ -2930,7 +2948,7 @@ The failure expression is essential for system safety assessment because it is u
 %
 %We use \simulink as starting point because it is a standard tool in the control systems industry.
 %
-Furthermore, we still connect the strategy presented in~\cite{MJG+2010} with the works reported in~\cite{JMS+2011} (functional analysis) and in~\cite{GMS+2010,PMS+2001} (safety assessment) because our new algebra is at least a Boolean algebra.
+Furthermore, we still connect the strategy presented in~\cite{MJG+2010} with the works reported in~\cite{JMS+2011} (functional analysis) and in~\cite{GMS+2010,PMS+2001} (safety assessment) because our new algebra is at least a Boolean\index{Boolean Algebra} algebra.
 
 \begin{sloppypar}
 The work reported in~\cite{Walker2009,WP2009,WP2010} tackles simultaneity with ``nearly simultaneous'' events~\cite{EWG2013}.
@@ -2947,10 +2965,11 @@ In \cref{fig:status-of-thesis} we show:
   \item what will be done in future work, after the thesis' defence.
 \end{alineasinline}
 Many of the tasks shown in \cref{tbl:tasks-schedule} already started.
-The effort shown in the ``Weeks'' column is the estimated remaining time to finish the task.
+The \namecref{tbl:tasks-schedule} shows the estimated execution of the tasks by year's quarters. 
+The second quarter of 2016 is from April to June/2016, the third quarter is from July to September/2016, the fourth quarter, from October to December/2016, and we expected to defend the thesis by February/2017.
 
 
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.9]{StrategyOverview-Status}
   \caption{Status of this thesis using the strategy overview (see \cref{fig:strategy-overview})}
@@ -2962,33 +2981,33 @@ The effort shown in the ``Weeks'' column is the estimated remaining time to fini
   \caption{Tasks schedule}%
   \label{tbl:tasks-schedule}%
 }{%
-  \begin{tabular}{p{9.9cm}ccc}
+  \begin{tabular}{p{10.2cm}cccc}
     \toprule
-    Task & Start & Weeks & Weeks total\\
+    Task & 2nd & 3rd & 4th & 1st\\
     \midrule \midrule
-    Qualification & 04/04/2016 & 0 & 0\\
+    Qualification & $\bullet$ &  &  & \\
     \midrule
-    Elaborate a theory for the \ac{activation} & 04/04/2016 & 7 & 0\\
+    Elaborate a theory for the \ac{activation} & $\bullet$ &  &  & \\
     \midrule
-    Elaborate a theory for the acceptance criteria & 23/05/2016 & 4 & 7\\
+    Elaborate a theory for the acceptance criteria & $\bullet$ &  &  & \\
     \midrule
-    Prepare a paper about \ac{activation} and acceptance criteria & 20/06/2016 & 4 & 11\\
+    Prepare a paper about \ac{activation} and acceptance criteria & $\bullet$ & $\bullet$ &  & \\
     \midrule
-    Submit paper about \ac{activation} and acceptance criteria & 18/07/2016 & 0 & 15\\
+    Submit paper about \ac{activation} and acceptance criteria &  & $\bullet$ &  & \\
     \midrule
-    Prove soundness and completeness theorems for the \ac{DNF} of \ac{algebra} & 18/07/2016 & 1 & 15\\
+    Prove soundness and completeness theorems for the \ac{DNF} of \ac{algebra} &  & $\bullet$ & $\bullet$ & \\
     \midrule
-    Define the mapping rules from traces to \ac{algebra} & 03/10/2016 & 2 & 26\\
+    Define the mapping rules from traces to \ac{algebra} &  &  & $\bullet$ & \\
     \midrule
-    Demonstrate the relations of \ac{NOT} and \ac{XBefore} and other operators & 17/10/2016 & 2 & 28\\
+    Demonstrate the relations of \ac{NOT} and \ac{XBefore} and other operators &  &  & $\bullet$ & \\
     \midrule
-    Define the conditions that cause non-coherent analysis with \ac{NOT} & 31/10/2016 & 2 & 30\\
+    Define the conditions that cause non-coherent analysis with \ac{NOT} &  &  & $\bullet$ & \\
     \midrule
-    Write the results in the thesis & 14/11/2016 & 8 & 32\\
+    Write the results in the thesis &  & $\bullet$ & $\bullet$ & \\
     \midrule
-    Prepare thesis' defence & 09/01/2017 & 4 & 40\\
+    Prepare thesis' defence &  &  & $\bullet$ & $\bullet$\\
     \midrule
-    Defence & 06/02/2017 & 0 & 44\\
+    Defence &  &  &  & $\bullet$\\
     \bottomrule
   \end{tabular}%
 }{%
@@ -3008,7 +3027,7 @@ We developed a small set of rules for the acceptance criteria verification, but 
 
 We showed the \ac{DNF} for \ac{algebra}, but we did not demonstrate that every formula can be converted into \ac{DNF}.
 The laws shown in this work should be sufficient for this demonstration.
-Also, we did not show the mapping rules from traces to \ac{algebra} (with Boolean operators only \ac{AND} with \ac{XBefore}).
+Also, we did not show the mapping rules from traces to \ac{algebra} (with Boolean\index{Boolean Algebra} operators only \ac{AND} with \ac{XBefore}).
 The mapping rules follow those for the traces: \ac{XBefore} is obtained by the order of occurrence and the absence of an event is the complement ($-$).
 
 Although we do not use negation (\ac{NOT} operator) with \ac{XBefore} in our case study, it is part of \ac{algebra}, so it could be used.
@@ -3025,13 +3044,13 @@ We look forward to obtain a less restrictive law.
 %The sets in \iac{FBA}\index{Boolean Algebra!Free} formula are already the minimal cut sets\index{Minimal Cut!Sets}.
 %In our work, \ac{algebra} allows us to find minimal cut sequences\index{Minimal Cut!Sequences} (with XBefore) from the formulas in \ac{DNF} algebraically: each sub-expression is a minimal cut sequence\index{Minimal Cut!Sequences}.
 
-Boolean formulas reduction can be achieved by:
+Boolean\index{Boolean Algebra} formulas reduction can be achieved by:
 \begin{alineasinline}
   \item application of Boolean laws,
   \item \ac{BDD}\index{Binary Decision Diagrams}, or
   \item \acp{FBA}\index{Boolean Algebra!Free}.
 \end{alineasinline}
-We used Boolean and \ac{XBefore} laws to reduce \ac{algebra} formulas.
+We used Boolean\index{Boolean Algebra} and \ac{XBefore} laws to reduce \ac{algebra} formulas.
 %
 The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs\index{Binary Decision Diagrams!Sequential} to reduce formulas with order-based operators.
 %
@@ -3054,16 +3073,37 @@ The definition and the theory of ``Faults Modelling and Fault Tolerance Patterns
 %\theappendix
 \begin{apendicesenv}
 \partapendices
-\chapter{Formal proofs in \isabellehol}
+
+\chapter{Formal proofs in Isabelle/HOL}
 \label{app:formal-proofs-isabelle-hol}
+
+In the following we list all theorem and proofs concerning the laws presented in the \cref{chap:strategy}.
+In this version we list the content of all theory files.
+Each theorem, proof or corollary is followed by their own proof.
+
+The theory about lists of distinct elements---or simply \emph{distinct lists}---is available in~\cite{HL2016} (we used the 2015 version the is available with Isabelle/HOL 2015).
+
+This \namecref{app:formal-proofs-isabelle-hol} is organized as follows:
+\begin{alineasinline}
+  \item \cref{sec:theory-sliceable} presents the base lemmas and theorems for sliceable types;
+  \item sublists (sliceable distinct lists) are shown in \cref{sec:theory-sliceable-dlist};
+  \item algebraic definitions and laws of the \ac{algebra} are shown in \cref{sec:theory-algebra}, and
+  \item proofs using the denotational semantics of sets of distinct lists are shown in \cref{sec:theory-algebra-dlist}.
+\end{alineasinline}
+
+\input{algebra/output/document/Sliceable}
+\input{algebra/output/document/Sliceable_dlist}
+\input{algebra/output/document/Temporal_Faults_Algebra}
+\input{algebra/output/document/Temporal_Faults_Algebra_dlist}
 
 \end{apendicesenv}
 
 \phantompart
 \printindex
-\todo{Verify indexes again (search again for words already in the index)}
-\todo{Run ``makeindex main'' on this directory}
+\adnote{Verify indexes again (search again for words already in the index)}
+\adnote{Add more indexes}
+\adnote{Run ``makeindex main'' on this directory}
 \cleardoublepage
 
-\listoftodos[Notes]{}
+%\listoftodos[Notes]
 \end{document}

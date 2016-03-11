@@ -1,6 +1,6 @@
 (* Author: Florian Haftmann, TU Muenchen *)
 
-section {* Lists with elements distinct as canonical example for datatype invariants *}
+section {* Lists with distinct elements as canonical example for datatype invariants *}
 
 theory Dlist
 imports Main

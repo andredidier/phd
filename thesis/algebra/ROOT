@@ -1,25 +1,15 @@
-session "events-occurrence-theory" = "HOL" +
+session "algebra" = "HOL" +
   options [document = pdf, document_output = "output", quick_and_dirty = true, show_question_marks = false]
   theories [document = false]
-    (* Foo *)
-    (* Bar *)
     Permutation
     Sublist_Order
+    Dlist
+  theories
     Sliceable
     Sliceable_dlist
-    Dlist
     Temporal_Faults_Algebra
-  theories
-    (* Baz *)
-  	Temporal_Faults_Algebra_dlist
+    Temporal_Faults_Algebra_dlist
   document_files
     "root.tex"
-    (*"before_theory.tex"
-    "after_theory.tex"*)
     "root.bib"
-    (*"acsBlockDiagrams.png"
-    "article-overview.pdf"
-    "blockDiagramMonitorInternals.png"
-    "ex-fault-tree1.pdf"
-    "time-relations.pdf"*)
 

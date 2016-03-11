@@ -33,13 +33,13 @@ A list @{term "xs"} is @{term "distinct"} if it has no repeated element.
 So, if @{term "x"} is in @{term "xs"}, then it has a unique associated index @{term "i"} and we 
 denote it as @{term "nth xs i"}.
 
-The set of sets of distinct lists form a free algebra, similarly to \fbas. \emph{Infimum} and 
+The set of sets of distinct lists form a free algebra, similarly to \acp{FBA}. \emph{Infimum} and 
 \emph{Supremum} are defined as set intersection (@{text "$\<inter>$"}) and union (@{text "$\<union>$"}) respectively. 
 The order of the algebra's lattice is defined with set inclusion (@{text "$\<subseteq>,\<subset>$"}).
 
 From a set of @{term "n"} free variables there are @{term "fact n"} lists and we need an operator
 to distinguish all these @{term "fact n"} to build the algebra. We define this operator as the
-XBefore~\cref{def:xbefore-append} in terms of list appending, as is is in~\cite{DM2015}.
+\ac{XBefore} in terms of list appending, as is is in~\cite{DM2015}.
 *}
 (*
 \begin{definition}[XBefore with appending]
@@ -58,14 +58,14 @@ last index is the size of the list. For example, the list @{term "xs\<dagger>0..
 to the @{text "xs"}.
 
 \begin{definition}[XBefore]
-\label{def:xbefore}
+\label{def:theory-xbefore}
 Given two sets of distinct lists @{text "A"} and @{text "B"}, the XBefore operator with slicing
 is:
 @{term [display] "xbefore a b" } = @{term [display] "Collect (dlist_xbefore a b)"}
 \end{definition}
 
 \begin{lemma}[XBefore with appending is equivalent to XBefore with slicing]
-\label{thm:xbefore-append-slice}
+\label{thm:theory-xbefore-append-slice}
 Given two sets of distinct lists @{text "A"} and @{text "B"}, the XBefore definition is append
 is equivalent to the definition with slicing:
 @{thm (rhs) dlist_xbefore_append} @{text "\<equiv>"} @{thm (rhs) dlist_xbefore_def}
@@ -78,7 +78,7 @@ The proof follows directly the property that
 The XBefore has some properties that follows from its definition.
 
 \begin{lemma}[XBefore is not symmetric]
-\label{thm:xbefore-not-sym}
+\label{thm:theory-xbefore-not-sym}
 Given two sets of distinct lists, @{thm (prem 1) dlist_xbefore_and} and 
 @{thm (prem 2) dlist_xbefore_and}, then
 @{thm [display] (concl) dlist_xbefore_and}

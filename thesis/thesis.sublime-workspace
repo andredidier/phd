@@ -4,12 +4,8 @@
 		"selected_items":
 		[
 			[
-				"mat",
-				"question:mathematical-model"
-			],
-			[
-				"simu",
-				"simulink"
+				"table",
+				"tableabntibge	Table ABNT IBGE"
 			],
 			[
 				"clear",
@@ -251,7 +247,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 171497,
+				"buffer_size": 174829,
 				"line_ending": "Windows"
 			}
 		},
@@ -259,15 +255,15 @@
 			"file": "algebra/ROOT",
 			"settings":
 			{
-				"buffer_size": 621,
+				"buffer_size": 365,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "algebra/document/root.tex",
+			"file": "algebra/output/document/Sliceable.tex",
 			"settings":
 			{
-				"buffer_size": 5779,
+				"buffer_size": 41439,
 				"line_ending": "Unix"
 			}
 		},
@@ -287,10 +283,14 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 104.0,
-		"last_filter": "remove",
+		"height": 392.0,
+		"last_filter": "Package Control: ",
 		"selected_items":
 		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
 			[
 				"remove",
 				"Package Control: Remove Package"
@@ -298,10 +298,6 @@
 			[
 				"fr",
 				"File: Rename"
-			],
-			[
-				"Package Control: ",
-				"Package Control: List Packages"
 			],
 			[
 				"enable",
@@ -363,36 +359,61 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/algebra",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/algebra/document"
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/document",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document"
 	],
 	"file_history":
 	[
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
-		"/C/Users/Andre/Desktop/Mesa/acro/acro.sty",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/main.lox",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/abntex2-num.bst",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/abnt.bst",
-		"/C/Users/Andre/Desktop/Mesa/abntex2/bibtex/bst/abntex2/abntex2-num.bst",
-		"/C/Users/Andre/Desktop/Mesa/acro/example_one.tex",
-		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/root.log",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Sliceable.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Temporal_Faults_Algebra.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Sliceable_dlist.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Dlist.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/ROOT",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/Dlist.thy",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/references-jabref.bib",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Temporal_Faults_Algebra_dlist.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/session.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Document.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/session.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.ind",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lox",
+		"/C/Users/andre/Desktop/COMPASS/Theme5/JointPapers/SEFM 2014 - Circus modelchecker/Circus/ERUs.tex",
+		"/C/Users/andre/Desktop/COMPASS/Theme5/JointPapers/SEFM 2014 - Circus modelchecker/cml/ERSystem.cml",
+		"/C/Users/andre/Desktop/COMPASS/Theme5/JointPapers/SEFM 2014 - Circus modelchecker/FORMULA/ERS.tex",
+		"/C/Users/andre/Desktop/COMPASS/Common/CaseStudies/EmergencyResponse/Rules-Led/model/InitRescue.cml",
+		"/C/Users/andre/Desktop/COMPASS/Common/CaseStudies/EmergencyResponse/Expert-Led-Complete/CompleteModel.cml",
+		"/C/Users/andre/Desktop/COMPASS/Theme2/WP24/T2.4.2/CSP/Insiel/InsielCaseStudy.csp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/Pré-algoritmos/2015.2/Aula05/prob1_max.cpp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/Pré-algoritmos/2015.2/Aula05/prob2_ordenar.cpp",
+		"/C/Users/andre/Desktop/LemasAuxiliares.thy",
+		"/C/Users/andre/BitTorrent Sync/LeaderPackage/Sub/Sub.output",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Table ABNT IBGE.sublime-snippet",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.sublime-snippet",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.xml",
+		"/C/Users/andre/Desktop/Mesa/Sub/Sub.output.txt.txt",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
 		"/C/Users/andre/Desktop/Mesa/2015-12-12 Concurso UFRPE/2016-01-11_resumos-ufrpe.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/ficha-catalografica.tex",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/thesis.sublime-project",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
 		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/main.log",
 		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/AutoSpell/AutoSpell.sublime-settings",
 		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/User/AutoSpell.sublime-settings",
 		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/C/Program Files/Sublime Text 3/Packages/Language - English.sublime-package",
 		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/LaTeXTools.sublime-settings",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
 		"/C/Users/Andre/Dropbox/Organização/2016-02-06 Lista de presentes de Lu.txt",
 		"/C/Users/Andre/AppData/Roaming/MiKTeX/2.9/tex/latex/caption/subcaption.sty",
 		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
@@ -404,7 +425,6 @@
 		"/C/Users/andre/Dropbox/todo/todo (Cópia em conflito de Reis 2016-01-20).txt",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acro.sty",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
 		"/C/Users/andre/Desktop/Set_Theory_and_Logic.bibtex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.log",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acronyms.tex",
@@ -419,7 +439,6 @@
 		"/C/Users/andre/Desktop/Mesa/2015-12-15 Avaliações 2015.2/Lista de alunos para revisão de prova da final de CE.txt",
 		"/C/Users/andre/AppData/Local/Temp/Temp1_glossaries.tds.zip/doc/latex/glossaries/samples/sample-newkeys.tex",
 		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/acro/acro.sty",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
 		"/C/Users/andre/Desktop/Mesa/risethesis/resumo.tex",
 		"/C/Users/andre/Desktop/Mesa/risethesis/risethesis.tex",
@@ -474,33 +493,11 @@
 		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/README.markdown",
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/svjour3.cls",
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.lyx",
-		"//webserver.cin.ufpe.br/alrd/public_html/index.html",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/q22-lista3-geracao-testes.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/q22-lista3.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/Dúvidas dos alunos/ARQUIVO_SMARTPHONE.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/Dúvidas dos alunos/cadastro.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/CLIENTES.CAD",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/COMPRAS.CAD",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/VENDAS.CAD",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/tabelamento.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/trapezios.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/Simpson.c",
-		"/C/Users/andre/Desktop/LaTeX/template.tex",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/2EE-q2.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/2EE-q1.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/makefile",
-		"/C/Discos virtuais/MontarTodos.txt",
-		"/C/Discos virtuais/MontarTodos.bat",
-		"/C/Users/andre/Desktop/ee2.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/.gitignore",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/interpolacao-adalberto/main.c",
-		"/C/Users/andre/Desktop/cpf_nome.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/makefile",
-		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/metodos.c"
+		"//webserver.cin.ufpe.br/alrd/public_html/index.html"
 	],
 	"find":
 	{
-		"height": 36.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -514,91 +511,105 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"\\\\part",
-			"We showed the",
+			"undefined",
+			"error",
+			"isabelle",
+			"{Theo}",
+			"{theo}",
+			"{Prop}",
+			"{Cor}",
+			"{Theo}",
+			"{Lem}",
+			"{Def}",
+			"def",
+			"Def",
+			"def",
+			"Def",
+			"{Def}",
+			"fault tree!cohe",
+			"\\\\index{dependability",
+			"\\\\index{dependability}",
+			"dependability",
+			"} ",
+			"dependability",
+			"Boolean",
+			"boolean",
+			"Boolean",
+			"\\index{Boolean Algebra}",
+			"Boolean",
+			"Boolean Algebra",
+			"Boolean algebra",
+			"shannon",
+			"{SBDD}",
+			"\\{SBDD\\}",
+			"SBDD",
+			"\\\\ac{BDD}",
+			"\\ac{BDD}",
+			"\\\\ac{BDD}",
+			"\\ac{BDD}",
+			"bdd",
+			"todo",
+			"section\\{.*\\\\ac",
+			"Non-coherent fault tree",
+			"begin\\{figure",
+			"amnote",
+			"not",
+			"NOT",
+			"denotational",
+			"researchquestion",
+			"alineas",
+			"pandora",
+			"newcommand",
+			"failure expre",
+			"pretextual",
+			"fdr",
+			"FDR",
+			"fdr",
+			"enumerate",
+			"is",
+			"NOT",
+			"\\\\probability",
+			"\\$.*P\\$",
+			"itemize",
+			"minimal terms",
+			"parsin",
+			"\\[",
+			"reported in",
+			"0,",
+			"alineas",
+			"dft",
+			"a un",
+			"free boolean",
+			"itemize",
+			"}\n",
+			"\\\\todo",
+			"adnote",
+			"XBefore",
+			"planning",
+			"NOT",
 			"ATF",
 			"ActA",
-			"{sec:case-study}",
-			"sec:case-study",
-			"case study",
-			"sec:strategy",
-			"rqenumi",
-			"question:",
-			"zbdd",
-			"Zero-suppresed Binary Decision",
+			"midrow",
+			"\\(i\\)",
+			"(",
+			"\\(i\\)",
+			"(",
+			"item",
+			"  \n",
+			"(",
+			"\\(i\\)",
 			"alineas",
-			"contrenum",
+			"mylist",
 			"alineas",
-			"alph",
-			"rqenum",
+			"tabular",
+			"paper",
+			"tabularx",
+			"table",
+			"sec:conclusion",
+			"researchquestion",
 			"alineas",
-			"contrenum",
-			"based in",
-			"isabellehol",
 			"isabelle",
-			"Isabelle",
-			"isabelle",
-			" ",
-			".",
-			"proposition",
-			"\\\\ac{\\\\ac{DNF}}",
-			"DNF",
-			"\\\\ac{\\\\ac{XBefore}}",
-			"\\ac{\\ac{XBefore}}",
-			"XBefore",
-			"algebraset",
-			"enumerate",
-			"itemize",
-			"figure",
-			"zbdd",
-			"continue",
-			" ",
-			".",
-			"if\\$",
-			", thus",
-			"sequences",
-			"part:contributions",
-			"part:results",
-			"fdr",
-			"failure",
-			"failure logic",
-			" an \\\\ac",
-			"an \\\\ac",
-			"rq",
-			"extra",
-			"\\\\xbeforetext",
-			"\\\\simultaneoustext",
-			"\\\\ibeforetext",
-			"\\\\nibeforetext",
-			"\\\\nottext",
-			"\\\\sandtext",
-			"\\\\portext",
-			"\\\\sandtext",
-			"\\\\portext",
-			"\\\\pandtext",
-			"\\\\ac\\{AND",
-			"\\\\andtext",
-			"\\\\acp\\{OR",
-			"\\\\ortext",
-			"ortext",
-			"and",
-			"gate",
-			"printacr",
-			"enumerate",
-			"itemize",
-			"alinea",
-			"sbdd",
-			"acro_first_instance",
-			"UseInstance",
-			"acro_first_instance",
-			"l__acro_first_instance_tl",
-			"acro_use",
-			"plural",
-			"cite",
-			"input $i",
-			"math",
-			"dependency tree",
-			"dependenc",
+			"subcaption",
 			"limited",
 			"failure expression",
 			"todo",
@@ -627,21 +638,7 @@
 			"[1]",
 			"1",
 			"tb2004",
-			"mathbf",
-			"tabular",
-			"Value",
-			"infty",
-			"d\\parsin",
-			"tabularx",
-			"tabular",
-			"begin\\{table",
-			"itemize",
-			"centering",
-			"includegraphics",
-			"  \n",
-			"includegraphics",
-			"subcaptionbox",
-			"original"
+			"mathbf"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -649,22 +646,9 @@
 		"regex": true,
 		"replace_history":
 		[
-			"\\\\ac{DNF}",
-			"\\\\ac{XBefore}",
-			"failure expression",
-			"\\\\ac{XBefore}",
-			"\\\\ac{SIMLT}",
-			"\\\\ac{IBefore}",
-			"\\\\ac{NIBefore}",
-			"\\\\ac{NOT}",
-			"\\\\ac{SAND}",
-			"\\\\ac{POR}",
-			"\\\\ac{AND}",
-			"\\\\ac{OR}",
-			"\\\\ac{PAND}",
-			"\\\\ac{AND}",
-			"\\\\ac{OR}",
-			"\\ac{OR}",
+			"\\\\index{Dependability",
+			"\\\\index{Dependability}",
+			"an un",
 			"\\\\$1c$2*\\{",
 			"\\$1c$2*\\{",
 			"\\{CSPm\\}",
@@ -716,7 +700,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 171497,
+						"buffer_size": 174829,
 						"regions":
 						{
 							"bookmarks":
@@ -726,20 +710,12 @@
 								"regions":
 								[
 									[
-										36855,
-										36855
+										5929,
+										5935
 									],
 									[
-										38102,
-										38102
-									],
-									[
-										91575,
-										91579
-									],
-									[
-										164170,
-										164170
+										53860,
+										53860
 									]
 								],
 								"scope": "bookmarks"
@@ -748,8 +724,8 @@
 						"selection":
 						[
 							[
-								33471,
-								33471
+								170954,
+								170954
 							]
 						],
 						"settings":
@@ -761,7 +737,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 15573.0,
+						"translation.y": 67942.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -773,58 +749,56 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 621,
+						"buffer_size": 365,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								473,
-								473
+								210,
+								210
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 4,
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "algebra/document/root.tex",
+					"file": "algebra/output/document/Sliceable.tex",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5779,
+						"buffer_size": 41439,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5572,
-								5572
+								4733,
+								4733
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1680.0,
+						"translation.y": 1026.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -840,8 +814,8 @@
 						"selection":
 						[
 							[
-								7866,
-								7866
+								5236,
+								5236
 							]
 						],
 						"settings":
@@ -850,7 +824,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 9047.0,
+						"translation.y": 5125.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
@@ -902,7 +876,7 @@
 	"project": "thesis.sublime-project",
 	"replace":
 	{
-		"height": 66.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":
