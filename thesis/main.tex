@@ -146,7 +146,7 @@
 %% Change the following pdf author attribute name to your name.
 \autor{André Luís Ribeiro Didier}
 \titulo{An Algebra of Temporal Faults}
-\data{March 2016}
+\data{April 2016}
 \instituicao{%
 Federal University of Pernambuco%
 \par
@@ -413,7 +413,7 @@ I dedicate this thesis to Juliana, Luciana (pipoquinha), and Bianca (snowflake).
 If I were afraid of the path, I wouldn't have gotten here.
 
 Two men helped me to build this path far before I started my scholar journey: Roberto and Júnior.
-My two grandparents couldn't see how far I got.
+My two grandfathers couldn't see how far I got.
 My heart was with them all the time, but I was physically far away from them in their very last breath.
 May God have them in his arms.
 
@@ -421,7 +421,7 @@ It is now ten years since I graduated.
 I met professors Alexandre and Augusto still during the Computing Science undergrad course.
 They have been present in my academic life ever since.
 Their comments, instructions, talks, (even jokes), are what molded my path to here.
-I have no words to express how much I thank them.
+I have no words to express how much I thank them, specially Alexandre, who have guided me since my undergrad course.
 %I hope this is the beginning of a healthy partnership for the improvement of science.
 
 CNPq and FACEPE were keen to guarantee my existential needs.
@@ -430,7 +430,7 @@ The former with the trip to Newcastle upon Tyne, and the latter during the time 
 I thank to Sascha Romanovsky for accepting me as his advisee while I was a Research Assistant of the COMPASS project.
 His comments, instructions, and knowledge were of great importance for this work.
 
-My stay in Newcastle upon Tyne could be as good as it was without the hospitality, useful discussions, and support of my colleagues at Newcastle University.
+My stay in Newcastle upon Tyne couldn't be as good as it was without the hospitality, useful discussions, and support of my colleagues at Newcastle University.
 A big THANK YOU to John Fitzgerald, Zoe Andrews, Richard Payne, Claire Smith, Dee Carr, Claire Ingram, my shared office colleague Anirban Bhattacharyya, and all other staff members.
 
 Still in Newcastle upon Tyne, I thank all friends my family and I made outside University.
@@ -468,12 +468,13 @@ Tradicionalmente, Árvores de Defeitos Estáticas são empregadas para este fim,
 
 Em um trabalho anterior, mostramos uma estratégia baseada na álgebra de processos CSP e modelos Simulink para obter rastros (sequências) de defeitos que levam a uma falha.
 A partir dos rastros de defeitos nós descartamos a informação de ordenamento para obter expressões de estrutura  para Ávores de Defeitos Estáticas.
-Ao contrário de descartar tal informação de ordenamento, ela poderia ser usada para obter expressões de estrutura para Árvores de Defeitos Temporais ou Dinâmicas.
-No presente trabalho, apresentamos duas álgebras:
-\begin{alineasinline}
-  \item uma para modelar formalmente defeitos a partir de modelos arquiteturais, racionalizando sobre combinações de defeitos, e
-  \item uma álgebra temporal de defeitos (com noção de propagação de defeitos) e provar que ela é de fato uma álgebra Booleana.
-\end{alineasinline}
+Ao contrário de descartar tal informação de ordenamento, poderíamos usá-la para obter expressões de estrutura para Árvores de Defeitos Temporais ou Dinâmicas.
+No presente trabalho, apresentamos uma álgebra temporal de defeitos (com noção de propagação de defeitos) para analisar falhas em sistemas e provamos que ela é de fato uma álgebra Booleana.
+%No presente trabalho, apresentamos duas álgebras:
+%\begin{alineasinline}
+%  \item uma para modelar formalmente defeitos a partir de modelos arquiteturais, racionalizando sobre combinações de defeitos, e
+%  \item uma álgebra temporal de defeitos (com noção de propagação de defeitos) para analisar falhas em sistema e provamos que ela é de fato uma álgebra Booleana.
+%\end{alineasinline}
 Isso permite herdar as propriedades de álgebras Booleanas, leis e técnicas de redução existentes, as quais são muito benéficas para a modelagem e análise de defeitos.
 Com expressões na álgebra temporal de defeitos nós permitimos a verificação de propriedades de segurança (\emph{safety}) baseadas em Árvores de Defeitos Estáticas, Temporais ou Dinâmicas.
 Nós ilustramos nosso trabalho com alguns estudos de caso simples, mas reais, fornecidos pelo nosso parceiro industrial, a EMBRAER.
@@ -496,11 +497,12 @@ Traditionally, Static Fault Trees are employed to this end, but Temporal and Dyn
 In previous work, we showed a strategy based on the process algebra CSP and Simulink models to obtain fault traces that lead to a failure.
 From the fault traces we discarded the ordering information to obtain structure expressions for Static Fault Trees.
 Instead of discarding such an ordering information, it could be used to obtain structure expressions of Temporal or Dynamic Fault Trees.
-In this work we present two algebras:
-\begin{alineasinline}
-  \item one to model faults from architectural models formally, reasoning about faults combinations, and
-  \item an algebra of temporal faults (with a notion of fault propagation) and prove that it is indeed a Boolean algebra.
-\end{alineasinline}
+In this work we present an algebra of temporal faults (with a notion of fault propagation) to analyse systems' failures, and prove that it is indeed a Boolean algebra.
+%In this work we present two algebras:
+%\begin{alineasinline}
+%  \item one to model faults from architectural models formally, reasoning about faults combinations, and
+%  \item an algebra of temporal faults (with a notion of fault propagation) and prove that it is indeed a Boolean algebra.
+%\end{alineasinline}
 This allows us to inherit Boolean algebra's properties, laws and existing reduction techniques, which are very beneficial for faults modelling and analysis.
 With expressions in the algebra of temporal faults we allow the verification of safety properties based on Static, Temporal or Dynamic Fault Trees.
 We illustrate our work on simple but real case studies, some supplied by our industrial partner EMBRAER.
@@ -529,12 +531,16 @@ We illustrate our work on simple but real case studies, some supplied by our ind
 %\listofacronyms
 
 \acresetall
+\pdfbookmark[0]{\listadesiglasname{}}{acro}
 \printacronyms[name={\listadesiglasname{}},heading=chapter*,exclude-classes={gate}]
 \acresetall
+\setcounter{table}{0}
 \cleardoublepage
 
+\pdfbookmark[0]{Fault tree gates}{ftgates}
 \printacronyms[name={\Acl*{FT} gates},heading=chapter*,include-classes={gate}]
 \acresetall
+\setcounter{table}{0}
 \cleardoublepage
 
 
@@ -712,7 +718,8 @@ In this version of the thesis we propose the theory that answers \cref{question:
 %In this work we present an algebra, called \acf{algebra}, defined  denota
 \adnote{Continue from here: what's denotational semantics?}
 
-In this work we present a denotational semantics and an associated algebra, called \acf{algebra}, to analyse acceptance criteria of \ac{FT} with ordering of fault events (\ac{TFT} and \ac{DFT}).
+In this work we present an algebra, called \acf{algebra}, to analyse acceptance criteria of \acp{FT} with ordering of fault events (\ac{TFT} and \ac{DFT}).
+The laws of \ac{algebra} are given in a denotational semantics based in sets of lists of distinct elements.
 \Theac{algebra} aims at answering the \cref{question:mathematical-model,question:ordering-representation}.
 The analysis of acceptance criteria is a decision problem and we use first-order logic and \isabellehol as verification tool.
 Indeed, \ac{algebra} is part of a bigger strategy the relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
@@ -729,7 +736,7 @@ We depict traditional \ac{FTA} in path C to show that we still need the acceptan
 
 System and fault modelling is an essential step towards safety analysis.
 Architectural modelling is the first step of the strategy and can be executed either in a graphical tool, or as requirements in natural language.
-For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling to verify fault tolerance of \acp{SoS}.
+For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling in \ac{SysML} to verify fault tolerance of \acp{SoS}.
 
 ``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
 It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault events sequences.
@@ -1303,7 +1310,7 @@ A & B & \ac{AND} & \ac{OR} & \ac{PAND} & \ac{POR} & \ac{SAND}  \\
     \centering
     \includegraphicsaspectratio[0.75]{ft-symbol-sand-gate}
     \caption{\acs*{SAND} gate}\label{fig:tft-sand-gate}
-  \end{subfigure}  
+  \end{subfigure}
   \caption{\acs*{TFT}-specific gates}
   \label{fig:tft-symbols}
 \end{figure}
@@ -2095,7 +2102,7 @@ Usually, the value for this property is set to \textsim{auto}, allowing \simulin
 %     \EMBRAER.}\texten{Block diagram of the ACS provided by \EMBRAER}}
 %     \label{fg:acsBlockDiagrams}
 % \end{figure*}
-\begin{figure}[htb] 
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio{acsBlockDiagrams}
   \caption{Block diagram of the ACS provided by \EMBRAER (nominal model)}
@@ -2107,7 +2114,7 @@ Nowadays, control systems are usually composed of an electromechanical part and 
 In this system, the feedback behaviour is given by the \textsim{Controller} (1), \textsim{Actuator} (2) and \textsim{Sensor} (3). A command is received by the \textsim{Controller}, which sends a signal to the \textsim{Actuator} to start its movement.
 The \textsim{Sensor} detects the actual position of the \textsim{Actuator} and sends it back to the \textsim{Controller}, which adjusts the given command to achieve the desired position. This loop (feedback) continues until the desired position given by the original command is reached.
 
-\begin{figure}[htb] 
+\begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.6]{blockDiagramMonitorInternals}
   \caption{Internal diagram of the monitor component (\cref{fg:acsBlockDiagrams}~(A)).}
@@ -2404,20 +2411,22 @@ We use the following notation for list slicing:
 %
 \begin{subequations}
 \begin{align}
-\slice{xs}{i}{j} &= \text{starts at $i$ and ends at $j-1$}\\
-\sliceright{xs}{j} &= \slice{xs}{0}{j}\\
-\sliceleft{xs}{i} &= \slice{xs}{i}{\length{xs}}
+\slice{xs}{i}{j} &= \text{starts at $i$ and ends at $j-1$}\label{def:slice}\\
+\sliceright{xs}{j} &= \slice{xs}{0}{j}\label{def:slice-right}\\
+\sliceleft{xs}{i} &= \slice{xs}{i}{\length{xs}}\label{def:slice-left}
 \end{align}
 \end{subequations}
 
 List slicing and concatenation are complementary: concatenating two consecutive slices results in the original list:
 \begin{equation}
+\label{law:slice-append}
 \forall i \bullet \append{\sliceright{xs}{i}}{\sliceleft{xs}{i}} = xs
 \end{equation}
 
 There is an equivalent definition of \ac{XBefore} with concatenation using lists slicing:
 %
 \begin{equation}
+\label{def:xbefore-slice}
 \xbefore{S}{T} =
   \setsin{
     zs | \exists i \bullet \sliceright{zs}{i} \in S \land \sliceleft{zs}{i} \in T
@@ -2534,18 +2543,20 @@ Finally, if a generator belongs to a list, then there is a sublist of size one t
 
 Variables have all four temporal properties. For a generator $x$, the following is valid:
 %
-\[
+\begin{equation}
+\label{law:var-tempo}
 \tempo[1]{\left(\var{x}\right)} \land
 \tempo[2]{\left(\var{x}\right)} \land
 \tempo[3]{\left(\var{x}\right)} \land
 \tempo[4]{\left(\var{x}\right)}
-\]
+\end{equation}
 
 \begin{sloppypar}
 In our previous work~\cite{DM2015} we used set difference to specify the \ac{XBefore} operator.
 Provided $\tempo[1]{S}$ and $\tempo[1]{T}$, \ac{XBefore} in~\cite{DM2015} is equivalent to \eqref{def:xbefore-append}:
 %
 \begin{equation}
+\label{law:old-xbefore}
 \xbefore{S}{T} = \left\{ zs | \exists xs, ys \bullet xs \in S-T \land ys \in T-S \land \distinct{zs} \land zs = \append{xs}{ys}  \right\}
 \end{equation}
 \end{sloppypar}
@@ -2553,10 +2564,10 @@ Provided $\tempo[1]{S}$ and $\tempo[1]{T}$, \ac{XBefore} in~\cite{DM2015} is equ
 Other expressions also meet one or more temporal properties:
 \begin{subequations}
 \begin{align}
-\tempo[1]{S} \land \tempo[1]{T} & \implies \tempo[1]{\parsin{S \inter T}}\\
-\tempo[3]{S} \land \tempo[3]{T} & \implies \tempo[3]{\parsin{S \inter T}}\\
-\tempo[2]{S} \land \tempo[2]{T} & \implies \tempo[2]{\parsin{S \union T}}\\
-\tempo[4]{S} \land \tempo[4]{T} & \implies \tempo[4]{\parsin{S \union T}}
+\tempo[1]{S} \land \tempo[1]{T} & \implies \tempo[1]{\parsin{S \inter T}}\label{law:tempo1-inter}\\
+\tempo[3]{S} \land \tempo[3]{T} & \implies \tempo[3]{\parsin{S \inter T}}\label{law:tempo3-inter}\\
+\tempo[2]{S} \land \tempo[2]{T} & \implies \tempo[2]{\parsin{S \union T}}\label{law:tempo2-union}\\
+\tempo[4]{S} \land \tempo[4]{T} & \implies \tempo[4]{\parsin{S \union T}}\label{law:tempo4-union}
 \end{align}
 \end{subequations}
 
@@ -2597,6 +2608,7 @@ We define events independence ($\independenteventsop$) as the property that one 
 For example, we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \union \var{b}$ (it results in $\False$, see \eqref{thm:xbefore-not-idempotent}).
 %
 \begin{equation}
+\label{law:independent-events}
 \independentevents{S}{T} = \forall i, zs \bullet
   \lnot \left(
     \slice{zs}{i}{\left(i+1\right)} \in S \land
@@ -2636,6 +2648,7 @@ The absence of occurrences ($\False$, the empty set of $\algebraset$) is a ``0''
   \xbefore{S}{(\xbefore{T}{U})} =&
   \xbefore{(\xbefore{S}{T})}{U} &
   \text{associativity}
+  \label{thm:xbefore-associativity}
 %
 \end{align}
 \end{subequations}
@@ -2965,7 +2978,7 @@ In \cref{fig:status-of-thesis} we show:
   \item what will be done in future work, after the thesis' defence.
 \end{alineasinline}
 Many of the tasks shown in \cref{tbl:tasks-schedule} already started.
-The \namecref{tbl:tasks-schedule} shows the estimated execution of the tasks by year's quarters. 
+The \namecref{tbl:tasks-schedule} shows the estimated execution of the tasks by year's quarters.
 The second quarter of 2016 is from April to June/2016, the third quarter is from July to September/2016, the fourth quarter, from October to December/2016, and we expected to defend the thesis by February/2017.
 
 
@@ -3082,6 +3095,109 @@ In this version we list the content of all theory files.
 Each theorem, proof or corollary is followed by their own proof.
 
 The theory about lists of distinct elements---or simply \emph{distinct lists}---is available in~\cite{HL2016} (we used the 2015 version the is available with Isabelle/HOL 2015).
+
+%\Cref{tbl:laws-theorems-slice} shows a mapping of the equations shown in~\cref{chap:strategy} and theorem names in the \isabellehol code presented in this \namecref{app:formal-proofs-isabelle-hol}.
+
+%\begin{table}[htb]
+%  \caption{Laws and theorems}%
+%  \label{tbl:laws-theorems-slice}%
+%  \begin{longtable}{p{8cm}ll}
+%    \hline
+%    Description & Def. or Law & Theorem name \\
+%    \hline \hline
+%    \endfirsthead
+%    \multicolumn{3}{c}%
+%    {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+%    \hline
+%    Description & Def. or Law & Theorem name \\
+%    \hline
+%    \endhead
+%    \hline \multicolumn{3}{r}{\textit{Continued on next page}} \\
+%    \endfoot
+%    \hline
+%    \endlastfoot
+%    & \Cref{def:xbefore-append} & \\
+%    \hline
+    %Definition of slice in distinct lists & \Cref{def:slice} & instantiation dlist, $l\dagger i..f$\\
+%    \hline
+%    Definition of slice-right & \Cref{def:slice-right} & slice\_right\\
+%    \hline
+%    Definition of slice-left & \Cref{def:slice-left} & slice\_left\\
+%    \hline
+    %Relation of slice and concatenation (appending) & \Cref{law:slice-append} &  slice\_append\\
+%    \hline
+    %Definition of \ac{XBefore} using slice & \Cref{def:xbefore-slice} &  dlist\_xbefore\_append\\
+%    \hline
+%    Variable definition & \Cref{def:var} & \\
+%    \hline
+%    & \Cref{def:algebraset-var} & \\
+%    \hline
+%    & \Cref{def:algebraset-compl} & \\
+%    \hline
+%    & \Cref{def:algebraset-inf} & \\
+%    \hline
+%    & \Cref{def:algebraset-xbefore} & \\
+%    \hline
+%    & \Cref{def:algebraset-true} & \\
+%    \hline
+%    & \Cref{def:algebraset-false} & \\
+%    \hline
+%    & \Cref{def:algebraset-sup} & \\
+%    \hline
+%    & \Cref{eqs:generators-independence} & \\
+%    \hline
+%    & \Cref{def:tempo1} & \\
+%    \hline
+%    & \Cref{def:tempo2} & \\
+%    \hline
+%    & \Cref{def:tempo3} & \\
+%    \hline
+%    & \Cref{def:tempo4} & \\
+%    \hline
+%    & \Cref{law:var-tempo} & \\
+%    \hline
+%    & \Cref{law:old-xbefore} & \\
+%    \hline
+%    & \Cref{law:tempo1-inter} & \\
+%    \hline
+%    & \Cref{law:tempo3-inter} & \\
+%    \hline
+%    & \Cref{law:tempo2-union} & \\
+%    \hline
+%    & \Cref{law:tempo4-union} & \\
+%    \hline
+%    & \Cref{law:independent-events} & \\
+%    \hline
+%    & \Cref{thm:xbefore-of-false-1} & \\
+%    \hline
+%    & \Cref{thm:xbefore-of-false-2} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-absorb-1} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-absorb-2} & \\
+%    \hline
+%    & \Cref{thm:xbefore-not-idempotent} & \\
+%    \hline
+%    & \Cref{thm:xbefore-associativity} & \\
+%    \hline
+%    & \Cref{thm:xbefore-inf-equiv-bot} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-equiv-inf} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-1} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-2} & \\
+%    \hline
+%    & \Cref{thm:xbefore-inf-1} & \\
+%    \hline
+%    & \Cref{thm:xbefore-inf-2} & \\
+%    \hline
+%    & \Cref{thm:and_xbefore_equiv_or_xbefore} & \\
+%    \hline
+%    & \Cref{thm:and_xbefore_equiv_or_xbefore_expanded} & \\
+%    \hline
+%  \end{longtable}%
+%\end{table}
 
 This \namecref{app:formal-proofs-isabelle-hol} is organized as follows:
 \begin{alineasinline}

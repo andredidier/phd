@@ -7,6 +7,11 @@ imports Main
 begin
 (*>*)
 
+text {* 
+In the following we present the algebraic laws for the \ac{algebra}. 
+*}
+
+subsection {* Basic \ac{algebra} operators and tempo1 *}
 
 class temporal_faults_algebra_basic = boolean_algebra +
   fixes xbefore :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
@@ -18,10 +23,14 @@ class temporal_faults_algebra_basic = boolean_algebra +
   assumes xbefore_not_sym: 
     "\<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> (xbefore a b) \<le> -(xbefore b a)"
 
+subsection {* Definition of associativity of \ac{XBefore} *}
+    
 class temporal_faults_algebra_assoc = temporal_faults_algebra_basic +
   assumes xbefore_assoc: "\<lbrakk>tempo1 a; tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> 
     xbefore (xbefore a b) c = xbefore a (xbefore b c)"
 
+subsection {* Equivalences in the \ac{algebra} and properties *}
+    
 class temporal_faults_algebra_equivs = temporal_faults_algebra_assoc +
   fixes independent_events :: "'a \<Rightarrow> 'a \<Rightarrow> bool"
   fixes tempo2 :: "'a \<Rightarrow> bool"
@@ -36,11 +45,15 @@ class temporal_faults_algebra_equivs = temporal_faults_algebra_assoc +
   assumes sup_tempo2: "\<lbrakk>tempo2 a; tempo2 b\<rbrakk> \<Longrightarrow> tempo2 (sup a b)"
   assumes inf_tempo3: "\<lbrakk>tempo3 a; tempo3 b\<rbrakk> \<Longrightarrow> tempo3 (inf a b)"
   assumes sup_tempo4: "\<lbrakk>tempo4 a; tempo4 b\<rbrakk> \<Longrightarrow> tempo4 (sup a b)"
-  
+
+subsection {* \Ac{XBefore} transitivity *}
+
 class temporal_faults_algebra_trans = temporal_faults_algebra_equivs +
   assumes xbefore_trans: 
     "\<lbrakk>tempo1 a; tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo2 a; tempo2 b; tempo2 c\<rbrakk> \<Longrightarrow>
     less_eq (inf (xbefore a b) (xbefore b c)) (xbefore a c)"
+
+subsection {* Mixed operators in \ac{algebra} *}
 
 class temporal_faults_algebra_mixed_ops = temporal_faults_algebra_trans +
   assumes xbefore_sup_1: 
@@ -58,6 +71,13 @@ class temporal_faults_algebra_mixed_ops = temporal_faults_algebra_trans +
     sup (xbefore (inf a b) c) (xbefore b (inf a c))"
 
 class temporal_faults_algebra = temporal_faults_algebra_mixed_ops
+
+subsection {* Theorems in the context of \ac{algebra} *}
+
+text {* 
+The following theorems are valid for \ac{algebra}.
+They are valid for any instantiation of the \ac{algebra} class as, for example, for the sets of distinct lists type.
+*}
 
 context temporal_faults_algebra
 begin

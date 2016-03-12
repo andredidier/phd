@@ -1,5 +1,10 @@
 section {* Denotational semantics for \ac{algebra} *}
-text {*\label{sec:theory-algebra-dlist}*}
+
+text {*
+\label{sec:theory-algebra-dlist}
+In the following we present the denotation semantics for \ac{algebra} in terms of sets of distinct lists.
+*}
+
 (*<*)
 theory Temporal_Faults_Algebra_dlist
 imports Temporal_Faults_Algebra Dlist Permutation Sublist_Order Sliceable_dlist 
@@ -9,16 +14,21 @@ begin
 
 subsection {* Formula: distinct lists *}
 
+text{* 
+The definition of a formula in the \ac{algebra} is a set of sets of distinct lists (dlist).
+*}
+
 typedef 'a formula = "UNIV::'a dlist set set" by simp
 
 subsubsection {* Formula as Boolean algebra*}
+
 (*<*)
 notation
   bot ("\<bottom>") and
   top ("\<top>") and
   inf  (infixl "\<sqinter>" 70) and
   sup  (infixl "\<squnion>" 65)
-
+(*
 notation (latex output) 
   xbefore ("_\<rightarrow>_" [80,80] 80) and
   slice ("(3_\<^bsub>[_.._]\<^esub>)"  [80,80,80] 80) and
@@ -31,7 +41,10 @@ notation (latex output)
   Abs_formula ("_\<^bsub>formula\<^esub>") and
   Rep_formula ("_\<^bsub>dlist set\<^esub>") and
   list_of_dlist ("_\<^bsub>list\<^esub>" 80)
+  *)
 (*>*)
+
+text{* In the following we instantiate the formula as a Boolean algebra and prove that Boolean operators are valid. *}
 
 instantiation formula :: (type) boolean_algebra
 begin
@@ -108,6 +121,8 @@ no_notation
 
 subsubsection {* Tempo properties *}
 
+text {* In this section we define the tempo properties. *}
+
 text {* Tempo1: disjoint split *}
 definition dlist_tempo1 :: "('a dlist \<Rightarrow> bool) \<Rightarrow> bool"
 where
@@ -165,6 +180,12 @@ by (metis Dlist_list_of_dlist append_eq_conv_conj slice_left_drop
   take_slice_right)
 
 subsubsection {* Tempo properties for list member *}
+
+text {*
+We use the naming convention of variable, but in fact, a variable is equivalent to a list membership: 
+@{term "var a = {xs . a \<in> set (list_of_dlist xs)}"}.
+*}
+
 lemma dlist_tempo1_member: "dlist_tempo1 (\<lambda>xs. a \<in> set (list_of_dlist xs))"
 unfolding dlist_tempo1_def
 by (meson distinct_in_set_slice1_not_in_slice2)
@@ -568,6 +589,10 @@ qed
 
 
 subsection {* Formulas as \ac{algebra} *}
+
+text {*
+In the following we prove that a formula is valid instantation for all \ac{algebra} classes.
+*}
 
 subsubsection {* Basic properties of \ac{algebra} *}
 
