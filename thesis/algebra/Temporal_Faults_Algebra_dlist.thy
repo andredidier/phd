@@ -591,7 +591,7 @@ qed
 subsection {* Formulas as \ac{algebra} *}
 
 text {*
-In the following we prove that a formula is valid instantation for all \ac{algebra} classes.
+In the following we prove that a formula is a valid type instantation for all \ac{algebra} classes.
 *}
 
 subsubsection {* Basic properties of \ac{algebra} *}
