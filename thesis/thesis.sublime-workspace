@@ -251,7 +251,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 180273,
+				"buffer_size": 180388,
 				"line_ending": "Windows"
 			}
 		},
@@ -508,6 +508,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"algebraurl",
+			"www.cin",
+			"newcomm",
 			"acrony",
 			"acro",
 			"table",
@@ -632,10 +635,7 @@
 			"fdr",
 			"FDR",
 			"fdr",
-			"enumerate",
-			"is",
-			"NOT",
-			"\\\\probability"
+			"enumerate"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -698,7 +698,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 180273,
+						"buffer_size": 180388,
 						"regions":
 						{
 							"bookmarks":
@@ -708,12 +708,20 @@
 								"regions":
 								[
 									[
-										176530,
-										176530
+										41131,
+										41131
 									],
 									[
-										179286,
-										179286
+										176039,
+										176049
+									],
+									[
+										176645,
+										176645
+									],
+									[
+										179401,
+										179401
 									]
 								],
 								"scope": "bookmarks"
@@ -722,8 +730,8 @@
 						"selection":
 						[
 							[
-								176419,
-								176419
+								176148,
+								176148
 							]
 						],
 						"settings":
@@ -735,7 +743,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 69908.0,
+						"translation.y": 69887.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
