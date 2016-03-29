@@ -355,11 +355,7 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/document",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output",
-		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document"
+		"/home/andre/btsync/Mesa/phd-alrd/thesis"
 	],
 	"file_history":
 	[
@@ -494,7 +490,7 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 25.0
 	},
 	"find_in_files":
 	{
@@ -730,8 +726,8 @@
 						"selection":
 						[
 							[
-								176148,
-								176148
+								301,
+								301
 							]
 						],
 						"settings":
@@ -743,7 +739,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 69887.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -813,7 +809,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 26.0
+		"height": 25.0
 	},
 	"input":
 	{
@@ -854,7 +850,7 @@
 	"project": "thesis.sublime-project",
 	"replace":
 	{
-		"height": 62.0
+		"height": 46.0
 	},
 	"save_all_on_build": true,
 	"select_file":
