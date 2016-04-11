@@ -251,7 +251,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 2093,
+				"buffer_size": 1779,
 				"line_ending": "Windows"
 			}
 		}
@@ -340,6 +340,7 @@
 	"file_history":
 	[
 		"/C/Users/andre/git/beamerthemecin-code/beamerthemeCIn20131120.sty",
+		"/C/Users/andre/git/phd-alrd/thesis/main.tex",
 		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2016.1/Apresentações/main.tex",
 		"/C/Users/andre/Desktop/Mesa/classes-schedule/src/test/resources/programa-de-aula.js",
 		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/curso-calculo-numerico/ajustamento.tex",
@@ -465,8 +466,7 @@
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/conclusion.tex",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/main.tex",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/acknowledgements.tex",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/caseStudy.tex",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/output/document/Document.tex"
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/caseStudy.tex"
 	],
 	"find":
 	{
@@ -484,6 +484,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"toc",
 			"codigo",
 			"codgio",
 			"a",
@@ -610,8 +611,7 @@
 			"{SBDD}",
 			"\\{SBDD\\}",
 			"SBDD",
-			"\\\\ac{BDD}",
-			"\\ac{BDD}"
+			"\\\\ac{BDD}"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -675,22 +675,22 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2093,
+						"buffer_size": 1779,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								199,
-								199
+								247,
+								247
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"tab_size": 2,
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

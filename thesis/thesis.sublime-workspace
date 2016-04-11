@@ -251,16 +251,16 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 180388,
+				"buffer_size": 180383,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "algebra/ROOT",
+			"file": "isabelle-hol-basic/ROOT",
 			"settings":
 			{
-				"buffer_size": 365,
-				"line_ending": "Unix"
+				"buffer_size": 215,
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -355,10 +355,16 @@
 	},
 	"expanded_folders":
 	[
-		"/home/andre/btsync/Mesa/phd-alrd/thesis"
+		"/C/Users/andre/git/phd-alrd/thesis",
+		"/C/Users/andre/git/phd-alrd/thesis/algebra/output",
+		"/C/Users/andre/git/phd-alrd/thesis/algebra/output/document",
+		"/C/Users/andre/git/phd-alrd/thesis/isabelle-hol-basic/output",
+		"/C/Users/andre/git/phd-alrd/thesis/isabelle-hol-basic/output/document"
 	],
 	"file_history":
 	[
+		"/C/Users/andre/git/phd-alrd/thesis/capa.tex",
+		"/C/Users/andre/git/phd-alrd/thesis/algebra/ROOT",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Temporal_Faults_Algebra_dlist.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Temporal_Faults_Algebra.tex",
@@ -484,13 +490,11 @@
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/MySession/ROOT",
 		"/C/Users/andre/Desktop/Mesa/Ata da turma S8.txt",
 		"/C/Users/andre/Dropbox/Organização/Documentos/Sync_Pro_Purchase_30610.btskey",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.out",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_ISF LaTeX.zip/template.tex",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/README.markdown"
+		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.out"
 	],
 	"find":
 	{
-		"height": 25.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -504,6 +508,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"capa",
+			"posgradua",
 			"algebraurl",
 			"www.cin",
 			"newcomm",
@@ -629,9 +635,7 @@
 			"failure expre",
 			"pretextual",
 			"fdr",
-			"FDR",
-			"fdr",
-			"enumerate"
+			"FDR"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -694,7 +698,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 180388,
+						"buffer_size": 180383,
 						"regions":
 						{
 							"bookmarks":
@@ -704,20 +708,20 @@
 								"regions":
 								[
 									[
-										41131,
-										41131
+										41125,
+										41125
 									],
 									[
-										176039,
-										176049
+										176033,
+										176043
 									],
 									[
-										176645,
-										176645
+										176639,
+										176639
 									],
 									[
-										179401,
-										179401
+										179395,
+										179395
 									]
 								],
 								"scope": "bookmarks"
@@ -726,8 +730,8 @@
 						"selection":
 						[
 							[
-								301,
-								301
+								4787,
+								4787
 							]
 						],
 						"settings":
@@ -739,7 +743,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2155.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -747,32 +751,30 @@
 				},
 				{
 					"buffer": 1,
-					"file": "algebra/ROOT",
+					"file": "isabelle-hol-basic/ROOT",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 365,
+						"buffer_size": 215,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								365,
-								365
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -801,7 +803,7 @@
 						"translation.y": 1350.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
