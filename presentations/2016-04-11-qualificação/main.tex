@@ -1,0 +1,93 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+\usetheme{CIn20131120}
+
+%\setbeamercovered{transparent}
+}
+
+\usepackage[british]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} 
+    
+\title{CIn Beamer Template}
+\subtitle{20131120}
+
+\author{André Didier}
+
+\institute{
+\inst{1}Federal University of Pernambuco\\
+Centre of Informatics
+}
+    
+\subject{Beamer Template}
+
+\begin{document}
+
+\begin{frame}[label=title]
+\titlepage
+\end{frame}
+
+\section{Motivation}
+
+\begin{frame}
+\frametitle{Motivation}
+We were motivated because it takes time to write formulas using the office
+suite, as well as sharing files. With LaTeX, we can share in plain text format.
+
+If you want to restart, goto \hyperlink{title}{\beamergotobutton{title}}.
+
+\note[item] {This a basic template with some examples and instruction about
+configuring the CIn template.}
+
+\end{frame}
+
+\section{Instructions}
+\subsection{Linux}
+
+\begin{frame}
+\frametitle{Instructions to install the theme in Linux}
+
+\begin{enumerate}
+    \item Checkout the CIn Theme repository into your computer
+    (<cin-theme>);
+    \item Create the directory tree to: \~{}/texmf/tex/latex/beamer/themes
+    \item Move to the created directory;
+    \item Make a symbolic to the CIn template file in the repository:
+    \begin{enumerate}
+        \item ln -s <cin-theme>/beamerthemeCIn.sty
+        \item ln -s <cin-theme>/beamerthemeCIn-images
+    \end{enumerate}
+    \item Run texhash: texhash \~{}/texmf
+\end{enumerate}
+
+\note[item] {Instructions may vary depending on the installed operating system.}
+
+\end{frame}
+
+\section{Colours}
+
+\begin{frame}
+\frametitle{Available colours}
+\begin{itemize}
+    \item {\color{PANTONE188CV} PANTONE188CV}
+    \item {\color{35PANTONECOOLGRAY10CV} 35PANTONECOOLGRAY10CV}
+    \item {\color{100PANTONECOOLGRAY10CV} 100PANTONECOOLGRAY10CV}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Available item symbols}
+\begin{itemize}
+    \item Level 1
+    \begin{itemize}
+      \item Level 2
+        \begin{itemize}
+          \item Level 3
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}

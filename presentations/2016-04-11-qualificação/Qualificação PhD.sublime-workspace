@@ -1,0 +1,791 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"isab",
+				"isabellehol"
+			],
+			[
+				"table",
+				"tableabntibge	Table ABNT IBGE"
+			],
+			[
+				"clear",
+				"cleardoublepage"
+			],
+			[
+				"pand",
+				"pandora"
+			],
+			[
+				"temporal",
+				"sec:temporal-fault-trees"
+			],
+			[
+				"simulta",
+				"simultaneous"
+			],
+			[
+				"nibef",
+				"nibefore"
+			],
+			[
+				"simult",
+				"simultaneous"
+			],
+			[
+				"tbl",
+				"tbl:dft-conversion-te-probability"
+			],
+			[
+				"figure",
+				"figure	Figure"
+			],
+			[
+				"boole",
+				"lem:boolean-algebra-free-generators-valuation"
+			],
+			[
+				"bo",
+				"lem:boolean-algebra-free-generators"
+			],
+			[
+				"Dec",
+				"DeclareAcronym"
+			],
+			[
+				"use",
+				"usepackage"
+			],
+			[
+				"hip",
+				"hiphops"
+			],
+			[
+				"isa",
+				"Isabelle"
+			],
+			[
+				"hight",
+				"highlightresult"
+			],
+			[
+				"high",
+				"highlightresult"
+			],
+			[
+				"indep",
+				"independentevents"
+			],
+			[
+				"tempo",
+				"def:tempo1"
+			],
+			[
+				"ve",
+				"VGR+1981: Fault Tree Handbook"
+			],
+			[
+				"mem",
+				"memoriaMB"
+			],
+			[
+				"quanti",
+				"quantidadeCompras"
+			],
+			[
+				"quani",
+				"quantidadeCompras"
+			],
+			[
+				"quan",
+				"quantidadeClientes"
+			],
+			[
+				"qu",
+				"quantidadeClientes"
+			],
+			[
+				"quant",
+				"quantidadeCompras"
+			],
+			[
+				"de",
+				"DescricaoProduto"
+			],
+			[
+				"vend",
+				"Venda"
+			],
+			[
+				"arq",
+				"arqClientes"
+			],
+			[
+				"Cod",
+				"CodCliente"
+			],
+			[
+				"para",
+				"paradaErro"
+			],
+			[
+				"most",
+				"mostrarVetor"
+			],
+			[
+				"ler",
+				"lerTabelamento"
+			],
+			[
+				"usar",
+				"usarExistente"
+			],
+			[
+				"tan",
+				"tanNumeroMaquina"
+			],
+			[
+				"sin",
+				"sinNumeroMaquina"
+			],
+			[
+				"form",
+				"formatado"
+			],
+			[
+				"nu",
+				"numero"
+			],
+			[
+				"taman",
+				"tamanhoSistemaUsu"
+			],
+			[
+				"tamanho",
+				"tamanhoSistemaUsu"
+			],
+			[
+				"q",
+				"quantidadeFuncoes"
+			],
+			[
+				"qa",
+				"quantidadeFuncoes"
+			],
+			[
+				"funca",
+				"funcaoEscolhida"
+			],
+			[
+				"foir",
+				"formatarNumeroMaquina"
+			],
+			[
+				"ta",
+				"tabelamento"
+			],
+			[
+				"mult",
+				"mult10"
+			],
+			[
+				"for",
+				"formatarNumeroMaquina"
+			],
+			[
+				"sis",
+				"sistemaEqLineares"
+			],
+			[
+				"tama",
+				"tamanhoSistema"
+			],
+			[
+				"Numero",
+				"NumeroMaquina"
+			],
+			[
+				"NUme",
+				"NumeroMaquina"
+			],
+			[
+				"valor",
+				"valorNumeroMaquina"
+			],
+			[
+				"usa",
+				"usarExistente"
+			],
+			[
+				"di",
+				"digitos"
+			],
+			[
+				"digito",
+				"digitoArred"
+			],
+			[
+				"numero",
+				"numeroUsuario"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"Exer",
+				"Exercício"
+			],
+			[
+				"Exec",
+				"Exercícios"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "main.tex",
+			"settings":
+			{
+				"buffer_size": 2093,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "Package Control: ",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"fr",
+				"File: Rename"
+			],
+			[
+				"enable",
+				"Package Control: Enable Package"
+			],
+			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: lat",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: LaTe",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"next_misspelling",
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)",
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/andre/git/beamerthemecin-code/beamerthemeCIn20131120.sty",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2016.1/Apresentações/main.tex",
+		"/C/Users/andre/Desktop/Mesa/classes-schedule/src/test/resources/programa-de-aula.js",
+		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/curso-calculo-numerico/ajustamento.tex",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/2016-03-11 IF724/2016-03-16/Otávio - palindrome 2/palindromo/Palindrome.java",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/2016-03-11 IF724/2016-03-30/Wilquer Torres - Tradutor/Wilquer Torres - Tradutor.java",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/2016-03-11 IF724/2016-03-30/Otávio Vera Cruz - tradutor/tradutor/Tradutor.java",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/2016-03-11 IF724/2016-03-30/Gabriel Santana - prealg3/prealg3/Tradutor.java",
+		"/C/Users/andre/Desktop/tmp/Décio Silva - dvfs-Aula4-Tradutor/Tradutor.java",
+		"/C/Users/andre/Desktop/tmp/Luís  Santos - lhns-tradutor/lhns/src/tradutor/Tradutor.java",
+		"/M/Uni-USB-Installer-Readme.txt",
+		"/M/README.diskdefines",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/Projeto de Métodos Computacionais.txt",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2016.1/Apresentações/main.vrb",
+		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/curso-calculo-numerico/main.tex",
+		"/W/public_html/programa-de-aula.js",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2015.2/Aula03/prog1.cpp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2015.2/Aula02/io_basico.cpp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2015.2/Aula02/incr_decr.cpp",
+		"/W/public_html/cronograma-2015-1.js",
+		"/C/Users/andre/Desktop/Mesa/classes-schedule-bot/example.js",
+		"/C/Users/andre/Desktop/Mesa/labes-bot/commands.json",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acronyms.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/ROOT",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Temporal_Faults_Algebra_dlist.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Temporal_Faults_Algebra.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Sliceable_dlist.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Sliceable.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Dlist.tex",
+		"/C/Users/andre/.isabelle/Isabelle2015/heaps/polyml-5.5.2_x86-cygwin/log/algebra",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/root.log",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/ROOT",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/Dlist.thy",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/references-jabref.bib",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/session.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Document.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/session.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.ind",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lox",
+		"/C/Users/andre/Desktop/COMPASS/Theme5/JointPapers/SEFM 2014 - Circus modelchecker/Circus/ERUs.tex",
+		"/C/Users/andre/Desktop/COMPASS/Theme5/JointPapers/SEFM 2014 - Circus modelchecker/cml/ERSystem.cml",
+		"/C/Users/andre/Desktop/COMPASS/Theme5/JointPapers/SEFM 2014 - Circus modelchecker/FORMULA/ERS.tex",
+		"/C/Users/andre/Desktop/COMPASS/Common/CaseStudies/EmergencyResponse/Rules-Led/model/InitRescue.cml",
+		"/C/Users/andre/Desktop/COMPASS/Common/CaseStudies/EmergencyResponse/Expert-Led-Complete/CompleteModel.cml",
+		"/C/Users/andre/Desktop/COMPASS/Theme2/WP24/T2.4.2/CSP/Insiel/InsielCaseStudy.csp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/Pré-algoritmos/2015.2/Aula05/prob1_max.cpp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/Pré-algoritmos/2015.2/Aula05/prob2_ordenar.cpp",
+		"/C/Users/andre/Desktop/LemasAuxiliares.thy",
+		"/C/Users/andre/BitTorrent Sync/LeaderPackage/Sub/Sub.output",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Table ABNT IBGE.sublime-snippet",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.sublime-snippet",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.xml",
+		"/C/Users/andre/Desktop/Mesa/Sub/Sub.output.txt.txt",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
+		"/C/Users/andre/Desktop/Mesa/2015-12-12 Concurso UFRPE/2016-01-11_resumos-ufrpe.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/ficha-catalografica.tex",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/thesis.sublime-project",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/main.log",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/AutoSpell/AutoSpell.sublime-settings",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/User/AutoSpell.sublime-settings",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Program Files/Sublime Text 3/Packages/Language - English.sublime-package",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/LaTeXTools.sublime-settings",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
+		"/C/Users/Andre/Dropbox/Organização/2016-02-06 Lista de presentes de Lu.txt",
+		"/C/Users/Andre/AppData/Roaming/MiKTeX/2.9/tex/latex/caption/subcaption.sty",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/if215ufpe.txt",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/provas.csv",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/turmas.csv",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/aulas.csv",
+		"/C/Users/andre/Dropbox/todo/todo.txt",
+		"/C/Users/andre/Dropbox/todo/todo (Cópia em conflito de Reis 2016-01-20).txt",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acro.sty",
+		"/C/Users/andre/Desktop/Set_Theory_and_Logic.bibtex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.log",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.pdf",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/delete.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lot",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrdacro.sty",
+		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/tocloft/tocloft.sty",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrd.sty",
+		"/C/Users/andre/Desktop/Mesa/2015-12-15 Avaliações 2015.2/Lista de alunos para revisão de prova da final de CE.txt",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_glossaries.tds.zip/doc/latex/glossaries/samples/sample-newkeys.tex",
+		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/acro/acro.sty",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/risethesis/resumo.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/risethesis.tex",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/LaTeXTools.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/banca.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/main.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/intro.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/appendix/mapping-study.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/chapters/introduction.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/agradecimentos.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/operating-and-support-hazard-analysis/replace-220v-electrical-outlet.csp",
+		"/C/Users/andre/Dropbox (Pessoal)/Doutorado/Prorrogação 2016.1 - novo.xml",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/suggested-reviewers.txt",
+		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/document/root.tex",
+		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/ROOT",
+		"/C/Users/andre/Desktop/nubank.csv",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/Todo.txt",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/.gitignore",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/svjour3.cls",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.output.txt",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.out",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.fdr.output.txt",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/AutoSpell.sublime-settings",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/AutoSpell/AutoSpell.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/conclusion.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/main.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/acknowledgements.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/caseStudy.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/output/document/Document.tex"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"codigo",
+			"codgio",
+			"a",
+			"lstlisting",
+			"enumerate",
+			"\\x",
+			"x",
+			"\\\\g",
+			"5",
+			"section",
+			"bit",
+			"itemize",
+			"}\n",
+			"lecture",
+			"sistema",
+			"semAula",
+			"if264",
+			"{\n",
+			"2016-03-09",
+			"Apresentaçãio",
+			"exibicao",
+			"algebraurl",
+			"www.cin",
+			"newcomm",
+			"acrony",
+			"acro",
+			"table",
+			"tabular",
+			"table",
+			"arraystr",
+			"table",
+			"space",
+			"tabular",
+			"4",
+			"midrule",
+			"longtable",
+			"table",
+			"label",
+			"thm",
+			"\\\\begin{figure}",
+			"includegraphicsaspectratio",
+			"\\\\begin{figure}",
+			"[t]",
+			"\\\\begin{figure}",
+			"includegraphicsaspectratio",
+			"\\\\begin{figure}",
+			"includegraphicsaspectratio",
+			"\\\\begin{figure",
+			"\\end{center}",
+			"\\\\begin{center}",
+			"\\\\caption{\\\\label",
+			"\\caption{\\label",
+			"\\\\begin{figure}",
+			"\\begin{figure}",
+			"\\\\begin{figure}",
+			"acs",
+			"Ac",
+			"\\\\begin{figure}",
+			"caption",
+			"\\\\begin{figure}",
+			"\\{figure\\}",
+			"Crefname",
+			"crefname",
+			"Crefname",
+			"crefname",
+			"Crefname",
+			"crefname",
+			"Crefname",
+			"crefname",
+			"Crefname",
+			"crefname",
+			"\\{figure\\}",
+			"env",
+			"\\{figure\\}",
+			"Ac",
+			"includegraphicsaspectratio",
+			"centering",
+			"includegraphicsaspectratio",
+			"centering",
+			"0.25",
+			"\\{figure\\}",
+			"caption",
+			"\\{figure\\}",
+			"figure",
+			"crefname",
+			"t",
+			"subsection",
+			"section",
+			"sec:conclusion",
+			"X",
+			"NOT",
+			"ATF",
+			"ActA",
+			"	",
+			"undefined",
+			"error",
+			"isabelle",
+			"{Theo}",
+			"{theo}",
+			"{Prop}",
+			"{Cor}",
+			"{Theo}",
+			"{Lem}",
+			"{Def}",
+			"def",
+			"Def",
+			"def",
+			"Def",
+			"{Def}",
+			"fault tree!cohe",
+			"\\\\index{dependability",
+			"\\\\index{dependability}",
+			"dependability",
+			"} ",
+			"dependability",
+			"Boolean",
+			"boolean",
+			"Boolean",
+			"\\index{Boolean Algebra}",
+			"Boolean",
+			"Boolean Algebra",
+			"Boolean algebra",
+			"shannon",
+			"{SBDD}",
+			"\\{SBDD\\}",
+			"SBDD",
+			"\\\\ac{BDD}",
+			"\\ac{BDD}"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"Apresentação",
+			"\\\\centering",
+			"\\\\index{Dependability",
+			"\\\\index{Dependability}",
+			"an un",
+			"\\\\$1c$2*\\{",
+			"\\$1c$2*\\{",
+			"\\{CSPm\\}",
+			"Binary Decision Diagrams!",
+			"FBA",
+			"\\index{Minimal Cut!Sets}",
+			"\\index{Minimal Cut Sets}\\index{Minimal Cut!Sets}",
+			"\\\\ac{hiphops}",
+			"\\\\acs",
+			"\\\\section",
+			"structure-expressions",
+			"\\1 expression",
+			"\\\\caption",
+			"\\\\inter",
+			"\\\\union",
+			"sec",
+			"\\\\tempo[4]",
+			"\\\\tempo[3]",
+			"\\\\tempo[2]",
+			"\\\\tempo[1]",
+			"$\\1$",
+			"\\\\fdr",
+			"\\\\csp",
+			"\\\\cspm",
+			"\\cspm",
+			"",
+			"verificaVetor",
+			"printf",
+			"i",
+			"fabs(",
+			"n->",
+			"Acertos da questão"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "main.tex",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2093,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								199,
+								199
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 174.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Qualificação PhD.sublime-project",
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 210.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
