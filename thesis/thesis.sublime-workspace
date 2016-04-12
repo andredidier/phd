@@ -256,6 +256,14 @@
 			}
 		},
 		{
+			"file": "thesis.sublime-project",
+			"settings":
+			{
+				"buffer_size": 127,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "isabelle-hol-basic/ROOT",
 			"settings":
 			{
@@ -355,11 +363,7 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/andre/git/phd-alrd/thesis",
-		"/C/Users/andre/git/phd-alrd/thesis/algebra/output",
-		"/C/Users/andre/git/phd-alrd/thesis/algebra/output/document",
-		"/C/Users/andre/git/phd-alrd/thesis/isabelle-hol-basic/output",
-		"/C/Users/andre/git/phd-alrd/thesis/isabelle-hol-basic/output/document"
+		"/C/Users/andre/git/phd-alrd/thesis"
 	],
 	"file_history":
 	[
@@ -689,7 +693,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -746,11 +750,40 @@
 						"translation.y": 2155.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "thesis.sublime-project",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 127,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								127
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
 					"file": "isabelle-hol-basic/ROOT",
 					"semi_transient": false,
 					"settings":
@@ -774,11 +807,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 3,
 					"file": "acronyms.tex",
 					"semi_transient": false,
 					"settings":
@@ -803,7 +836,7 @@
 						"translation.y": 1350.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]

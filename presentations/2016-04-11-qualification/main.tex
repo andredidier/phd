@@ -17,7 +17,8 @@
 \usepackage[british]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc} 
-    
+\usepackage{xspace}
+
 \title{An Algebra of Temporal Faults}
 \subtitle{PhD Qualification}
 \date{April 2016}
@@ -31,6 +32,82 @@ Centre of Informatics
 
 \subject{Qualification presentation}
 
+%%%%%%%%%%%%%%%%%%% Acronyms
+\def\FTA{Fault Tree Analysis (FTA)\gdef\FTA{FTA\xspace}\xspace}
+\def\FT{%
+	Fault Tree (FT)%
+	\gdef\FT{FT\xspace}%
+	\gdef\FTs{FTs\xspace}%
+	\xspace%
+}
+\def\FTs{%
+	Fault Trees (FTs)%
+	\gdef\FT{FT\xspace}%
+	\gdef\FTs{FTs\xspace}%
+	\xspace%
+}
+\def\MCS{%
+	Minimal Cut Set (MCS)%
+	\gdef\MCS{MCS\xspace}%
+	\gdef\MCSs{MCSs\xspace}%
+	\xspace%
+}
+\def\MCSs{%
+	Minimal Cut Sets (MCSs)%
+	\gdef\MCS{MCS\xspace}%
+	\gdef\MCSs{MCSs\xspace}%
+	\xspace%
+}
+\def\SFT{%
+	Static Fault Tree (SFT)%
+	\gdef\SFT{SFT\xspace}%
+	\gdef\SFTs{SFTs\xspace}%
+	\xspace%
+}
+\def\SFTs{%
+	Static Fault Trees (SFTs)%
+	\gdef\SFT{SFT\xspace}%
+	\gdef\SFTs{SFTs\xspace}%
+	\xspace%
+}
+\def\TFT{%
+	Temporal Fault Tree (TFT)%
+	\gdef\TFT{TFT\xspace}%
+	\gdef\TFTs{TFTs\xspace}%
+	\xspace%
+}
+\def\TFTs{%
+	Temporal Fault Trees (TFTs)%
+	\gdef\TFT{TFT\xspace}%
+	\gdef\TFTs{TFTs\xspace}%
+	\xspace%
+}
+\def\DFT{%
+	Dynamic Fault Tree (DFT)%
+	\gdef\DFT{DFT\xspace}%
+	\gdef\DFTs{DFTs\xspace}%
+	\xspace%
+}
+\def\DFTs{%
+	Dynamic Fault Trees (DFTs)%
+	\gdef\DFT{DFT\xspace}%
+	\gdef\DFTs{DFTs\xspace}%
+	\xspace%
+}
+\def\FBA{%
+	Free Boolean Algebra (FBA)%
+	\gdef\FBA{FBA\xspace}%
+	\gdef\FBAs{FBAs\xspace}%
+	\xspace%
+}
+\def\FBAs{%
+	Free Boolean Algebras (FBAs)%
+	\gdef\FBA{FBA\xspace}%
+	\gdef\FBAs{FBAs\xspace}%
+	\xspace%
+}
+%%%%%%%%%%%%%%%%%%% Acronyms (end)
+
 \begin{document}
 
 \begin{frame}[label=title]
@@ -39,8 +116,66 @@ Centre of Informatics
 \end{frame}
 
 \section{Introduction}
+\begin{frame}
+	\frametitle{Introduction}
+	\begin{itemize}
+		\item Safety is a crucial concern on critical systems
+		\item \FTA is a deductive method to assess safety: premisses are leaves (basic events) and conclusions are roots (top events)
+		\item Structure expressions represent the structure of \FTs
+		\begin{itemize}
+			\item \MCSs discover and top-event probability calculus use these expressions
+		\end{itemize}
+		\item Other kinds of \FTs: \TFT and \DFT
+		\begin{itemize}
+			\item \SFT is used to distinguish original \FTs from the other kinds of \FTs
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Example of structure expression}
+	TODO: colocar figura de árvore e sua expressão de estrutura
+\end{frame}
+
+\begin{frame}
+	\frametitle{\FTs and structure expressions}
+	\begin{itemize}
+		\item \SFTs: structure expressions, Shannon method (later BDDs) in the Fault Tree Handbook
+		\item \TFTs: Pandora, structure expressions, and the full implementation of the Fault Tree Handbook (Papadopoulos, Walker)
+		\begin{itemize}
+			\item Operators: PAND, POR, SAND
+		\end{itemize}
+		\item \DFTs: defined as a visual representation and to improve expressiveness of Markov chains (Boyd and Dugan); structure expressions and calculus of top-event probability for \DFTs shown in the work of Merle
+		\begin{itemize}
+			\item Operators: CSp, SEQ, FDEP
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
 \subsection{Research questions}
+
+\begin{frame}
+	\frametitle{Mathematical models}
+	\begin{itemize}
+		\item \SFTs have a mathematical model based on \FBA
+		\item There are different mathematical models for \TFTs and \DFTs, none is similar to \FBA
+		\item Models for \TFTs and \DFTs are not ready for NOT gates, although it has its importance
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Research questions}
+	\begin{itemize}
+		\item Is there a mathematical model that unifies the representation of \SFTs, \TFTs and \DFTs?
+		\item Can this model represent ordering of events for \TFTs and \DFTs? 
+		\item Does this model allow formula reduction to a normal form?
+	\end{itemize}
+\end{frame}
+
 \subsection{Proposed solution}
+\begin{frame}
+	\frametitle{Proposed solution overview}
+\end{frame}
 
 \section{Background}
 \subsection{Systems, dependability, and fault modelling}

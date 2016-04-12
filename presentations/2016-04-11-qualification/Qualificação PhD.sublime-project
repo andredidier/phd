@@ -1,2 +1,10 @@
 {
+	"settings":
+	{
+		"TEXroot": "main.tex",
+		"tex_file_exts":
+		[
+			".tex"
+		]
+	}
 }
