@@ -18,6 +18,13 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc} 
 \usepackage{xspace}
+\usepackage{graphicx}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+
+%\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\DeclareGraphicsExtensions{.pdf,.eps,.png}
+%\DeclareGraphicsExtensions{.png}
+\graphicspath{{./../../thesis/},{./}}
 
 \title{An Algebra of Temporal Faults}
 \subtitle{PhD Qualification}
@@ -98,15 +105,69 @@ Centre of Informatics
 	Free Boolean Algebra (FBA)%
 	\gdef\FBA{FBA\xspace}%
 	\gdef\FBAs{FBAs\xspace}%
+	\gdef\iFBA{an FBA\xspace}%
 	\xspace%
 }
 \def\FBAs{%
 	Free Boolean Algebras (FBAs)%
 	\gdef\FBA{FBA\xspace}%
 	\gdef\FBAs{FBAs\xspace}%
+	\gdef\iFBA{an FBA\xspace}%
+	\xspace%
+}
+\def\iFBA{%
+	a Free Boolean Algebra (FBA)%
+	\gdef\FBA{FBA\xspace}%
+	\gdef\FBAs{FBAs\xspace}%
+	\gdef\iFBA{an FBA\xspace}%
+	\xspace%
+}
+\def\ATF{%
+	Algebra of Temporal Faults (ATF)%
+	\gdef\ATF{ATF\xspace}%
+	\gdef\iATF{an ATF\xspace}%
+	\gdef\IATF{An ATF\xspace}%
+	\xspace%
+}
+\def\IlATF{%
+	An Algebra of Temporal Faults (ATF)%
+	\gdef\ATF{ATF\xspace}%
+	\gdef\iATF{an ATF\xspace}%
+	\gdef\IATF{An ATF\xspace}%
+	\xspace%
+}
+\def\iATF{%
+	an Algebra of Temporal Faults (ATF)%
+	\gdef\ATF{ATF\xspace}%
+	\gdef\iATF{an ATF\xspace}%
+	\gdef\IATF{An ATF\xspace}%
+	\xspace%
+}
+\def\IATF{%
+	An Algebra of Temporal Faults (ATF)%
+	\gdef\ATF{ATF\xspace}%
+	\gdef\iATF{an ATF\xspace}%
+	\gdef\IATF{An ATF\xspace}%
 	\xspace%
 }
 %%%%%%%%%%%%%%%%%%% Acronyms (end)
+%%%%%%%%%%%%%%%%%%% Commands
+\newcommand{\includegraphicsaspectratio}[2][1]{%
+  \includegraphics[width=#1\textwidth,height=#1\textheight,keepaspectratio]{#2}%
+}
+\def\pand{\ensuremath\operatorname{<}}
+\def\por{\ensuremath\operatorname{|}}
+\def\sand{\ensuremath\operatorname{\&}}
+\def\nibefore{\ensuremath\operatorname{\lhd}}
+\def\ibefore{\ensuremath\operatorname{\unlhd}}
+\def\simultaneous{\ensuremath\operatorname{\bigtriangleup}}
+\def\probabilityop{\ensuremath \Pr}
+\newcommand{\probability}[1]{\ensuremath \probabilityop\parsin{#1}}
+\def\varop{\ensuremath\operatorname{\mathbf{var}}}
+\newcommand{\var}[1]{\ensuremath\varop #1}
+\def\union{\ensuremath\operatorname{\cup}}
+\def\inter{\ensuremath\operatorname{\cap}}
+%%%%%%%%%%%%%%%%%%% Commands (end)
 
 \begin{document}
 
@@ -157,8 +218,12 @@ Centre of Informatics
 \begin{frame}
 	\frametitle{Mathematical models}
 	\begin{itemize}
-		\item \SFTs have a mathematical model based on \FBA
+		\item \SFTs have a mathematical model based on \FBA (the expressions evaluate to a set of sets)
 		\item There are different mathematical models for \TFTs and \DFTs, none is similar to \FBA
+		\begin{itemize}
+			\item \TFTs: sequence value function (evaluates to a discrete order natural number)
+			\item \DFTs: date-of-occurrence function (evaluates to a date)
+		\end{itemize}
 		\item Models for \TFTs and \DFTs are not ready for NOT gates, although it has its importance
 	\end{itemize}
 \end{frame}
@@ -174,17 +239,185 @@ Centre of Informatics
 
 \subsection{Proposed solution}
 \begin{frame}
-	\frametitle{Proposed solution overview}
+	\begin{center}
+		\includegraphicsaspectratio[1]{StrategyOverview}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{\IlATF}
+	\begin{itemize}
+		\item The algebra has a denotational semantics that evaluates to a set of lists
+		\begin{itemize}
+			\item In \FBAs, each set corresponds to a ``true'' value
+			\item In the \ATF, each \emph{list} corresponds to a ``true'' value
+		\end{itemize}
+		\item The \ATF is a conservative extension of Boolean Algebra (\SFT)
+		\item \TFTs and \DFTs gates can be expressed with gates that are order-based
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Agenda}
+	\begin{itemize}
+		\item Background
+		\begin{itemize}
+			\item systems, dependability, and fault modelling; 
+			\item time relation of fault events;
+		\end{itemize}
+		\item Analysis and tools
+		\begin{itemize}
+			\item \FTA, 
+			\item structure expressions, 
+			\item \FBAs, 
+			\item importance of the NOT operator
+		\end{itemize}
+		\item Contributions
+		\begin{itemize}
+			\item the algebra, 
+			\item temporal properties, 
+			\item XBefore laws, 
+			\item propositions
+		\end{itemize}
+		\item Case study
+	\end{itemize}
 \end{frame}
 
 \section{Background}
+
 \subsection{Systems, dependability, and fault modelling}
+
+\begin{frame}
+	\frametitle{Systems and dependability}
+	\begin{itemize}
+		\item Systems are characterized by five properties: functionality, performance, \emph{cost}, \emph{dependability}, and security
+		\item Dependability
+		\begin{itemize}
+			\item Threats: fault-error-failure chain
+			\item Attributes: availability, reliability, \emph{safety}, integrity, maintainability
+			\item Means to attain: Fault tolerance and removal by injecting faults (model-checking), theorem proving, and symbolic execution
+		\end{itemize}
+		\item Hardware and software are connected: software faults may cause a failure in a software-controlled hardware, and hardware faults may send incorrect date, causing a failure
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Fault modelling}
+	\begin{itemize}
+		\item SAE ARP4761 (safety assessment process for civil airborne systems) describe development cycles and methods to ``clearly identify each failure condition''
+		\item \SFTs, Dependence Diagrams, and Markov chains are involved in failure identification
+		\begin{itemize}
+		%TODO there is a relaction of DD and SFTs, as well as DRBD abd DFTs
+			\item Recall that Markov chains are the basis for \DFTs
+		\end{itemize}
+		\item \FTs are present in several stages of systems' modelling (which depends on fault modelling)
+	\end{itemize}
+\end{frame}
+
 \subsection{Time relation of fault events}
 
+\begin{frame}
+	\frametitle{Background: time relations}
+	\begin{center}
+		\includegraphicsaspectratio[0.5]{time-relations}
+	\end{center}
+\end{frame}
+
 \section{Analysis and tools}
-\subsection{Fault Tree Analysis}
-\subsection{Structure expressions analysis}
-\subsection{Free Boolean algebrass}
+\subsection{Fault Tree Analysis and structure expressions}
+\begin{frame}
+	\frametitle{\SFT}
+	\begin{center}
+		\includegraphicsaspectratio[0.9]{sft-example-ald-software}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{\SFT structure expression}
+	\begin{center}
+		\includegraphicsaspectratio[0.45]{ex-fault-tree1}\\
+		$TOP = a \land b$
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{\TFT}
+	\begin{center}
+		\includegraphicsaspectratio[0.55]{tft-small-example}\\
+		$TOP = (A < C) \lor (A \land B)$
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{\TFT's temporal truth table}
+	\begin{center}
+	\scriptsize
+		$TOP = (A < C) \lor (A \land B)$\\
+		\begin{tabular}{cccccc}
+			$A$ & $B$ & $C$ & $A < C$ & $A \land B$ & $TOP$\\
+			\hline
+			0 & 0 & 0 & 0 & 0 & \textbf{0}\\
+			\ldots\\
+			1 & 0 & 2 & 2 & 0 & \textbf{2}\\
+			1 & 1 & 0 & 0 & 1 & \textbf{1}\\
+			\ldots\\
+			1 & 1 & 2 & 2 & 1 & \textbf{1}\\
+			1 & 2 & 1 & 0 & 2 & \textbf{2}\\
+			1 & 2 & 2 & 2 & 2 & \textbf{2}\\
+			\ldots\\
+			1 & 3 & 2 & 2 & 3 & \textbf{2}\\
+			\ldots\\
+			2 & 1 & 3 & 3 & 2 & \textbf{2}\\
+			2 & 2 & 1 & 0 & 2 & \textbf{2}\\
+			\ldots\\
+			3 & 1 & 2 & 0 & 3 & \textbf{3}\\
+			\ldots\\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{\DFT}
+	\begin{center}
+		\scriptsize
+		\includegraphicsaspectratio[0.60]{dft-example-mrl2014}
+		\begin{align*}
+		SYSTEM =& CS \lor SS \lor (M \land MC) \lor \\
+			&(P \land (B_d \nibefore P)) \lor (B_a \land (P \nibefore B_a)) \lor \\
+			&(BP_a \land (P2 \nibefore P1) \land (P1 \nibefore BP_a)) \lor
+			(P2 \land (P1 \nibefore BP_a) \land (BP_a \nibefore P2))
+		\end{align*}
+	\end{center}
+\end{frame}
+
+\subsection{Free Boolean algebras}
+
+\begin{frame}
+	\frametitle{\FBA}
+	\begin{itemize}
+		\item Generators of \iFBA are independent statements (or independent events). Some examples:
+		\begin{itemize}
+			\item ``valve A is stuck closed''
+			\item ``motor M is malfunctioning''
+		\end{itemize}
+		\item Let $E$ be a set of generators. An algebra is constructed from the power set of $E$: the set of sets of the elements of $E$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{\FBA}
+	Inductive definition of \iFBA:
+	\begin{subequations}
+		\begin{align}
+		\var s = \{X | s \in X\} & \implies \var s \in B & \text{(variable)}\\
+		X \in B & \implies -X \in B                           & \text{(complement)}\\
+		X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
+		\end{align}
+	\end{subequations}
+	Bottom and top of the algebra's lattice, and the union operator are obtained from DeMorgan laws.
+\end{frame}
+
 \subsection{NOT operator in SFTs}
 \subsection{Nominal model and fault injection}
 \subsection{Isabelle/HOL}
