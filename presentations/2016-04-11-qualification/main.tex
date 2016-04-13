@@ -162,11 +162,15 @@ Centre of Informatics
 \def\ibefore{\ensuremath\operatorname{\unlhd}}
 \def\simultaneous{\ensuremath\operatorname{\bigtriangleup}}
 \def\probabilityop{\ensuremath \Pr}
-\newcommand{\probability}[1]{\ensuremath \probabilityop\parsin{#1}}
+\newcommand{\probability}[1]{\ensuremath \probabilityop\left({#1}\right)}
 \def\varop{\ensuremath\operatorname{\mathbf{var}}}
 \newcommand{\var}[1]{\ensuremath\varop #1}
 \def\union{\ensuremath\operatorname{\cup}}
 \def\inter{\ensuremath\operatorname{\cap}}
+%\def\ftcoherencyop{\ensuremath\operatorname{\Phi}}
+\def\ftcoherencyop{\ensuremath\operatorname{\phi}}
+\newcommand{\ftcoherency}[1]{\ensuremath\ftcoherencyop\left(#1\right)}
+\newcommand{\replace}[2]{\ensuremath\left[#1\middle/#2\right]}
 %%%%%%%%%%%%%%%%%%% Commands (end)
 
 \begin{document}
@@ -419,6 +423,72 @@ Centre of Informatics
 \end{frame}
 
 \subsection{NOT operator in SFTs}
+
+\begin{frame}
+	\frametitle{NOT operator in SFTs: coherency}
+	Definition of coherency:
+	\begin{itemize}
+		\item $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
+		\item Each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Non-coherent tree}
+	\begin{center}
+		\includegraphicsaspectratio[0.55]{non-coherent-ft-example}\\
+		$S = \left(x_1 \land x_3\right) \lor \left(x_2 \land \lnot x_3\right)$\\
+		$\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0} \implies \text{non-coherent}$
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Usefulness of the NOT gate}
+	\begin{center}
+		\begin{minipage}{0.6\textwidth}
+			\includegraphicsaspectratio[1]{ft-generic-failure-gas-detection-system}
+		\end{minipage}
+		\begin{minipage}{0.39\textwidth}
+			\footnotesize
+			\begin{description}
+				\item[$L$:] lamp (informative)
+				\item[$R_1$, $R_2$:] relays (actuators)
+				\item[$D_1$, $D_2$:] sensors
+				\item[$LU$:] logic control unit
+			\end{description}
+			\begin{align*}
+				G_1 & = L \lor LU \lor \left(D_1 \land D_2\right)\\
+				G_2 & = R_1 \lor LU \lor \left(D_1 \land D_2\right)\\
+				G_3 & = R_2 \lor LU \lor \left(D_1 \land D_2\right)
+			\end{align*}
+		\end{minipage}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Most critical outcome}
+	\footnotesize
+	\begin{itemize}
+		\item Process isolation shuts down ($G_2$), power supply isolation fails ($G_3$) and operator is not informed ($G_1$) but the operator information system is working (lamp and siren are off, but they are operational)
+	\end{itemize}
+	\begin{minipage}{0.38\textwidth}
+		\footnotesize
+		\includegraphicsaspectratio[0.95]{outcome-4-coherent-ft}
+		\begin{itemize}
+			\item Coherent tree, without event ``operator not informed''
+			\item Minimal cut sets: $\left\{R_1, R_2\right\}, \left\{D_1, D_2\right\}, \left\{LU\right\} $
+		\end{itemize}
+	\end{minipage}
+	\begin{minipage}{0.52\textwidth}
+		\footnotesize
+		\includegraphicsaspectratio[0.95]{outcome-4-non-coherent-ft}
+		\begin{itemize}
+			\item Structure expression of the non-coherent tree: $\lnot L \land \lnot LU \land R_1 \land R_2 \land \left(\lnot D_1 \lor \lnot D_2\right)$
+			\item Minimal cut set after approximation: $\left\{R_1, R_2\right\} $
+		\end{itemize}
+	\end{minipage}
+\end{frame}
+
 \subsection{Nominal model and fault injection}
 \subsection{Isabelle/HOL}
 
@@ -437,14 +507,17 @@ Centre of Informatics
 
 \begin{frame}
 \frametitle{Status}
+TODO
 \end{frame}
 
 \begin{frame}
 \frametitle{Next steps in the thesis}
+TODO
 \end{frame}
 
 \begin{frame}
 \frametitle{Future work, out of the scope of this thesis}
+TODO
 \end{frame}
 
 %\begin{frame}
