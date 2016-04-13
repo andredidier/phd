@@ -44,7 +44,7 @@ which provides a text editor, syntax parser, shortcuts, etc. (see
   \label{fig:basic-symmetry-isabelle-window}
 \end{figure}
 
-Theories on Isabelle/HOL are based in a few axioms.
+Theories on Isabelle/HOL are based on a few axioms.
 %
 Isabelle/HOL Library's theories---which comes with the installer---and user's theories are based on 
 these axioms.

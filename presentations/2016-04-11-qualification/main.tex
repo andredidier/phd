@@ -20,6 +20,7 @@
 \usepackage{xspace}
 \usepackage{graphicx}
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{verbatim}
 
 %\DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \DeclareGraphicsExtensions{.pdf,.eps,.png}
@@ -45,12 +46,21 @@ Centre of Informatics
 	Fault Tree (FT)%
 	\gdef\FT{FT\xspace}%
 	\gdef\FTs{FTs\xspace}%
+	\gdef\IFT{An FT\xspace}%
 	\xspace%
 }
 \def\FTs{%
 	Fault Trees (FTs)%
 	\gdef\FT{FT\xspace}%
 	\gdef\FTs{FTs\xspace}%
+	\gdef\IFT{An FT\xspace}%
+	\xspace%
+}
+\def\IFT{%
+	A Fault Tree (FT)%
+	\gdef\FT{FT\xspace}%
+	\gdef\FTs{FTs\xspace}%
+	\gdef\IFT{An FT\xspace}%
 	\xspace%
 }
 \def\MCS{%
@@ -171,6 +181,7 @@ Centre of Informatics
 \def\ftcoherencyop{\ensuremath\operatorname{\phi}}
 \newcommand{\ftcoherency}[1]{\ensuremath\ftcoherencyop\left(#1\right)}
 \newcommand{\replace}[2]{\ensuremath\left[#1\middle/#2\right]}
+\def\CSPm{CSP$_M$}
 %%%%%%%%%%%%%%%%%%% Commands (end)
 
 \begin{document}
@@ -181,8 +192,7 @@ Centre of Informatics
 \end{frame}
 
 \section{Introduction}
-\begin{frame}
-	\frametitle{Introduction}
+\begin{frame}{Introduction}
 	\begin{itemize}
 		\item Safety is a crucial concern on critical systems
 		\item \FTA is a deductive method to assess safety: premisses are leaves (basic events) and conclusions are roots (top events)
@@ -197,13 +207,7 @@ Centre of Informatics
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Example of structure expression}
-	TODO: colocar figura de árvore e sua expressão de estrutura
-\end{frame}
-
-\begin{frame}
-	\frametitle{\FTs and structure expressions}
+\begin{frame}{\FTs and structure expressions}
 	\begin{itemize}
 		\item \SFTs: structure expressions, Shannon method (later BDDs) in the Fault Tree Handbook
 		\item \TFTs: Pandora, structure expressions, and the full implementation of the Fault Tree Handbook (Papadopoulos, Walker)
@@ -219,8 +223,7 @@ Centre of Informatics
 
 \subsection{Research questions}
 
-\begin{frame}
-	\frametitle{Mathematical models}
+\begin{frame}{Mathematical models}
 	\begin{itemize}
 		\item \SFTs have a mathematical model based on \FBA (the expressions evaluate to a set of sets)
 		\item There are different mathematical models for \TFTs and \DFTs, none is similar to \FBA
@@ -232,8 +235,7 @@ Centre of Informatics
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Research questions}
+\begin{frame}{Research questions}
 	\begin{itemize}
 		\item Is there a mathematical model that unifies the representation of \SFTs, \TFTs and \DFTs?
 		\item Can this model represent ordering of events for \TFTs and \DFTs? 
@@ -248,8 +250,7 @@ Centre of Informatics
 	\end{center}
 \end{frame}
 
-\begin{frame}
-	\frametitle{\IlATF}
+\begin{frame}{\IlATF}
 	\begin{itemize}
 		\item The algebra has a denotational semantics that evaluates to a set of lists
 		\begin{itemize}
@@ -261,8 +262,7 @@ Centre of Informatics
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Agenda}
+\begin{frame}{Agenda}
 	\begin{itemize}
 		\item Background
 		\begin{itemize}
@@ -291,8 +291,7 @@ Centre of Informatics
 
 \subsection{Systems, dependability, and fault modelling}
 
-\begin{frame}
-	\frametitle{Systems and dependability}
+\begin{frame}{Systems and dependability}
 	\begin{itemize}
 		\item Systems are characterized by five properties: functionality, performance, \emph{cost}, \emph{dependability}, and security
 		\item Dependability
@@ -305,8 +304,7 @@ Centre of Informatics
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Fault modelling}
+\begin{frame}{Fault modelling}
 	\begin{itemize}
 		\item SAE ARP4761 (safety assessment process for civil airborne systems) describe development cycles and methods to ``clearly identify each failure condition''
 		\item \SFTs, Dependence Diagrams, and Markov chains are involved in failure identification
@@ -320,8 +318,7 @@ Centre of Informatics
 
 \subsection{Time relation of fault events}
 
-\begin{frame}
-	\frametitle{Background: time relations}
+\begin{frame}{Background: time relations}
 	\begin{center}
 		\includegraphicsaspectratio[0.5]{time-relations}
 	\end{center}
@@ -329,31 +326,27 @@ Centre of Informatics
 
 \section{Analysis and tools}
 \subsection{Fault Tree Analysis and structure expressions}
-\begin{frame}
-	\frametitle{\SFT}
+\begin{frame}{\SFT}
 	\begin{center}
 		\includegraphicsaspectratio[0.9]{sft-example-ald-software}
 	\end{center}
 \end{frame}
 
-\begin{frame}
-	\frametitle{\SFT structure expression}
+\begin{frame}{\SFT structure expression}
 	\begin{center}
 		\includegraphicsaspectratio[0.45]{ex-fault-tree1}\\
 		$TOP = a \land b$
 	\end{center}
 \end{frame}
 
-\begin{frame}
-	\frametitle{\TFT}
+\begin{frame}{\TFT}
 	\begin{center}
 		\includegraphicsaspectratio[0.55]{tft-small-example}\\
 		$TOP = (A < C) \lor (A \land B)$
 	\end{center}
 \end{frame}
 
-\begin{frame}
-	\frametitle{\TFT's temporal truth table}
+\begin{frame}{\TFT's temporal truth table}
 	\begin{center}
 	\scriptsize
 		$TOP = (A < C) \lor (A \land B)$\\
@@ -381,8 +374,7 @@ Centre of Informatics
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]
-	\frametitle{\DFT}
+\begin{frame}[fragile]{\DFT}
 	\begin{center}
 		\scriptsize
 		\includegraphicsaspectratio[0.60]{dft-example-mrl2014}
@@ -397,8 +389,7 @@ Centre of Informatics
 
 \subsection{Free Boolean algebras}
 
-\begin{frame}
-	\frametitle{\FBA}
+\begin{frame}{\FBA}
 	\begin{itemize}
 		\item Generators of \iFBA are independent statements (or independent events). Some examples:
 		\begin{itemize}
@@ -409,8 +400,7 @@ Centre of Informatics
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-	\frametitle{\FBA}
+\begin{frame}[fragile]{\FBA}
 	Inductive definition of \iFBA:
 	\begin{subequations}
 		\begin{align}
@@ -422,10 +412,20 @@ Centre of Informatics
 	Bottom and top of the algebra's lattice, and the union operator are obtained from DeMorgan laws.
 \end{frame}
 
+\begin{frame}{Formulas in \FBA}
+	\begin{itemize}
+		\item \IFT event is a statement in \FBA
+		\begin{itemize}
+			\item For example, fault $F_1$ and $F_2$ becomes $\var F_1$ and $\var F_2$ in \FBA (the set of generators contains only the two events)
+			\item If a top event is given by $F_1 \land F_2$, the expression in \FBA is $\var F_1 \inter \var F_2$
+			\item In the denotational semantics, the formula has the following sets:
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
 \subsection{NOT operator in SFTs}
 
-\begin{frame}
-	\frametitle{NOT operator in SFTs: coherency}
+\begin{frame}{NOT operator in SFTs: coherency}
 	Definition of coherency:
 	\begin{itemize}
 		\item $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
@@ -433,8 +433,7 @@ Centre of Informatics
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Non-coherent tree}
+\begin{frame}{Non-coherent tree}
 	\begin{center}
 		\includegraphicsaspectratio[0.55]{non-coherent-ft-example}\\
 		$S = \left(x_1 \land x_3\right) \lor \left(x_2 \land \lnot x_3\right)$\\
@@ -442,8 +441,7 @@ Centre of Informatics
 	\end{center}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Usefulness of the NOT gate}
+\begin{frame}{Usefulness of the NOT gate}
 	\begin{center}
 		\begin{minipage}{0.6\textwidth}
 			\includegraphicsaspectratio[1]{ft-generic-failure-gas-detection-system}
@@ -465,8 +463,7 @@ Centre of Informatics
 	\end{center}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Most critical outcome}
+\begin{frame}{Most critical outcome}
 	\footnotesize
 	\begin{itemize}
 		\item Process isolation shuts down ($G_2$), power supply isolation fails ($G_3$) and operator is not informed ($G_1$) but the operator information system is working (lamp and siren are off, but they are operational)
@@ -490,10 +487,58 @@ Centre of Informatics
 \end{frame}
 
 \subsection{Nominal model and fault injection}
-\subsection{Isabelle/HOL}
+
+\begin{frame}[fragile]{Monitor component nominal model}
+	\begin{center}
+		\includegraphicsaspectratio[0.60]{blockDiagramMonitorInternals}
+	\end{center}
+	\begin{itemize}
+		\item Each component has a \CSPm process
+		\item The model is the synchronization of the components' processes
+		\item Temporal dependency of events through a \verb$tick$ event
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Monitor component breakable model}
+	\footnotesize
+	\begin{center}
+		\includegraphicsaspectratio[0.60]{monitor-breakable}
+	\end{center}
+	\begin{itemize}
+		\item For each hardware signal, a new signal process is created and synchronizes in inputs and outputs of the components
+		\item The breakable version allows the hardware signals to behave arbitrarily, changing output values or omitting them
+		\item The failure cases are those when the observed output on the breakable version is different from the nominal one
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{\SFT structure expressions from fault injection output traces}
+	\begin{itemize}
+		\item From the traces generated by the observer, we extracted failure expressions (local structure expressions)
+		\item These expressions ignore order and consider only event occurrence
+	\end{itemize}
+\end{frame}
 
 \section{Contributions}
 \subsection{A free algebra to express structure expressions}
+
+\begin{frame}{Representing three kinds of \FTs}
+	\begin{itemize}
+		\item Structure expressions of \SFTs are not related to order
+		\item Existing structure expressions of \TFTs and \DFTs can represent \SFTs' structure expressions, but non can represent NOT gates
+		\item \TFT's structure expressions is based on a sequence value function
+		\item \DFT's is based on a date-of-occurrence function
+		\item All three kinds can be represented by an order-based operator
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The algebra}
+	\begin{itemize}
+		\item Why lists? Simple: built-in order representation.
+		\item Boolean algebra lattice order: set inclusion
+		\item In 
+	\end{itemize}
+\end{frame}
+
 \subsection{Temporal properties}
 \subsection{XBefore laws}
 \subsection{Propositions}
@@ -505,18 +550,15 @@ Centre of Informatics
 \section{Final remarks}
 \subsection{Conclusion}
 
-\begin{frame}
-\frametitle{Status}
+\begin{frame}{Status}
 TODO
 \end{frame}
 
-\begin{frame}
-\frametitle{Next steps in the thesis}
+\begin{frame}{Next steps in the thesis}
 TODO
 \end{frame}
 
-\begin{frame}
-\frametitle{Future work, out of the scope of this thesis}
+\begin{frame}{Future work, out of the scope of this thesis}
 TODO
 \end{frame}
 

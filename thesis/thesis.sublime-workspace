@@ -256,22 +256,6 @@
 			}
 		},
 		{
-			"file": "thesis.sublime-project",
-			"settings":
-			{
-				"buffer_size": 127,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "isabelle-hol-basic/ROOT",
-			"settings":
-			{
-				"buffer_size": 215,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "acronyms.tex",
 			"settings":
 			{
@@ -367,6 +351,8 @@
 	],
 	"file_history":
 	[
+		"/C/Users/andre/git/phd-alrd/thesis/isabelle-hol-basic/ROOT",
+		"/C/Users/andre/git/phd-alrd/thesis/thesis.sublime-project",
 		"/C/Users/andre/git/phd-alrd/thesis/capa.tex",
 		"/C/Users/andre/git/phd-alrd/thesis/algebra/ROOT",
 		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Temporal_Faults_Algebra_dlist.tex",
@@ -492,9 +478,7 @@
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/document/after_theory.tex",
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/Document.thy",
 		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/MySession/ROOT",
-		"/C/Users/andre/Desktop/Mesa/Ata da turma S8.txt",
-		"/C/Users/andre/Dropbox/Organização/Documentos/Sync_Pro_Purchase_30610.btskey",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.out"
+		"/C/Users/andre/Desktop/Mesa/Ata da turma S8.txt"
 	],
 	"find":
 	{
@@ -693,7 +677,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -734,8 +718,8 @@
 						"selection":
 						[
 							[
-								4787,
-								4787
+								19691,
+								19691
 							]
 						],
 						"settings":
@@ -747,71 +731,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2155.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "thesis.sublime-project",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 127,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								127
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 8959.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "isabelle-hol-basic/ROOT",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 215,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
+					"buffer": 1,
 					"file": "acronyms.tex",
 					"semi_transient": false,
 					"settings":
@@ -836,7 +763,7 @@
 						"translation.y": 1350.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
