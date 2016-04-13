@@ -251,7 +251,15 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 12289,
+				"buffer_size": 20240,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/andre/git/beamerthemecin-code/beamerthemeCIn20131120.sty",
+			"settings":
+			{
+				"buffer_size": 6170,
 				"line_ending": "Windows"
 			}
 		},
@@ -347,12 +355,16 @@
 	},
 	"file_history":
 	[
+		"/C/Users/andre/git/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
+		"/C/Users/andre/Desktop/Teste.txt",
+		"/C/Users/andre/Dropbox (Pessoal)/Mestrado/Dissertação/latex/src/chapters/caseStudy/monitor/InterfaceBreaker.csp",
+		"/C/Users/andre/Dropbox (Pessoal)/Mestrado/Dissertação/latex/src/chapters/csp/monitor/monitor.csp",
+		"/C/Users/andre/git/phd-alrd/thesis/main.tex",
 		"/C/Users/andre/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/main.tex",
 		"/C/Users/andre/git/trabalho-tecnico-alrd/ictac2015-alrd-acm-text/main.tex",
 		"/C/Users/andre/git/trabalho-tecnico-alrd/tdsc-alrd-acm/main.tex",
 		"/C/Users/andre/git/phd-alrd/presentations/2016-04-11-qualification/Qualificação PhD.sublime-project",
 		"/C/Users/andre/git/beamerthemecin-code/beamerthemeCIn20131120.sty",
-		"/C/Users/andre/git/phd-alrd/thesis/main.tex",
 		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2016.1/Apresentações/main.tex",
 		"/C/Users/andre/Desktop/Mesa/classes-schedule/src/test/resources/programa-de-aula.js",
 		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/curso-calculo-numerico/ajustamento.tex",
@@ -470,11 +482,7 @@
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/Todo.txt",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/.gitignore",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/svjour3.cls",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.output.txt",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.out",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.fdr.output.txt",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/AutoSpell.sublime-settings",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/AutoSpell/AutoSpell.sublime-settings"
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.output.txt"
 	],
 	"find":
 	{
@@ -492,6 +500,42 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"\\ac{algebra}",
+			"\\ac{DNF}",
+			"\\ac{activation}",
+			"bullet",
+			"midrule",
+			"   ",
+			"  ",
+			"   ",
+			"  ",
+			"    ",
+			"   ",
+			"  ",
+			"    ",
+			"   ",
+			"  ",
+			"ne",
+			"based in",
+			"An FTs",
+			"\\\\ft",
+			"FBA",
+			"fba",
+			"frametitle",
+			"title",
+			"tick",
+			"|",
+			"cspm",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"($",
+			":",
+			"item",
+			"itemize",
+			"(G",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"  ",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"parsin",
 			"\\\\parsin\\{([\\w\\\\\\s()]*)\\}",
 			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
 			"nonumber",
@@ -583,43 +627,7 @@
 			"crefname",
 			"Crefname",
 			"crefname",
-			"Crefname",
-			"crefname",
-			"Crefname",
-			"crefname",
-			"Crefname",
-			"crefname",
-			"\\{figure\\}",
-			"env",
-			"\\{figure\\}",
-			"Ac",
-			"includegraphicsaspectratio",
-			"centering",
-			"includegraphicsaspectratio",
-			"centering",
-			"0.25",
-			"\\{figure\\}",
-			"caption",
-			"\\{figure\\}",
-			"figure",
-			"crefname",
-			"t",
-			"subsection",
-			"section",
-			"sec:conclusion",
-			"X",
-			"NOT",
-			"ATF",
-			"ActA",
-			"	",
-			"undefined",
-			"error",
-			"isabelle",
-			"{Theo}",
-			"{theo}",
-			"{Prop}",
-			"{Cor}",
-			"{Theo}"
+			"Crefname"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -627,6 +635,8 @@
 		"regex": true,
 		"replace_history":
 		[
+			"\\\\left(\\1\\\\right)",
+			"\\left(\\1\\right)",
 			"(\\1)",
 			"Apresentação",
 			"\\\\centering",
@@ -684,7 +694,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 12289,
+						"buffer_size": 20240,
 						"regions":
 						{
 							"bookmarks":
@@ -694,12 +704,16 @@
 								"regions":
 								[
 									[
-										3590,
-										3590
+										4460,
+										4460
 									],
 									[
-										11214,
-										11214
+										17426,
+										17426
+									],
+									[
+										19082,
+										19082
 									]
 								],
 								"scope": "bookmarks"
@@ -708,8 +722,8 @@
 						"selection":
 						[
 							[
-								11647,
-								11647
+								17389,
+								17389
 							]
 						],
 						"settings":
@@ -720,7 +734,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 7178.0,
+						"translation.y": 10109.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -728,6 +742,36 @@
 				},
 				{
 					"buffer": 1,
+					"file": "/C/Users/andre/git/beamerthemecin-code/beamerthemeCIn20131120.sty",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6170,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5481,
+								5481
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LaTeX/TeX.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2225.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
 					"file": "/C/Users/andre/git/phd-alrd/thesis/main.tex",
 					"semi_transient": false,
 					"settings":
@@ -739,8 +783,8 @@
 						"selection":
 						[
 							[
-								12349,
-								12435
+								114,
+								94
 							]
 						],
 						"settings":
@@ -750,7 +794,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6115.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
