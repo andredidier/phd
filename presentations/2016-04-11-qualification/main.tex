@@ -181,13 +181,19 @@ Centre of Informatics
 \newcommand{\probability}[1]{\ensuremath \probabilityop\left({#1}\right)}
 \def\varop{\ensuremath\operatorname{\mathbf{var}}}
 \newcommand{\var}[1]{\ensuremath\varop #1}
+\newcommand{\sliceright}[2]{\ensuremath #1_{\left[..#2\right]}}
+\newcommand{\sliceleft}[2]{\ensuremath #1_{\left[#2..\right]}}
+\newcommand{\slice}[3]{\ensuremath #1_{\left[#2..#3\right]}}
+\def\xbeforeop{\ensuremath\rightarrow}
+\newcommand{\xbefore}[2]{\ensuremath #1 \xbeforeop #2 }
+\newcommand{\xbeforedef}[2]{\ensuremath \left\{ zs | \exists i \bullet \sliceright{zs}{i} \land \sliceleft{zs}{i}  \right\}}
 \def\union{\ensuremath\operatorname{\cup}}
 \def\inter{\ensuremath\operatorname{\cap}}
 %\def\ftcoherencyop{\ensuremath\operatorname{\Phi}}
 \def\ftcoherencyop{\ensuremath\operatorname{\phi}}
 \newcommand{\ftcoherency}[1]{\ensuremath\ftcoherencyop\left(#1\right)}
 \newcommand{\replace}[2]{\ensuremath\left[#1\middle/#2\right]}
-\def\CSPm{CSP$_M$}
+\def\CSPm{CSP$_M$\xspace}
 \newenvironment{snippetcspm}[1][2]
 {
 \ifthenelse{\equal{#1}{0}}
@@ -208,6 +214,11 @@ Centre of Informatics
 \endverbatim
 %\end{samepage}
 }
+\def\tempoop{\ensuremath\operatorname{\mathbf{tempo}}}
+\newcommand{\tempo}[2][1-4]{\ensuremath\tempoop_{#1} #2}
+\def\tracetobool{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny B}}}}
+\def\tracetofba{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny F}}}}
+\def\tracetoalgebra{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny XB}}}}
 %%%%%%%%%%%%%%%%%%% Commands (end)
 
 \begin{document}
@@ -515,11 +526,14 @@ Centre of Informatics
 \subsection{Nominal model and fault injection}
 
 \begin{frame}[fragile]{Monitor component nominal model}
+	\begin{itemize}
+		\item A monitor is a component commonly used to improve fault tolerance
+	\end{itemize}
 	\begin{center}
 		\includegraphicsaspectratio[0.60]{blockDiagramMonitorInternals}
 	\end{center}
 	\begin{itemize}
-		\item Each component has a \CSPm process
+		\item Each component of the monitor has a \CSPm process
 		\item The model is the synchronization of the components' processes
 		\item Temporal dependency of events through a \verb$tick$ event
 	\end{itemize}
@@ -571,17 +585,162 @@ Centre of Informatics
 	\begin{itemize}
 		\item Why lists? Simple: built-in order representation.
 		\item Boolean algebra lattice order: set inclusion
-		\item In (TODO CONTINUE FROM HERE)
+		\begin{itemize}
+			\item In \FBAs, the formula for $A \lor B$ is the set of sets: 
+			$\left\{
+				\left\{A\right\},
+				\left\{B\right\},
+				\left\{A,B\right\}
+			\right\}$
+		\end{itemize}
+		\item The algebra with lists is indeed a Boolean algebra? How to represent the same formula with lists? 
+		\begin{itemize}
+			\item Answer: all permutations
+			\item The same formula with lists is the set: 
+			$\left\{
+				\left[A\right],
+				\left[B\right],
+				\left[A,B\right],
+				\left[B,A\right]
+			\right\}$
+		\end{itemize}
+		\item We show that it is valid for any other Boolean formula, including the NOT operator %by implementing the boolean class in Isabelle/HOL
 	\end{itemize}
 \end{frame}
 
-\subsection{Temporal properties}
+\begin{frame}{But how to express order}
+	\begin{itemize}
+		\item The Boolean operators are not enough to distinguish order
+		\begin{itemize}
+			\item So we need new operators
+			\item How many? Just one.
+		\end{itemize}
+		\item The exclusive before shall express that one variable comes before another
+		\item The result of $A\land B$ is
+		$\left\{
+			\left[A,B\right]
+			\left[B,A\right]
+		\right\}$
+		\item The result of $\xbefore{A}{B}$ is
+		$\left\{
+			\left[A,B\right]
+		\right\}$
+		\item Not always trivial. What if there are three variables ($A$, $B$, and $C$)?
+		\begin{itemize}
+			\item $A\land B$ is 
+				$\left\{
+					\left[A,B\right],
+					\left[A,B,C\right], 
+					\left[A,C,B\right],
+					\left[C,A,B\right],\right. $
+					$\left.
+						\left[B,A\right],
+						\left[B,A,C\right], 
+						\left[B,C,A\right],
+						\left[C,B,A\right]
+					\right\}$
+			\item $\xbefore{A}{B}$ is 
+				$\left\{
+					\left[A,B\right], 
+					\left[A,B,C\right], 
+					\left[A,C,B\right],
+					\left[C,A,B\right]
+				\right\} $
+		\end{itemize}
+		\item And the combination of operators?
+	\end{itemize}
+\end{frame}
+
+%\subsection[Tempo properties]{\emph{Tempo} properties}
+\subsection{Tempo properties}
+
+\begin{frame}[label=tempo]{\emph{Tempo} properties}
+	\begin{itemize}
+		\item The properties are:
+		\begin{enumerate}
+			\item Disjoint split if the first part of a list is in the set, then every remainder is not;
+			\item If a sublist is in the given set, then is must be in a sublist in the beginning or at the end;
+			\item If a sublist is in the middle, then there a sublist that ends at the end of the sublist and there is another that starts at the beginning of the sublist
+			\item If a generator belongs to a list, then there is a sublist of size one that contains the generator
+		\end{enumerate}
+		\item Odd \emph{tempo} properties are related to the AND operator and even \emph{tempo} properties are related to the OR operator
+		\item The XBefore laws depend on these properties
+		\item All properties apply for variables (the previous examples)
+		% Provided the tempo properties apply, our work is equivalent to the work of Merle 
+	\end{itemize}
+	More in \hyperlink{tempodetail}{\beamergotobutton{\emph{tempo} properties definitions}}
+\end{frame}
+
 \subsection{XBefore laws}
-\subsection{Propositions}
+
+\begin{frame}{The XBefore laws}
+	\begin{itemize}
+		\item The laws are divided into three categories
+		\item Basic: absorption, non-idempotency ($\tempo[1]$)
+		\item Relation with Boolean operators: intersection ($\tempo[1]$) and union ($\tempo$)
+		\item Reduction: associativity ($\tempo[1]$) and distributivity ($\tempo$)
+	\end{itemize}
+\end{frame}
 
 \section{Case study}
+
+\begin{frame}{Case study: monitor}
+	\begin{center}
+		\includegraphicsaspectratio[0.60]{blockDiagramMonitorInternals}
+	\end{center}
+	\begin{align*}
+		a &= \text{LowPower-In1}& A = \var a\\
+		b &= \text{LowPower-In2}& B = \var b\\
+		s &= \text{SwitchFailure}& S = \var s
+	\end{align*}
+\end{frame}
+
 \subsection{Structure expressions with Boolean operators}
+
+\begin{frame}[fragile]{Mapping each trace from the \CSPm model to \ATF}{Boolean operators only, without XBefore}
+{\scriptsize
+	\begin{align*}
+		\text{\texttt{TRACE 1: }}&[s,b] \tracetobool S \inter B \inter -A & \left\{\left[s,b\right],\left[b,s\right]\right\}\\
+		\text{\texttt{TRACE 2: }}&[b,s] \tracetobool B \inter S \inter -A & \left\{\left[s,b\right],\left[b,s\right]\right\}\\
+		\text{\texttt{TRACE 3: }}&[a,b] \tracetobool A \inter B \inter -S & \left\{\left[a,b\right],\left[b,a\right]\right\}\\
+		\text{\texttt{TRACE 4: }}&[b,a] \tracetobool B \inter A \inter -S & \left\{\left[a,b\right],\left[b,a\right]\right\}\\
+		\text{\texttt{TRACE 5: }}&[a,s] \tracetobool A \inter S \inter -B & \left\{\left[a,s\right],\left[s,a\right]\right\}\\
+		\text{\texttt{TRACE 6: }}&[a,s,b] \tracetobool A \inter S \inter B & \left\{\left[a,b,s\right],\left[a,s,b\right],\ldots,\left[s,b,a\right]\right\}\\
+		\text{\texttt{TRACE 7: }}&[a,b,s] \tracetobool A \inter B \inter S & \left\{\left[a,b,s\right],\left[a,s,b\right],\ldots,\left[s,b,a\right]\right\}\\
+		\text{\texttt{TRACE 8: }}&[b,a,s] \tracetobool B \inter A \inter S & \left\{\left[a,b,s\right],\left[a,s,b\right],\ldots,\left[s,b,a\right]\right\}
+	\end{align*}
+}
+
+Combining the above sets with unions, we obtain a set that is equivalent to $(A \inter B) \union (S \inter (A \union B))$
+\end{frame}
+
 \subsection{Structure expressions with XBefore}
+\begin{frame}[fragile]{Mapping each trace from the \CSPm model to \ATF}{With Boolean operators and the XBefore}
+{\scriptsize
+	\begin{align*}
+		\text{\texttt{TRACE 1: }}&[s,b] \tracetoalgebra \left(\xbefore{S}{B}\right) \inter -A & \left\{[s,b]\right\}\\
+		\text{\texttt{TRACE 2: }}&[b,s] \tracetoalgebra \left(\xbefore{B}{S}\right) \inter -A & \left\{[b,s]\right\}\\
+		\text{\texttt{TRACE 3: }}&[a,b] \tracetoalgebra \left(\xbefore{A}{B}\right) \inter -S & \left\{[a,b]\right\}\\
+		\text{\texttt{TRACE 4: }}&[b,a] \tracetoalgebra \left(\xbefore{B}{A}\right) \inter -S & \left\{[b,a]\right\}\\
+		\text{\texttt{TRACE 5: }}&[a,s] \tracetoalgebra \left(\xbefore{A}{S}\right) \inter -B & \left\{[a,s]\right\}\\
+		\text{\texttt{TRACE 6: }}&[a,s,b] \tracetoalgebra \xbefore{\xbefore{A}{S}}{B} & \left\{[a,s,b]\right\}\\
+		\text{\texttt{TRACE 7: }}&[a,b,s] \tracetoalgebra \xbefore{\xbefore{A}{B}}{S} & \left\{[a,b,s]\right\}\\
+		\text{\texttt{TRACE 8: }}&[b,a,s] \tracetoalgebra \xbefore{\xbefore{B}{A}}{S} & \left\{[b,a,s]\right\}
+	\end{align*}}
+\end{frame}
+
+\begin{frame}{Analysing the expression obtained using \ATF}
+	\begin{itemize}
+		\item Combining the sets with unions, we obtain a set that is equivalent to 
+$\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \union \left(\xbefore{A}{S}\right)$
+	\end{itemize}
+	\begin{center}
+		\includegraphicsaspectratio[0.60]{blockDiagramMonitorInternals}
+	\end{center}
+	\begin{itemize}
+		\item If the switcher fails and connects the second output, \emph{then} the first input fails, the system is in an operational state
+	\end{itemize}
+\end{frame}
 
 \section{Final remarks}
 \subsection{Conclusion}
@@ -601,6 +760,7 @@ Centre of Informatics
 
 \begin{frame}[label=nextsteps]{Next steps in the thesis}
 	\begin{itemize}
+		\item Soundness and completeness of \ATF
 		\item Faults modelling (\activation) 
 		\item Automatic \FTA (\ATF reduction and FT criteria verification)
 		\item Relations of NOT and XBefore
@@ -615,9 +775,39 @@ Centre of Informatics
 	\end{itemize}
 \end{frame}
 
+\begin{frame}[label=end]
+%If you want to restart, goto \hyperlink{title}{\beamergotobutton{title}}.
+\titlepage
+\end{frame}
+
 \section{Detailed information}
 
-\begin{frame}[label=tasks]{Tasks schedule}
+\begin{frame}[noframenumbering]
+	The following slides are used to show detailed information about some topic in the presentation.
+\end{frame}
+
+\subsection{\ATF as a Boolean algebra}
+
+\begin{frame}[noframenumbering]{\ATF as a Boolean algebra}
+	TODO 
+\end{frame}
+
+\subsection{XBefore definitions}
+
+\begin{frame}[noframenumbering]{XBefore definitions}
+	TODO 
+\end{frame}
+
+\subsection{Tempo properties definitions}
+
+\begin{frame}[noframenumbering,label=tempodetail]{\emph{Tempo} properties definitions}
+	TODO put tempo properties
+	\hyperlink{tempo}{\beamergotobutton{Back}}
+\end{frame}
+
+\subsection{Tasks schedule}
+
+\begin{frame}[noframenumbering,label=tasks]{Tasks schedule}
 	\begin{center}
 		\scriptsize
 		\begin{tabular}{p{6.7cm}cccc}
