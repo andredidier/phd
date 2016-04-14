@@ -22,3 +22,5 @@ Thumbs.db
 **.vrb
 **acronyms.log
 **.synctex.gz
+**.fls
+**.fdb_latexmk
