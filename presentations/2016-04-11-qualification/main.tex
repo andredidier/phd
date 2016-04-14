@@ -76,6 +76,18 @@ Centre of Informatics
 	\gdef\MCSs{MCSs\xspace}%
 	\xspace%
 }
+\def\MCSeq{%
+	Minimal Cut Sequence (MCSeq)%
+	\gdef\MCSeq{MCSeq\xspace}%
+	\gdef\MCSeqs{MCSeqs\xspace}%
+	\xspace%
+}
+\def\MCSeqs{%
+	Minimal Cut Sequences (MCSeqs)%
+	\gdef\MCS{MCSeq\xspace}%
+	\gdef\MCSs{MCSeqs\xspace}%
+	\xspace%
+}
 \def\SFT{%
 	Static Fault Tree (SFT)%
 	\gdef\SFT{SFT\xspace}%
@@ -216,15 +228,17 @@ Centre of Informatics
 }
 \def\tempoop{\ensuremath\operatorname{\mathbf{tempo}}}
 \newcommand{\tempo}[2][1-4]{\ensuremath\tempoop_{#1} #2}
+\def\algebraset{\ensuremath\operatorname{\mathbf{atf}}}
 \def\tracetobool{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny B}}}}
 \def\tracetofba{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny F}}}}
 \def\tracetoalgebra{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny XB}}}}
+\newcommand{\append}[2]{\ensuremath #1 \operatorname{\mathbf{@}} #2}
 %%%%%%%%%%%%%%%%%%% Commands (end)
 
 \begin{document}
 
 \begin{frame}[label=title]
-%If you want to restart, goto \hyperlink{title}{\beamergotobutton{title}}.
+%If you want to restart, goto \hyperlink{title}{\beamergotobutton{title}}
 \titlepage
 \end{frame}
 
@@ -232,13 +246,15 @@ Centre of Informatics
 \begin{frame}{Introduction}
 	\begin{itemize}
 		\item Safety is a crucial concern on critical systems
-		\item \FTA is a deductive method to assess safety: premisses are leaves (basic events) and conclusions are roots (top events)
+		%\item \FTA is a deductive method to assess safety: premisses are leaves (basic events) and conclusions are roots (top events)
+		\item \FTA is a deductive method to assess safety: from premisses (leaves, basic events) it deduces the conclusions (roots, top events)
 		\item Structure expressions represent the structure of \FTs
 		\begin{itemize}
 			\item \MCSs discover and top-event probability calculus use these expressions
 		\end{itemize}
 		\item Other kinds of \FTs: \TFT and \DFT
 		\begin{itemize}
+			\item Sequences of events---\MCSeqs---that lead to top-events
 			\item \SFT is used to distinguish original \FTs from the other kinds of \FTs
 		\end{itemize}
 	\end{itemize}
@@ -295,7 +311,7 @@ Centre of Informatics
 			\item In the \ATF, each \emph{list} corresponds to a ``true'' value
 		\end{itemize}
 		\item The \ATF is a conservative extension of Boolean Algebra (\SFT)
-		\item \TFTs and \DFTs gates can be expressed with gates that are order-based
+		\item \TFTs and \DFTs gates can be expressed with an order-based operator in the algebra
 	\end{itemize}
 \end{frame}
 
@@ -318,7 +334,6 @@ Centre of Informatics
 			\item the algebra, 
 			\item temporal properties, 
 			\item XBefore laws, 
-			\item propositions
 		\end{itemize}
 		\item Case study
 	\end{itemize}
@@ -369,14 +384,14 @@ Centre of Informatics
 	\end{center}
 \end{frame}
 
-\begin{frame}{\SFT structure expression}
+\begin{frame}{\SFT and structure expression}
 	\begin{center}
 		\includegraphicsaspectratio[0.45]{ex-fault-tree1}\\
 		$TOP = a \land b$
 	\end{center}
 \end{frame}
 
-\begin{frame}{\TFT}
+\begin{frame}{\TFT and structure expression}
 	\begin{center}
 		\includegraphicsaspectratio[0.55]{tft-small-example}\\
 		$TOP = (A < C) \lor (A \land B)$
@@ -411,7 +426,7 @@ Centre of Informatics
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{\DFT}
+\begin{frame}[fragile]{\DFT structure expression}
 	\begin{center}
 		\scriptsize
 		\includegraphicsaspectratio[0.60]{dft-example-mrl2014}
@@ -426,7 +441,7 @@ Centre of Informatics
 
 \subsection{Free Boolean algebras}
 
-\begin{frame}{\FBA}
+\begin{frame}{Definition of \iFBA}
 	\begin{itemize}
 		\item Generators of \iFBA are independent statements (or independent events). Some examples:
 		\begin{itemize}
@@ -437,8 +452,8 @@ Centre of Informatics
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{\FBA}
-	Inductive definition of \iFBA:
+\begin{frame}[fragile]{Definition of \iFBA}
+	The inductive definition of \iFBA is:
 	\begin{subequations}
 		\begin{align}
 		\var s = \{X | s \in X\} & \implies \var s \in B & \text{(variable)}\\
@@ -446,16 +461,19 @@ Centre of Informatics
 		X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
 		\end{align}
 	\end{subequations}
-	Bottom and top of the algebra's lattice, and the union operator are obtained from DeMorgan laws.
+	Bottom and top of the algebra's lattice, and the union operator are obtained from the inductive definition.
 \end{frame}
 
 \begin{frame}{Formulas in \FBA}
 	\begin{itemize}
 		\item \IFT event is a statement in \FBA
+		\item For example, fault $F_1$ and $F_2$ becomes $\var F_1$ and $\var F_2$ in \FBA (the set of generators contains only the two events)
+		\item If a top event is given by $F_1 \land F_2$, the expression in \FBA is $\var F_1 \inter \var F_2$
 		\begin{itemize}
-			\item For example, fault $F_1$ and $F_2$ becomes $\var F_1$ and $\var F_2$ in \FBA (the set of generators contains only the two events)
-			\item If a top event is given by $F_1 \land F_2$, the expression in \FBA is $\var F_1 \inter \var F_2$
-			\item In the denotational semantics, the formula has the following sets:
+			\item The resulting set isolation: 
+			$\left\{
+				\left\{F_1, F_2\right\}
+			\right\}$
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -463,19 +481,28 @@ Centre of Informatics
 \subsection{NOT operator in SFTs}
 
 \begin{frame}{NOT operator in SFTs: coherency}
-	Definition of coherency:
 	\begin{itemize}
-		\item $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
-		\item Each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$.
+		\item Definition of coherency:
+			\begin{itemize}
+				\item The coherency function $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
+				\item Each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$
+			\end{itemize}
+		\item Coherent trees are those that dot not have NOT gates or have them removed
+		\item Removal of negated elements is possible due to an approximation: if the probability of occurrence is close to 1, the probability of non-occurrence is negligible (it depends on the probability of the other events)
 	\end{itemize}
+	
 \end{frame}
 
 \begin{frame}{Non-coherent tree}
 	\begin{center}
-		\includegraphicsaspectratio[0.55]{non-coherent-ft-example}\\
-		$S = \left(x_1 \land x_3\right) \lor \left(x_2 \land \lnot x_3\right)$\\
-		$\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0} \implies \text{non-coherent}$
+		\includegraphicsaspectratio[0.50]{non-coherent-ft-example}\\
 	\end{center}
+	\footnotesize
+	\begin{itemize}
+		\item $S = \left(x_1 \land x_3\right) \lor \left(x_2 \land \lnot x_3\right)$ ($x_1 = \text{take a ride}$, $x_2 = \text{take the metro}$, $x_3 = \text{wake up early}$)
+		\item $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0} \implies \text{non-coherent}$
+		\item The tree misleads: one possibility from the tree is that: the college student would take a ride AND take the metro ($x_1 \land x_2$)
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Usefulness of the NOT gate}
@@ -581,7 +608,7 @@ Centre of Informatics
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{The algebra}
+\begin{frame}[label=thealgebra]{The algebra}
 	\begin{itemize}
 		\item Why lists? Simple: built-in order representation.
 		\item Boolean algebra lattice order: set inclusion
@@ -593,7 +620,7 @@ Centre of Informatics
 				\left\{A,B\right\}
 			\right\}$
 		\end{itemize}
-		\item The algebra with lists is indeed a Boolean algebra? How to represent the same formula with lists? 
+		\item The algebra with lists is indeed a Boolean algebra? How to represent the same formula with lists? (\hyperlink{inductiveatf}{\beamergotobutton{inductive \ATF}})
 		\begin{itemize}
 			\item Answer: all permutations
 			\item The same formula with lists is the set: 
@@ -605,20 +632,21 @@ Centre of Informatics
 			\right\}$
 		\end{itemize}
 		\item We show that it is valid for any other Boolean formula, including the NOT operator %by implementing the boolean class in Isabelle/HOL
+		\item Normal form: similar to a DNF: terms may contain ANDs, NOTs, and XBefores.
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{But how to express order}
+\begin{frame}[label=expressorder]{How to express order?}
 	\begin{itemize}
 		\item The Boolean operators are not enough to distinguish order
 		\begin{itemize}
 			\item So we need new operators
 			\item How many? Just one.
 		\end{itemize}
-		\item The exclusive before shall express that one variable comes before another
+		\item The exclusive before expresses that one variable comes before another \hyperlink{xbeforedefs}{\beamergotobutton{definition}}
 		\item The result of $A\land B$ is
 		$\left\{
-			\left[A,B\right]
+			\left[A,B\right],
 			\left[B,A\right]
 		\right\}$
 		\item The result of $\xbefore{A}{B}$ is
@@ -668,7 +696,7 @@ Centre of Informatics
 		\item All properties apply for variables (the previous examples)
 		% Provided the tempo properties apply, our work is equivalent to the work of Merle 
 	\end{itemize}
-	More in \hyperlink{tempodetail}{\beamergotobutton{\emph{tempo} properties definitions}}
+	\hyperlink{tempodetail}{\beamergotobutton{definitions}}
 \end{frame}
 
 \subsection{XBefore laws}
@@ -747,8 +775,9 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 
 \begin{frame}{Conclusion}
 	\begin{itemize}
-		\item Theory to support a more precise representation of fault events compared to our previous strategy for injecting faults
-		\item The theory can represent \SFTs, \TFTs and \DFTs with the XBefore operator (still needs to prove the equivalence to existing algebras for \TFTs and \DFTs)
+		\item A theory was developed to support a more precise representation of fault events compared to our previous strategy for injecting faults
+		\item The theory can represent \SFTs, \TFTs and \DFTs with the XBefore operator and has a denotational semantics based on a set of lists
+		%(still needs to prove the equivalence to existing algebras for \TFTs and \DFTs)
 	\end{itemize}
 \end{frame}
 
@@ -760,17 +789,17 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 
 \begin{frame}[label=nextsteps]{Next steps in the thesis}
 	\begin{itemize}
-		\item Soundness and completeness of \ATF
+		\item Soundness and completeness of the \ATF
 		\item Faults modelling (\activation) 
 		\item Automatic \FTA (\ATF reduction and FT criteria verification)
 		\item Relations of NOT and XBefore
-		\item \hyperlink{tasks}{\beamergotobutton{Tasks schedule}}
 	\end{itemize}
+	\hyperlink{tasks}{\beamergotobutton{Tasks schedule}}
 \end{frame}
 
 \begin{frame}{Future work, out of the scope of this thesis}
 	\begin{itemize}
-		\item Apply a similar idea to Sequential BDDs to our approach
+		\item Apply a similar idea to Sequential BDDs to our approach to reduce expressions to a normal form
 		\item The definition and theory of the automatic proposal of architectural model modifications based on \DFTs
 	\end{itemize}
 \end{frame}
@@ -788,20 +817,62 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 
 \subsection{\ATF as a Boolean algebra}
 
-\begin{frame}[noframenumbering]{\ATF as a Boolean algebra}
-	TODO 
+\begin{frame}[noframenumbering,label=inductiveatf]{\ATF as a Boolean algebra}
+	\begin{align*}
+		\var x & \in \algebraset & \text{Variable}\\
+		S \in \algebraset \implies -S & \in \algebraset & \text{Complement, Negation}\\
+		S \in \algebraset \land T \in \algebraset \implies S \inter T & \in \algebraset & \text{Intersection, \emph{Infimum}}\\
+		S \in \algebraset \land T \in \algebraset \implies \xbefore{S}{T} & \in \algebraset & \text{XBefore}\\
+		\intertext{Following the definitions, the expressions below are also valid for $\algebraset$:}
+		UNIV &\in \algebraset & \text{Universal set, True}\\
+		\{\} &\in \algebraset & \text{Empty set, False}\\
+		S \in \algebraset \land T \in \algebraset \implies S \union T &\in \algebraset & \text{Union, \emph{Supremum}}
+	\end{align*}
+	\hyperlink{thealgebra}{\beamergotobutton{Back}}
 \end{frame}
 
 \subsection{XBefore definitions}
 
-\begin{frame}[noframenumbering]{XBefore definitions}
-	TODO 
+\begin{frame}[noframenumbering,label=xbeforedefs]{XBefore definitions}
+	\begin{itemize}
+		\item Using list concatenation:
+			{\scriptsize
+						$\xbefore{S}{T} =
+									  \left\{
+									    zs | \exists xs, ys \bullet \left(set~xs\right) \inter \left(set~ys\right) = \{\}
+									      \land xs \in S \land ys \in T \land zs = \append{xs}{ys}
+									  \right\}$}
+		\item Using list split:
+			{\scriptsize
+				$\xbefore{S}{T} =
+									\left\{
+										zs | \exists i \bullet \sliceright{zs}{i} \in S \land \sliceleft{zs}{i} \in T
+									\right\}$}
+	\end{itemize}
+	\hyperlink{expressorder}{\beamergotobutton{Back}}
 \end{frame}
 
 \subsection{Tempo properties definitions}
 
 \begin{frame}[noframenumbering,label=tempodetail]{\emph{Tempo} properties definitions}
-	TODO put tempo properties
+	{\scriptsize\begin{align*}
+			\tempo[1]{S} &= \forall i, j, zs \bullet
+			  i \le j \implies
+			  \lnot \left(
+			    \sliceright{zs}{i} \in S \land \sliceleft{zs}{j} \in S
+			  \right)\\
+			\tempo[2]{S} &= \forall i, zs \bullet
+			  zs \in S \iff
+			  \sliceright{zs}{i} \in S \lor \sliceleft{zs}{i} \in S\\
+			\tempo[3]{S} &= \forall i, j, zs \bullet
+			  j < i \implies
+			  \left(
+			    \slice{zs}{j}{i} \in S \iff \sliceright{zs}{i} \in S \land \sliceleft{zs}{j} \in S
+			  \right)\\
+			\tempo[4]{S} &= \forall zs \bullet zs \in S \iff (\exists i \bullet \slice{zs}{i}{\left(i+1\right)} \in S)
+			%\intertext{Replace $\tempo[4]{S}$ by (less restrictive):}
+			%&= \forall zs \bullet zs \in S \iff \exists i,j \bullet i < j \land \slice{zs}{i}{j} \in S
+		\end{align*}}
 	\hyperlink{tempo}{\beamergotobutton{Back}}
 \end{frame}
 

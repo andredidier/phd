@@ -4,16 +4,64 @@
 		"selected_items":
 		[
 			[
-				"newenvi",
-				"newenvironment"
+				"isab",
+				"isabellehol"
 			],
 			[
-				"generators-independence",
-				"eqs:generators-independence-subseteq-compl-neq"
+				"table",
+				"tableabntibge	Table ABNT IBGE"
 			],
 			[
-				"case",
-				"sec:case-study-xbefore"
+				"clear",
+				"cleardoublepage"
+			],
+			[
+				"pand",
+				"pandora"
+			],
+			[
+				"temporal",
+				"sec:temporal-fault-trees"
+			],
+			[
+				"simulta",
+				"simultaneous"
+			],
+			[
+				"nibef",
+				"nibefore"
+			],
+			[
+				"simult",
+				"simultaneous"
+			],
+			[
+				"tbl",
+				"tbl:dft-conversion-te-probability"
+			],
+			[
+				"figure",
+				"figure	Figure"
+			],
+			[
+				"boole",
+				"lem:boolean-algebra-free-generators-valuation"
+			],
+			[
+				"bo",
+				"lem:boolean-algebra-free-generators"
+			],
+			[
+				"Dec",
+				"DeclareAcronym"
+			],
+			[
+				"use",
+				"usepackage"
+			],
+			[
+				"hip",
+				"hiphops"
 			],
 			[
 				"isa",
@@ -203,8 +251,16 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 20240,
-				"line_ending": "Unix"
+				"buffer_size": 32068,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/andre/git/phd-alrd/thesis/main.tex",
+			"settings":
+			{
+				"buffer_size": 180383,
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -221,7 +277,31 @@
 		[
 			[
 				"Package Control: ",
-				"Package Control: Discover Packages"
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"fr",
+				"File: Rename"
+			],
+			[
+				"enable",
+				"Package Control: Enable Package"
+			],
+			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remove",
+				"Package Control: Remove Package"
 			],
 			[
 				"install",
@@ -267,138 +347,138 @@
 	},
 	"file_history":
 	[
-		"/home/andre/git/phd-alrd/presentations/2016-04-11-qualification/Qualificação PhD.sublime-project",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/lista/em-sala/teste.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/lista/em-sala/makefile",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/lista/em-sala/lista1.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/lista/em-sala/lista.h",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/lista/lista.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/2015.2-2.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/atividade2.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/atividade3.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/atividade4.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/imposto-renda.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/l1-exercicio14.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/l1-exercicio20.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/l1-exercicio16.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/l1-exercicio24.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/l1-exercicio18.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/l1-exercicio11.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/l1-exercicio20.h",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/atividade2",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/atividade3",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF165 Computação Eletrônica/2016.1 - Exercicios/atividade4",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/tad/ponto.h",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/tad/ponto2.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/tad/principal.c",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/tad/makefile",
-		"/home/andre/btsync/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/tad/ponto.c",
-		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/tad/ponto.c",
-		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/tad/ponto.h",
-		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/tad/principal.c",
-		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF264 Métodos Computacionais/alrd/tad/makefile",
-		"/C/Users/andre/git/trabalho-tecnico-alrd/isf2015-alrd-acm/references.bib",
-		"/C/Users/andre/git/trabalho-tecnico-alrd/isf2015-alrd-acm/reviews/2016-03-17/review.tex",
-		"/C/Users/andre/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.tex",
-		"/C/Users/andre/git/trabalho-tecnico-alrd/isf2015-alrd-acm/isabelletags.sty",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/.gitignore",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/reviews/2016-03-17/reviewer2.txt",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/reviews/2016-03-17/reviewer1.txt",
-		"/C/Users/Andre/Desktop/Mesa/2015-12-15 Avaliações 2015.2/Lista de alunos para revisão de prova da final de CE.txt",
-		"/C/Users/Andre/Desktop/Mesa/2016-01-08 Cartórios em Campina Grande",
+		"/C/Users/andre/git/beamerthemecin-code/beamerthemeCIn20131120.sty",
+		"/C/Users/andre/git/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
+		"/C/Users/andre/Desktop/Teste.txt",
+		"/C/Users/andre/Dropbox (Pessoal)/Mestrado/Dissertação/latex/src/chapters/caseStudy/monitor/InterfaceBreaker.csp",
+		"/C/Users/andre/Dropbox (Pessoal)/Mestrado/Dissertação/latex/src/chapters/csp/monitor/monitor.csp",
+		"/C/Users/andre/git/phd-alrd/thesis/main.tex",
+		"/C/Users/andre/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/main.tex",
+		"/C/Users/andre/git/trabalho-tecnico-alrd/ictac2015-alrd-acm-text/main.tex",
+		"/C/Users/andre/git/trabalho-tecnico-alrd/tdsc-alrd-acm/main.tex",
+		"/C/Users/andre/git/phd-alrd/presentations/2016-04-11-qualification/Qualificação PhD.sublime-project",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2016.1/Apresentações/main.tex",
+		"/C/Users/andre/Desktop/Mesa/classes-schedule/src/test/resources/programa-de-aula.js",
+		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/curso-calculo-numerico/ajustamento.tex",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/2016-03-11 IF724/2016-03-16/Otávio - palindrome 2/palindromo/Palindrome.java",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/2016-03-11 IF724/2016-03-30/Wilquer Torres - Tradutor/Wilquer Torres - Tradutor.java",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/2016-03-11 IF724/2016-03-30/Otávio Vera Cruz - tradutor/tradutor/Tradutor.java",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/2016-03-11 IF724/2016-03-30/Gabriel Santana - prealg3/prealg3/Tradutor.java",
+		"/C/Users/andre/Desktop/tmp/Décio Silva - dvfs-Aula4-Tradutor/Tradutor.java",
+		"/C/Users/andre/Desktop/tmp/Luís  Santos - lhns-tradutor/lhns/src/tradutor/Tradutor.java",
+		"/M/Uni-USB-Installer-Readme.txt",
+		"/M/README.diskdefines",
+		"/C/Users/andre/Dropbox (Pessoal)/Aulas/2016.1/Projeto de Métodos Computacionais.txt",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2016.1/Apresentações/main.vrb",
+		"/C/Users/andre/Desktop/Prateleira/metodos-numericos/curso-calculo-numerico/main.tex",
+		"/W/public_html/programa-de-aula.js",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2015.2/Aula03/prog1.cpp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2015.2/Aula02/io_basico.cpp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/IF724 Pré-algoritmos/2015.2/Aula02/incr_decr.cpp",
+		"/W/public_html/cronograma-2015-1.js",
+		"/C/Users/andre/Desktop/Mesa/classes-schedule-bot/example.js",
+		"/C/Users/andre/Desktop/Mesa/labes-bot/commands.json",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acronyms.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/ROOT",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Temporal_Faults_Algebra_dlist.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Temporal_Faults_Algebra.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Sliceable_dlist.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Sliceable.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Dlist.tex",
+		"/C/Users/andre/.isabelle/Isabelle2015/heaps/polyml-5.5.2_x86-cygwin/log/algebra",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/root.log",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/ROOT",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/Dlist.thy",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/references-jabref.bib",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/session.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/algebra/output/document/Document.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/session.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/root.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.ind",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.toc",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lox",
+		"/C/Users/andre/Desktop/COMPASS/Theme5/JointPapers/SEFM 2014 - Circus modelchecker/Circus/ERUs.tex",
+		"/C/Users/andre/Desktop/COMPASS/Theme5/JointPapers/SEFM 2014 - Circus modelchecker/cml/ERSystem.cml",
+		"/C/Users/andre/Desktop/COMPASS/Theme5/JointPapers/SEFM 2014 - Circus modelchecker/FORMULA/ERS.tex",
+		"/C/Users/andre/Desktop/COMPASS/Common/CaseStudies/EmergencyResponse/Rules-Led/model/InitRescue.cml",
+		"/C/Users/andre/Desktop/COMPASS/Common/CaseStudies/EmergencyResponse/Expert-Led-Complete/CompleteModel.cml",
+		"/C/Users/andre/Desktop/COMPASS/Theme2/WP24/T2.4.2/CSP/Insiel/InsielCaseStudy.csp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/Pré-algoritmos/2015.2/Aula05/prob1_max.cpp",
+		"/C/Users/andre/Desktop/Prateleira/Aulas/Programação/Pré-algoritmos/2015.2/Aula05/prob2_ordenar.cpp",
+		"/C/Users/andre/Desktop/LemasAuxiliares.thy",
+		"/C/Users/andre/BitTorrent Sync/LeaderPackage/Sub/Sub.output",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Table ABNT IBGE.sublime-snippet",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/risethesis.cls",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.sublime-snippet",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/tableabnt-snippet.xml",
+		"/C/Users/andre/Desktop/Mesa/Sub/Sub.output.txt.txt",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lof",
+		"/C/Users/andre/Desktop/Mesa/2015-12-12 Concurso UFRPE/2016-01-11_resumos-ufrpe.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/ficha-catalografica.tex",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/thesis.sublime-project",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/main.log",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/AutoSpell/AutoSpell.sublime-settings",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/User/AutoSpell.sublime-settings",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Program Files/Sublime Text 3/Packages/Language - English.sublime-package",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/LaTeXTools.sublime-settings",
+		"/C/Users/Andre/Desktop/Mesa/phd-alrd/thesis/isabelle.sty",
+		"/C/Users/Andre/Dropbox/Organização/2016-02-06 Lista de presentes de Lu.txt",
+		"/C/Users/Andre/AppData/Roaming/MiKTeX/2.9/tex/latex/caption/subcaption.sty",
+		"/C/Users/Andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/if215ufpe.txt",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/provas.csv",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/turmas.csv",
+		"/C/Users/Andre/Desktop/Prateleira/metodos-numericos/telegram-if215ufpe/aulas.csv",
+		"/C/Users/andre/Dropbox/todo/todo.txt",
+		"/C/Users/andre/Dropbox/todo/todo (Cópia em conflito de Reis 2016-01-20).txt",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.aux",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/acro.sty",
+		"/C/Users/andre/Desktop/Set_Theory_and_Logic.bibtex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.log",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.pdf",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/delete.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/main.lot",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrdacro.sty",
+		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/tocloft/tocloft.sty",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/alrd.sty",
+		"/C/Users/andre/Desktop/Mesa/2015-12-15 Avaliações 2015.2/Lista de alunos para revisão de prova da final de CE.txt",
+		"/C/Users/andre/AppData/Local/Temp/Temp1_glossaries.tds.zip/doc/latex/glossaries/samples/sample-newkeys.tex",
+		"/C/Users/andre/AppData/Local/Programs/MiKTeX 2.9/tex/latex/acro/acro.sty",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/risethesis/resumo.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/risethesis.tex",
+		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/LaTeXTools.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/banca.tex",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/main.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/intro.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/appendix/mapping-study.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/chapters/introduction.tex",
+		"/C/Users/andre/Desktop/Mesa/risethesis/agradecimentos.tex",
+		"/C/Users/andre/Desktop/Mesa/phd-alrd/thesis/operating-and-support-hazard-analysis/replace-220v-electrical-outlet.csp",
+		"/C/Users/andre/Dropbox (Pessoal)/Doutorado/Prorrogação 2016.1 - novo.xml",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/suggested-reviewers.txt",
 		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/document/root.tex",
 		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/ROOT",
 		"/C/Users/andre/Desktop/nubank.csv",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/Todo.txt",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/.gitignore",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/svjour3.cls",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.output.txt",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.out",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.fdr.output.txt",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/AutoSpell.sublime-settings",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/AutoSpell/AutoSpell.sublime-settings",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/conclusion.tex",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/main.tex",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/acknowledgements.tex",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/caseStudy.tex",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/output/document/Document.tex",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/main.bbl",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/main.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/strategy.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/document/root.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/ROOT",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/output/document/root.log",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/document/root - Copia.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/Document.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.log",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/output/document/root.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/output/document/session.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/output/document/Document.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/extensions.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/sections/background.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/document/before_theory.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/document/after_theory.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/Document.thy",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/events-occurrence-theory/MySession/ROOT",
-		"/C/Users/andre/Desktop/Mesa/Ata da turma S8.txt",
-		"/C/Users/andre/Dropbox/Organização/Documentos/Sync_Pro_Purchase_30610.btskey",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.out",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_ISF LaTeX.zip/template.tex",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/Default (Windows).sublime-keymap",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
-		"/C/Users/andre/AppData/Roaming/Sublime Text 3/Packages/LaTeXTools/README.markdown",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/svjour3.cls",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/isf2015-alrd-acm/main.lyx",
-		"//webserver.cin.ufpe.br/alrd/public_html/index.html",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/q22-lista3-geracao-testes.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/q22-lista3.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/Dúvidas dos alunos/ARQUIVO_SMARTPHONE.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/Dúvidas dos alunos/cadastro.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/CLIENTES.CAD",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/COMPRAS.CAD",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/VENDAS.CAD",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/tabelamento.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/trapezios.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/Simpson.c",
-		"/C/Users/andre/Desktop/LaTeX/template.tex",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/2EE-q2.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/2EE-q1.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/makefile",
-		"/C/Discos virtuais/MontarTodos.txt",
-		"/C/Discos virtuais/MontarTodos.bat",
-		"/C/Users/andre/Desktop/ee2.tex",
-		"/C/Users/andre/Work/git/trabalho-tecnico-alrd/.gitignore",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/interpolacao-adalberto/main.c",
-		"/C/Users/andre/Desktop/cpf_nome.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/makefile",
-		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/metodos.c",
-		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/metodos.h",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/entrada.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/output.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/saida.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/alrd.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes CN.csv",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/teste-andreia.c",
-		"/C/Users/andre/Desktop/10.1007%2Fs100090050035.bib",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Líderes Est.csv",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Métodos Numéricos/Projetos de Cálculo Numérico/Correção/main.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/C/2015.2/1EE/makefile",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Linguagens de Programação/Projetos de Programação/Correção-01/Rinaldo do Herval - 08842969460-01.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_Thiago Oliveira - 05967003428-cos-taylor.zip/cosseno.c",
-		"/C/Users/andre/Dropbox/Organização/Aulas/CNT7-líderes.txt",
-		"/C/Users/andre/Dropbox/Organização/Aulas/Lìderes CN.csv",
-		"/C/Users/andre/Dropbox/Organização/Aulas/CNT7-líderes.csv",
-		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/makefile",
-		"/C/Users/andre/Work/git/metodos-numericos/C/MetodosNumericos/main.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo08.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo07.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo06.c",
-		"/C/Users/andre/AppData/Local/Temp/Temp1_05-estruturas_repeticao.zip/05-estruturas_repeticao/exo05.c"
+		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.output.txt"
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -412,134 +492,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"struct t_dados",
-			" ",
-			"printf",
-			"FLT_MAX",
-			"FLT_MIN",
-			"lf",
-			"100",
-			"}\n",
-			"detect",
+			"label",
+			"align",
+			"append",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"\\\\listset\\{([\\w\\\\\\s]*)\\}",
+			"\\label",
+			"align",
+			"mcs",
+			"mcseq",
+			"\\\\parsin\\{([\\w\\\\\\s-]*)\\}",
+			"\\\\parsin\\{([\\w\\\\\\s\\{\\}]*)\\}",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"{\n",
+			"\\right}",
+			"\\left{",
+			"\\\\listsin\\{([\\w\\\\\\s,]*)\\}",
+			"\\\\setsin\\{([\\w\\\\\\s,\\{\\}]*)\\}",
+			"\\\\setsin\\{([\\w\\\\\\s]*)\\}",
+			"frame",
+			"tempo",
+			"\\}",
+			"\\{",
+			"\\}",
+			"\\{",
+			"\\ac{algebra}",
+			"\\ac{DNF}",
+			"\\ac{activation}",
+			"bullet",
+			"midrule",
+			"   ",
+			"  ",
+			"   ",
+			"  ",
+			"    ",
+			"   ",
+			"  ",
+			"    ",
+			"   ",
+			"  ",
+			"ne",
+			"based in",
+			"An FTs",
+			"\\\\ft",
+			"FBA",
+			"fba",
+			"frametitle",
+			"title",
+			"tick",
+			"|",
 			"cspm",
-			"Roscoe1997",
-			"roscoe",
-			"*       ",
-			"->",
-			"o       ",
-			"*       ",
-			"enumerate",
-			"*       ",
-			"paperwidth",
-			"\"",
-			"'",
-			"\"",
-			"reviewer",
-			"fault traces",
-			"Catole",
-			"Catolé",
-			"def:algebraset-sup",
-			"structure[s]? function",
-			"aligned",
-			"From",
-			"trace",
-			"failure trace",
-			"then the comp",
-			"fault trace",
-			"hiphops",
-			"structure[s]?",
-			"structure-functions",
-			"structure[s]?",
-			"(structure[s]?) function",
-			"structure[s?] function",
-			"failure event",
-			"\\\\intertion",
-			"\\\\cap",
-			"\\\\cup",
-			"\\cup",
-			"algebraalign",
-			"algebraeq",
-			"algebra",
-			"tracetotfa",
-			"}\n",
-			"tracetotfa",
-			"tracetofta",
-			"set[s]? of distinct",
-			"acsAnnotations",
-			"tackle",
-			"hops",
-			"line",
-			"\\\\pandora",
-			"pandora",
-			"gates",
-			"hiphops",
-			"static",
-			"\\\\fta",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"($",
+			":",
+			"item",
+			"itemize",
+			"(G",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"  ",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"parsin",
+			"\\\\parsin\\{([\\w\\\\\\s()]*)\\}",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"nonumber",
+			"align",
+			"\\\\parsin\\{([\\w\\\\\\s]*)\\}",
+			"\\\\",
+			"textbf",
+			"end",
+			"begin",
+			"(",
+			":",
+			"(",
+			"item",
+			"Free Boolean Algebra",
+			"FBA",
+			"graphi",
+			"Does",
+			"DFT",
+			"TFT",
+			"FT",
+			"FTs",
 			"FTA",
 			"fta",
-			"\\\\tfa",
-			"listset",
-			"tfaset",
-			"a[n]? \\\\fba",
-			"failure",
-			"tracetolbba",
-			"lattice",
-			"\\\\tfa",
-			"\\tfa",
-			"lattice",
-			"listsyn",
-			"setsyn",
-			"parsyn",
-			"ssec",
-			"xbefore",
-			"\\\\False",
-			"\\\\True",
-			"\\\\Trye",
-			"variable",
-			"such as",
-			"\\\\tempofour",
-			"\\\\tempothree",
-			"\\\\tempotwo",
-			"\\\\tempoone",
-			"\\\\isa\\{([\\w]*)\\}",
-			"\\\\isa{([\\w]*)}",
-			"error",
-			"Error",
-			"error",
-			"definition",
-			"ams",
-			"1 101.649.654/08 ALBERT GUSTAVO SANTOS SILVA\n2 101.312.394/81 ALEXANDRE SAMIO ALVES DA SILVA JUNIOR\n3 106.766.924/86 ALEXSANDRO ARCANJO DA SILVA\n4 109.072.414/41 ALICE SOARES DA SILVA\n5 064.233.904/01 ALLAN LAUZID\n6 112.496.664/14 ANA CLAUDIA MARQUES DE OLIVEIRA\n7 087.893.524/08 ANDERSON JOSE ROCHA CARDOSO DE LIMA\n8 100.415.854/88 ANDERSON SILVA DO NASCIMENTO\n9 081.530.294/01 ANDREIA CAROLINE DE ARAUJO\n",
-			"\\\\FDR",
-			"\\\\CSP",
-			"\\\\CSPM",
-			"snippetcspm",
-			"matlab",
-			"simulink",
-			"static faul",
-			"handbook",
-			"fault tree",
-			"sumatra",
-			"fread",
-			"fwrite",
-			"fopen",
-			"[.-]",
-			"eh_latina",
-			"mostrarMAtriz",
-			"mostrarVetor",
-			"mostrarvetor",
-			"fprintf",
-			"malloc",
-			"Funcao",
-			"processarSistema",
-			"Funcao",
-			";",
-			"Nome;E-mail se líder;Equipe;1EE;2EE;Média;Ordem de apresentação\nDIEGO DOS SANTOS SILVA;diegosnts1@hotmail.com;8;;;;10\nDYEGO HENRIQUE NICACIO LOPES;dyego_lopes16@hotmail.com;2;;;;9\nGABRIELA DE AGUIAR SILVA;gabrielaaguiar31@hotmail.com;1;;;;3\nGERALDO BRAZ DE ALMEIDA NETO;gban50@gmail.com;4;;;;7\nJOSE ANACLETO DA SILVA BELO JUNIOR;joseanacleto13@gmail.com;5;;;;6\nJOSE LAERCIO DE LIMA JUNIOR;juniorlaercio13@hotmail.com;9;;;;1\nKATARINA CARLOS DE LIRA SILVA;katariinalira@gmail.com;6;;;;8\nMARIANA CAVALCANTI SEABRA DE ALBUQUERQUE;eemcsa@gmail.com;7;;;;2\nMARVIN GABRIEL ANTONINO VERISSIMO;marvingabriel@ymail.com;10;;;;5\nTHIAGO AZEVEDO DA SILVA;thiago_ctg1@hotmail.com;3;;;;4",
-			"Nome;E-mail se líder;Equipe;1EE;2EE;Média;Ordem de apresentação\nDIEGO DOS SANTOS SILVA;diegosnts1@hotmail.com;8;;;;10\nDYEGO HENRIQUE NICACIO LOPES;dyego_lopes16@hotmail.com;2;;;;9\nGABRIELA DE AGUIAR SILVA;gabrielaaguiar31@hotmail.com;1;;;;3\nGERALDO BRAZ DE ALMEIDA NETO;gban50@gmail.com;4;;;;7\nJOSE ANACLETO DA SILVA BELO JUNIOR;joseanacleto13@gmail.com;5;;;;6\nJOSE LAERCIO DE LIMA JUNIOR;juniorlaercio13@hotmail.com;9;;;;1\nKATARINA CARLOS DE LIRA SILVA;katariinalira@gmail.com;6;;;;8\nMARIANA CAVALCANTI SEABRA DE ALBUQUERQUE;eemcsa@gmail.com;7;;;;2\nMARVIN GABRIEL ANTONINO VERISSIMO;marvingabriel@ymail.com;10;;;;5\nTHIAGO AZEVEDO DA SILVA;thiago_ctg1@hotmail.com;3;;;;4\n",
-			"Nome",
-			"sistemaEqLineares",
-			"jacobi",
-			"prinf",
-			"j"
+			"FTA",
+			"fta",
+			"toc",
+			"codigo",
+			"codgio",
+			"a",
+			"lstlisting",
+			"enumerate",
+			"\\x",
+			"x",
+			"\\\\g",
+			"5",
+			"section",
+			"bit",
+			"itemize",
+			"}\n",
+			"lecture",
+			"sistema",
+			"semAula",
+			"if264",
+			"{\n",
+			"2016-03-09",
+			"Apresentaçãio",
+			"exibicao",
+			"algebraurl",
+			"www.cin",
+			"newcomm",
+			"acrony",
+			"acro",
+			"table",
+			"tabular",
+			"table",
+			"arraystr",
+			"table",
+			"space",
+			"tabular",
+			"4",
+			"midrule",
+			"longtable",
+			"table",
+			"label",
+			"thm",
+			"\\\\begin{figure}",
+			"includegraphicsaspectratio",
+			"\\\\begin{figure}"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -547,6 +627,28 @@
 		"regex": true,
 		"replace_history":
 		[
+			"\\\\left\\\\\\{\\1\\\\right\\\\\\}",
+			"\\\\left(\\1\\\\right)",
+			"\\\\left[\\1\\\\right]",
+			"\\\\left\\{\\1\\\\right\\}",
+			"\\\\left(\\1\\\\right)",
+			"\\left(\\1\\right)",
+			"(\\1)",
+			"Apresentação",
+			"\\\\centering",
+			"\\\\index{Dependability",
+			"\\\\index{Dependability}",
+			"an un",
+			"\\\\$1c$2*\\{",
+			"\\$1c$2*\\{",
+			"\\{CSPm\\}",
+			"Binary Decision Diagrams!",
+			"FBA",
+			"\\index{Minimal Cut!Sets}",
+			"\\index{Minimal Cut Sets}\\index{Minimal Cut!Sets}",
+			"\\\\ac{hiphops}",
+			"\\\\acs",
+			"\\\\section",
 			"structure-expressions",
 			"\\1 expression",
 			"\\\\caption",
@@ -588,27 +690,84 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 20240,
+						"buffer_size": 32068,
+						"regions":
+						{
+							"bookmarks":
+							{
+								"flags": 144,
+								"icon": "bookmark",
+								"regions":
+								[
+									[
+										5582,
+										5582
+									],
+									[
+										5636,
+										5636
+									],
+									[
+										20827,
+										20827
+									],
+									[
+										29566,
+										29566
+									]
+								],
+								"scope": "bookmarks"
+							}
+						},
+						"selection":
+						[
+							[
+								27458,
+								27458
+							]
+						],
+						"settings":
+						{
+							"spell_check": true,
+							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 14285.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/andre/git/phd-alrd/thesis/main.tex",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 180383,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								148,
-								148
+								146236,
+								145457
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 50054.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -616,7 +775,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 40.0
+		"height": 26.0
 	},
 	"input":
 	{
@@ -647,7 +806,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 246.0
+		"height": 174.0
 	},
 	"output.find_results":
 	{
@@ -657,7 +816,7 @@
 	"project": "Qualificação PhD.sublime-project",
 	"replace":
 	{
-		"height": 76.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -671,12 +830,12 @@
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"last_filter": "",
 		"selected_items":
 		[
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"select_symbol":
 	{
@@ -695,7 +854,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 278.0,
+	"side_bar_width": 210.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
