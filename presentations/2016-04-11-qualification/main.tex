@@ -22,6 +22,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath,amsfonts,amssymb,amsthm}
 \usepackage{verbatim}
+\usepackage{appendixnumberbeamer} 
 
 %\DeclareGraphicsExtensions{.pdf,.png,.jpg}
 \DeclareGraphicsExtensions{.pdf,.eps,.png}
@@ -33,6 +34,8 @@
 \date{April 2016}
 
 \author{André Didier}
+\supervisor{Alexandre Cabral Mota}
+\cosupervisor{Alexander Romanovsky}
 
 \institute{
 \inst{1}Federal University of Pernambuco\\
@@ -243,7 +246,7 @@ Centre of Informatics
 \end{frame}
 
 \section{Introduction}
-\begin{frame}{Introduction}
+\begin{frame}{Motivation}
 	\begin{itemize}
 		\item Safety is a crucial concern on critical systems
 		%\item \FTA is a deductive method to assess safety: premisses are leaves (basic events) and conclusions are roots (top events)
@@ -262,14 +265,14 @@ Centre of Informatics
 
 \begin{frame}{\FTs and structure expressions}
 	\begin{itemize}
-		\item \SFTs: structure expressions, Shannon method (later BDDs) in the Fault Tree Handbook
-		\item \TFTs: Pandora, structure expressions, and the full implementation of the Fault Tree Handbook (Papadopoulos, Walker)
+		\item \SFTs: structure expressions, Shannon's method (later, BDDs) in the Fault Tree Handbook
+		\item \TFTs: Pandora, structure expressions, and the full implementation of the Fault Tree Handbook (Papadopoulos and Walker)
 		\begin{itemize}
-			\item Operators: PAND, POR, SAND
+			\item Gates: PAND, POR, SAND
 		\end{itemize}
 		\item \DFTs: defined as a visual representation and to improve expressiveness of Markov chains (Boyd and Dugan); structure expressions and calculus of top-event probability for \DFTs shown in the work of Merle
 		\begin{itemize}
-			\item Operators: CSp, SEQ, FDEP
+			\item Gates: CSp, SEQ, FDEP
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -441,7 +444,7 @@ Centre of Informatics
 
 \subsection{Free Boolean algebras}
 
-\begin{frame}{Definition of \iFBA}
+\begin{frame}[label=fba]{Definition of \iFBA}
 	\begin{itemize}
 		\item Generators of \iFBA are independent statements (or independent events). Some examples:
 		\begin{itemize}
@@ -450,18 +453,7 @@ Centre of Informatics
 		\end{itemize}
 		\item Let $E$ be a set of generators. An algebra is constructed from the power set of $E$: the set of sets of the elements of $E$
 	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Definition of \iFBA}
-	The inductive definition of \iFBA is:
-	\begin{subequations}
-		\begin{align}
-		\var s = \{X | s \in X\} & \implies \var s \in B & \text{(variable)}\\
-		X \in B & \implies -X \in B                           & \text{(complement)}\\
-		X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
-		\end{align}
-	\end{subequations}
-	Bottom and top of the algebra's lattice, and the union operator are obtained from the inductive definition.
+	\hyperlink{fbadef}{\beamergotobutton{FBA}}
 \end{frame}
 
 \begin{frame}{Formulas in \FBA}
@@ -470,9 +462,18 @@ Centre of Informatics
 		\item For example, fault $F_1$ and $F_2$ becomes $\var F_1$ and $\var F_2$ in \FBA (the set of generators contains only the two events)
 		\item If a top event is given by $F_1 \land F_2$, the expression in \FBA is $\var F_1 \inter \var F_2$
 		\begin{itemize}
-			\item The resulting set isolation: 
+			\item The resulting set is: 
 			$\left\{
 				\left\{F_1, F_2\right\}
+			\right\}$
+		\end{itemize}
+		\item The NOT operator needs the Universal set
+		\begin{itemize}
+			\item $\lnot \left(F_1 \land F_2\right)$ is equivalent to the expression $- \left(\var F_1 \inter \var F_2\right)$, which results in the set:
+			$\left\{
+				\left\{\right\},
+				\left\{F_1\right\},
+				\left\{F_2\right\}
 			\right\}$
 		\end{itemize}
 	\end{itemize}
@@ -480,17 +481,13 @@ Centre of Informatics
 
 \subsection{NOT operator in SFTs}
 
-\begin{frame}{NOT operator in SFTs: coherency}
+\begin{frame}[label=not]{NOT operator in SFTs: coherency}
 	\begin{itemize}
-		\item Definition of coherency:
-			\begin{itemize}
-				\item The coherency function $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
-				\item Each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$
-			\end{itemize}
 		\item Coherent trees are those that dot not have NOT gates or have them removed
 		\item Removal of negated elements is possible due to an approximation: if the probability of occurrence is close to 1, the probability of non-occurrence is negligible (it depends on the probability of the other events)
+		\item In a coherent tree, each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$
 	\end{itemize}
-	
+	\hyperlink{coherencydef}{\beamergotobutton{Coherency}}
 \end{frame}
 
 \begin{frame}{Non-coherent tree}
@@ -501,7 +498,7 @@ Centre of Informatics
 	\begin{itemize}
 		\item $S = \left(x_1 \land x_3\right) \lor \left(x_2 \land \lnot x_3\right)$ ($x_1 = \text{take a ride}$, $x_2 = \text{take the metro}$, $x_3 = \text{wake up early}$)
 		\item $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0} \implies \text{non-coherent}$
-		\item The tree misleads: one possibility from the tree is that: the college student would take a ride AND take the metro ($x_1 \land x_2$)
+		\item The tree misleads. One possibility from the tree is that: the college student would take a ride AND take the metro ($x_1 \land x_2$)
 	\end{itemize}
 \end{frame}
 
@@ -513,7 +510,7 @@ Centre of Informatics
 		\begin{minipage}{0.39\textwidth}
 			\footnotesize
 			\begin{description}
-				\item[$L$:] lamp (informative)
+				\item[$L$:] lamp and siren (informative)
 				\item[$R_1$, $R_2$:] relays (actuators)
 				\item[$D_1$, $D_2$:] sensors
 				\item[$LU$:] logic control unit
@@ -530,7 +527,7 @@ Centre of Informatics
 \begin{frame}{Most critical outcome}
 	\footnotesize
 	\begin{itemize}
-		\item Process isolation shuts down ($G_2$), power supply isolation fails ($G_3$) and operator is not informed ($G_1$) but the operator information system is working (lamp and siren are off, but they are operational)
+		\item Process shut down fails ($G_2$), power supply isolation fails ($G_3$) and operator is not informed ($G_1$), but the operator information system is working (lamp and siren are off, but they are operational)
 	\end{itemize}
 	\begin{minipage}{0.38\textwidth}
 		\footnotesize
@@ -610,7 +607,7 @@ Centre of Informatics
 
 \begin{frame}[label=thealgebra]{The algebra}
 	\begin{itemize}
-		\item Why lists? Simple: built-in order representation.
+		\item Why lists? Built-in order representation.
 		\item Boolean algebra lattice order: set inclusion
 		\begin{itemize}
 			\item In \FBAs, the formula for $A \lor B$ is the set of sets: 
@@ -620,7 +617,7 @@ Centre of Informatics
 				\left\{A,B\right\}
 			\right\}$
 		\end{itemize}
-		\item The algebra with lists is indeed a Boolean algebra? How to represent the same formula with lists? (\hyperlink{inductiveatf}{\beamergotobutton{inductive \ATF}})
+		\item The algebra with lists is indeed a Boolean algebra? How to represent the same formula with lists? \hyperlink{inductiveatf}{\beamergotobutton{inductive \ATF}}
 		\begin{itemize}
 			\item Answer: all permutations
 			\item The same formula with lists is the set: 
@@ -632,7 +629,7 @@ Centre of Informatics
 			\right\}$
 		\end{itemize}
 		\item We show that it is valid for any other Boolean formula, including the NOT operator %by implementing the boolean class in Isabelle/HOL
-		\item Normal form: similar to a DNF: terms may contain ANDs, NOTs, and XBefores.
+		\item Normal form similar to a DNF: terms may contain ANDs, NOTs, and a new order-based operator.
 	\end{itemize}
 \end{frame}
 
@@ -643,7 +640,7 @@ Centre of Informatics
 			\item So we need new operators
 			\item How many? Just one.
 		\end{itemize}
-		\item The exclusive before expresses that one variable comes before another \hyperlink{xbeforedefs}{\beamergotobutton{definition}}
+		\item The exclusive before (XBefore) expresses that one variable comes before another \hyperlink{xbeforedefs}{\beamergotobutton{definition}}
 		\item The result of $A\land B$ is
 		$\left\{
 			\left[A,B\right],
@@ -686,8 +683,8 @@ Centre of Informatics
 	\begin{itemize}
 		\item The properties are:
 		\begin{enumerate}
-			\item Disjoint split if the first part of a list is in the set, then every remainder is not;
-			\item If a sublist is in the given set, then is must be in a sublist in the beginning or at the end;
+			\item Disjoint split: if the first part of a list is in the set, then every remainder is not;
+			\item If a sublist is in a list, then is must be in a sublist in the beginning or at the end;
 			\item If a sublist is in the middle, then there a sublist that ends at the end of the sublist and there is another that starts at the beginning of the sublist
 			\item If a generator belongs to a list, then there is a sublist of size one that contains the generator
 		\end{enumerate}
@@ -790,6 +787,7 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 \begin{frame}[label=nextsteps]{Next steps in the thesis}
 	\begin{itemize}
 		\item Soundness and completeness of the \ATF
+		\item Mapping function from traces to \ATF
 		\item Faults modelling (\activation) 
 		\item Automatic \FTA (\ATF reduction and FT criteria verification)
 		\item Relations of NOT and XBefore
@@ -800,7 +798,7 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 \begin{frame}{Future work, out of the scope of this thesis}
 	\begin{itemize}
 		\item Apply a similar idea to Sequential BDDs to our approach to reduce expressions to a normal form
-		\item The definition and theory of the automatic proposal of architectural model modifications based on \DFTs
+		\item Define and develop a theory of the automatic proposal of architectural model modifications based on \DFTs
 	\end{itemize}
 \end{frame}
 
@@ -809,15 +807,42 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 \titlepage
 \end{frame}
 
+\appendix
 \section{Detailed information}
 
-\begin{frame}[noframenumbering]
+\begin{frame}
 	The following slides are used to show detailed information about some topic in the presentation.
+\end{frame}
+
+\subsection{Definition of \iFBA}
+
+\begin{frame}[fragile,label=fbadef]{Inductive definition of an FBA}
+	The inductive definition of \iFBA is:
+	\begin{subequations}
+		\begin{align}
+		\var s = \{X | s \in X\} & \implies \var s \in B & \text{(variable)}\\
+		X \in B & \implies -X \in B                           & \text{(complement)}\\
+		X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
+		\end{align}
+	\end{subequations}
+	Bottom and top of the algebra's lattice, and the union operator are obtained from the inductive definition.
+
+	\hyperlink{fba}{\beamergotobutton{Back}}
+\end{frame}
+
+\subsection{Definition of coherency}
+
+\begin{frame}[fragile,label=coherencydef]{Definition of coherency}
+	\begin{itemize}
+		\item The coherency function $\ftcoherency{x}$ is monotonic (non-decreasing) in each variable;
+		\item Each $x_i$ is relevant, which means that $\ftcoherency{x}\replace{x_i}{1} \neq \ftcoherency{x}\replace{x_i}{0}$ for some vector $x$
+	\end{itemize}
+	\hyperlink{not}{\beamergotobutton{Back}}
 \end{frame}
 
 \subsection{\ATF as a Boolean algebra}
 
-\begin{frame}[noframenumbering,label=inductiveatf]{\ATF as a Boolean algebra}
+\begin{frame}[label=inductiveatf]{\ATF as a Boolean algebra}
 	\begin{align*}
 		\var x & \in \algebraset & \text{Variable}\\
 		S \in \algebraset \implies -S & \in \algebraset & \text{Complement, Negation}\\
@@ -833,7 +858,7 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 
 \subsection{XBefore definitions}
 
-\begin{frame}[noframenumbering,label=xbeforedefs]{XBefore definitions}
+\begin{frame}[label=xbeforedefs]{XBefore definitions}
 	\begin{itemize}
 		\item Using list concatenation:
 			{\scriptsize
@@ -854,7 +879,7 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 
 \subsection{Tempo properties definitions}
 
-\begin{frame}[noframenumbering,label=tempodetail]{\emph{Tempo} properties definitions}
+\begin{frame}[label=tempodetail]{\emph{Tempo} properties definitions}
 	{\scriptsize\begin{align*}
 			\tempo[1]{S} &= \forall i, j, zs \bullet
 			  i \le j \implies
@@ -878,7 +903,7 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 
 \subsection{Tasks schedule}
 
-\begin{frame}[noframenumbering,label=tasks]{Tasks schedule}
+\begin{frame}[label=tasks]{Tasks schedule}
 	\begin{center}
 		\scriptsize
 		\begin{tabular}{p{6.7cm}cccc}
@@ -914,10 +939,6 @@ $\left(B \inter S \inter -A\right) \union \left(B \inter A \inter -S\right) \uni
 	{\footnotesize 2nd, 3rd, 4th: second, third, and fourth quarter of 2016; 1st: first quarter of 2017}
 	\hyperlink{nextsteps}{\beamergotobutton{Next steps}}
 \end{frame}
-
-%\begin{frame}
-%\frametitle{Motivation}
-%\end{frame}
 
 
 \end{document}
