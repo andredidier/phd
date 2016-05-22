@@ -251,7 +251,7 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 180383,
+				"buffer_size": 180375,
 				"line_ending": "Windows"
 			}
 		},
@@ -496,6 +496,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"tasks",
 			"capa",
 			"posgradua",
 			"algebraurl",
@@ -622,8 +623,7 @@
 			"newcommand",
 			"failure expre",
 			"pretextual",
-			"fdr",
-			"FDR"
+			"fdr"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -686,40 +686,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 180383,
+						"buffer_size": 180375,
 						"regions":
 						{
-							"bookmarks":
-							{
-								"flags": 144,
-								"icon": "bookmark",
-								"regions":
-								[
-									[
-										41125,
-										41125
-									],
-									[
-										176033,
-										176043
-									],
-									[
-										176639,
-										176639
-									],
-									[
-										179395,
-										179395
-									]
-								],
-								"scope": "bookmarks"
-							}
 						},
 						"selection":
 						[
 							[
-								19691,
-								19691
+								170568,
+								171768
 							]
 						],
 						"settings":
@@ -731,7 +706,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 8959.0,
+						"translation.y": 62815.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,

@@ -251,7 +251,15 @@
 			"file": "main.tex",
 			"settings":
 			{
-				"buffer_size": 32068,
+				"buffer_size": 32918,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/andre/git/beamerthemecin-code/beamerthemeCIn20131120.sty",
+			"settings":
+			{
+				"buffer_size": 6635,
 				"line_ending": "Windows"
 			}
 		},
@@ -259,7 +267,7 @@
 			"file": "/C/Users/andre/git/phd-alrd/thesis/main.tex",
 			"settings":
 			{
-				"buffer_size": 180383,
+				"buffer_size": 180375,
 				"line_ending": "Windows"
 			}
 		}
@@ -347,6 +355,11 @@
 	},
 	"file_history":
 	[
+		"/C/Users/andre/git/phd-alrd/presentations/2016-04-11-qualification/main.vrb",
+		"/C/Users/andre/git/phd-alrd/presentations/2016-04-11-qualification/main.toc",
+		"/C/Users/andre/git/phd-alrd/presentations/2016-04-11-qualification/main.nav",
+		"/C/Users/andre/git/phd-alrd/presentations/2016-04-11-qualification/main.38.vrb",
+		"/C/Users/andre/git/phd-alrd/presentations/2016-04-11-qualification/main.39.vrb",
 		"/C/Users/andre/git/beamerthemecin-code/beamerthemeCIn20131120.sty",
 		"/C/Users/andre/git/phd-alrd/thesis/isabelle-hol-basic/output/document/Basic.tex",
 		"/C/Users/andre/Desktop/Teste.txt",
@@ -469,12 +482,7 @@
 		"/C/Users/andre/Dropbox (Pessoal)/Doutorado/Prorrogação 2016.1 - novo.xml",
 		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/suggested-reviewers.txt",
 		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/document/root.tex",
-		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/ROOT",
-		"/C/Users/andre/Desktop/nubank.csv",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/Todo.txt",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/.gitignore",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/isf2015-alrd-acm/svjour3.cls",
-		"/C/Users/andre/Desktop/Mesa/trabalho-tecnico-alrd/fmi2015-alrd-acm/text/monitor/TwoBatteriesMonitor-InterfaceBreaker.mdl.csp.output.txt"
+		"/C/Users/Andre/Desktop/Mesa/trabalho-tecnico-alrd/temporal-faults-algebra/ROOT"
 	],
 	"find":
 	{
@@ -492,6 +500,13 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"noframenumbering",
+			"noframenumbering,",
+			"begin\\{frame",
+			"Operators",
+			"Supervisor",
+			"supervisor",
+			"title",
 			"label",
 			"align",
 			"append",
@@ -612,14 +627,7 @@
 			"space",
 			"tabular",
 			"4",
-			"midrule",
-			"longtable",
-			"table",
-			"label",
-			"thm",
-			"\\\\begin{figure}",
-			"includegraphicsaspectratio",
-			"\\\\begin{figure}"
+			"midrule"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -690,7 +698,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 32068,
+						"buffer_size": 32918,
 						"regions":
 						{
 							"bookmarks":
@@ -700,20 +708,16 @@
 								"regions":
 								[
 									[
-										5582,
-										5582
+										14015,
+										14015
 									],
 									[
-										5636,
-										5636
+										28079,
+										28079
 									],
 									[
-										20827,
-										20827
-									],
-									[
-										29566,
-										29566
+										30504,
+										30504
 									]
 								],
 								"scope": "bookmarks"
@@ -722,8 +726,8 @@
 						"selection":
 						[
 							[
-								27458,
-								27458
+								392,
+								392
 							]
 						],
 						"settings":
@@ -734,7 +738,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 14285.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -742,19 +746,66 @@
 				},
 				{
 					"buffer": 1,
+					"file": "/C/Users/andre/git/beamerthemecin-code/beamerthemeCIn20131120.sty",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6635,
+						"regions":
+						{
+							"bookmarks":
+							{
+								"flags": 144,
+								"icon": "bookmark",
+								"regions":
+								[
+									[
+										534,
+										534
+									],
+									[
+										4880,
+										4880
+									]
+								],
+								"scope": "bookmarks"
+							}
+						},
+						"selection":
+						[
+							[
+								5921,
+								5921
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LaTeX/TeX.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2524.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
 					"file": "/C/Users/andre/git/phd-alrd/thesis/main.tex",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 180383,
+						"buffer_size": 180375,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								146236,
-								145457
+								113465,
+								113465
 							]
 						],
 						"settings":
@@ -764,10 +815,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 50054.0,
+						"translation.y": 39146.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
