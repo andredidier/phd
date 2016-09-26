@@ -1,9 +1,6 @@
 session "algebra" = "HOL" +
   options [document = pdf, document_output = "output", quick_and_dirty = true, show_question_marks = false]
   theories [document = false]
-    Permutation
-    Sublist_Order
-    Dlist
   theories
     Sliceable
     Sliceable_dlist
