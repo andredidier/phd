@@ -1,6 +1,8 @@
 (*<*)
 theory Document
-imports Temporal_Faults_Algebra_dlist LaTeXsugar OptionalSugar
+imports Temporal_Faults_Algebra_dlist 
+  "~~/src/HOL/Library/LaTeXsugar"
+  "~~/src/HOL/Library/OptionalSugar"
 begin
 (*>*)
 
@@ -11,7 +13,6 @@ notation (output)
   tempo1 ("vremya\<^sub>1 _" 80) and
   tempo2 ("vremya\<^sub>2 _" 80) and
   tempo3 ("vremya\<^sub>3 _" 80) and
-  tempo5 ("vremya\<^sub>5 _" 80) and
   slice ("(3_\<^bsub>[_.._]\<^esub>)"  [80,80,80] 80) and
   slice_left ("(2_\<^bsub>[_..]\<^esub>)" [80,80] 80) and
   slice_right ("(2_\<^bsub>[.._]\<^esub>)" [80,80] 80) and 

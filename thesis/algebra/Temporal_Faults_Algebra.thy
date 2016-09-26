@@ -212,38 +212,36 @@ proof -
   assume a7: "tempo3 b"
   assume a8: "tempo4 a"
   assume a9: "tempo4 b"
-  hence f10: "- xbefore a b = sup (sup (- a) (- b)) (xbefore b a)"
-    using a8 a7 a6 a5 a4 a3 a2 a1 by (metis (no_types) local.xbefore_not)
-  have f11: "\<forall>a aa ab. inf (a\<Colon>'a) (sup aa ab) = sup (inf a aa) (inf a ab)"
-    using local.distrib_imp2 local.sup_inf_distrib1 by blast
-  hence "sup (inf a (- b)) (inf a b) = a"
-    by (metis (no_types) local.compl_sup_top local.inf_top_right)
-  hence "sup (inf a (- b)) (xbefore a b) = 
-    inf a (sup (inf a (- b)) (- xbefore b a))"
-    using f10 by (metis (no_types) local.compl_sup local.double_compl 
-      local.sup_inf_distrib1)
-  hence f12: "sup (inf a (- b)) (xbefore a b) = 
-    sup (inf a (- xbefore b a)) (inf a (- b))"
-    using f11 by (simp add: local.sup.commute)
-  have f13: "sup (xbefore a b) (xbefore b a) = inf a b"
-    using a9 a8 a7 a6 a5 a4 a3 a2 a1 by (metis (no_types) 
-      local.xbefore_sup_equiv_inf)
-  have "sup a (xbefore b a) = a"
-    using a9 a8 a7 a6 a5 a4 a3 a2 a1 by (meson xbefore_sup_absorb_2b)
-  hence f14: "sup (inf a (- xbefore b a)) (xbefore b a) = a"
-    using local.sup_inf_distrib2 by auto
-  have "sup (xbefore a b) a = a"
-    using a9 a8 a7 a6 a5 a4 a3 a2 a1 by (meson xbefore_sup_absorb_1)
-  hence "sup (inf a (- xbefore b a)) (inf a b) = a"
-    using f14 f13 by (metis (no_types) local.sup_left_commute)
-  hence "sup (inf a (- xbefore b a)) (inf a b) = 
-    sup (inf a (- xbefore b a)) a"
-    using local.sup.commute by auto
-  hence "sup (inf a (- b)) (xbefore a b) = 
-    sup (inf a (- xbefore b a)) (inf (- b) (inf a b))"
-    using f12 local.inf_commute local.sup_inf_distrib1 by auto
-  thus ?thesis
-    using local.inf_left_commute by auto
+  then have f10: "- sup (inf a (- b)) (xbefore a b) = inf (sup (- a) (- (- b))) (sup (sup (- a) (- b)) (xbefore b a))"
+    using a8 a7 a6 a5 a4 a3 a2 a1 local.compl_inf local.compl_sup local.xbefore_not by presburger
+  have f11: "sup (- a) (- a) = - a"
+    by auto
+  have f12: "\<forall>f a aa. \<not> abel_semigroup f \<or> f (a::'a) aa = f aa a"
+    by (simp add: abel_semigroup.commute)
+  then have f13: "inf (sup (- a) (- a)) (xbefore b a) = inf (xbefore b a) (- a)"
+    using f11 local.inf.abel_semigroup_axioms by presburger
+  have f14: "inf b (xbefore b a) = inf (xbefore b a) b"
+    using f12 local.inf.abel_semigroup_axioms by blast
+  have f15: "inf a (xbefore b a) = xbefore b a"
+    using a9 a8 a7 a6 a5 a4 a3 a2 a1 by (meson xbefore_inf_absorb_2)
+  then have f16: "inf (xbefore b a) a = xbefore b a"
+    using f12 local.inf.abel_semigroup_axioms by presburger
+  then have "inf b (xbefore b a) = inf (xbefore b a) (sup (xbefore a b) (xbefore b a))"
+    using f14 a9 a8 a7 a6 a5 a4 a3 a2 a1 by (metis (full_types) local.inf.assoc local.xbefore_sup_equiv_inf)
+  then have f17: "inf b (xbefore b a) = inf (sup (xbefore a b) a) (xbefore b a)"
+    using f15 a3 a2 by (simp add: local.inf_sup_distrib1 local.inf_sup_distrib2 local.xbefore_inf_equiv_bot)
+  have f18: "sup (xbefore a b) a = a"
+    using a9 a8 a7 a6 a5 a4 a3 a2 a1 by (metis (no_types) xbefore_sup_absorb_1)
+  have "inf (xbefore b a) (- a) = bot"
+    using f16 by (metis (no_types) local.inf.assoc local.inf_compl_bot local.inf_compl_bot_left2)
+  then have f19: "inf (sup (- a) (- (- b))) (xbefore b a) = inf (sup (xbefore a b) a) (xbefore b a)"
+    using f17 f13 by (simp add: local.inf_sup_distrib2)
+  have "inf (sup (- a) (- (- b))) (sup (- a) (- b)) = sup (sup (- a) (- a)) (inf b (- b))"
+    using local.distrib_imp1 local.inf_sup_distrib1 by force
+  then have "- sup (inf a (- b)) (xbefore a b) = - inf (- xbefore b a) a"
+    using f19 f18 f15 f10 by (simp add: local.inf_sup_distrib1 local.sup.commute)
+  then show ?thesis
+    using f12 by (metis (no_types) local.compl_eq_compl_iff local.inf.abel_semigroup_axioms)
 qed
 
 

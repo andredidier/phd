@@ -7,8 +7,12 @@ In the following we present the denotation semantics for \ac{algebra} in terms o
 
 (*<*)
 theory Temporal_Faults_Algebra_dlist
-imports Temporal_Faults_Algebra Dlist Permutation Sublist_Order Sliceable_dlist 
-  LaTeXsugar OptionalSugar
+imports 
+  Temporal_Faults_Algebra Dlist Sliceable_dlist 
+  "~~/src/HOL/Library/Permutation" 
+  "~~/src/HOL/Library/Sublist_Order" 
+  "~~/src/HOL/Library/LaTeXsugar"
+  "~~/src/HOL/Library/OptionalSugar"
 begin
 (*>*)
 
