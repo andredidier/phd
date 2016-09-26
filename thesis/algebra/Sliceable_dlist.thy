@@ -4,7 +4,9 @@ text {* \label{sec:theory-sliceable-dlist}*}
 (*<*)
 theory Sliceable_dlist
 
-imports Dlist Sliceable
+imports 
+  Sliceable
+  "~~/src/HOL/Library/Dlist"
 
 begin
 (*>*)

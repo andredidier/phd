@@ -8,7 +8,8 @@ In the following we present the denotation semantics for \ac{algebra} in terms o
 (*<*)
 theory Temporal_Faults_Algebra_dlist
 imports 
-  Temporal_Faults_Algebra Dlist Sliceable_dlist 
+  Temporal_Faults_Algebra Sliceable_dlist 
+  "~~/src/HOL/Library/Dlist"
   "~~/src/HOL/Library/Permutation" 
   "~~/src/HOL/Library/Sublist_Order" 
   "~~/src/HOL/Library/LaTeXsugar"
