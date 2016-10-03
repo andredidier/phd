@@ -498,7 +498,7 @@ Isabelle/HOL foi utilizado para a mecanização das provas dos teoremas da álge
 %\end{keywords}
 
 \begin{resumo}
-Faults modelling is essential to anticipate failures in critical systems.
+Fault modelling is essential to anticipate failures in critical systems.
 Traditionally, Static Fault Trees are employed to this end, but Temporal and Dynamic Fault Trees have gained evidence due to their enriched power to model and detect intricate propagation of faults that lead to a failure.
 
 In previous work, we showed a strategy based on the process algebra CSP and Simulink models to obtain fault traces that lead to a failure.
@@ -506,7 +506,7 @@ From the fault traces we discarded the ordering information to obtain structure 
 Instead of discarding such an ordering information, it could be used to obtain structure expressions of Temporal or Dynamic Fault Trees.
 
 In this work we present an algebra of temporal faults (with a notion of fault propagation) to analyse systems' failures, and prove that it is indeed a Boolean algebra.
-This allows us to inherit Boolean algebra's properties, laws and existing reduction techniques, which are very beneficial for faults modelling and analysis.
+This allows us to inherit Boolean algebra's properties, laws and existing reduction techniques, which are very beneficial for fault modelling and analysis.
 With expressions in the algebra of temporal faults we allow the verification of safety properties based on Static, Temporal or Dynamic Fault Trees.
 We illustrate our work on simple but real case studies, some supplied by our industrial partner EMBRAER.
 
@@ -649,14 +649,13 @@ It then runs \acs{FDR} to obtain several counter-examples (which are fault trace
 %
 For two case studies provided by our industrial partner, \EMBRAER, we showed that our automatically created failure expressions match with the engineer's provided ones or are better (a weaker proposition).
 
-%TODO continuar de 1.1 da revisão de Augusto.
 \section{Research questions}
 
 Both \ac{TFT} and \ac{DFT} lack a first-order logic mathematical model like the one defined for \ac{SFT}.
 For \acp{SFT}, mathematical models to reduce structure expressions are either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}\index{Binary Decision Diagrams}.
 Both are efficient.
 One important concern on employing \ac{FTA} is whether \iac{FT} indeed represents a system behaviour.
-The work reported in~\cite{MCS+1999} exposes this concern for \acp{DFT}, and the \ac{hiphops} framework---related to \acp{SFT} and \acp{TFT}---aims at getting this issued sorted.
+The work reported in~\cite{MCS+1999} exposes this concern for \acp{DFT}, and the \ac{hiphops} framework---related to \acp{SFT} and \acp{TFT}---aims at getting this issue sorted out.
 Our contribution to this issue for \ac{SFT} is shown in~\cite{DM2012,Didier2012}.
 
 The mathematical model for \ac{TFT} has a discontinuity between two activation states:
@@ -664,19 +663,19 @@ The mathematical model for \ac{TFT} has a discontinuity between two activation s
   \item non-occurrence, and
   \item occurrence some time later.
 \end{alineasinline}
-Such a discontinuity has some drawbacks, as for example, the impossibility to use \ac{NOT} gates, and handling the specific case of non-occurrence with zeros in \acp{TTT}.
+Such a discontinuity has some drawbacks as, for example, the impossibility to use \ac{NOT} gates, and handling the specific case of non-occurrence with zeros in \acp{TTT}.
 The reduction of structure expressions in \ac{TFT} is based on a combination of:
 \begin{alineasinline}
   \item algebraic reduction---which can unfortunately result in an infinite application of rules---,
   \item modularisation of independent subtrees (subtrees not always are independent), and
-  \item \ac{TDT}---which are limited to seven basic events, due to exponential growth.
+  \item \ac{DT}---which are limited to seven basic events, due to exponential growth.
 \end{alineasinline}
 
 
 \begin{sloppypar}
 Most mathematical models~\cite{LHT2013,CSD2000,BRM+2005} for \ac{DFT} are based on the formalisation of \ac{DTMC} or \ac{CTMC} because \acp{DFT} were initially conceived to be a visual representation of such models.
 As both \ac{DTMC} and \ac{CTMC} are state-based, they experience the state-space explosion problem.
-The works reported in~\cite{BKK+2003,BHH+2003,SAE1996b} show techniques to overcome this problem, but the reduction can be infeasible because it depends on systems' models, whether they are independent or not.
+The works reported in~\cite{BKK+2003,BHH+2003,SAE1996b} show techniques to overcome this problem, but the reduction can be infeasible because it depends on systems' models particularly, whether they are independent or not.
 \end{sloppypar}
 
 There are other approaches, however.
@@ -695,14 +694,14 @@ It defines, instead, several algebraic laws to reduce expressions and an algorit
 
 \begin{sloppypar}
 \Ac{hiphops} proposes a hierarchical approach to model systems and perform \ac{FTA} (and \ac{FMEA}).
-Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{FT} construction is based on an algorithm, without proofs for soundness nor completeness.
+Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{FT} construction is based on an algorithm, without proofs for soundness or completeness.
 \end{sloppypar}
 
 %The work reported in~\cite{AH2015} shows the formalisation of probabilistic analysis of \ac{SFT} and uses the same concept of date-of-occurrence shown in \adnote{cite Merle work}.
 
 From the exposed in this section, our research question is:
 \begin{rqenum}[series=researchquestion]
-  \item Is there a mathematical model that is set-based and similar to \ac{FBA}?\label{question:mathematical-model}
+  \item Is there a mathematical model to analyse \acp{TFT} and \acp{DFT} that is set-based and similar to \ac{FBA}?\label{question:mathematical-model}
 \end{rqenum}
 %
 Also, does such a model:
@@ -711,11 +710,12 @@ Also, does such a model:
   \item have the capacity of representing events ordering similar to \ac{TFT} and \ac{DFT}\label{question:ordering-representation}?
   \item represent systems behaviour by construction\label{question:gap}?
   \item allow both qualitative and quantitative analyses as supported by \ac{TFT} and \ac{DFT}\label{question:analyses}?
-  \item perform reduction of structure expressions to a normal form at least as efficient as current approaches\label{question:efficiency}?
+  \item perform reduction of structure expressions to a normal form at least as efficiently as current approaches\label{question:efficiency}?
 \end{rqenum}
 
 %
-In this version of the thesis we propose the theory that answers \cref{question:mathematical-model,question:ordering-representation,question:gap}. \Cref{question:analyses,question:efficiency} are not answered in this version of the thesis.
+%In this work we propose a theory that answers \cref{question:mathematical-model,question:ordering-representation,question:gap,question:analyses}. 
+%\Cref{question:efficiency} is left as a future work.
 
 \section{Proposed solution}
 
@@ -729,7 +729,7 @@ The analysis of acceptance criteria is a decision problem and we use first-order
 Indeed, \ac{algebra} is part of a bigger strategy the relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
 In \cref{fig:strategy-overview} the strategy starts in the top (green) node and ends in the bottom (red) node.
 Fault events are either extracted from a nominal model with injected faults (\cref{fig:strategy-overview}, path A), or modelled using a proposed notation, called \ac{activation} (\cref{fig:strategy-overview}, path B).
-We depict traditional \ac{FTA} in path C to show that we still need the acceptance criteria, which are the expected properties of system's \acp{FT}.
+We depict traditional \ac{FTA} in path C to compare to our strategy and because we still need part of the traditional \ac{FTA} to obtain the acceptance criteria, which are the expected properties of system's \acp{FT}.
 
 \begin{figure}[htb]
   \centering
@@ -742,14 +742,14 @@ System and fault modelling is an essential step towards safety analysis.
 Architectural modelling is the first step of the strategy and can be executed either in a graphical tool, or as requirements in natural language.
 For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling in \ac{SysML} to verify fault tolerance of \acp{SoS}.
 
-``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
-It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault events sequences.
-The fault events sequences are then mapped to \theac{algebra}, which have denotational semantics based on sets of lists.
-As fault names are obtained directly from components and subsystems in a \simulink model, \theac{activation} (in the ``Faults Modelling'' group) allows them to be modified or complemented.
+The ``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
+It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault event sequences.
+The fault event sequences are then mapped to \theac{algebra}, which have a denotational semantics based on sets of lists.
+As fault names are obtained directly from components and subsystems in a \simulink model, \theac{activation} (in the ``Fault Modelling'' group) allows them to be modified or complemented.
 \Theac{activation} also allows reasoning about faults that are not modelled in \simulink as, for example, common cause or environmental faults.
 Path A aims at answering the \cref{question:gap}.
 Given the flexibility of the \ac{activation} notation, it can be used directly (path B) to model faults formally, reasoning about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
-Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability.
+Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability, which is related to~\ref{question:mathematical-model}.
 %Paths A and B aim at answering the \ref{question:gap}.
 
 \Theac{FTA} has associated non-functional system requirements which are in fact acceptance criteria for \acp{FT}.
@@ -766,8 +766,8 @@ The main contributions of this work are:
 \begin{contrenum}[series=contributions]
   \item Define a denotational and algebraic model to express fault events order with \theac{algebra}---see \cref{chap:strategy};
   %\item Formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance---to do;
-  \item Reuse \simulink models, obtaining fault event sequences and mapping to \ac{algebra}---partially done, see \cref{chap:strategy};
-  \item Reason about faults modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures)---see discussion in~\cref{sec:activation};
+  \item From \simulink models, obtaining fault event sequences and mapping to \ac{algebra}---partially done, see \cref{chap:strategy};
+  \item Reason about fault modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures)---see discussion in~\cref{sec:activation};
   \item Illustrate the application of the laws on a real case study, provided by our industrial partner, \EMBRAER---see \cref{chap:case-study}.
   \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016})---see \cref{chap:strategy};
   \adnote{When accepted, add work submitted to ISF}
@@ -790,10 +790,10 @@ To facilitate the understanding of the presented strategy, the effort to build l
 \label{chap:basic-concepts}
 
 Means to dependability\index{Dependability}\amnote{Está muito filosófico isto. É assim mesmo ou seja, não há uma definição para dependebilidade?} \adnote{Eu explico dependabilidade a seguir.} are obtained by modelling and analysing a system.
-It is strongly related to faults modelling, which depends on the kinds of analyses we want to perform.
+It is strongly related to fault modelling, which depends on the kinds of analyses we want to perform.
 %For instance, in \aclp{FT}, even if a fault can be repaired, it is considered as a non-repairable fault.
 \Acp{FT} are present in several stages of systems' modelling.
-We introduce dependability\index{Dependability} and faults modelling in \cref{sec:dependability}.
+We introduce dependability\index{Dependability} and fault modelling in \cref{sec:dependability}.
 
 \Iac{SFT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occur, then it will.} of a faults topology of a system, subsystem or component.
 %\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
@@ -805,11 +805,11 @@ We discuss these time relations in \cref{sec:time-relations}.
 
 \begin{sloppypar}
 Computing systems are characterized by five properties: functionality, performance, cost, dependability\index{Dependability}, security.
-The work reported in~\cite[p. 289--302]{Sommerville2011} explain these properties---including dependability\index{Dependability}---with a focus in software.
+The work reported in~\cite[p. 289--302]{Sommerville2011} explain these properties---including dependability\index{Dependability}---with a focus on software.
 Hardware and software are connected, as software faults may cause a failure in a software-controlled hardware, and hardware faults may send incorrect data, causing a failure in the software.
 \end{sloppypar}
 
-The work reported in~\cite{ALR+2004} summarizes all concepts of and related to dependability\index{Dependability} for computing systems that contains software and hardware.
+The work reported in~\cite{ALR+2004} summarizes all concepts of and related to dependability\index{Dependability} for computing systems that contain software and hardware.
 In the following, we show these concepts and highlight those used in this work.
 
 \subsection{Systems}
@@ -824,10 +824,11 @@ The \emph{service} delivered by a system is its behaviour as it is perceived by 
 A system can both provide and consume services.
 
 The \emph{structure} of a system is how it is composed: a system is composed of components, and each component is another system, etc.
-This concept of hierarchical compositionality in systems, is what originated the concept of \ac{SoS} and is object of analysis in \ac{hiphops}.
+This concept of hierarchical compositionality in systems is what originated the concept of \ac{SoS} and is the object of analysis in \ac{hiphops}.
 Such a recursion (of a system containing other systems) stops when a component---or a constituent system---is considered to be atomic.
 A system is the total state of its atomic components.
 
+%TODO +correcoesAugusto
 \subsection{Dependability}
 \index{Dependability}
 
@@ -1373,13 +1374,13 @@ For example, the expression $\parsin{X \sand Y} \por Z$ is a temporal relation (
 To extract \acp{MCSeq} it needs to be converted to $\squaresin{X \sand Y} \land \squaresin{X \por Z} \land \squaresin{Y \por Z} $ (the square brackets is the doublets notation and it is the direct application of the \emph{Temporal Distributive Law}~\cite[p. 120]{Walker2009}).
 
 The normal form for \ac{TFT} is similar to \ac{SFT}: it is \iac{DNF} with temporal operators (\ac{PAND}, \ac{POR}, \ac{SAND}) in the minimal terms.
-The reduction of \ac{TFT} structure expressions is achieved using \ac{TDT}\adnote{Cite dependency tree}.
-In \iac{TDT}, if all children of a tree node are true, then the node is also true.
+The reduction of \ac{TFT} structure expressions is achieved using \ac{DT}\adnote{Cite dependency tree}.
+In \iac{DT}, if all children of a tree node are true, then the node is also true.
 Conversely, if a node is true, then all its children are also true.
-An issue with \acp{TDT} is that they grow exponentially.
+An issue with \acp{DT} is that they grow exponentially.
 Accordingly to the work~\cite{WP2010}, it is already infeasible to deal with seven fault events in TFTs.
-Although there is a solution, it is based on a mixed application of \acp{TDT}, modularisation of independent subtrees, and algebraic laws~\cite{WP2009}.
-We show \acp{TDT} in~\cref{sec:dependency-trees}.
+Although there is a solution, it is based on a mixed application of \acp{DT}, modularisation of independent subtrees, and algebraic laws~\cite{WP2009}.
+We show \acp{DT} in~\cref{sec:dependency-trees}.
 Some of these algebraic laws are:
 %
 \begin{subequations}
@@ -1667,7 +1668,7 @@ Still on the state-based approaches, the work reported in~\cite{SLD2011} maps \a
 
 In the following we show specific methods that are designed to reduce structure expressions.
 In essence, the methods are very similar.
-Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{TDT} (\cref{sec:dependency-trees}), \acp{MCSeq} of \acp{DFT} can be obtained using \ac{ZBDD} (\cref{sec:zbdd}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} (\cref{sec:sbdd}).
+Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{DT} (\cref{sec:dependency-trees}), \acp{MCSeq} of \acp{DFT} can be obtained using \ac{ZBDD} (\cref{sec:zbdd}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} (\cref{sec:sbdd}).
 
 \subsection{\Aclp*{BDD}\index{Binary Decision Diagrams}}
 \label{sec:bdd}
@@ -1744,27 +1745,27 @@ The work reported in~\cite{Rudell1993} shows initial findings on variable orderi
 For \acp{SFT} the evaluation of \iac{BDD} is the calculation of the probability of the paths ending in \emph{true}.
 For example, the probability of the expression in \cref{fig:bdd-diagram-for-example-expression} is obtained from the formula: $\probability{A \lor \parsin{\lnot A \land \lnot B \land C}}$. Note that the formula in the probability calculation is different from the formula that originated the diagram.
 
-\subsection{\Acl*{TDT}}
+\subsection{\Acl*{DT}}
 \label{sec:dependency-trees}
 
-\Acf{TDT} is a hierarchical acyclic graph of expressions that shows all possible cut sequences for any given set of events.
+\Acf{DT} is a hierarchical acyclic graph of expressions that shows all possible cut sequences for any given set of events.
 It is a graphical view of a \ac{TTT}.
-At the top of \iac{TDT} are the variables, that is, the single events that occur in an expression.
+At the top of \iac{DT} are the variables, that is, the single events that occur in an expression.
 On the lower levels are the increasingly complex expressions.
 Each node represents \iac{MCSeq}.
-\Cref{fig:simple-dependency-tree} shows \iac{TDT} with all nodes for variables $X$ and $Y$.
+\Cref{fig:simple-dependency-tree} shows \iac{DT} with all nodes for variables $X$ and $Y$.
 
 \begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.5]{simple-dependency-tree}
-  \caption{\acs*{TDT} for variables $X$ and $Y$}
+  \caption{\acs*{DT} for variables $X$ and $Y$}
   \label{fig:simple-dependency-tree}
 \end{figure}
 
 The reduction of a structure expression is given by the activation (true values) of nodes.
 If a node is active (true), then all child nodes are also active; the converse is also true: if all node's children are active, then it is also active.
 The reduced expression is given by the \ac{DNF} created with the expressions of higher active level nodes.
-To reduce the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$, given on the beginning of this section, we create the \ac{TDT} depicted in \cref{fig:dependency-tree-reduction}.
+To reduce the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$, given on the beginning of this section, we create the \ac{DT} depicted in \cref{fig:dependency-tree-reduction}.
 Nodes marked as ``1'' are those \acp{MCSeq} given directly by the formula.
 Nodes marked as ``2'' are child nodes of the ``1'''s nodes, and so forth.
 The node of the expression $\parsin{\parsin{X \pand Y} \land Z}$ is a grandchild of $X \land Y$ and thus it is not necessary.
@@ -1773,7 +1774,7 @@ The final expression is obtained by the active higher level node, which is $X \l
 \begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.7]{dependency-tree-reduction}
-  \caption{\acs*{TDT} for the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$}
+  \caption{\acs*{DT} for the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$}
   \label{fig:dependency-tree-reduction}
 \end{figure}
 
@@ -3024,7 +3025,7 @@ The second quarter of 2016 is from April to June/2016, the third quarter is from
 
 \section{Next steps in this thesis}
 
-The next steps in this thesis are the conclusion of the work-in-progress of the ``Faults Modelling'' and ``Automatic FTA'' blocks in \cref{fig:status-of-thesis}.
+The next steps in this thesis are the conclusion of the work-in-progress of the ``Fault Modelling'' and ``Automatic FTA'' blocks in \cref{fig:status-of-thesis}.
 An initial version of the theory of the \ac{activation} is done.
 The case study shown in this thesis is also modelled in \ac{activation}.
 But we need to adapt the failure predicates to \theac{algebra}.
@@ -3067,7 +3068,7 @@ We plan to use similar concepts in a future work.
 The work reported in~\cite{SAE1996b} states that \acp{DTMC} (\aca{DTMC}) is more appropriate to represent several states than \acp{SFT}.
 Considering that \acp{DFT} were conceived as a visual representation of \acap{DTMC}, then we may say that \acp{DFT} can be used to represent several states.
 Thus they are suitable to propose the architectural model modifications as shown in \cref{fig:strategy-overview,fig:status-of-thesis}.
-The definition and the theory of ``Faults Modelling and Fault Tolerance Patterns'' and the automatic proposal of ``Architectural Model Modifications'' blocks are left as future work.
+The definition and the theory of ``Fault Modelling and Fault Tolerance Patterns'' and the automatic proposal of ``Architectural Model Modifications'' blocks are left as future work.
 
 
 % References
