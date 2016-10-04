@@ -828,11 +828,10 @@ This concept of hierarchical compositionality in systems is what originated the 
 Such a recursion (of a system containing other systems) stops when a component---or a constituent system---is considered to be atomic.
 A system is the total state of its atomic components.
 
-%TODO +correcoesAugusto
 \subsection{Dependability}
 \index{Dependability}
 
-The concepts that creates the basis for dependability\index{Dependability} are:
+The concepts that create the basis for dependability\index{Dependability} are:
 \begin{alineasinline}
   \item threats to,
   \item attributes of, and
@@ -851,7 +850,7 @@ A \emph{degraded} mode of a system is when there are active faults, so some func
 There are two acceptable definitions of dependability\index{Dependability} reported in~\cite{ALR+2004}.
 One is more general, difficult to measure: ``the ability to deliver service that can justifiably be \emph{trusted}''.
 A more precise definition that uses the definition of service failure is: ``the ability to avoid service failures that are more frequent and more severe than is acceptable''.
-This definition has two implications about system's requirements: there should be how it can fail, and what are the acceptable severity and frequency of its failures.
+This definition has two implications about system's requirements: there should be defined how it can fail, and what are the acceptable severity and frequency of its failures.
 
 The following systems' dependability attributes\index{Dependability!attributes of} enlightens such requirements:
 \begin{description}
@@ -869,9 +868,9 @@ The implementation of these attributes requires a deep analysis of system's mode
 The \emph{means to attain dependability}\index{Dependability!means to attain} are summarized as follows:
 
 \begin{description}
-  \item[Prevention] is about avoiding incorporate faults during development.
+  \item[Prevention] is about avoiding incorporating faults during development.
   \item[Tolerance] deals with usage of mechanisms to still deliver a---possibly degraded---service even in the presence of faults.
-  \item[Removal] is about detecting and removing (or reducing severity of) failures from a system, as in the development stage, as in production stage.
+  \item[Removal] is about detecting and removing (or reducing severity of) failures from a system, both in the development and production stages.
   \item[Forecasting] is about predicting likely faults so they can removed, or tackling their effects.
 \end{description}
 
@@ -901,7 +900,7 @@ Following the taxonomy presented in~\cite{ALR+2004}, there are some techniques f
     \item Actual inputs:
     \begin{description}
       \item[Testing:] Selected input values are set on system's inputs and their outputs are compared to expected values.
-      Outputs in this case are observed faults, in case of hardware testing or software's mutation testing, and criteria-based, in case of software testing.
+      The verification outcomes are observed faults, in case of hardware testing or software mutation testing, and criteria-based, in case of software testing.
     \end{description}
   \end{subalineas}
 \end{alineas}
@@ -926,9 +925,10 @@ In this work, we use a combination of:
   \item theorem proving, and
   \item symbolic execution.
 \end{alineasinline}
-We use these methods to obtain an erroneous behaviour of the system which is compared to system's dependability attributes\index{Dependability!attributes of} (safety).
-We explain how these methods combine in \cref{chap:strategy}.
+We use these methods to obtain an erroneous behaviour of the system which is compared to the system dependability attributes\index{Dependability!attributes of} (safety).
+We explain how these methods are combined in \cref{chap:strategy}.
 
+%+correcoesAugusto
 \subsection{Fault Modelling}
 
 Fault modelling plays an important role in reasoning about the fault-error-failure chain.
