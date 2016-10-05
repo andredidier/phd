@@ -928,7 +928,6 @@ In this work, we use a combination of:
 We use these methods to obtain an erroneous behaviour of the system which is compared to the system dependability attributes\index{Dependability!attributes of} (safety).
 We explain how these methods are combined in \cref{chap:strategy}.
 
-%+correcoesAugusto
 \subsection{Fault Modelling}
 
 Fault modelling plays an important role in reasoning about the fault-error-failure chain.
@@ -940,19 +939,19 @@ Fault, error, failures, and fault propagation have structural views, which are r
 These works map \ac{SysML} to two formal languages---\ac{CML} and \ac{CSP}, respectively---to verify fault tolerance.
 
 In~\cite{SAE1996b} the safety assessment process for civil airborne systems and equipment describes development cycles and methods to ``clearly identify each failure condition''.
-The methods that involves failure identification are:
+The methods that involve failure identification are:
 \begin{alineasinline}
   \item \ac{SFT},
   \item \ac{DD},
   \item \aca{DTMC}, and
   \item \ac{FMEA}.
 \end{alineasinline}
-The first three are top-down methods, that starts with undesired failure conditions and moves to lower levels to obtain more detailed conditions that causes the top-level event.
-\Acp{DD} are an alternate method of representing the data in \ac{SFT}.
-\Ac{FMEA} is a bottom-up method that identifies failure modes of a component and determines the effects on the next higher level.
+The first three are top-down methods, that start with undesired failure conditions and moves to lower levels to obtain more detailed conditions that causes the top-level event.
+\Acp{DD} are an alternative method of representing the data in \ac{SFT}.
+\Ac{FMEA} is a bottom-up method that identifies failure modes of a component and determines the effects on the upper level.
 We detail \ac{SFT} in \cref{sec:static-fault-trees}.
 
-\Acp{DFT} are an extension of \acp{SFT} and models dynamic behaviour of system's faults.
+\Acp{DFT} are an extension of \acp{SFT} and models dynamic behaviour of system faults.
 Similarly to the relation of \acp{SFT} and \acp{DD}, the work reported in~\cite{DP2009} demonstrates the relation of \acp{DFT} to \acp{DRBD}.
 As the models (\ac{DFT} and \ac{DRBD}) are equivalent, this work sticks to \ac{DFT} due to the amount of work already published.
 We detail \acp{DFT} in \cref{sec:dynamic-fault-trees}.
@@ -962,7 +961,7 @@ We detail \acp{DFT} in \cref{sec:dynamic-fault-trees}.
 
 The most general case for time relations\index{time relations}\index{order!time relations} is to consider that each fault event has a continuous time duration.
 They are the basis on how fault events discretisation are defined.
-In \cref{fig:time-relations} we show all possibilities of events relations in a continuous time line (from $A$ to $B$; the converse relation is similar):
+In \cref{fig:time-relations} we show all possibilities of event relations in a continuous time line (from $A$ to $B$; the converse relation is similar):
 
 \begin{description}
   \item[a.] $A$ starts and ends before $B$ starts;
@@ -975,9 +974,9 @@ In \cref{fig:time-relations} we show all possibilities of events relations in a 
 \end{description}
 
 Although the occurrence of fault events has at least seven possibilities, what really matters when analysing systems is when a fault is \emph{detected}.
-Considering that fault detection corresponds to the start of a fault event, from \cref{fig:time-relations} we clearly identify which event comes first: $A$ comes before than $B$, except in the cases (d) and (f), where they start exactly at the same time.
-If fault events are independent (they are not susceptible to have a common cause) then the probability of they are starting at the same time is very low.
-In \cref{chap:strategy} we abstract events relation in continuous time as an \emph{exclusive before} relation, based on fault \emph{detection} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
+Considering that fault detection corresponds to the start of a fault event, from \cref{fig:time-relations} we clearly identify which event comes first: $A$ comes before $B$, except in the cases (d) and (f), where they start exactly at the same time.
+If fault events are independent (they are not susceptible to have a common cause) then the probability of them starting at the same time is very low.
+In \cref{chap:strategy} we abstract event relations in continuous time as an \emph{exclusive before} relation, based on fault \emph{detection} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
 
 
 \begin{figure}[htb]
