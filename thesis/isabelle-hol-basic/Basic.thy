@@ -5,18 +5,17 @@ begin
 (*>*)
 
 text {*
-From the site\footnote{Accessed 27/jan/2016: \url{https://isabelle.in.tum.de/overview.html}} of the 
-creators:
+We use the same words of the creators of this tool, retrieved from their 
+website\footnote{Accessed 27/jan/2016: \url{https://isabelle.in.tum.de/overview.html}}:
 %
-\begin{quote}
+\begin{citacao}
 Isabelle is a generic proof assistant. It allows mathematical formulas to be expressed in a formal 
 language and provides tools for proving those formulas in a logical calculus. 
 %
-The main application 
-is the formalization of mathematical proofs and in particular formal verification, which includes 
-proving the correctness of computer hardware or software and proving properties of computer 
-languages and protocols.
-\end{quote}
+The main application is the formalization of mathematical proofs and in particular formal verification, 
+which includes proving the correctness of computer hardware or software and proving properties of 
+computer languages and protocols.
+\end{citacao}
 *}
 
 text {*

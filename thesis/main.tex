@@ -35,7 +35,7 @@
 \usepackage{textcomp}
 %Quantas vezes e em quais páginas a referência foi citada
 %\usepackage[english,hyperpageref]{backref}
-%\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm]{todonotes} % NOTAS
+\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm]{todonotes} % NOTAS
 \usepackage[final]{fixme}
 \usepackage{soul}
 
@@ -80,9 +80,9 @@
 \FXRegisterAuthor{ad}{alrd}{AD}
 \FXRegisterAuthor{am}{acm}{AM}
 %\fxuselayouts{pdfsignote,margin}
-\newcommand{\todo}[1]{\adnote{#1}}
-\newcommand{\note}[2][]{\adnote{#2}}
-\newcommand{\listoftodos}[1]{\listoffixmes}
+%\newcommand{\todo}[1]{\adnote{#1}}
+%\newcommand{\note}[2][]{\adnote{#2}}
+%\newcommand{\listoftodos}[1]{\listoffixmes}
 %%%%%%%%%%%%%%%%% NOTAS
 
 % alterando o aspecto da cor azul
@@ -770,7 +770,6 @@ The main contributions of this work are:
   \item Reason about fault modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures)---see discussion in~\cref{sec:activation};
   \item Illustrate the application of the laws on a real case study, provided by our industrial partner, \EMBRAER---see \cref{chap:case-study}.
   \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016})---see \cref{chap:strategy};
-  \adnote{When accepted, add work submitted to ISF}
   %\item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}---to do.
 \end{contrenum}
 
@@ -1624,10 +1623,8 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
   \label{fig:dft-example}
 \end{figure}
 
-%+correcoesAugusto
 \section{Structure expression analysis}
 \label{sec:structure-expression-analysis}
-\todo{Ver nota na p. 54}
 
 In this section we explain the difference of stateful and stateless methods to analyse structure expressions and detail the stateless methods.
 %As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based
@@ -1637,13 +1634,14 @@ Boolean\index{Boolean Algebra} laws are well-known and are used for \acp{SFT}, t
 An issue with algebraic laws is that, in some cases, the expression needs to be expanded before it gets reduced, so reduction automation is not trivial without a theorem prover.
 For example, the following \acg{TFT} structure expression needs to be expanded \cite{WP2010} before it gets reduced:
 \begin{align*}
-  \parsin{X \land Y} & \lor \parsin{\parsin{X \pand Y} \land Z} &\\
-  = \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} & \lor \parsin{\parsin{X \pand Y} \land Z} & \text{by \cref{law:tft-conjunctive-completion-law}}\\
-  = \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} & & \text{by Boolean absorption of } X \pand Y\\
-  = X \land Y & & \text{by \cref{law:tft-conjunctive-completion-law}}
+  & \parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z} &\\
+  = & \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} \lor \parsin{\parsin{X \pand Y} \land Z} & \text{by \cref{law:tft-conjunctive-completion-law}}\\
+  = & \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} & \text{by Boolean absorption of } X \pand Y\\
+  = & X \land Y & \text{by \cref{law:tft-conjunctive-completion-law}}
 \end{align*}
-%
+
 A denotational semantics to Boolean\index{Boolean Algebra} expressions---and consequently to \ac{SFT}---is given by \acp{FBA} (\cref{sec:fba}).
+Using denotational semantics in favour of axiomatic laws is preferred as the axioms must be very simple or must be generally accepted, because a subtlety in an axiom (an unfounded axiom) may invalidate a whole theory.
 
 There are several works with stateful analysis methods for \acp{FT} (\ac{SFT}, \ac{TFT}, and \ac{DFT}).
 We show some of them in \cref{sec:ft-stateful-analysis-methods}.
@@ -1656,10 +1654,10 @@ Instead of tackling basic events ordering (as in \ac{PAND}), it considers a caus
 
 For \acp{TFT}, the works reported in~\cite{MPW2010,MWP2012} show an inverse solution.
 They map \acp{FSM}\adnote{Cite FSM} to \pandora logic, then verify system properties.
-They show that such a mapping simplifies expressions reduction, thus improving performance on the analysis.
+They show that such a mapping simplifies expression reduction, thus improving performance on the analysis.
 
-Although there is formal modelling for \acp{DFT}, they do not implement a direct modelling of the \ac{DFT} itself.
-Instead, most of the works propose a formal modelling of a state-based approach.
+Although there is formal modelling approaches to \acp{DFT}, they do not implement a direct modelling of the \ac{DFT} itself.
+Instead, most of the works propose a formal modelling using a state-based approach.
 The work reported in~\cite{CSD2000} shows a formal model of \acap{DTMC} in \theac{Z} and each \ac{DFT} element (basic events and gates).
 The analysis uses a quantifier on states of the resulting \aca{DTMC} automaton.
 The work reported in~\cite{GD1997} shows a methodology to perform a modular analysis of \acp{DFT} based on \ac{BDD}\index{Binary Decision Diagrams} and \aca{DTMC}.
@@ -1669,7 +1667,7 @@ Still on the state-based approaches, the work reported in~\cite{SLD2011} maps \a
 
 %The work reported in~\cite{LR1998} uses a formal approach using \ac{FSM} to generate fault trees automatically from system models.
 
-In the following we show specific methods that are designed to reduce structure expressions.
+In the following we show specific stateless methods that are designed to reduce structure expressions.
 In essence, the methods are very similar.
 Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{DT} (\cref{sec:dependency-trees}), \acp{MCSeq} of \acp{DFT} can be obtained using \ac{ZBDD} (\cref{sec:zbdd}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} (\cref{sec:sbdd}).
 
@@ -1769,8 +1767,8 @@ The reduction of a structure expression is given by the activation (true values)
 If a node is active (true), then all child nodes are also active; the converse is also true: if all node's children are active, then it is also active.
 The reduced expression is given by the \ac{DNF} created with the expressions of higher active level nodes.
 To reduce the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$, given on the beginning of this section, we create the \ac{DT} depicted in \cref{fig:dependency-tree-reduction}.
-Nodes marked as ``1'' are those \acp{MCSeq} given directly by the formula.
-Nodes marked as ``2'' are child nodes of the ``1'''s nodes, and so forth.
+Nodes marked with ``1'' are those \acp{MCSeq} given directly by the formula.
+Nodes marked with ``2'' are child nodes of the ``1'''s nodes, and so forth.
 The node of the expression $\parsin{\parsin{X \pand Y} \land Z}$ is a grandchild of $X \land Y$ and thus it is not necessary.
 The final expression is obtained by the active higher level node, which is $X \land Y$.
 
@@ -1814,7 +1812,7 @@ Our order-related operator has a set-based semantics that can be combined with o
 \label{sec:sbdd}
 
 \Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} is an extension of \ac{BDD}\index{Binary Decision Diagrams} to tackle ordering of events in \acp{DFT} for \ac{CSp} and \ac{WSp} gates.
-Ordering of events in \ac{CSp} gates~\cite{XTD2012} is slightly different compared to \ac{WSp}~\cite{TXD2011}.
+Ordering of events in \ac{CSp} gates~\cite{XTD2012} is slightly different from \ac{WSp}~\cite{TXD2011}.
 A backup system in \ac{CSp} gets activated slower than in \ac{WSp}, which implies that there are less failure possibilities in \ac{CSp}, but its the readiness is lower than in \ac{WSp}.
 \Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} adds a new node kind that contains a binary operation of fault events, which allows to express the ordering of events.
 One kind of operation expresses the slowness of the relation of the fault events of \ac{CSp}, and another one expresses the readiness of the \ac{WSp}.
@@ -1840,8 +1838,8 @@ The evaluation is similar to \acg{BDD}: each path ending in true is a minimal te
 Another means to analyse \acp{SFT} is to use \iac{FBA} to perform set-theoretical operations (intersection, difference, etc.) to reduce expressions.
 In this section we briefly present the \ac{FBA} theory and its elements.
 
-Instead of using an axiomatic definition of a Boolean\index{Boolean Algebra} algebra, we follow its set-theoretical definition, as shown in~\cite[pp. 254--258]{Stoll1979} and~\cite[pp. 8--11]{GH2009}.
-This definition represents a Boolean\index{Boolean Algebra} algebra as an algebra of sets and does not rely on axioms (which can be misleading, case there is an unfounded axiom).
+Instead of using an axiomatic definition of a Boolean\index{Boolean Algebra} algebra directly, we follow its set-theoretical definition, as shown in~\cite[pp. 254--258]{Stoll1979} and~\cite[pp. 8--11]{GH2009}.
+This definition represents a Boolean\index{Boolean Algebra} algebra as an algebra of sets and does not rely on Boolean axioms (which can be misleading, case there is an unfounded axiom).
 
 \begin{definition}[Boolean Algebra]
 \label{def:boolean-algebra}
@@ -1976,7 +1974,7 @@ $x\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, \ldots, x_n}$
 
 In this section we illustrate---with the second example detailed in~\cite{Oliv2006}---how non-coherent \ac{FT} misleads.
 
-A college student who wants to visit her mother in another city has two options: wake up early ($x_3$) and take ride with a friend ($x_1$), or wake up late ($\lnot x_3$) and take the metro ($x_2$).
+A college student who wants to visit her mother in another city has two options: wake up early ($x_3$) and take a ride with a friend ($x_1$), or wake up late ($\lnot x_3$) and take the metro ($x_2$).
 The top-event failure is ``visit mother'' with expression $S = \parsin{x_1 \land x_3} \lor \parsin{x_2 \land \lnot x_3}$.
 Its \acl{FT} is depicted in \cref{fig:non-coherent-ft-example}.
 It is clear that the structure function is non-coherent in $x_3$ accordingly to \cref{def:ft-coherency}: $\ftcoherency{1,1,x_3}\replace{x_3}{1}=\ftcoherency{1,1,x_3}\replace{x_3}{0}$.
@@ -2013,7 +2011,7 @@ When a leakage is detected, these sensors send a signal to the logic control uni
   \label{fig:gas-detection-system}
 \end{figure}
 
-The system\index{gas detection system} is in fail state if it does not perform one of these three tasks.
+The system\index{gas detection system} is in a fail state if it does not perform one of these three tasks.
 The \acl{FT} that represents this generic failure is depicted in \cref{fig:ft-generic-failure-gas-detection-system}.
 $G_1$, $G_2$, and $G_3$ are subtrees that represents the three tasks ``Operator not informed'', ``Process shut-down fails'', and ``Power supply not isolated'', respectively.
 All three tasks will fail if their respective main component fails ($L$, $R_1$, and $R_2$) or there is no signal from $LU$ ($LU$ fails or both $D_1$ and $D_2$ fail).
@@ -2084,7 +2082,7 @@ Reducing the expressions of the non-coherent \ac{FT} (\cref{fig:outcome-4-non-co
 %We can construct two independent fault trees, $TP_1$ and $TP_2$, for the unavailability of $P_1$ and $P_2$ as: $TP_1 = P_1 \lor CP_1 \lor \parsin{D_1 \land \parsin{I \lor D_2}}$ and $TP_2 = P_2 \lor CP_2 \lor \parsin{D_2 \land \parsin{I \lor D_1}}$.
 %$TOP_1$ and $TOP_2$ generate coherent fault trees, using $TP_1$ and $TP_2$.
 
-\section{Systems' nominal model and faults injection}
+\section{Systems nominal model and fault injection}
 \label{sec:faults-injection}
 
 Control system modelling using \simulink block diagrams~\cite{MathWorks2010} is recommended in~\cite{Nise1992} and have been used by our industrial partner.
@@ -2126,7 +2124,7 @@ The \textsim{Sensor} detects the actual position of the \textsim{Actuator} and s
   \label{fg:blockDiagramMonitorInternals}
 \end{figure}
 
-\Cref{fg:blockDiagramMonitorInternals} shows the internal elements of the monitor component (\cref{fg:acsBlockDiagrams}~(A)), which is used as case study in \cref{chap:case-study} to illustrate our
+\Cref{fg:blockDiagramMonitorInternals} shows the internal elements of the monitor component (\cref{fg:acsBlockDiagrams}~(A)), which is used as a case study in \cref{chap:case-study} to illustrate our
 strategy.
 The outputs of the hardware elements are annotated with \textsim{HW}, which are the two power sources and an internal component of the monitor (switch command).
 
@@ -2151,7 +2149,7 @@ In our previous work, reported in~\cite{DM2012}, we modified such a translation 
 %
 We designed \iac{CSPm} process to act as an observer (specification), watching outputs of the nominal version and comparing to the outputs of the ``breakable'' version (with injected faults---the implementation) of the system.
 %
-When the \ac{CSPm} process of the model and the observer are loaded into the \acs{FDR} model-checker, counter-examples are generated for each output that differs from the nominal model, thus obtaining a \emph{sequence} of injected faults combinations that leads to the unexpected output, which are indeed \emph{fault traces}.
+When the \ac{CSPm} process of the model and the observer are loaded into the \acs{FDR} model-checker, counter-examples are generated for each output that differs from the nominal model, thus obtaining a \emph{sequence} of injected fault combinations that leads to the unexpected output, which are indeed \emph{fault traces}.
 
 In what follows, injected faults and the top-level failure have generic names based on the names of the \simulink model blocks.
 It is out of the scope of~\cite{DM2012} to define event names.
@@ -3221,5 +3219,5 @@ This \namecref{app:formal-proofs-isabelle-hol} is organized as follows:
 \adnote{Run ``makeindex main'' on this directory}
 \cleardoublepage
 
-%\listoftodos[Notes]
+\listoftodos[TODOs]
 \end{document}
