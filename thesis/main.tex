@@ -2328,20 +2328,22 @@ Our strategy avoids this kind of issue by being completely systematic.
 \chapter{A free algebra to express structure expressions of ordered events}
 \label{chap:strategy}
 
+\todo{De Augusto: ``Este capítulo é desnecessariamente conciso, principalmente por se tratar da contribuição. Seria importante, na versão final, ilustrar cada conceito e propriedade com exemplos.   
+Tem que destacar resultados importantes, como o fato da mecanização com Isabelle. Deveria ter uma seção ou um capítulo dedicado à mecanização, não incluindo tudo, obviamente, mas ilustrando um pequeno exemplo.''}
+
 \todo{Explain the interaction of (i) fault-injection, (ii) theorem proving, and (iii) symbolic execution.}
 \todo{dizer que nossa abordagem usa a abordagem similar à de expressões de estrutura, mas que tem o objetivo de dar uma semântica denotacional baseada em conjuntos}
 
-Recall from \cref{sec:time-relations,sec:fault-trees} that fault events are independent on one another if the events are not susceptible to a common cause.
+Recall from \cref{sec:time-relations,sec:fault-trees} that fault events are independent of one another if the events are not susceptible to a common cause.
 The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{FBA}\index{Boolean Algebra!Free}, where each generator in \acp{FBA}\index{Boolean Algebra!Free} corresponds to a fault event symbol in \aclp{FT}.
-In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are independent on one another and Boolean\index{Boolean Algebra} formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
+In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are independent of one another and Boolean\index{Boolean Algebra} formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
 %This is equivalent to the disjunctive normal form, where each set is a minterm (conjunction) and the formula itself is the disjunction of minterms.
 
-We showed in \cref{sec:fault-trees} that there is an omnipresence of order-based operators to analyse \acp{TFT} and \acp{DFT}.
-And that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a canonical form.
+We showed in \cref{sec:fault-trees} that there is an omnipresence of order-based operators to analyse \acp{TFT} and \acp{DFT}, and that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a canonical form.
 
-From the need to tackle events ordering and from the ordering information we had from fault injection that we developed in~\cite{DM2012}, we defined a lists-based algebra, called \acf{algebra}, to express and analyse systems considering events ordering.
+From the need to tackle events ordering and from the ordering information we had from fault injection that we developed in~\cite{DM2012}, we defined a list-based algebra, called \acf{algebra}, to express and analyse systems considering events ordering.
 We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra.
-The order-specific operations are expressed with a new operator ($\xbeforeop$) that we call \ac{XBefore} (or exclusive before).
+The order-specific operations are expressed with a new operator ($\xbeforeop$) that we call \ac{XBefore}.
 
 The set of sets for \acp{FBA}\index{Boolean Algebra!Free} are the denotational semantics for Boolean\index{Boolean Algebra} algebras.
 We use the concept of generators to propose the \ac{algebra} with a denotational semantics of a set of lists without repetition (distinct lists).
