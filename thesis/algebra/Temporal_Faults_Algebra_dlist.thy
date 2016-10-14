@@ -805,7 +805,7 @@ unfolding dlist_xbefore_append old_dlist_xbefore_def
 using dlist_tempo_1_no_gap_append
 by blast
 
-section {* Soundness and completeness*}
+subsection {* Soundness and completeness*}
 
 lemma temporal_faults_algebra_soundness_1: 
     "\<forall> f\<^sub>1 f\<^sub>2. \<exists>S. (Abs_formula f\<^sub>1 = S \<and> Abs_formula f\<^sub>2 = S \<longrightarrow> f\<^sub>1 = f\<^sub>2)"
