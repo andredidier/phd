@@ -36,7 +36,7 @@
 %Quantas vezes e em quais páginas a referência foi citada
 %\usepackage[english,hyperpageref]{backref}
 \usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm]{todonotes} % NOTAS
-\usepackage[final]{fixme}
+\usepackage[draft]{fixme}
 \usepackage{soul}
 
 \usepackage{indentfirst}
@@ -79,6 +79,7 @@
 %\fxusetargetlayout{signature}
 \FXRegisterAuthor{ad}{alrd}{AD}
 \FXRegisterAuthor{am}{acm}{AM}
+\FXRegisterAuthor{as}{acas}{AS}
 %\fxuselayouts{pdfsignote,margin}
 %\newcommand{\todo}[1]{\adnote{#1}}
 %\newcommand{\note}[2][]{\adnote{#2}}
@@ -2350,7 +2351,7 @@ The set-theoretical abstraction of structure expressions\index{structure express
 In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are independent of one another and Boolean\index{Boolean Algebra} formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
 %This is equivalent to the disjunctive normal form, where each set is a minterm (conjunction) and the formula itself is the disjunction of minterms.
 
-We showed in \cref{sec:fault-trees} that there is an omnipresence of order-based operators to analyse \acp{TFT} and \acp{DFT}, and that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a canonical form.
+We showed in \cref{sec:fault-trees} that there is a consistent presence of order-based operators to analyse \acp{TFT} and \acp{DFT}, and that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a canonical form.
 
 From the need to tackle events ordering and from the ordering information we had from fault injection that we developed in~\cite{DM2012}, we defined a list-based algebra, called \acf{algebra}, to express and analyse systems considering events ordering.
 We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra.
@@ -2482,13 +2483,12 @@ S \in \algebraset \land T \in \algebraset \implies S \union T &\in \algebraset &
 \end{align}
 \end{subequations}
 
-%todo: +correcoesAugusto
 The following expressions are valid for generators $a$ and $b$ and are sufficient to show that the generators are independent:
 %
 \begin{subequations}
 \label{eqs:generators-independence}
 \begin{align}
-&\var a \subseteq \var b \iff a = b\label{eqs:generators-independence-subseteq-eq}\\
+%&\var a \subseteq \var b \iff a = b\label{eqs:generators-independence-subseteq-eq}\\
 &\var a = \var b \iff a = b\\
 &\var a \not\subseteq - \var b\\
 &\var a \neq -\var b\label{eqs:generators-independence-subseteq-neq-compl} \\
@@ -2509,12 +2509,14 @@ We name these properties as \emph{temporal properties}.
 \label{sec:temporal-properties}
 
 Temporal properties give a more abstract and less restrictive shape on the \ac{XBefore} laws.
+They are abbreviations that some operators satisfy altogether\todo{Verificar significado de altogether} or individually.
 These properties avoid the requirement that every operand of \ac{XBefore} should be a variable \eqref{def:var}.
-%The properties are: $\tempo[1]{}$ (\cref{def:tempo1}), $\tempo[2]{}$ (\cref{def:tempo2}), $\tempo[3]{}$ (\cref{def:tempo3}), and $\tempo[4]{}$ (\cref{def:tempo4}).
+%The properties are: $\tempo[1]{}$ (\cref{def:tempo1}), $\tempo[2]{}$ (\cref{def:tempo2}), $\tempo[3]{}$ (\cref{def:tempo3}), and $\tempo[4]{}$ (\cref{def:tempo4}). 
+
 
 The first temporal property is about disjoint split.
 If the first part of a list is in a given set, then every remainder part is not.
-So, if a generator is in the beginning of a list, it must not be at the ending (and vice-versa).
+So, if a generator is in the beginning of a list, it must not be at the end (and vice-versa).
 %
 %\todo{Explain temporal properties with respect to Figure 1 about relation of events? At least make it clearer.}
 %
@@ -2540,7 +2542,7 @@ So, if a generator is in the beginning of a list, it must not be at the ending (
 \end{subequations}
 
 The second temporal property is about belonging to one sublist in the beginning or in the end.
-If a generator is in a list, then it must be at the beginning or at the ending.
+If a generator is in a list, then it must be at the beginning or at the end.
 %
 %\begin{definition}[\Tempotext 2, belongs to one sublist in the beginning or at the ending]
 %\label{def:tempo2}
@@ -2549,7 +2551,7 @@ If a generator is in a list, then it must be at the beginning or at the ending.
 %
 
 The third temporal property is about belonging to one sublist in the middle.
-If a generator belongs to a sublist between $i$ and $j$, then it belongs to the sublist that starts at first position and ends in $j$ and to the sublist that starts at $i$ and ends at the last position (both sublists contain the sublist in the middle).
+If a generator belongs to a sublist between $j$ and $i$, then it belongs to the sublist that starts at first position and ends in $j$ and to the sublist that starts at $i$ and ends at the last position (both sublists contain the sublist in the middle).
 %
 %\begin{definition}[\Tempotext 3, belongs to the middle of a sublist]
 %\label{def:tempo3}
@@ -2679,7 +2681,7 @@ The absence of occurrences ($\False$, the empty set of $\algebraset$) is a ``0''
 %
 The \ac{XBefore} is absorbed by one of the operands: if one of the operands may happen alone, thus the order with any other operand is irrelevant.
 However, an event cannot come before itself, thus \ac{XBefore} is not idempotent.
-The \ac{XBefore} but is associative.
+The \ac{XBefore} is associative.
 
 To allow formula reduction we need the relation of \ac{XBefore} to the other Boolean\index{Boolean Algebra} operators.
 First we use the \ac{XBefore} as operands of union and intersection.
@@ -2701,11 +2703,10 @@ First we use the \ac{XBefore} as operands of union and intersection.
 \end{align}
 \end{subequations}
 %
-As the \ac{XBefore} is not symmetric, the intersection of symmetrical sets is empty.
-The union of the symmetric is a partition of the intersection of the operands.
+As \ac{XBefore} is not symmetric, the intersection of symmetrical \acp{XBefore} is empty.
+The union of symmetrical \acp{XBefore} is a partition of the intersection of the operands.
 
-In our previous work~\cite{DM2015}, we stated that $S$ and $T$ had to be variables.
-For example, of the form $\var{s}$ and $\var{t}$.
+In our previous work~\cite{DM2015}, we stated that $S$ and $T$ had to be variables, for example, of the form $\var{s}$ and $\var{t}$.
 Now, each law requires that the operands satisfy some of the temporal properties, avoiding using variables explicitly.
 %So, as variables satisfy all temporal properties and by \eqref{thm:xbefore-sup-equiv-inf}, our theorem ``Exclusive before \emph{supremum}'' is still valid.
 
@@ -2780,11 +2781,11 @@ The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer 
 \section{Propositions}
 \label{sec:propositions}
 
-In this section we discuss the theorems and definitions the still need to be proved.
+In this section we discuss the theorems and definitions that still need to be proved.
 We present them as propositions.
 
 Soundness and completeness of the \ac{algebra} is given in terms of the algebraic form and its denotational semantics (\cref{sec:soundness-completeness-algebra}).
-The \ac{activation} is defined in terms of a logic that is solved by decision and some output value (\cref{sec:activation}).
+The \ac{activation} is defined in terms of a logic that is decidable and some output value (\cref{sec:activation}).
 
 \subsection{Soundness and completeness of \acs*{algebra}}
 \label{sec:soundness-completeness-algebra}
@@ -2798,7 +2799,8 @@ To guarantee the completeness we show that for every set of sequences there is a
 \begin{proposition}[Soundness and completeness of \ac{algebra}]
 \amnote{Está de acordo com os livros de lógica?}
 \adnote{Não tive muito tempo para pensar, mas sim. Eu olhei o significado de ambos e montei a proposição.}
-Let $F$ be the set of all formula in \ac{algebra}, and $SS$ be the set of all sets of sequences:
+\asnote{A definição de completess é intuitiva, mas a de soundness, não. Esperaria que fosse algo como a equivalência de duas formulas estivesse relacionada à equivalência das duas sequencias que representassem estas formulas. Da forma como está, uma mesma formula pode ser equivalente a duas sequencias diferentes, o que geraria uma inconsistência. }
+Let $F$ be the set of all formulas in \ac{algebra}, and $SS$ be the set of all sets of sequences:
 %
 \begin{subequations}
   \begin{align}
@@ -2813,7 +2815,7 @@ The equality in the proposition is set-based, thus, in both cases, $f \subseteq 
 \subsection{\acs*{activation} concepts}
 \label{sec:activation}
 
-The \acf{activation} is used to model systems faults.
+The \acf{activation} is used to model system faults.
 When reasoning about faults, engineers analyse component by component, defining its outputs in the presence of each possible fault.
 The \ac{activation} is nothing more than this: the outputs of the components in the presence of (some combination of) faults.
 To ensure that all possibilities are considered (those that the engineer reasoned about them), the formula that results from the output conditions shall be a \emph{tautology}.
@@ -2844,6 +2846,8 @@ The underlying conditions in \ac{activation} can be in Boolean\index{Boolean Alg
 In any case, soundness and completeness in \ac{activation} is given in terms of the underlying algebra: given a formula in \ac{activation}, any predicate generates a valid expression in the underlying algebra, and there exists a formula and a predicate for any expression in the underlying algebra.
 
 \begin{proposition}[Soundness and completeness of \ac{activation}]
+\asnote{P não deveria estar quantificado universalmente no primeiro predicado? E no segundo, a quantificação é existencial mesmo?
+A noção de soundness, como no caso anterior, continua parecendo muito fraca. }
 Let $F$ be the set of all formulas in \ac{activation}, $G$ be the set of all formulas in its underlying algebra, and $P$ a predicate over output values of \ac{activation}, then:
 %
 \begin{subequations}
@@ -2856,6 +2860,8 @@ Let $F$ be the set of all formulas in \ac{activation}, $G$ be the set of all for
 
 \chapter{Case study}
 \label{chap:case-study}
+\asnote{Vocês confirmaram com a Embraer que isso pode ser divulgado mesmo? No caso de Gustavo, mesmo exemplos que eles descaracterizam, não permitem que apresentemos assim de forma explícita a modelagem. Nós temos apresentado apenas os resultados. }
+\asnote{Ficou esquisito não utilizar o not no estudo de caso, após tanta ênfase dada ao operador. Poderia tentar estender o estudo de caso de forma a usar o not.}
 
 \EMBRAER provided us with the \simulink model of an Actuator Control System (depicted in \cref{fg:acsBlockDiagrams}).
 The failure expression of this system (that is, for each of its constituent components) was also provided by \EMBRAER (we show some of them in \cref{tbl:acsAnnotations}).
@@ -2914,7 +2920,7 @@ If we use Boolean\index{Boolean Algebra} expression reduction instead, it result
 (A \inter B) \union (S \inter (A \union B))
 \]
 %
-which is equivalent to the set of sets above and is equivalent to \EMBRAER failure expression shown in \cref{tbl:acsAnnotations} (with \ac{AND} gates as $\inter$ and \ac{OR} gates as $\union$).
+which is equivalent to the set of sequences above and is equivalent to \EMBRAER failure expression shown in \cref{tbl:acsAnnotations} (with \ac{AND} gates as $\inter$ and \ac{OR} gates as $\union$).
 %
 This shows that \ac{algebra} can represent (static) failure expression as in our previous work~\cite{DM2012}.
 

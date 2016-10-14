@@ -70,6 +70,7 @@ class temporal_faults_algebra_mixed_ops = temporal_faults_algebra_trans +
   assumes inf_xbefore_equiv_sups_xbefore: "tempo2 a \<Longrightarrow> inf a (xbefore b c) = 
     sup (xbefore (inf a b) c) (xbefore b (inf a c))"
 
+
 class temporal_faults_algebra = temporal_faults_algebra_mixed_ops
 
 subsection {* Theorems in the context of \ac{algebra} *}
@@ -243,7 +244,6 @@ proof -
   then show ?thesis
     using f12 by (metis (no_types) local.compl_eq_compl_iff local.inf.abel_semigroup_axioms)
 qed
-
 
 end
 
