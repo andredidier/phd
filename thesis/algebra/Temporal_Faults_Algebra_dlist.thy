@@ -403,9 +403,11 @@ where
   (\<forall>i l. \<not> (S (l\<dagger>i..(Suc i)) \<and> T (l\<dagger>i..(Suc i))))"
 
 (*Verificar se faz sentido a regra abaixo. *)
+(*
 lemma "dlist_independent_events a b \<Longrightarrow> \<forall>xs. b xs \<longrightarrow> a xs \<Longrightarrow> False"
 unfolding dlist_independent_events_def
 sorry
+*)
 
 (*TODO: try to remove all these requirements*)
 lemma dlist_and_split9:

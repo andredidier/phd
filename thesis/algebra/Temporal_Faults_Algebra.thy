@@ -147,15 +147,13 @@ proof-
   thus ?thesis using 0 by (simp add: xbefore_sup_absorb_1b)
 qed
 
-(*TODO: verify where these theorem need to be used*)
-(*<*)
 theorem xbefore_inf_absorb_1: "independent_events a b \<Longrightarrow> 
   \<lbrakk> tempo1 a; tempo1 b \<rbrakk> \<Longrightarrow>
   \<lbrakk> tempo2 a; tempo2 b \<rbrakk> \<Longrightarrow>
   \<lbrakk> tempo3 a; tempo3 b \<rbrakk> \<Longrightarrow>
   \<lbrakk> tempo4 a; tempo4 b \<rbrakk> \<Longrightarrow>
   inf a (xbefore a b) = xbefore a b"
-sorry
+by (simp add: local.inf_absorb2 local.le_iff_sup xbefore_sup_absorb_1)
 
 theorem xbefore_inf_absorb_2: "independent_events a b \<Longrightarrow> 
   \<lbrakk> tempo1 a; tempo1 b \<rbrakk> \<Longrightarrow>
@@ -163,8 +161,7 @@ theorem xbefore_inf_absorb_2: "independent_events a b \<Longrightarrow>
   \<lbrakk> tempo3 a; tempo3 b \<rbrakk> \<Longrightarrow>
   \<lbrakk> tempo4 a; tempo4 b \<rbrakk> \<Longrightarrow>
   inf a (xbefore b a) = xbefore b a"
-sorry
-(*>*)
+by (simp add: local.inf.absorb2 local.sup.absorb_iff1 xbefore_sup_absorb_2b)
 
 (*
 lemma inf_xbefore_equiv_sups_xbefore_1:
