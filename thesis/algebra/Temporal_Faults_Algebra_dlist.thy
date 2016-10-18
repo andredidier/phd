@@ -809,21 +809,13 @@ by blast
 
 subsection {* Soundness and completeness*}
 
-lemma temporal_faults_algebra_soundness_1: 
-    "\<forall> f\<^sub>1 f\<^sub>2. \<exists>S. (Abs_formula f\<^sub>1 = S \<and> Abs_formula f\<^sub>2 = S \<longrightarrow> f\<^sub>1 = f\<^sub>2)"
+theorem temporal_faults_algebra_soundness: 
+    "\<forall> (f\<^sub>1::'a formula) (f\<^sub>2::'a formula). \<exists> S. ((Rep_formula f\<^sub>1 = S \<and> Rep_formula f\<^sub>2 = S) \<longleftrightarrow> f\<^sub>1 = f\<^sub>2)"
 using Abs_formula_inject by blast
 
-lemma temporal_faults_algebra_soundness_2: 
-    "\<forall> f\<^sub>1 f\<^sub>2. \<exists> S. (f\<^sub>1 = f\<^sub>2 \<longrightarrow> Abs_formula f\<^sub>1 = S \<and> Abs_formula f\<^sub>2 = S)"
-by auto
-
-theorem temporal_faults_algebra_soundness: 
-    "\<forall> f\<^sub>1 f\<^sub>2. \<exists> S. ((Abs_formula f\<^sub>1 = S \<and> Abs_formula f\<^sub>2 = S) \<longleftrightarrow> f\<^sub>1 = f\<^sub>2)"
-using temporal_faults_algebra_soundness_1 temporal_faults_algebra_soundness_2 by blast
-
 theorem temporal_faults_algebra_completeness: 
-    "\<forall>S. \<exists>f. f = Rep_formula S"
-by simp
+    "\<forall> (S::'a dlist set). \<exists> f::'a formula. Rep_formula f = S"
+using Abs_formula_inverse by auto
 
 
 (*<*)
