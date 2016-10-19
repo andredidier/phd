@@ -807,15 +807,36 @@ unfolding dlist_xbefore_append old_dlist_xbefore_def
 using dlist_tempo_1_no_gap_append
 by blast
 
-subsection {* Soundness and completeness*}
+subsection {* Soundness and completeness on the mapping rules*}
 
-theorem temporal_faults_algebra_soundness: 
+theorem temporal_faults_algebra_mapping_soundness: 
     "\<forall> (f\<^sub>1::'a formula) (f\<^sub>2::'a formula). \<exists> S. ((Rep_formula f\<^sub>1 = S \<and> Rep_formula f\<^sub>2 = S) \<longleftrightarrow> f\<^sub>1 = f\<^sub>2)"
 using Abs_formula_inject by blast
 
-theorem temporal_faults_algebra_completeness: 
+theorem temporal_faults_algebra_mapping_completeness: 
     "\<forall> (S::'a dlist set). \<exists> f::'a formula. Rep_formula f = S"
 using Abs_formula_inverse by auto
+
+subsection {* Soundness and completeness on the syntactical constructors *}
+
+datatype 'a TFA =
+  tTrue | 
+  tAND "'a TFA" "'a TFA" | 
+  tNOT "'a TFA" | 
+  tXB "'a TFA" "'a TFA"
+  
+primrec eval :: "'a TFA \<Rightarrow> 'a formula" where
+  "eval tTrue = top" | 
+  "eval (tAND a b) = inf (eval a) (eval b)" |
+  "eval (tNOT a) = (- eval a)" |
+  "eval (tXB a b) = (xbefore (eval a) (eval b))"
+
+lemma "\<lbrakk>tempo1 (eval a); tempo1 (eval b) \<rbrakk> \<Longrightarrow> eval (tAND (tXB a b) (tXB b a)) = eval (tNOT tTrue)"
+by (simp add: xbefore_inf_equiv_bot)
+
+(* CONTINUAR DAQUI. Estender as regras.*)
+theorem "f = tTrue \<Longrightarrow> eval f = top"
+by simp
 
 
 (*<*)
