@@ -819,17 +819,25 @@ using Abs_formula_inverse by auto
 
 subsection {* Soundness and completeness on the syntactical constructors *}
 
-datatype 'a TFA =
+datatype 'a formula_syn =
   tTrue | 
-  tAND "'a TFA" "'a TFA" | 
-  tNOT "'a TFA" | 
-  tXB "'a TFA" "'a TFA"
+  tVar 'a |
+  tAND "'a formula_syn" "'a formula_syn" | 
+  tNOT "'a formula_syn" | 
+  tXB "'a formula_syn" "'a formula_syn"
   
-primrec eval :: "'a TFA \<Rightarrow> 'a formula" where
+primrec eval :: "'a formula_syn \<Rightarrow> 'a formula" where
   "eval tTrue = top" | 
+  "eval (tVar x) = Abs_formula {xs. x \<in> set (list_of_dlist xs)}" |
   "eval (tAND a b) = inf (eval a) (eval b)" |
   "eval (tNOT a) = (- eval a)" |
   "eval (tXB a b) = (xbefore (eval a) (eval b))"
+
+primrec list_to_formula_syn :: "'a list \<Rightarrow> 'a formula_syn" where
+ "list_to_formula_syn [] = tTrue" |
+ "list_to_formula_syn (x # xs) = tXB (tVar x) (list_to_formula_syn xs)"
+
+(* From a set of formulas to a formula syntactic 'a formula \<Rightarrow> 'a formula_syn \<Longrightarrow> resolver com inductive? *) 
 
 lemma "\<lbrakk>tempo1 (eval a); tempo1 (eval b) \<rbrakk> \<Longrightarrow> eval (tAND (tXB a b) (tXB b a)) = eval (tNOT tTrue)"
 by (simp add: xbefore_inf_equiv_bot)
