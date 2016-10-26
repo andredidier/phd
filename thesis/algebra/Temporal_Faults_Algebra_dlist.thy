@@ -292,7 +292,7 @@ by (metis Rep_slice_append append_Nil2 append_eq_conv_conj
   size_dlist_def slice_append slice_dlist_def slice_left_def slice_right_def 
   take_slice_right)
 
-subsubsection {* \acs*{XBefore}, bot and idempotency *}
+subsubsection {* \acs*{XBefore}, bot, top and idempotency *}
 
 lemma dlist_xbefore_bot_1: "dlist_xbefore (\<lambda>xs. False) b zs = False"
 unfolding dlist_xbefore_def
@@ -301,6 +301,11 @@ by simp
 corollary dlistset_xbefore_bot_1: 
   "Collect (dlist_xbefore (\<lambda>xs. False) b) = {}"
 by (simp add: dlist_xbefore_bot_1)
+
+(*
+unfolding dlist_xbefore_def dlist_tempo_def dlist_tempo1_def dlist_tempo2_def
+  dlist_tempo3_def dlist_tempo4_def dlist_tempo5_def dlist_tempo6_def dlist_tempo7_def
+by auto*)
 
 lemma dlist_xbefore_bot_2: "dlist_xbefore a (\<lambda>xs. False) zs = False"
 unfolding dlist_xbefore_def
@@ -323,6 +328,26 @@ lemma dlist_xbefore_implies_idem:
   "\<forall>xs. b xs \<longrightarrow> a xs \<Longrightarrow> dlist_tempo1 a \<Longrightarrow> dlist_xbefore a b zs = False"
 unfolding dlist_tempo1_def dlist_xbefore_def
 by blast
+
+subsubsection {* \acs*{XBefore} neutral*}
+
+lemma dlist_xbefore_neutral_1: 
+  "dlist_tempo1 a \<Longrightarrow> dlist_xbefore (\<lambda>xs. xs = dlist_of_list []) a zs = a zs"
+by (metis (full_types) Dlist_list_of_dlist Rep_slice_append append.simps(1) 
+  dlist_of_list dlist_xbefore_def take_0 take_slice_right)
+
+corollary dlistset_xbefore_neutral_1: 
+  "dlist_tempo1 a \<Longrightarrow> Collect (dlist_xbefore (\<lambda>xs. xs = dlist_of_list []) a) = Collect a"
+using dlist_xbefore_neutral_1 by auto
+
+lemma dlist_xbefore_neutral_2: 
+  "dlist_tempo1 a \<Longrightarrow> dlist_xbefore a (\<lambda>xs. xs = dlist_of_list []) zs = a zs"
+by (smt Dlist_list_of_dlist append_Nil2 distinct_append distinct_list_of_dlist dlist_of_list 
+  dlist_xbefore_append list_of_dlist_empty)
+
+corollary dlistset_xbefore_neutral_2: 
+  "dlist_tempo1 a \<Longrightarrow> Collect (dlist_xbefore a (\<lambda>xs. xs = dlist_of_list [])) = Collect a"
+using dlist_xbefore_neutral_2 by auto
 
 subsubsection {* \acs*{XBefore} associativity*}
 
@@ -601,6 +626,18 @@ text {*
 In the following we prove that a formula is a valid type instantation for all \ac{algebra} classes.
 *}
 
+subsubsection {* Neutral element of \ac{algebra} *}
+
+instantiation formula :: (type) temporal_faults_algebra_neutral
+begin
+
+definition
+  "neutral = Abs_formula { dlist_of_list [] }"
+instance proof
+qed
+
+end
+
 subsubsection {* Basic properties of \ac{algebra} *}
 
 instantiation formula :: (type) temporal_faults_algebra_basic
@@ -629,6 +666,18 @@ lemma Rep_formula_xbefore_bot_2: "Rep_formula (xbefore a bot) =
 unfolding xbefore_formula_def
 by (simp add: Abs_formula_inverse dlist_xbefore_bot_2)
 
+lemma Rep_formula_xbefore_neutral_1: "tempo1 a \<Longrightarrow> Rep_formula (xbefore neutral a) = Rep_formula a"
+(*TODO sledgehammer*)
+unfolding xbefore_formula_def neutral_formula_def tempo1_formula_def 
+apply (simp add: Abs_formula_inverse)
+using dlistset_xbefore_neutral_1 by auto
+
+lemma Rep_formula_xbefore_neutral_2: "tempo1 a \<Longrightarrow> Rep_formula (xbefore a neutral) = Rep_formula a"
+(*TODO sledgehammer*)
+unfolding xbefore_formula_def neutral_formula_def tempo1_formula_def
+apply (simp add: Abs_formula_inverse)
+using dlistset_xbefore_neutral_2 by auto
+
 lemma Rep_formula_xbefore_not_idempotent: 
   "tempo1 a \<Longrightarrow> Rep_formula (xbefore a a) = Rep_formula bot"
 unfolding xbefore_formula_def tempo1_formula_def 
@@ -649,6 +698,18 @@ instance proof
   fix a::"'a formula"
   show "xbefore a bot = bot"
   unfolding eq_formula_iff Rep_formula_xbefore_bot_2 by auto
+  next
+  fix a::"'a formula"
+  assume "tempo1 a"
+  thus "xbefore neutral a = a"
+  unfolding eq_formula_iff
+  using Rep_formula_xbefore_neutral_1 by auto
+  next
+  fix a::"'a formula"
+  assume "tempo1 a"
+  thus "xbefore a neutral = a"
+  unfolding eq_formula_iff
+  using Rep_formula_xbefore_neutral_2 by auto
   next
   fix a::"'a formula"
   assume "tempo1 a"
@@ -819,27 +880,106 @@ using Abs_formula_inverse by auto
 
 subsection {* Soundness and completeness on the syntactical constructors *}
 
-datatype 'a formula_syn =
-  tTrue | 
+abbreviation dlists_of :: "'a set \<Rightarrow> 'a dlist set" where
+  "dlists_of V \<equiv> { xs. set (list_of_dlist xs) \<subseteq> V }"
+
+abbreviation formula_of :: "'a set \<Rightarrow> 'a formula set" where
+  "formula_of V \<equiv> { f. Rep_formula f \<subseteq> dlists_of V }"
+(*
+
+inductive_set
+  formula_of :: "'a set \<Rightarrow> 'a formula set"
+  for "V"
+where
+  "bot \<in> formula_of V" |
+  "a \<in> V \<Longrightarrow> Abs_formula {xs. a \<in> set (list_of_dlist xs)} \<in> formula_of V" |
+  "a \<in> V \<Longrightarrow> Abs_formula {xs. a \<notin> set (list_of_dlist xs)} \<in> formula_of V" |
+  "\<lbrakk> f\<^sub>1 \<in> formula_of V; f\<^sub>2 \<in> formula_of V \<rbrakk> \<Longrightarrow> sup f\<^sub>1 f\<^sub>2 \<in> formula_of V" |
+  "\<lbrakk> f\<^sub>1 \<in> formula_of V; f\<^sub>2 \<in> formula_of V \<rbrakk> \<Longrightarrow> xbefore f\<^sub>1 f\<^sub>2 \<in> formula_of V" 
+*)
+
+lemma neutral_in_formula_of: "neutral \<in> formula_of V"
+by (simp add: formula_of.intros(2))
+
+(*
+TODO
+theorem finite_formula : "finite V \<Longrightarrow> finite (formula_of V)"
+sledgehammer
+*)
+
+datatype 'a formula_exp =
+  tFalse | 
   tVar 'a |
-  tAND "'a formula_syn" "'a formula_syn" | 
-  tNOT "'a formula_syn" | 
-  tXB "'a formula_syn" "'a formula_syn"
+  tOR "'a formula_exp" "'a formula_exp" | 
+  tNOT "'a formula_exp" | 
+  tXB "'a formula_exp" "'a formula_exp"
   
-primrec eval :: "'a formula_syn \<Rightarrow> 'a formula" where
-  "eval tTrue = top" | 
-  "eval (tVar x) = Abs_formula {xs. x \<in> set (list_of_dlist xs)}" |
-  "eval (tAND a b) = inf (eval a) (eval b)" |
-  "eval (tNOT a) = (- eval a)" |
-  "eval (tXB a b) = (xbefore (eval a) (eval b))"
+abbreviation tAND where "tAND a b \<equiv> tNOT (tOR (tNOT a) (tNOT b))"
+abbreviation tTrue where "tTrue \<equiv> tNOT tFalse"
 
-primrec list_to_formula_syn :: "'a list \<Rightarrow> 'a formula_syn" where
- "list_to_formula_syn [] = tTrue" |
- "list_to_formula_syn (x # xs) = tXB (tVar x) (list_to_formula_syn xs)"
+primrec formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula" where
+  "formula_exp_to_formula tFalse = bot" | 
+  "formula_exp_to_formula (tVar x) = Abs_formula {xs. x \<in> set (list_of_dlist xs)}" |
+  "formula_exp_to_formula (tOR a b) = sup (formula_exp_to_formula a) (formula_exp_to_formula b)" |
+  "formula_exp_to_formula (tNOT a) = (- formula_exp_to_formula a)" |
+  "formula_exp_to_formula (tXB a b) = (xbefore (formula_exp_to_formula a) (formula_exp_to_formula b))"
 
-(* From a set of formulas to a formula syntactic 'a formula \<Rightarrow> 'a formula_syn \<Longrightarrow> resolver com inductive? *) 
+(* TODO rever a forma normal
+fun formula_exp_to_NF :: "'a formula_exp \<Rightarrow> 'a formula_exp" where
+  "formula_exp_to_NF f = f"
+*)
 
-lemma "\<lbrakk>tempo1 (eval a); tempo1 (eval b) \<rbrakk> \<Longrightarrow> eval (tAND (tXB a b) (tXB b a)) = eval (tNOT tTrue)"
+abbreviation eval where "eval \<equiv> formula_exp_to_formula"
+
+abbreviation empty_list_formula_exp :: "'a set \<Rightarrow> 'a formula_exp" where
+  "empty_list_formula_exp V \<equiv> Finite_Set.fold (\<lambda> x f\<^sub>2 . tAND (tNOT (tVar x)) f\<^sub>2) tTrue V"
+
+primrec list_to_formula_exp :: "'a list \<Rightarrow> 'a formula_exp" where
+ "list_to_formula_exp [] = (empty_list_formula_exp UNIV)" |
+ "list_to_formula_exp (x # xs) = tXB (tVar x) (list_to_formula_exp xs)"
+
+abbreviation dlist_to_formula_exp  where
+  "dlist_to_formula_exp dl \<equiv> list_to_formula_exp (list_of_dlist dl)"
+
+abbreviation dlist_set_to_formula_exp where
+  "dlist_set_to_formula_exp Dls \<equiv> Finite_Set.fold (\<lambda> dl f\<^sub>2 . tOR (dlist_to_formula_exp dl) f\<^sub>2  ) tFalse Dls"
+
+abbreviation formula_to_formula_exp where
+  "formula_to_formula_exp f \<equiv> dlist_set_to_formula_exp (Rep_formula f)"
+
+(* From a set of formulas to a formula syntactic 'a formula \<Rightarrow> 'a formula_exp \<Longrightarrow> 
+  resolver com inductive? *) 
+
+inductive_set
+  formula_syn :: "'a set \<Rightarrow> 'a formula_exp set"
+  for "V"
+where 
+  "tFalse \<in> formula_syn V" |
+  "a \<in> V \<Longrightarrow> tVar a \<in> formula_syn V" |
+  "f \<in> formula_syn V \<Longrightarrow> tNOT f \<in> formula_syn V" |
+  "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tOR f\<^sub>1 f\<^sub>2 \<in> formula_syn V" |
+  "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tXB f\<^sub>1 f\<^sub>2 \<in> formula_syn V" 
+
+theorem "\<forall> V. finite V \<and> fexp \<in> formula_syn V \<longrightarrow> formula_exp_to_formula fexp \<in> formula_of V"
+apply (induct fexp)
+apply (simp add: formula_of.intros(1))
+apply (metis formula_exp.distinct(1) formula_exp.distinct(11) formula_exp.distinct(13) formula_exp.distinct(9) formula_exp_to_formula.simps(2) formula_of.intros(3) formula_syn.simps)
+apply (metis formula_exp.distinct(15) formula_exp.distinct(17) formula_exp.distinct(3) formula_exp.distinct(9) formula_exp.inject(2) formula_exp_to_formula.simps(3) formula_of.intros(4) formula_syn.simps)
+(*sledgehammer*)
+
+unfolding formula_exp_to_formula_def
+(*
+sledgehammer
+*)
+
+theorem "\<forall>V. finite V \<and> fsem \<in> formula V \<longrightarrow> formula_to_formula_exp fsem \<in> formula_syn V"
+(*
+sledgehammer
+*)
+
+
+
+lemma "\<lbrakk> tempo1 (eval a); tempo1 (eval b) \<rbrakk> \<Longrightarrow> eval (tAND (tXB a b) (tXB b a)) = eval (tFalse)"
 by (simp add: xbefore_inf_equiv_bot)
 
 (* CONTINUAR DAQUI. Estender as regras.*)

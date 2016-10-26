@@ -13,11 +13,16 @@ In the following we present the algebraic laws for the \ac{algebra}.
 
 subsection {* Basic \ac{algebra} operators and tempo1 *}
 
-class temporal_faults_algebra_basic = boolean_algebra +
+class temporal_faults_algebra_neutral = boolean_algebra +
+  fixes neutral :: "'a"
+
+class temporal_faults_algebra_basic = temporal_faults_algebra_neutral +
   fixes xbefore :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
   fixes tempo1 :: "'a \<Rightarrow> bool"
   assumes xbefore_bot_1: "xbefore bot a = bot"
   assumes xbefore_bot_2: "xbefore a bot = bot"
+  assumes xbefore_neutral_1: "tempo1 a \<Longrightarrow> xbefore neutral a = a"
+  assumes xbefore_neutral_2: "tempo1 a \<Longrightarrow> xbefore a neutral = a"
   assumes xbefore_not_idempotent: "tempo1 a \<Longrightarrow> xbefore a a = bot"
   assumes inf_tempo1: "\<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> tempo1 (inf a b)"
   assumes xbefore_not_sym: 
