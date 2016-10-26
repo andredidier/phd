@@ -880,11 +880,34 @@ using Abs_formula_inverse by auto
 
 subsection {* Soundness and completeness on the syntactical constructors *}
 
-abbreviation dlists_of :: "'a set \<Rightarrow> 'a dlist set" where
-  "dlists_of V \<equiv> { xs. set (list_of_dlist xs) \<subseteq> V }"
+lemma dlist_card: "Dlist.length dl = card (Dlist.set dl)"
+by (simp add: Dlist.length_def distinct_card set.rep_eq)
+
+lemma dlist_limit: "\<lbrakk> finite A; Dlist.set dl \<subseteq> A \<rbrakk> \<Longrightarrow> Dlist.length dl \<le> card A"
+by (simp add: card_mono dlist_card)
+
+lemma finite_dlists_length_le: 
+  "finite A \<Longrightarrow> finite { dl. Dlist.set dl \<subseteq> A \<and> Dlist.length dl \<le> n }"
+using  finite_lists_length_le Dlist.set_def Dlist.length_def 
+sorry
+
+lemma finite_dlist_set: "finite A \<Longrightarrow> finite { dl. Dlist.set dl \<subseteq> A }"
+proof-
+  assume 1: "finite A"
+  hence "finite { dl. Dlist.set dl \<subseteq> A \<and> Dlist.length dl \<le> card A }" 
+    using 1 finite_dlists_length_le by blast
+  thus ?thesis using 1
+    by (metis (mono_tags, lifting) Collect_cong dlist_limit) 
+qed
+
+abbreviation dlist_contained_in :: "'a dlist \<Rightarrow> 'a set \<Rightarrow> bool" where
+  "dlist_contained_in dl V \<equiv> set (list_of_dlist dl) \<subseteq> V"
+
+abbreviation formula_contained_in :: "'a formula \<Rightarrow> 'a set \<Rightarrow> bool" where
+  "formula_contained_in f V \<equiv> \<forall> dl \<in> (Rep_formula f). dlist_contained_in dl V"
 
 abbreviation formula_of :: "'a set \<Rightarrow> 'a formula set" where
-  "formula_of V \<equiv> { f. Rep_formula f \<subseteq> dlists_of V }"
+  "formula_of V \<equiv> Collect (\<lambda>f. formula_contained_in f V)"
 (*
 
 inductive_set
@@ -898,14 +921,28 @@ where
   "\<lbrakk> f\<^sub>1 \<in> formula_of V; f\<^sub>2 \<in> formula_of V \<rbrakk> \<Longrightarrow> xbefore f\<^sub>1 f\<^sub>2 \<in> formula_of V" 
 *)
 
-lemma neutral_in_formula_of: "neutral \<in> formula_of V"
-by (simp add: formula_of.intros(2))
+lemma bot_in_formula_of: "bot \<in> formula_of V"
+by simp
 
-(*
-TODO
-theorem finite_formula : "finite V \<Longrightarrow> finite (formula_of V)"
-sledgehammer
-*)
+lemma formula_contained_in_neutral: "formula_contained_in neutral V"
+unfolding neutral_formula_def
+by (metis Dlist_list_of_dlist Rep_formula_inverse dlist_of_list empty_iff empty_set empty_subsetI 
+  insert_iff list_of_dlist_empty temporal_faults_algebra_mapping_completeness)
+
+corollary neutral_in_formula_of: "neutral \<in> formula_of V"
+by (simp add: formula_contained_in_neutral)
+
+lemma formula_contained_in_var: 
+  "a \<in> V \<Longrightarrow> formula_contained_in 
+  (Abs_formula {xs. dlist_contained_in xs V \<and> a \<in> set (list_of_dlist xs)}) V"
+by (simp add: Abs_formula_inverse)
+
+lemma var_in_formula_of: "a \<in> V \<Longrightarrow> 
+  Abs_formula {xs. dlist_contained_in xs V \<and> a \<in> set (list_of_dlist xs)} \<in> formula_of V"
+using formula_contained_in_var by force
+
+lemma finite_formula : "finite V \<Longrightarrow> finite (formula_of V)"
+sorry
 
 datatype 'a formula_exp =
   tFalse | 
