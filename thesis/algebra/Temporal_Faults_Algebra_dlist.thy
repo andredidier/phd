@@ -190,45 +190,45 @@ text {*
 We use the naming convention of variable, but in fact, a variable is equivalent to a list membership: 
 @{term "var a = {xs . a \<in> set (list_of_dlist xs)}"}.
 *}
-
-lemma dlist_tempo1_member: "dlist_tempo1 (\<lambda>xs. a \<in> set (list_of_dlist xs))"
-unfolding dlist_tempo1_def
+                                                      
+lemma dlist_tempo1_member: "dlist_tempo1 (\<lambda>xs. Dlist.member xs a)"
+unfolding dlist_tempo1_def Dlist.member_def List.member_def
 by (meson distinct_in_set_slice1_not_in_slice2)
 
-lemma dlist_tempo2_member: "dlist_tempo2 (\<lambda>xs. a \<in> set (list_of_dlist xs))"
-unfolding dlist_tempo2_def
+lemma dlist_tempo2_member: "dlist_tempo2 (\<lambda>xs. Dlist.member xs a)"
+unfolding dlist_tempo2_def Dlist.member_def List.member_def
 by (metis (no_types, lifting) Un_iff set_slice )
 
-lemma dlist_tempo3_member: "dlist_tempo3 (\<lambda>xs. a \<in> set (list_of_dlist xs))"
-unfolding dlist_tempo3_def
+lemma dlist_tempo3_member: "dlist_tempo3 (\<lambda>xs. Dlist.member xs a)"
+unfolding dlist_tempo3_def Dlist.member_def List.member_def
 by (metis DiffD2 Un_iff distinct_slice_diff2 dlist_append_extreme_left 
   dlist_append_extreme_right less_imp_le_nat set_append)
 
-lemma dlist_tempo5_member: "dlist_tempo5 (\<lambda>xs. a \<in> set (list_of_dlist xs))"
-unfolding dlist_tempo5_def
+lemma dlist_tempo5_member: "dlist_tempo5 (\<lambda>xs. Dlist.member xs a)"
+unfolding dlist_tempo5_def Dlist.member_def List.member_def
 by (metis Dlist_list_of_dlist Suc_leI disjoint_dlist_def disjoint_slice_suc 
   distinct_list_of_dlist dlist_empty_slice dlist_member_suc_nth1 empty_slice 
   less_Suc_eq_0_disj not_less_eq slice_singleton)
 
-lemma dlist_tempo4_member: "dlist_tempo4 (\<lambda>xs. a \<in> set (list_of_dlist xs))"
-unfolding dlist_tempo4_def
+lemma dlist_tempo4_member: "dlist_tempo4 (\<lambda>xs. Dlist.member xs a)"
+unfolding dlist_tempo4_def Dlist.member_def List.member_def
 (*by (metis Un_iff length_pos_if_in_set set_slice size_dlist_def slice_none 
   slice_right_slice_left_absorb)*)
 by (metis dlist_member_suc_nth in_set_conv_nth in_set_dropD in_set_takeD 
   list_of_dlist_Dlist set_remdups size_dlist_def slice_dlist_def)
 
-lemma dlist_tempo6_member: "dlist_tempo6 (\<lambda>xs. a \<in> set (list_of_dlist xs))"
-unfolding dlist_tempo6_def
+lemma dlist_tempo6_member: "dlist_tempo6 (\<lambda>xs. Dlist.member xs a)"
+unfolding dlist_tempo6_def Dlist.member_def List.member_def
 by (metis append_Nil in_set_conv_decomp in_set_conv_nth in_set_dropD 
   in_set_takeD length_pos_if_in_set list_of_dlist_slice take_drop_suc)
 
-lemma dlist_tempo7_member: "dlist_tempo7 (\<lambda>xs. a \<in> set (list_of_dlist xs))"
-unfolding dlist_tempo7_def
+lemma dlist_tempo7_member: "dlist_tempo7 (\<lambda>xs. Dlist.member xs a)"
+unfolding dlist_tempo7_def Dlist.member_def List.member_def
 by (metis Un_iff dlist_append_extreme_left dlist_member_suc_nth2 
   in_set_conv_nth lessI less_imp_le_nat set_append set_slice size_dlist_def)
 
-theorem dlist_tempo_member: "dlist_tempo (\<lambda>xs. a \<in> set (list_of_dlist xs))"
-unfolding dlist_tempo_def
+theorem dlist_tempo_member: "dlist_tempo (\<lambda>xs. Dlist.member xs a)"
+unfolding dlist_tempo_def 
 by (simp add: dlist_tempo1_member dlist_tempo2_member dlist_tempo3_member 
   dlist_tempo5_member dlist_tempo4_member dlist_tempo6_member 
   dlist_tempo7_member)
@@ -922,8 +922,11 @@ by (fast intro!: formulasI elim!: formulasD)
 lemma formulas_insert: "x \<in> formula_of S \<Longrightarrow> x \<in> formula_of (insert a S)"
 unfolding formula_of_def by auto
 
-lemma bot_in_formula_of: "bot \<in> formula_of V"
+lemma bot_in_formula_of: "V \<noteq> {} \<Longrightarrow> bot \<in> formula_of V"
+unfolding formula_of_def bot_formula_def 
+apply (auto simp add: Abs_formula_inverse)
 sledgehammer
+
 
 lemma formula_contained_in_neutral: "formula_contained_in neutral V"
 unfolding neutral_formula_def
