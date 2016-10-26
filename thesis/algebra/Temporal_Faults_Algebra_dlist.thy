@@ -900,29 +900,30 @@ proof-
     by (metis (mono_tags, lifting) Collect_cong dlist_limit) 
 qed
 
-abbreviation dlist_contained_in :: "'a dlist \<Rightarrow> 'a set \<Rightarrow> bool" where
-  "dlist_contained_in dl V \<equiv> set (list_of_dlist dl) \<subseteq> V"
+definition formula_of ::"'a set \<Rightarrow> 'a formula set" where
+  "formula_of V = { f. \<forall> l\<^sub>1 l\<^sub>2. (\<forall> a \<in> V. Dlist.member l\<^sub>1 a \<longleftrightarrow> Dlist.member l\<^sub>2 a ) \<longrightarrow> 
+    l\<^sub>1 \<in> Rep_formula f \<and> l\<^sub>2 \<in> Rep_formula f  }"
 
-abbreviation formula_contained_in :: "'a formula \<Rightarrow> 'a set \<Rightarrow> bool" where
-  "formula_contained_in f V \<equiv> \<forall> dl \<in> (Rep_formula f). dlist_contained_in dl V"
+lemma formulasI:
+  assumes "\<And>l\<^sub>1 l\<^sub>2. \<forall>a\<in>V. Dlist.member l\<^sub>1 a \<longleftrightarrow> Dlist.member l\<^sub>2 a
+    \<Longrightarrow> l\<^sub>1 \<in> Rep_formula f \<and> l\<^sub>2 \<in> Rep_formula f"
+  shows "f \<in> formula_of S"
+using assms unfolding formula_of_def by auto
 
-abbreviation formula_of :: "'a set \<Rightarrow> 'a formula set" where
-  "formula_of V \<equiv> Collect (\<lambda>f. formula_contained_in f V)"
-(*
+lemma formulasD:
+  assumes "f \<in> formula_of S"
+  assumes "\<forall>i\<in>S. Dlist.member l\<^sub>1 a \<longleftrightarrow> Dlist.member l\<^sub>2 a"
+  shows "l\<^sub>1 \<in> Rep_formula f \<and> l\<^sub>2 \<in> Rep_formula f"
+using assms unfolding formula_of_def by auto
 
-inductive_set
-  formula_of :: "'a set \<Rightarrow> 'a formula set"
-  for "V"
-where
-  "bot \<in> formula_of V" |
-  "a \<in> V \<Longrightarrow> Abs_formula {xs. a \<in> set (list_of_dlist xs)} \<in> formula_of V" |
-  "a \<in> V \<Longrightarrow> Abs_formula {xs. a \<notin> set (list_of_dlist xs)} \<in> formula_of V" |
-  "\<lbrakk> f\<^sub>1 \<in> formula_of V; f\<^sub>2 \<in> formula_of V \<rbrakk> \<Longrightarrow> sup f\<^sub>1 f\<^sub>2 \<in> formula_of V" |
-  "\<lbrakk> f\<^sub>1 \<in> formula_of V; f\<^sub>2 \<in> formula_of V \<rbrakk> \<Longrightarrow> xbefore f\<^sub>1 f\<^sub>2 \<in> formula_of V" 
-*)
+lemma formulas_mono: "S \<subseteq> T \<Longrightarrow> formula_of S \<subseteq> formula_of T"
+by (fast intro!: formulasI elim!: formulasD)
+
+lemma formulas_insert: "x \<in> formula_of S \<Longrightarrow> x \<in> formula_of (insert a S)"
+unfolding formula_of_def by auto
 
 lemma bot_in_formula_of: "bot \<in> formula_of V"
-by simp
+sledgehammer
 
 lemma formula_contained_in_neutral: "formula_contained_in neutral V"
 unfolding neutral_formula_def
