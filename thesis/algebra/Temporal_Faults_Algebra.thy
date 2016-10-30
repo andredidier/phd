@@ -236,13 +236,13 @@ proof -
   have f18: "sup (xbefore a b) a = a"
     using a9 a8 a7 a6 a5 a4 a3 a2 a1 by (metis (no_types) xbefore_sup_absorb_1)
   have "inf (xbefore b a) (- a) = bot"
-    using f16 by (metis (no_types) local.inf.assoc local.inf_compl_bot local.inf_compl_bot_left2)
+    by (metis f11 f13 f16 local.compl_inf_bot local.inf.left_commute local.inf_bot_right)
   then have f19: "inf (sup (- a) (- (- b))) (xbefore b a) = inf (sup (xbefore a b) a) (xbefore b a)"
     using f17 f13 by (simp add: local.inf_sup_distrib2)
   have "inf (sup (- a) (- (- b))) (sup (- a) (- b)) = sup (sup (- a) (- a)) (inf b (- b))"
     using local.distrib_imp1 local.inf_sup_distrib1 by force
   then have "- sup (inf a (- b)) (xbefore a b) = - inf (- xbefore b a) a"
-    using f19 f18 f15 f10 by (simp add: local.inf_sup_distrib1 local.sup.commute)
+    using f10 f15 f18 f19 local.inf_compl_bot local.inf_sup_distrib1 local.sup_commute by auto
   then show ?thesis
     using f12 by (metis (no_types) local.compl_eq_compl_iff local.inf.abel_semigroup_axioms)
 qed

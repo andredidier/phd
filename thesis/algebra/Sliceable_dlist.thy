@@ -111,8 +111,16 @@ instance proof
   next
   fix l::"'a dlist" and i and j and a and b
   show "(l\<dagger>i..j)\<dagger>a..b = l\<dagger>(i + a)..(min j (i + b))"
-    (*apply (simp add: slice_dlist_def list_of_dlist_slice Dlist_inverse )*)
-  by (metis (no_types, lifting) Sliceable_dlist.list_of_dlist_simps(3) diff_add_inverse drop_drop drop_take list_of_dlist_slice max_0L min.commute semiring_normalization_rules(24) take_take)
+    proof -
+      have f1: "\<forall>n. max (0\<Colon>nat) n = n"
+        by (meson max_0L)
+      hence "take b (take (max 0 (j - i)) (drop i (list_of_dlist l))) = drop i (take (i + b) (take j (list_of_dlist l)))"
+        by (metis (no_types) diff_add_inverse drop_take)
+      hence "take (max 0 (b - a)) (drop a (list_of_dlist (l\<dagger>i..j))) = drop a (drop i (take (min (i + b) j) (list_of_dlist l)))"
+        using f1 by (metis Sliceable_dlist.list_of_dlist_slice drop_take take_take)
+      thus ?thesis
+        using f1 by (metis (no_types) add.commute drop_drop drop_take list_of_dlist_simps(3) min.commute)
+    qed
   next
   fix l::"'a dlist" and i and j
   assume "disjoint l" "i\<noteq>j" "i < (#l)" "j < (#l)"

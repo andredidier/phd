@@ -8,7 +8,7 @@ In the following we present the denotation semantics for \ac{algebra} in terms o
 (*<*)
 theory Temporal_Faults_Algebra_dlist
 imports 
-  Temporal_Faults_Algebra Sliceable_dlist 
+  Temporal_Faults_Algebra Sliceable_dlist Dlist_finiteness
   "~~/src/HOL/Library/Dlist"
   "~~/src/HOL/Library/Permutation" 
   "~~/src/HOL/Library/Sublist_Order" 
@@ -872,7 +872,7 @@ subsection {* Soundness and completeness on the mapping rules*}
 
 theorem temporal_faults_algebra_mapping_soundness: 
     "\<forall> (f\<^sub>1::'a formula) (f\<^sub>2::'a formula). \<exists> S. ((Rep_formula f\<^sub>1 = S \<and> Rep_formula f\<^sub>2 = S) \<longleftrightarrow> f\<^sub>1 = f\<^sub>2)"
-using Abs_formula_inject by blast
+by blast
 
 theorem temporal_faults_algebra_mapping_completeness: 
     "\<forall> (S::'a dlist set). \<exists> f::'a formula. Rep_formula f = S"
@@ -880,25 +880,6 @@ using Abs_formula_inverse by auto
 
 subsection {* Soundness and completeness on the syntactical constructors *}
 
-lemma dlist_card: "Dlist.length dl = card (Dlist.set dl)"
-by (simp add: Dlist.length_def distinct_card set.rep_eq)
-
-lemma dlist_limit: "\<lbrakk> finite A; Dlist.set dl \<subseteq> A \<rbrakk> \<Longrightarrow> Dlist.length dl \<le> card A"
-by (simp add: card_mono dlist_card)
-
-lemma finite_dlists_length_le: 
-  "finite A \<Longrightarrow> finite { dl. Dlist.set dl \<subseteq> A \<and> Dlist.length dl \<le> n }"
-using  finite_lists_length_le Dlist.set_def Dlist.length_def 
-sorry
-
-lemma finite_dlist_set: "finite A \<Longrightarrow> finite { dl. Dlist.set dl \<subseteq> A }"
-proof-
-  assume 1: "finite A"
-  hence "finite { dl. Dlist.set dl \<subseteq> A \<and> Dlist.length dl \<le> card A }" 
-    using 1 finite_dlists_length_le by blast
-  thus ?thesis using 1
-    by (metis (mono_tags, lifting) Collect_cong dlist_limit) 
-qed
 
 definition formula_of ::"'a set \<Rightarrow> 'a formula set" where
   "formula_of V = { f. \<forall> dl. dl \<in> Rep_formula f \<longrightarrow> list_of_dlist dl \<in> lists V }"
