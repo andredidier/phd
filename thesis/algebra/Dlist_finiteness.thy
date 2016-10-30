@@ -19,8 +19,55 @@ definition lists_of_dlists :: "'a dlist set \<Rightarrow> 'a list set" where
 definition dlists_of_lists :: "'a list set \<Rightarrow> 'a dlist set" where
   "dlists_of_lists ls \<equiv> { dlist_of_list l | l . distinct l \<and> l \<in> ls  }"
 
-lemma dlists_lists_equiv: "lists_of_dlists (dlists_of_lists ls) = ls"
+lemma dlists_all_distinct: "\<forall>dl \<in> dlists_of_lists ls. distinct (list_of_dlist l)"
+by simp
+
+
+lemma lists_and_dlists_belongs: 
+  "l \<in> lists_of_dlists dls \<Longrightarrow> distinct l \<and> dlist_of_list l \<in> dls"
+  "distinct l \<and> dlist_of_list l \<in> dls \<Longrightarrow> l \<in> lists_of_dlists dls"
+  "\<lbrakk> \<forall>l \<in> ls. distinct l ; dl \<in> dlists_of_lists ls \<rbrakk> \<Longrightarrow> list_of_dlist dl \<in> ls"
+  "\<lbrakk> \<forall>l \<in> ls. distinct l ; list_of_dlist dl \<in> ls \<rbrakk> \<Longrightarrow> dl \<in> dlists_of_lists ls"
+unfolding lists_of_dlists_def dlists_of_lists_def
+apply auto
+apply (metis list_of_dlist_Dlist remdups_id_iff_distinct)
+apply (metis remdups_id_iff_distinct)
+by force
+
+lemma lists_and_dlists_inverse: 
+  "\<lbrakk> \<forall>l \<in> ls. distinct l; l \<in> lists_of_dlists (dlists_of_lists ls) \<rbrakk> \<Longrightarrow> l \<in> ls"
+  "dl \<in> dlists_of_lists (lists_of_dlists dls) \<Longrightarrow> dl \<in> dls"
+apply (metis dlist_of_list list_of_dlist_Dlist lists_and_dlists_belongs(1) 
+  lists_and_dlists_belongs(3) remdups_id_iff_distinct)
+by (metis Dlist_list_of_dlist dlist_of_list lists_and_dlists_belongs(1) 
+  lists_and_dlists_belongs(3))
+
+lemma lists_and_dlists_equiv_1: 
   "dlists_of_lists (lists_of_dlists dls) = dls"
+proof-
+   have "dlists_of_lists (lists_of_dlists dls) =
+    { dlist_of_list l | l. distinct l \<and> l \<in> lists_of_dlists dls}"
+    unfolding dlists_of_lists_def  by simp
+  moreover have "... = { dlist_of_list l | l. dlist_of_list l \<in> dls}"
+    by (metis Dlist_list_of_dlist distinct_list_of_dlist dlist_of_list 
+       lists_and_dlists_belongs(1) lists_and_dlists_belongs(2))
+  moreover have "... = { dl . dl \<in> dls }" by (metis Dlist_list_of_dlist dlist_of_list) 
+  ultimately show ?thesis by simp
+qed
+
+lemma lists_and_dlists_equiv_2: 
+  "\<forall>l \<in> ls. distinct l \<Longrightarrow> lists_of_dlists (dlists_of_lists ls) = ls"
+proof-
+  assume "\<forall>l \<in> ls. distinct l"
+  moreover have "lists_of_dlists (dlists_of_lists ls) = 
+    { list_of_dlist dl | dl . dl \<in> dlists_of_lists ls }"
+    unfolding dlists_of_lists_def lists_of_dlists_def by simp+
+  moreover have "... = { list_of_dlist dl | dl . list_of_dlist dl \<in> ls  }"
+    by (meson calculation(1) lists_and_dlists_belongs(3) lists_and_dlists_belongs(4))
+  moreover have "... = { l . l \<in> ls }"
+    by (metis Abs_dlist_inverse CollectI calculation(1))  
+  ultimately show ?thesis by simp
+qed
 
 lemma finite_lists_finite_distincts: "finite {xs. P xs} \<Longrightarrow> finite {xs. distinct xs \<and> P xs}"
 by auto
@@ -53,6 +100,16 @@ proof-
   thus ?thesis by (simp add: "0") 
 qed
 
+lemma dlists_finiteness_2: "finite A \<Longrightarrow> finite (lists_of_dlists (dlists A))"
+proof-
+  assume "finite A"
+  moreover hence "finite { list_of_dlist dl | dl. Dlist.set dl \<subseteq> A }" 
+    by (simp add: dlists_finiteness_1)
+  moreover hence "finite { list_of_dlist dl | dl. dl \<in> { dl . Dlist.set dl \<subseteq> A } }"
+    using CollectD CollectI Collect_cong by auto
+  thus ?thesis by (simp add: dlists_def lists_of_dlists_def)
+qed
+
 lemma list_of_dlist_pred: 
   "{list_of_dlist dl | dl. P (list_of_dlist dl)} = { l. distinct l \<and> P l }"
   "{ dl . P (list_of_dlist dl) } = { dlist_of_list l | l. distinct l \<and> P l }"
@@ -61,13 +118,24 @@ apply (metis distinct_list_of_dlist list_of_dlist_Dlist remdups_id_iff_distinct)
 apply (metis Dlist_list_of_dlist dlist_of_list list_of_dlist_Dlist remdups_id_iff_distinct)
 by (metis dlist_of_list list_of_dlist_Dlist remdups_id_iff_distinct)
 
-lemma "P ls \<Longrightarrow> \<exists> dls. dls = dlists_of_lists ls \<and> P (lists_of_dlists dls)"
+lemma lists_and_dlists_equiv_pred: 
+  "\<lbrakk> P ls ; \<forall> l\<in>ls. distinct l \<rbrakk> \<Longrightarrow> P (lists_of_dlists (dlists_of_lists ls))"
+by (simp add: lists_and_dlists_equiv_2)
 
-lemma dlists_finiteness: "finite A \<Longrightarrow> finite { dl. Dlist.set dl \<subseteq> A }"
+(* { l. distinct l \<and> set l \<subseteq> A } *)
+
+lemma finite_over_pred_lists_and_dlists:
+  "finite { l . distinct l \<and> P l } \<Longrightarrow> finite { dl . P (list_of_dlist dl) }"
+by (simp add: list_of_dlist_pred(2))
+
+lemma dlists_finiteness: "finite A \<Longrightarrow> finite (dlists A)"
 proof-
-  assume "finite A"
-  hence "finite { list_of_dlist dl | dl. Dlist.set dl \<subseteq> A }" using dlists_finiteness_1 by blast 
-  hence "finite {}"
+  obtain P where 1: "P = (\<lambda>l. set l \<subseteq> A)" by simp
+  assume 0: "finite A"
+  hence "finite { l. distinct l \<and> P l }" by (simp add: 1 distinct_list_finiteness)
+  hence "finite { dl . P (list_of_dlist dl) }" using finite_over_pred_lists_and_dlists by blast
+  hence "finite { dl . Dlist.set dl \<subseteq> A }" by (metis "1" Collect_cong set.rep_eq)
+  thus ?thesis by (simp add: dlists_def)  
 qed
 
 lemma "{ list_of_dlist dl | dl. Dlist.set dl \<subseteq> A } \<subseteq> lists A"
