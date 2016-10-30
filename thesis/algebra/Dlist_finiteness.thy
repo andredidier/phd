@@ -138,39 +138,31 @@ proof-
   thus ?thesis by (simp add: dlists_def)  
 qed
 
-lemma "{ list_of_dlist dl | dl. Dlist.set dl \<subseteq> A } \<subseteq> lists A"
-using set.rep_eq by fastforce
+lemma dlists_in_lists: "dlists A \<subseteq> dlists_of_lists (lists A)"
+by (smt Dlist_list_of_dlist distinct_list_of_dlist dlist_of_list dlists_def dlists_of_lists_def 
+  lists_eq_set mem_Collect_eq set.rep_eq subsetI)
 
+lemma lists_in_dlists: "\<forall>l \<in> lists A. distinct l \<Longrightarrow> dlists_of_lists (lists A) \<subseteq> dlists A"
+by (smt Collect_mono dlist_of_list dlists_def dlists_of_lists_def in_listsD list_of_dlist_Dlist 
+  remdups_id_iff_distinct set.rep_eq subsetI)
 
+lemma lists_equiv_dlists: "\<forall>l \<in> lists A. distinct l \<Longrightarrow> dlists_of_lists (lists A) = dlists A"
+by (simp add: dlists_in_lists eq_iff lists_in_dlists)
 
-lemma dlist_limit: "\<lbrakk> finite A; set (list_of_dlist dl) \<subseteq> A \<rbrakk> \<Longrightarrow> Dlist.length dl \<le> card A"
-by (metis card_mono distinct_card distinct_list_of_dlist Dlist.length_def)
+lemma dlists_empty_set: "dlists {} = dlists_of_lists {[]}"
+by (metis distinct.simps(1) lists_empty lists_equiv_dlists singletonD)
 
-inductive_set
-  dlists :: "'a set \<Rightarrow> 'a list set"
-  for A :: "'a set"
-where
-  Nil [intro!, simp]: "[] \<in> dlists A" | 
-  Cons [intro!, simp]: "\<lbrakk> a \<in> A; dl \<in> dlists A; a \<notin> set dl \<rbrakk> \<Longrightarrow> a # dl \<in> dlists A"
+lemma singleton_in_lists_singleton: "[a] \<in> lists {a}"
+by simp
 
-lemma dlists_subseteq_lists: "dlists A \<subseteq> lists A"
+(*
+lemma dlists_singleton: "dlists {a} = dlists_of_lists {[], [a]}"
+proof-
+  have 0: "\<forall>l \<in> {[], [a]}. distinct l" by auto 
+  hence "\<forall>x \<in> dlists {a} . x = (dlist_of_list []) \<or> x = (dlist_of_list [a])" sorry
+  thus ?thesis 
+qed
 
-
-
-lemma dlists_distinct: "l \<in> dlists A \<Longrightarrow> distinct l"
-apply (induct l)
-apply simp
-by (metis (no_types) distinct.simps(2) dlists.cases list.distinct(2) list.inject)
-
-lemma dlists_empty_set: "dlists {} = {[]}"
-using dlists.simps by blast
-
-lemma dlists_singleton_aux: "\<forall>x \<in> dlists {a} . x = [] \<or> x = [a]"
-using dlists.simps
-by (metis list.set_intros(1) singletonD)
-
-lemma dlists_singleton: "dlists {a} = {[], [a]}"
-by (simp add: dlists_singleton_aux subsetI subset_antisym)
 
 lemma singleton_list_in_dlists: "n \<in> A \<Longrightarrow> [n] \<in> dlists A"
 by simp
@@ -181,6 +173,7 @@ by simp
 
 lemma "n \<in> A \<Longrightarrow> \<forall>l \<in> dlists A. (remove1 n l) \<in> dlists A"
 
+*)
 
 (*
 lemma dlists_insert_remove1: "\<lbrakk> l \<in> dlists (insert n A); n \<notin> set l \<rbrakk> \<Longrightarrow> remove1 n l \<in> dlists A"
@@ -198,6 +191,7 @@ lemma dlists_insert_remove: "l \<in> dlists (insert n A) \<Longrightarrow> remov
 by (meson dlists_insert_remove1 dlists_insert_remove2)
 *)
 
+(*
 lemma dlists_insert_partition: "dlists (insert n A) = dlists {n} \<union> dlists A \<union> 
   { l. set l \<subseteq> insert n A \<and> remove1 n l \<in> dlists A }"
 proof (cases "n \<in> A")
@@ -238,7 +232,7 @@ proof-
   by (metis Zero_neq_Suc card.insert card_eq_0_iff dlists_empty_set dlists_insert_finite_2 
     empty_iff finite.cases finite.emptyI insert_commute)
 qed
-
+*)
 
 
 (*
