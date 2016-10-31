@@ -881,8 +881,8 @@ using Abs_formula_inverse by auto
 subsection {* Soundness and completeness on the syntactical constructors *}
 
 
-definition formula_of ::"'a set \<Rightarrow> 'a formula set" where
-  "formula_of V = { f. \<forall> dl. dl \<in> Rep_formula f \<longrightarrow> list_of_dlist dl \<in> lists V }"
+definition formulas ::"'a set \<Rightarrow> 'a formula set" where
+  "formulas V = { f . \<forall> dl \<in> Rep_formula f. dl \<in> dlists V }"
 (*
   "formula_of V = { f. \<forall> l\<in>lists V. (dlist_of_list l) \<in> Rep_formula f \<longrightarrow> List.set l \<subseteq> V }"
 *)

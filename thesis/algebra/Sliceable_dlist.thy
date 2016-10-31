@@ -77,12 +77,10 @@ lemmas list_of_dlist_simps = slice_left_def slice_right_def slice_dlist_def
   size_dlist_def disjoint_dlist_def empty_inter_dlist_def Dlist_slice_inverse 
 
 instance proof
-  (*fix l::"'a dlist"
-  show "disjoint l" by (simp add: disjoint_dlist_def)
-  next*)
   fix l::"'a dlist"
-  show "l\<dagger>0..(#l) = l" by (simp add: slice_dlist_def size_dlist_def 
-    list_of_dlist_inverse)
+  show "l\<dagger>0..(#l) = l" by (simp add: dlist_eqI list_of_dlist_slice size_dlist_def) 
+  fix l::"'a dlist"
+  show "disjoint l" by (simp add: disjoint_dlist_def)
   next
   fix l::"'a dlist" and c::nat and k
   assume "c \<le> k"
@@ -112,7 +110,7 @@ instance proof
   fix l::"'a dlist" and i and j and a and b
   show "(l\<dagger>i..j)\<dagger>a..b = l\<dagger>(i + a)..(min j (i + b))"
     proof -
-      have f1: "\<forall>n. max (0\<Colon>nat) n = n"
+      have f1: "\<forall>n. max (0::nat) n = n"
         by (meson max_0L)
       hence "take b (take (max 0 (j - i)) (drop i (list_of_dlist l))) = drop i (take (i + b) (take j (list_of_dlist l)))"
         by (metis (no_types) diff_add_inverse drop_take)
@@ -135,11 +133,6 @@ instance proof
     by simp
   thus "l\<dagger>i..Suc i \<noteq> l\<dagger>j..Suc j" 
   by (metis list_of_dlist_slice)
-  next
-  fix l::"'a dlist" and i and j
-  assume "disjoint l"
-  thus "disjoint (l\<dagger>i..j)" 
-    by (simp add: disjoint_dlist_def)
   next
   fix l1::"'a dlist" and l2::"'a dlist"
   show "(#l1) = (#l2) \<and> (\<forall>i j. l1\<dagger>i..j = l2\<dagger>i..j) \<longleftrightarrow> (l1 = l2)" 
