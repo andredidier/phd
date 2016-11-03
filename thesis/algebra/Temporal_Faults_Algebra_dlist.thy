@@ -1,4 +1,4 @@
-section {* Denotational semantics for \ac{algebra} *}
+ssection {* Denotational semantics for \ac{algebra} *}
 
 text {*
 \label{sec:theory-algebra-dlist}
@@ -667,13 +667,11 @@ unfolding xbefore_formula_def
 by (simp add: Abs_formula_inverse dlist_xbefore_bot_2)
 
 lemma Rep_formula_xbefore_neutral_1: "tempo1 a \<Longrightarrow> Rep_formula (xbefore neutral a) = Rep_formula a"
-(*TODO sledgehammer*)
 unfolding xbefore_formula_def neutral_formula_def tempo1_formula_def 
 apply (simp add: Abs_formula_inverse)
 using dlistset_xbefore_neutral_1 by auto
 
 lemma Rep_formula_xbefore_neutral_2: "tempo1 a \<Longrightarrow> Rep_formula (xbefore a neutral) = Rep_formula a"
-(*TODO sledgehammer*)
 unfolding xbefore_formula_def neutral_formula_def tempo1_formula_def
 apply (simp add: Abs_formula_inverse)
 using dlistset_xbefore_neutral_2 by auto
@@ -905,7 +903,13 @@ unfolding formulas_def by simp
 lemma formulas_var: "v \<in> V \<Longrightarrow> Abs_formula {ls. Dlist.member ls v} \<in> formulas V"
 by (metis Abs_formula_inverse CollectD CollectI UNIV_I formulasI)
 
-lemma formulas_var_iff: "Abs_formula {ls. Dlist.member ls v} \<in> formulas V \<longleftrightarrow> v \<in> V"
+lemma formulas_var_iff: "v \<in> V \<longleftrightarrow> Abs_formula {ls. Dlist.member ls v} \<in> formulas V"
+apply (rule iffI)
+apply (simp add: formulas_var)
+unfolding formulas_def Dlist.member_def 
+apply auto
+apply (rule list_of_dlist_induct)
+
 sorry
 
 lemma formulas_bot: "bot \<in> formulas S"
@@ -929,10 +933,11 @@ lemma formulas_diff:
   "x \<in> formulas S \<Longrightarrow> y \<in> formulas S \<Longrightarrow> x - y \<in> formulas S"
 unfolding formulas_def by (auto simp add: Rep_formula_simps)
 
-lemma formulas_xbefore: "\<lbrakk> f\<^sub>1 \<in> formulas V; f\<^sub>2 \<in> formulas V \<rbrakk> \<Longrightarrow> xbefore f\<^sub>1 f\<^sub>2 \<in> formulas V"
+lemma formulas_xbefore: "\<lbrakk> finite V; f\<^sub>1 \<in> formulas V; f\<^sub>2 \<in> formulas V \<rbrakk> \<Longrightarrow> 
+  xbefore f\<^sub>1 f\<^sub>2 \<in> formulas V"
 sorry
 
-lemma finite_formula : "finite V \<Longrightarrow> finite (formula_of V)"
+lemma finite_formula : "finite V \<Longrightarrow> finite (formulas V)"
 sorry
 
 datatype 'a formula_exp =
@@ -999,12 +1004,18 @@ apply (metis formula_exp.distinct(15) formula_exp.distinct(17) formula_exp.disti
 apply (metis formula_exp.distinct(11) formula_exp.distinct(15) formula_exp.distinct(19) 
   formula_exp.distinct(5) formula_exp.inject(3) formula_exp_to_formula.simps(4) 
   formula_syn.simps formulas_compl)
-by (metis formula_exp.distinct(13) formula_exp.distinct(17) formula_exp.distinct(19) 
-  formula_exp.distinct(7) formula_exp.inject(4) formula_exp_to_formula.simps(5) 
-  formula_syn.simps formulas_xbefore)
+by (metis formula_exp.distinct(13) formula_exp.distinct(17) formula_exp.distinct(19) formula_exp.distinct(7) formula_exp.inject(4) formula_exp_to_formula.simps(5) formula_syn.simps formulas_xbefore)
+
+lemma completeness_tNOT:
+  "finite V \<Longrightarrow> - f \<in> formulas V \<Longrightarrow> tNOT (formula_to_formula_exp f) \<in> formula_syn V"
+sorry
 
 theorem completeness: 
   "\<forall> V. finite V \<and> fsem \<in> formulas V \<longrightarrow> formula_to_formula_exp fsem \<in> formula_syn V"
+by (metis completeness_tNOT formula_exp.distinct(11) formula_exp.distinct(15) 
+  formula_exp.distinct(19) formula_exp.distinct(5) formula_exp.inject(3) formula_syn.cases 
+  formulas_compl)
+
 
 
 (*<*)
