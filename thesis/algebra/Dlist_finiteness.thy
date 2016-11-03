@@ -10,8 +10,41 @@ using  finite_lists_length_le Dlist.length_def
 sorry
 *)
 
+(*
+definition
+  formulas :: "'a set \<Rightarrow> 'a formula set"
+where
+  "formulas S =
+    {x. \<forall>A B. (\<forall>i\<in>S. i \<in> A \<longleftrightarrow> i \<in> B) \<longrightarrow>
+      A \<in> Rep_formula x \<longleftrightarrow> B \<in> Rep_formula x}"
+*)
+
+definition dlists2_pred :: "'a set \<Rightarrow> 'a dlist \<Rightarrow> bool" where
+  "dlists2_pred A dl = (\<forall>X. (Dlist.set dl \<subseteq> X \<longrightarrow> X \<subseteq> A) \<longleftrightarrow> (Dlist.set dl \<subseteq> A ))"
+(*
+  "dlists2_pred A dl = (Dlist.set dl \<subseteq> A)"
+*)
+(*
+  "dlists2_pred A dl = (\<forall> X Y. (\<forall> a \<in> A. a \<in> X \<longleftrightarrow> a \<in> Y) \<longrightarrow> 
+      Dlist.set dl \<subseteq> X \<longleftrightarrow> Dlist.set dl \<subseteq> Y)"
+*)
+
+definition dlists2 :: "'a set \<Rightarrow> 'a dlist set" where
+  "dlists2 A \<equiv> Collect (dlists2_pred A)"
+
+lemma "dlists2_pred A dl \<Longrightarrow> Dlist.set dl \<subseteq> A"
+by (auto simp add: dlists2_pred_def)
+
+lemma "\<not> dlists2_pred A dl \<Longrightarrow> Dlist.set dl \<subseteq> A"
+by (auto simp add: dlists2_pred_def)
+
 definition dlists :: "'a set \<Rightarrow> 'a dlist set" where
   "dlists A \<equiv> { dl . Dlist.set dl \<subseteq> A  }"
+
+
+lemma "dls \<subseteq> dlists2 A \<Longrightarrow> -dls \<subseteq> dlists2 A"
+unfolding dlists2_def
+apply auto
 
 definition lists_of_dlists :: "'a dlist set \<Rightarrow> 'a list set" where
   "lists_of_dlists dls \<equiv> { list_of_dlist dl | dl . dl \<in> dls  }"

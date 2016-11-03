@@ -880,56 +880,57 @@ using Abs_formula_inverse by auto
 
 subsection {* Soundness and completeness on the syntactical constructors *}
 
-
 definition formulas ::"'a set \<Rightarrow> 'a formula set" where
-  "formulas V = { f . \<forall> dl \<in> Rep_formula f. dl \<in> dlists V }"
-(*
-  "formula_of V = { f. \<forall> l\<in>lists V. (dlist_of_list l) \<in> Rep_formula f \<longrightarrow> List.set l \<subseteq> V }"
-*)
+  "formulas V = { ls. \<forall> f\<^sub>1 f\<^sub>2 . (\<forall>v\<in>V. Dlist.member f\<^sub>1 v \<longleftrightarrow> Dlist.member f\<^sub>2 v) \<longrightarrow>
+    f\<^sub>1 \<in> Rep_formula ls \<longleftrightarrow> f\<^sub>2 \<in> Rep_formula ls }"
 
-lemma formulas_mono: "S \<subseteq> T \<Longrightarrow> formula_of S \<subseteq> formula_of T"
-by (auto simp add: formula_of_def)
+lemma formulasI:
+  assumes "\<And>f\<^sub>1 f\<^sub>2. \<forall>v\<in>V. Dlist.member f\<^sub>1 v \<longleftrightarrow> Dlist.member f\<^sub>2 v
+    \<Longrightarrow> f\<^sub>1 \<in> Rep_formula ls \<longleftrightarrow> f\<^sub>2 \<in> Rep_formula ls"
+  shows "ls \<in> formulas V"
+using assms unfolding formulas_def by simp
 
-lemma formulas_insert: "x \<in> formula_of S \<Longrightarrow> x \<in> formula_of (insert a S)"
-unfolding formula_of_def by auto
+lemma formulasD:
+  assumes "ls \<in> formulas V"
+  assumes "\<forall>v\<in>V. Dlist.member f\<^sub>1 v \<longleftrightarrow> Dlist.member f\<^sub>2 v"
+  shows "f\<^sub>1 \<in> Rep_formula ls \<longleftrightarrow> f\<^sub>2 \<in> Rep_formula ls"
+using assms unfolding formulas_def by simp
 
-lemma bot_in_formula_of: "bot \<in> formula_of V"
-unfolding formula_of_def bot_formula_def 
-by (auto simp add: Abs_formula_inverse)
+lemma formulas_mono: "S \<subseteq> T \<Longrightarrow> formulas S \<subseteq> formulas T"
+by (fast intro!: formulasI elim!: formulasD)
 
-lemma neutral_in_formula_of: "neutral \<in> formula_of V"
-unfolding formula_of_def neutral_formula_def
-by (auto simp add: formula_of_def neutral_formula_def Abs_formula_inverse set.rep_eq)
+lemma formulas_insert: "x \<in> formulas S \<Longrightarrow> x \<in> formulas (insert a S)"
+unfolding formulas_def by simp
 
-lemma sup_in_formula_of: "\<lbrakk> f\<^sub>1 \<in> formula_of V; f\<^sub>2 \<in> formula_of V \<rbrakk> \<Longrightarrow> sup f\<^sub>1 f\<^sub>2 \<in> formula_of V"
-unfolding formula_of_def sup_formula_def 
-by (auto simp add: Abs_formula_inverse)
+lemma formulas_var: "v \<in> V \<Longrightarrow> Abs_formula {ls. Dlist.member ls v} \<in> formulas V"
+by (metis Abs_formula_inverse CollectD CollectI UNIV_I formulasI)
 
-lemma "f \<in> formula_of V \<Longrightarrow> \<forall>dl. dl \<in> Rep_formula f \<Longrightarrow> Dlist.set dl \<subseteq> V"
-unfolding formula_of_def
+lemma formulas_var_iff: "Abs_formula {ls. Dlist.member ls v} \<in> formulas V \<longleftrightarrow> v \<in> V"
+sorry
 
-lemma not_in_formula_of: "f \<in> formula_of V \<Longrightarrow> (- f) \<in> formula_of V"
-unfolding formula_of_def uminus_formula_def 
-apply (simp add: Abs_formula_inverse set.rep_eq)
-proof-
-  assume "\<forall>dl. dl \<in> Rep_formula f \<longrightarrow> list_of_dlist dl \<in> lists V"
-  hence "\<forall>dl. list_of_dlist dl \<in> lists V"
-qed
-apply (induct_tac V)
+lemma formulas_bot: "bot \<in> formulas S"
+unfolding formulas_def by simp
 
+lemma formulas_top: "top \<in> formulas S"
+unfolding formulas_def by simp
 
-lemma var_in_formula_of: "a \<in> V \<Longrightarrow> 
-  Abs_formula {xs. Dlist.member xs a} \<in> formula_of V"
-sledgehammer
-unfolding formula_of_def
-by (auto simp add: Abs_formula_inverse)
+lemma formulas_compl: "x \<in> formulas S \<Longrightarrow> - x \<in> formulas S"
+unfolding formulas_def by (simp add: Rep_formula_simps)
 
-lemma xbefore_in_formula_of: "\<lbrakk> f\<^sub>1 \<in> formula_of V; f\<^sub>2 \<in> formula_of V \<rbrakk> \<Longrightarrow> xbefore f\<^sub>1 f\<^sub>2 \<in> formula_of V"
-sledgehammer
-unfolding formula_of_def xbefore_formula_def dlist_xbefore_def
-by (auto simp add: Abs_formula_inverse)
+lemma formulas_inf:
+  "x \<in> formulas S \<Longrightarrow> y \<in> formulas S \<Longrightarrow> inf x y \<in> formulas S"
+unfolding formulas_def by (auto simp add: Rep_formula_simps)
 
+lemma formulas_sup:
+  "x \<in> formulas S \<Longrightarrow> y \<in> formulas S \<Longrightarrow> sup x y \<in> formulas S"
+unfolding formulas_def by (auto simp add: Rep_formula_simps)
 
+lemma formulas_diff:
+  "x \<in> formulas S \<Longrightarrow> y \<in> formulas S \<Longrightarrow> x - y \<in> formulas S"
+unfolding formulas_def by (auto simp add: Rep_formula_simps)
+
+lemma formulas_xbefore: "\<lbrakk> f\<^sub>1 \<in> formulas V; f\<^sub>2 \<in> formulas V \<rbrakk> \<Longrightarrow> xbefore f\<^sub>1 f\<^sub>2 \<in> formulas V"
+sorry
 
 lemma finite_formula : "finite V \<Longrightarrow> finite (formula_of V)"
 sorry
@@ -946,7 +947,7 @@ abbreviation tTrue where "tTrue \<equiv> tNOT tFalse"
 
 primrec formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula" where
   "formula_exp_to_formula tFalse = bot" | 
-  "formula_exp_to_formula (tVar x) = Abs_formula {xs. x \<in> set (list_of_dlist xs)}" |
+  "formula_exp_to_formula (tVar x) = Abs_formula { dl. Dlist.member dl x }" |
   "formula_exp_to_formula (tOR a b) = sup (formula_exp_to_formula a) (formula_exp_to_formula b)" |
   "formula_exp_to_formula (tNOT a) = (- formula_exp_to_formula a)" |
   "formula_exp_to_formula (tXB a b) = (xbefore (formula_exp_to_formula a) (formula_exp_to_formula b))"
@@ -959,7 +960,7 @@ fun formula_exp_to_NF :: "'a formula_exp \<Rightarrow> 'a formula_exp" where
 abbreviation eval where "eval \<equiv> formula_exp_to_formula"
 
 abbreviation empty_list_formula_exp :: "'a set \<Rightarrow> 'a formula_exp" where
-  "empty_list_formula_exp V \<equiv> Finite_Set.fold (\<lambda> x f\<^sub>2 . tAND (tNOT (tVar x)) f\<^sub>2) tTrue V"
+  "empty_list_formula_exp V \<equiv> tNOT (Finite_Set.fold (\<lambda> x f\<^sub>2 . tOR (tVar x) f\<^sub>2) tFalse V)"
 
 primrec list_to_formula_exp :: "'a list \<Rightarrow> 'a formula_exp" where
  "list_to_formula_exp [] = (empty_list_formula_exp UNIV)" |
@@ -987,31 +988,23 @@ where
   "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tOR f\<^sub>1 f\<^sub>2 \<in> formula_syn V" |
   "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tXB f\<^sub>1 f\<^sub>2 \<in> formula_syn V" 
 
-theorem "\<forall> V. finite V \<and> fexp \<in> formula_syn V \<longrightarrow> formula_exp_to_formula fexp \<in> formula_of V"
+theorem soundness: 
+  "\<forall> V. finite V \<and> fexp \<in> formula_syn V \<longrightarrow> formula_exp_to_formula fexp \<in> formulas V"
 apply (induct fexp)
-apply (simp add: formula_of.intros(1))
-apply (metis formula_exp.distinct(1) formula_exp.distinct(11) formula_exp.distinct(13) formula_exp.distinct(9) formula_exp_to_formula.simps(2) formula_of.intros(3) formula_syn.simps)
-apply (metis formula_exp.distinct(15) formula_exp.distinct(17) formula_exp.distinct(3) formula_exp.distinct(9) formula_exp.inject(2) formula_exp_to_formula.simps(3) formula_of.intros(4) formula_syn.simps)
-(*sledgehammer*)
+apply (simp add: formulas_bot)
+apply (metis formula_exp.distinct(1) formula_exp.distinct(11) formula_exp.distinct(13) 
+  formula_exp.distinct(9) formula_exp_to_formula.simps(2) formula_syn.simps formulas_var)
+apply (metis formula_exp.distinct(15) formula_exp.distinct(17) formula_exp.distinct(3) 
+  formula_exp.distinct(9) formula_exp.inject(2) formula_exp_to_formula.simps(3) formula_syn.simps formulas_sup)
+apply (metis formula_exp.distinct(11) formula_exp.distinct(15) formula_exp.distinct(19) 
+  formula_exp.distinct(5) formula_exp.inject(3) formula_exp_to_formula.simps(4) 
+  formula_syn.simps formulas_compl)
+by (metis formula_exp.distinct(13) formula_exp.distinct(17) formula_exp.distinct(19) 
+  formula_exp.distinct(7) formula_exp.inject(4) formula_exp_to_formula.simps(5) 
+  formula_syn.simps formulas_xbefore)
 
-unfolding formula_exp_to_formula_def
-(*
-sledgehammer
-*)
-
-theorem "\<forall>V. finite V \<and> fsem \<in> formula V \<longrightarrow> formula_to_formula_exp fsem \<in> formula_syn V"
-(*
-sledgehammer
-*)
-
-
-
-lemma "\<lbrakk> tempo1 (eval a); tempo1 (eval b) \<rbrakk> \<Longrightarrow> eval (tAND (tXB a b) (tXB b a)) = eval (tFalse)"
-by (simp add: xbefore_inf_equiv_bot)
-
-(* CONTINUAR DAQUI. Estender as regras.*)
-theorem "f = tTrue \<Longrightarrow> eval f = top"
-by simp
+theorem completeness: 
+  "\<forall> V. finite V \<and> fsem \<in> formulas V \<longrightarrow> formula_to_formula_exp fsem \<in> formula_syn V"
 
 
 (*<*)
