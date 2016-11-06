@@ -895,6 +895,14 @@ apply (rule iffI, simp add: index_of_member1)
 unfolding index_of_def List.member_def
 by (induct l, auto)
 
+lemma "\<exists>i. Dlist.member (dl\<dagger>..i) v \<longleftrightarrow> i < index_of (list_of_dlist dl) v"
+apply (induct dl, 
+  simp add: index_of_def Dlist.member_def  slice_right_def slice_dlist_def)
+
+
+
+lemma "\<exists>i. v \<in> Dlist.set (dl\<dagger>i..) \<longleftrightarrow> i \<ge> index_of (list_of_dlist dl) v \<and> i < Dlist.length dl"
+
 lemma dlist_index_of_member: 
   "index_of (list_of_dlist dl) v < Dlist.length dl \<longleftrightarrow> Dlist.member dl v"
 unfolding index_of_def Dlist.length_def Dlist.member_def
@@ -902,8 +910,8 @@ by (metis index_of_def index_of_member)
 
 definition formulas ::"'a set \<Rightarrow> 'a formula set" where
   "formulas V = { f. \<forall> dl\<^sub>1 dl\<^sub>2 . 
-    (\<forall>v\<in>V. index_of (list_of_dlist dl\<^sub>1) v < Dlist.length dl\<^sub>1 \<longleftrightarrow> 
-      index_of (list_of_dlist dl\<^sub>2) v < Dlist.length dl\<^sub>2) \<longrightarrow>
+    (\<forall>v\<in>V. (Dlist.member dl\<^sub>1 v \<longleftrightarrow> Dlist.member dl\<^sub>2 v) \<and> 
+      index_of (list_of_dlist dl\<^sub>1) v = index_of (list_of_dlist dl\<^sub>2) v) \<longrightarrow>
     dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f }"
 (*  
   "formulas V = { f. \<forall> dl\<^sub>1 dl\<^sub>2 . (\<forall>v\<in>V. Dlist.member dl\<^sub>1 v \<longleftrightarrow> Dlist.member dl\<^sub>2 v) \<longrightarrow>
@@ -912,16 +920,16 @@ definition formulas ::"'a set \<Rightarrow> 'a formula set" where
 
 lemma formulasI:
   assumes "\<And>dl\<^sub>1 dl\<^sub>2. 
-    (\<forall>v\<in>V. index_of (list_of_dlist dl\<^sub>1) v < Dlist.length dl\<^sub>1 \<longleftrightarrow> 
-      index_of (list_of_dlist dl\<^sub>2) v < Dlist.length dl\<^sub>2)
+    (\<forall>v\<in>V. (Dlist.member dl\<^sub>1 v \<longleftrightarrow> Dlist.member dl\<^sub>2 v) \<and> 
+      index_of (list_of_dlist dl\<^sub>1) v = index_of (list_of_dlist dl\<^sub>2) v)
     \<Longrightarrow> dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f"
   shows "f \<in> formulas V"
 using assms unfolding formulas_def by simp
 
 lemma formulasD:
   assumes "f \<in> formulas V"
-  assumes "\<forall>v\<in>V. index_of (list_of_dlist dl\<^sub>1) v < Dlist.length dl\<^sub>1 \<longleftrightarrow> 
-      index_of (list_of_dlist dl\<^sub>2) v < Dlist.length dl\<^sub>2"
+  assumes "\<forall>v\<in>V. (Dlist.member dl\<^sub>1 v \<longleftrightarrow> Dlist.member dl\<^sub>2 v) \<and> 
+      index_of (list_of_dlist dl\<^sub>1) v = index_of (list_of_dlist dl\<^sub>2) v"
   shows "dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f"
 using assms unfolding formulas_def by simp
 
@@ -941,12 +949,16 @@ by (metis Dlist.member_def dlist_member_suc_nth1 dlist_member_suc_nth2 drop_eq_N
   list_of_dlist_simps(4) list_of_dlist_slice take_eq_Nil)
 
 lemma formulas_var: "v \<in> V \<Longrightarrow> Abs_formula {dl. Dlist.member dl v} \<in> formulas V"
-by (simp add:  Abs_formula_inverse formulas_def dlist_index_of_member[symmetric])
+by (simp add:  Abs_formula_inverse formulas_def)
 
 lemma formulas_var_iff: "v \<in> V \<longleftrightarrow> Abs_formula {ls. Dlist.member ls v} \<in> formulas V"
 apply (rule iffI, simp add: formulas_var)
-apply (simp add:  Abs_formula_inverse formulas_def dlist_index_of_member)
-by (metis (mono_tags, hide_lams) Dlist.member_def empty_iff in_set_member list.set(1) list_of_dlist_Dlist member_rec(1) remdups.simps(1) remdups.simps(2))
+apply (simp add: Abs_formula_inverse formulas_def)
+sorry
+(*
+by (metis (mono_tags, hide_lams) Dlist.member_def empty_iff in_set_member list.set(1) 
+  list_of_dlist_Dlist member_rec(1) remdups.simps(1) remdups.simps(2))
+*)
 
 lemma formulas_bot: "bot \<in> formulas S"
 unfolding formulas_def by simp
@@ -973,7 +985,8 @@ lemma formulas_xbefore: "\<lbrakk> f\<^sub>1 \<in> formulas V; f\<^sub>2 \<in> f
   xbefore f\<^sub>1 f\<^sub>2 \<in> formulas V"
 unfolding formulas_def 
 apply (simp add: Rep_formula_boolean_algebra_simps Rep_formula_xbefore_to_dlist_xbefore
-  dlist_index_of_member dlist_xbefore_def)
+  dlist_xbefore_def)
+
 
 
 
