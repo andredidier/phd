@@ -1,4 +1,4 @@
-ssection {* Denotational semantics for \ac{algebra} *}
+section {* Denotational semantics for \ac{algebra} *}
 
 text {*
 \label{sec:theory-algebra-dlist}
@@ -107,13 +107,13 @@ by (simp add: Abs_formula_inverse Rep_formula)
 
 lemmas eq_formula_iff = Rep_formula_inject [symmetric]
 
-lemmas Rep_formula_simps =
+lemmas Rep_formula_boolean_algebra_simps =
   less_eq_formula_def less_formula_def eq_formula_iff
   Rep_formula_sup Rep_formula_inf Rep_formula_top Rep_formula_bot
   Rep_formula_compl Rep_formula_diff 
   
 instance proof
-qed (unfold Rep_formula_simps, auto)
+qed (unfold Rep_formula_boolean_algebra_simps, auto)
 end
 
 (*<*)
@@ -878,20 +878,51 @@ using Abs_formula_inverse by auto
 
 subsection {* Soundness and completeness on the syntactical constructors *}
 
+primrec index_of_aux :: "'a list \<Rightarrow> 'a \<Rightarrow> nat \<Rightarrow> nat" where
+  "index_of_aux [] _ n = n" |
+  "index_of_aux (x#xs) a n = (if x = a then 0 else Suc (index_of_aux xs a (n-1)))"
+
+definition index_of :: "'a list \<Rightarrow> 'a \<Rightarrow> nat" where
+  "index_of l a = index_of_aux l a (List.length l)"
+
+lemma index_of_member1: "index_of l v < List.length l \<Longrightarrow> List.member l v"
+unfolding index_of_def List.member_def 
+apply (induct l, auto)
+using not_less_eq by fastforce
+
+lemma index_of_member: "index_of l v < List.length l \<longleftrightarrow> List.member l v"
+apply (rule iffI, simp add: index_of_member1)
+unfolding index_of_def List.member_def
+by (induct l, auto)
+
+lemma dlist_index_of_member: 
+  "index_of (list_of_dlist dl) v < Dlist.length dl \<longleftrightarrow> Dlist.member dl v"
+unfolding index_of_def Dlist.length_def Dlist.member_def
+by (metis index_of_def index_of_member)
+
 definition formulas ::"'a set \<Rightarrow> 'a formula set" where
-  "formulas V = { ls. \<forall> f\<^sub>1 f\<^sub>2 . (\<forall>v\<in>V. Dlist.member f\<^sub>1 v \<longleftrightarrow> Dlist.member f\<^sub>2 v) \<longrightarrow>
-    f\<^sub>1 \<in> Rep_formula ls \<longleftrightarrow> f\<^sub>2 \<in> Rep_formula ls }"
+  "formulas V = { f. \<forall> dl\<^sub>1 dl\<^sub>2 . 
+    (\<forall>v\<in>V. index_of (list_of_dlist dl\<^sub>1) v < Dlist.length dl\<^sub>1 \<longleftrightarrow> 
+      index_of (list_of_dlist dl\<^sub>2) v < Dlist.length dl\<^sub>2) \<longrightarrow>
+    dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f }"
+(*  
+  "formulas V = { f. \<forall> dl\<^sub>1 dl\<^sub>2 . (\<forall>v\<in>V. Dlist.member dl\<^sub>1 v \<longleftrightarrow> Dlist.member dl\<^sub>2 v) \<longrightarrow>
+    dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f }"
+*)
 
 lemma formulasI:
-  assumes "\<And>f\<^sub>1 f\<^sub>2. \<forall>v\<in>V. Dlist.member f\<^sub>1 v \<longleftrightarrow> Dlist.member f\<^sub>2 v
-    \<Longrightarrow> f\<^sub>1 \<in> Rep_formula ls \<longleftrightarrow> f\<^sub>2 \<in> Rep_formula ls"
-  shows "ls \<in> formulas V"
+  assumes "\<And>dl\<^sub>1 dl\<^sub>2. 
+    (\<forall>v\<in>V. index_of (list_of_dlist dl\<^sub>1) v < Dlist.length dl\<^sub>1 \<longleftrightarrow> 
+      index_of (list_of_dlist dl\<^sub>2) v < Dlist.length dl\<^sub>2)
+    \<Longrightarrow> dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f"
+  shows "f \<in> formulas V"
 using assms unfolding formulas_def by simp
 
 lemma formulasD:
-  assumes "ls \<in> formulas V"
-  assumes "\<forall>v\<in>V. Dlist.member f\<^sub>1 v \<longleftrightarrow> Dlist.member f\<^sub>2 v"
-  shows "f\<^sub>1 \<in> Rep_formula ls \<longleftrightarrow> f\<^sub>2 \<in> Rep_formula ls"
+  assumes "f \<in> formulas V"
+  assumes "\<forall>v\<in>V. index_of (list_of_dlist dl\<^sub>1) v < Dlist.length dl\<^sub>1 \<longleftrightarrow> 
+      index_of (list_of_dlist dl\<^sub>2) v < Dlist.length dl\<^sub>2"
+  shows "dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f"
 using assms unfolding formulas_def by simp
 
 lemma formulas_mono: "S \<subseteq> T \<Longrightarrow> formulas S \<subseteq> formulas T"
@@ -900,17 +931,22 @@ by (fast intro!: formulasI elim!: formulasD)
 lemma formulas_insert: "x \<in> formulas S \<Longrightarrow> x \<in> formulas (insert a S)"
 unfolding formulas_def by simp
 
-lemma formulas_var: "v \<in> V \<Longrightarrow> Abs_formula {ls. Dlist.member ls v} \<in> formulas V"
-by (metis Abs_formula_inverse CollectD CollectI UNIV_I formulasI)
+lemma in_set_conv_member: "List.member l v \<longleftrightarrow> (\<exists> i < length l. l ! i = v )"
+by (simp add: in_set_conv_nth member_def)
+
+lemma in_set_conv_member_dlist: 
+  "Dlist.member dl v \<longleftrightarrow> (\<exists>i. Dlist.member (sliceable_nth dl i) v)"
+by (metis Dlist.member_def dlist_member_suc_nth1 dlist_member_suc_nth2 drop_eq_Nil 
+  empty_iff empty_set in_set_conv_member in_set_member linorder_not_less 
+  list_of_dlist_simps(4) list_of_dlist_slice take_eq_Nil)
+
+lemma formulas_var: "v \<in> V \<Longrightarrow> Abs_formula {dl. Dlist.member dl v} \<in> formulas V"
+by (simp add:  Abs_formula_inverse formulas_def dlist_index_of_member[symmetric])
 
 lemma formulas_var_iff: "v \<in> V \<longleftrightarrow> Abs_formula {ls. Dlist.member ls v} \<in> formulas V"
-apply (rule iffI)
-apply (simp add: formulas_var)
-unfolding formulas_def Dlist.member_def 
-apply auto
-apply (rule list_of_dlist_induct)
-
-sorry
+apply (rule iffI, simp add: formulas_var)
+apply (simp add:  Abs_formula_inverse formulas_def dlist_index_of_member)
+by (metis (mono_tags, hide_lams) Dlist.member_def empty_iff in_set_member list.set(1) list_of_dlist_Dlist member_rec(1) remdups.simps(1) remdups.simps(2))
 
 lemma formulas_bot: "bot \<in> formulas S"
 unfolding formulas_def by simp
@@ -919,26 +955,31 @@ lemma formulas_top: "top \<in> formulas S"
 unfolding formulas_def by simp
 
 lemma formulas_compl: "x \<in> formulas S \<Longrightarrow> - x \<in> formulas S"
-unfolding formulas_def by (simp add: Rep_formula_simps)
+unfolding formulas_def by (simp add: Rep_formula_boolean_algebra_simps)
 
 lemma formulas_inf:
   "x \<in> formulas S \<Longrightarrow> y \<in> formulas S \<Longrightarrow> inf x y \<in> formulas S"
-unfolding formulas_def by (auto simp add: Rep_formula_simps)
+unfolding formulas_def by (auto simp add: Rep_formula_boolean_algebra_simps)
 
 lemma formulas_sup:
   "x \<in> formulas S \<Longrightarrow> y \<in> formulas S \<Longrightarrow> sup x y \<in> formulas S"
-unfolding formulas_def by (auto simp add: Rep_formula_simps)
+unfolding formulas_def by (auto simp add: Rep_formula_boolean_algebra_simps)
 
 lemma formulas_diff:
   "x \<in> formulas S \<Longrightarrow> y \<in> formulas S \<Longrightarrow> x - y \<in> formulas S"
-unfolding formulas_def by (auto simp add: Rep_formula_simps)
+unfolding formulas_def by (auto simp add: Rep_formula_boolean_algebra_simps)
 
-lemma formulas_xbefore: "\<lbrakk> finite V; f\<^sub>1 \<in> formulas V; f\<^sub>2 \<in> formulas V \<rbrakk> \<Longrightarrow> 
+lemma formulas_xbefore: "\<lbrakk> f\<^sub>1 \<in> formulas V; f\<^sub>2 \<in> formulas V \<rbrakk> \<Longrightarrow> 
   xbefore f\<^sub>1 f\<^sub>2 \<in> formulas V"
-sorry
+unfolding formulas_def 
+apply (simp add: Rep_formula_boolean_algebra_simps Rep_formula_xbefore_to_dlist_xbefore
+  dlist_index_of_member dlist_xbefore_def)
+
+
+
 
 lemma finite_formula : "finite V \<Longrightarrow> finite (formulas V)"
-sorry
+
 
 datatype 'a formula_exp =
   tFalse | 
