@@ -210,6 +210,18 @@ corollary (in sliceable) forall_disjoint_slice_suc:
     (x\<dagger>i..(Suc i) \<noteq> x\<dagger>j..(Suc j))"
 by (simp add: local.disjoint_slice_suc)
 
+lemma (in sliceable) empty_slice_none:
+  "(#x) = 0 \<Longrightarrow> (#(x\<dagger>i..j)) = 0"
+by (simp add: size_slice)
+
+corollary (in sliceable) empty_slice_right_none:
+  "(#x) = 0 \<Longrightarrow> (#(x\<dagger>..j)) = 0"
+by (simp add: slice_right_def sliceable_class.empty_slice_none)
+
+corollary (in sliceable) empty_slice_left_none:
+  "(#x) = 0 \<Longrightarrow> (#(x\<dagger>i..)) = 0"
+by (simp add: slice_left_def sliceable_class.empty_slice_none)
+
 (*<*)
 end
 (*>*)

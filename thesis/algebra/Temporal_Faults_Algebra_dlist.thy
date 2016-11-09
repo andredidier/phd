@@ -882,13 +882,16 @@ primrec inc_nat_option :: "nat option \<Rightarrow> nat option" where
   "inc_nat_option None = None" |
   "inc_nat_option (Some i) = Some (Suc i)"
 
-primrec index_of_aux :: "'a list \<Rightarrow> 'a \<Rightarrow> nat \<Rightarrow> nat option" where
-  "index_of_aux [] _ n = None" |
-  "index_of_aux (x#xs) a n = 
-    (if x = a then Some 0 else inc_nat_option (index_of_aux xs a (n-1)))"
+primrec list_index_of_aux :: "'a list \<Rightarrow> 'a \<Rightarrow> nat \<Rightarrow> nat option" where
+  "list_index_of_aux [] _ n = None" |
+  "list_index_of_aux (x#xs) a n = 
+    (if x = a then Some 0 else inc_nat_option (list_index_of_aux xs a (n-1)))"
 
-definition index_of :: "'a list \<Rightarrow> 'a \<Rightarrow> nat option" where
-  "index_of l a = index_of_aux l a (List.length l)"
+definition list_index_of :: "'a list \<Rightarrow> 'a \<Rightarrow> nat option" where
+  "list_index_of l a = list_index_of_aux l a (List.length l)"
+
+definition dlist_index_of :: "'a dlist \<Rightarrow> 'a \<Rightarrow> nat option" where
+  "dlist_index_of dl a = list_index_of_aux (list_of_dlist dl) a (Dlist.length dl)"
 
 (*
 lemma index_of_aux_member1: 
@@ -897,10 +900,13 @@ unfolding index_of_def List.member_def
 apply (induct l, auto)
 *)
 
-lemma index_of_member1: "(index_of l v) \<noteq> None \<Longrightarrow> List.member l v"
-unfolding index_of_def List.member_def 
-apply (induct l, auto)
+lemma dlist_index_of_empty[simp]: "dlist_index_of Dlist.empty v = None"
+by (simp add: dlist_index_of_def)
 
+lemma dlist_index_of_member: "dlist_index_of dl v \<noteq> None \<Longrightarrow> Dlist.member dl v"
+unfolding dlist_index_of_def Dlist.member_def List.member_def 
+apply (induct dl, auto)
+sorry
 
 
 (*
@@ -910,10 +916,23 @@ apply (induct l, auto simp add: index_of_aux_member1)
 using member_rec by fastforce
 *)
 
-lemma index_of_member: "the (index_of l v) < List.length l \<longleftrightarrow> List.member l v"
-by (metis Cons_nth_drop_Suc drop_0 drop_eq_Nil empty_iff empty_set gr0I index_of.simps(2) 
-  index_of_aux_member member_def nat_less_induct not_less not_less0 option.sel)
+lemma dlist_index_of_member_iff: "dlist_index_of dl v \<noteq> None \<longleftrightarrow> Dlist.member dl v"
+apply (rule iffI, simp add: dlist_index_of_member)
+apply (induct dl, simp add: Dlist.empty_def Dlist.member_def dlist_index_of_def 
+  List.member_def)
 
+apply (simp add: Dlist.insert_def Dlist.member_def dlist_index_of_def)
+sorry
+
+lemma dlist_index_of_slice:
+  "dlist_index_of dl v \<noteq> None \<Longrightarrow> (\<exists>i. Dlist.member (dl\<dagger>..i) v \<or> Dlist.member (dl\<dagger>i..) v)"
+apply (induct dl, simp)
+sorry
+
+lemma dlist_index_of_slice_iff: 
+  "dlist_index_of dl v \<noteq> None \<longleftrightarrow> (\<exists>i. Dlist.member (dl\<dagger>..i) v \<or> Dlist.member (dl\<dagger>i..) v)"
+apply (rule iffI, simp add: dlist_index_of_slice)
+sorry
 
 (*
 lemma slice_right_member_index_of: 
@@ -956,11 +975,9 @@ by (metis Dlist.member_def One_nat_def Suc_diff_le diff_is_0_eq' drop_Nil drop_e
 *)
 
 
-lemma "distinct l1 \<Longrightarrow> distinct l2 \<Longrightarrow> \<forall>v. index_of l1 v = index_of l2 v \<Longrightarrow> l1 = l2"
-
 definition formulas ::"'a set \<Rightarrow> 'a formula set" where
   "formulas V = { f. \<forall> dl\<^sub>1 dl\<^sub>2 . 
-    (\<forall>v\<in>V. index_of (list_of_dlist dl\<^sub>1) v = index_of (list_of_dlist dl\<^sub>2) v) \<longrightarrow>
+    (\<forall>v\<in>V. dlist_index_of dl\<^sub>1 v = dlist_index_of dl\<^sub>2 v) \<longrightarrow>
     dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f }"
 (*  
   "formulas V = { f. \<forall> dl\<^sub>1 dl\<^sub>2 . (\<forall>v\<in>V. Dlist.member dl\<^sub>1 v \<longleftrightarrow> Dlist.member dl\<^sub>2 v) \<longrightarrow>
@@ -969,14 +986,14 @@ definition formulas ::"'a set \<Rightarrow> 'a formula set" where
 
 lemma formulasI:
   assumes "\<And>dl\<^sub>1 dl\<^sub>2. 
-    (\<forall>v\<in>V. index_of (list_of_dlist dl\<^sub>1) v = index_of (list_of_dlist dl\<^sub>2) v)
+    (\<forall>v\<in>V. dlist_index_of dl\<^sub>1 v = dlist_index_of dl\<^sub>2 v)
     \<Longrightarrow> dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f"
   shows "f \<in> formulas V"
 using assms unfolding formulas_def by simp
 
 lemma formulasD:
   assumes "f \<in> formulas V"
-  assumes "\<forall>v\<in>V. index_of (list_of_dlist dl\<^sub>1) v = index_of (list_of_dlist dl\<^sub>2) v"
+  assumes "\<forall>v\<in>V. dlist_index_of dl\<^sub>1 v = dlist_index_of dl\<^sub>2 v"
   shows "dl\<^sub>1 \<in> Rep_formula f \<longleftrightarrow> dl\<^sub>2 \<in> Rep_formula f"
 using assms unfolding formulas_def by simp
 
@@ -997,13 +1014,15 @@ by (metis Dlist.member_def dlist_member_suc_nth1 dlist_member_suc_nth2 drop_eq_N
 
 lemma formulas_var: "v \<in> V \<Longrightarrow> Abs_formula {dl. Dlist.member dl v} \<in> formulas V"
 apply (simp add: formulas_def Abs_formula_inverse)
-
+by (simp add: dlist_index_of_member_iff [symmetric])
 
 
 lemma formulas_var_iff: "v \<in> V \<longleftrightarrow> Abs_formula {ls. Dlist.member ls v} \<in> formulas V"
 apply (rule iffI, simp add: formulas_var)
 apply (simp add: Abs_formula_inverse formulas_def)
-sorry
+by (metis Dlist.member_def dlist_index_of_member empty_iff empty_set list_of_dlist_Dlist 
+  member_rec(1) member_rec(2) remdups.simps(1) remdups.simps(2))
+
 (*
 by (metis (mono_tags, hide_lams) Dlist.member_def empty_iff in_set_member list.set(1) 
   list_of_dlist_Dlist member_rec(1) remdups.simps(1) remdups.simps(2))
@@ -1032,10 +1051,9 @@ unfolding formulas_def by (auto simp add: Rep_formula_boolean_algebra_simps)
 
 lemma formulas_xbefore: "\<lbrakk> f\<^sub>1 \<in> formulas V; f\<^sub>2 \<in> formulas V \<rbrakk> \<Longrightarrow> 
   xbefore f\<^sub>1 f\<^sub>2 \<in> formulas V"
-unfolding formulas_def xbefore_formula_def
-apply (auto simp add: Rep_formula_boolean_algebra_simps Rep_formula_xbefore_to_dlist_xbefore
-  dlist_xbefore_def Abs_formula_inverse 
-  slice_right_member_index_of slice_left_member_index_of)
+apply (simp add: formulas_def xbefore_formula_def Abs_formula_inverse dlist_xbefore_def)
+apply (simp add: slice_left_def slice_right_def slice_dlist_def size_dlist_def )
+apply auto
 
 
 

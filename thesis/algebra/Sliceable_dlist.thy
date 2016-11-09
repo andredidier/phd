@@ -369,6 +369,15 @@ lemma dlist_member_suc_nth: "i < (#l) \<Longrightarrow>
 using dlist_member_suc_nth1 dlist_member_suc_nth2
 by fastforce
 
+lemma dlist_empty_slice_none: "(Dlist.empty\<dagger>i..j) = Dlist.empty"
+by (simp add: Dlist.empty_def slice_dlist_def)
+
+corollary dlist_empty_slice_right_none: "(Dlist.empty\<dagger>..j) = Dlist.empty"
+by (simp add: dlist_empty_slice_none slice_right_def)
+
+corollary dlist_empty_slice_left_none: "(Dlist.empty\<dagger>i..) = Dlist.empty"
+by (simp add: dlist_empty_slice_none slice_left_def)
+
 (*
 lemma dlist_nth_forall_iff_eq : "(\<forall>i. (dlist_nth l1 i = dlist_nth l2 i)) \<longleftrightarrow> l1 = l2"
 proof-
