@@ -424,13 +424,6 @@ by (metis Dlist.member_def empty_iff empty_set in_set_conv_nth in_set_member
   list_of_dlist_slice size_dlist_def slice_dlist_def slice_singleton)
 
 
-(*
-lemma dlist_nth_forall_iff_eq : "(\<forall>i. (dlist_nth l1 i = dlist_nth l2 i)) \<longleftrightarrow> l1 = l2"
-proof-
-  have "(\<forall>i j. (l1\<dagger>i..j = l2\<dagger>i..j)) \<longleftrightarrow> (l1 = l2)" using forall_slice_implies_eq by blast
-  hence "(\<forall>i. (l1\<dagger>i..(Suc i) = l2\<dagger>i..(Suc i))) \<longleftrightarrow> (l1 = l2)" 
-qed
-*)
 (*<*)
 end
 (*>*)

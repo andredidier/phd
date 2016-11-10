@@ -936,7 +936,7 @@ apply (induct dl, simp add: dlist_index_of_def)
 by (metis Dlist.member_def dlist_index_of_insert dlist_index_of_insert_existing 
   in_set_member insert_code(1) insert_iff list_of_dlist_insert option.simps(3))
 
-(*
+
 lemma dlist_index_of_slice_right: 
   "dlist_index_of dl v \<noteq> None \<Longrightarrow> (\<exists>i. Dlist.member (dl\<dagger>..i) v)"
 apply (induct dl, simp)
@@ -978,7 +978,56 @@ by (meson dlist_index_of_slice_right)
 corollary dlist_index_of_slice_iff: 
   "dlist_index_of dl v \<noteq> None \<longleftrightarrow> (\<exists>i. Dlist.member (dl\<dagger>..i) v \<or> Dlist.member (dl\<dagger>i..) v)"
 by (meson dlist_index_of_slice_left_iff dlist_index_of_slice_right_iff)
+
+lemma dlist_index_of_not_member_slice: 
+  "\<not> Dlist.member dl v \<Longrightarrow> dlist_index_of dl v = dlist_index_of (dl\<dagger>i..j) v"
+by (metis dlist_index_of_member dlist_member_slice_member_dlist)
+
+corollary dlist_index_of_not_member_slice_right: 
+  "\<not> Dlist.member dl v \<Longrightarrow> dlist_index_of dl v = dlist_index_of (dl\<dagger>..j) v"
+unfolding slice_right_def
+by (simp add: dlist_index_of_not_member_slice)
+
+corollary dlist_index_of_not_member_slice_left: 
+  "\<not> Dlist.member dl v \<Longrightarrow> dlist_index_of dl v = dlist_index_of (dl\<dagger>i..) v"
+unfolding slice_left_def
+by (simp add: dlist_index_of_not_member_slice)
+
+lemma dlist_index_of_length: 
+  "Dlist.member dl v \<Longrightarrow> the (dlist_index_of dl v) < Dlist.length dl"
+apply (induct dl, simp)
+by (smt Dlist.length_def Dlist.member_def Suc_lessI add_eq_self_zero 
+  dlist_index_of_insert dlist_index_of_member_iff inc_nat_option.simps(1) 
+  inc_nat_option.simps(2) le_add1 length_greater_0_conv lessI less_trans 
+  list.size(4) list_of_dlist_insert member_def not_in_set_insert not_less 
+  not_less_iff_gr_or_eq option.collapse option.inject)
+(*
+lemma dlist_index_length_iff: 
+  "Dlist.member dl v \<longleftrightarrow> the (dlist_index_of dl v) < Dlist.length dl"
+apply (rule iffI, simp add: dlist_index_of_length)
 *)
+
+lemma dlist_index_of_dlist_nth:
+  "dlist_index_of dl v = Some i \<Longrightarrow> dlist_nth dl i = v"
+apply (induct dl, simp)
+apply (simp add: dlist_index_of_insert)
+sorry
+
+lemma dlist_index_of_sliceable_nth:
+  "dlist_index_of dl v = Some i \<Longrightarrow> Dlist.member (sliceable_nth dl i) v"
+apply (induct dl, simp)
+apply (simp add: dlist_index_of_insert)
+sorry
+
+lemma dlist_index_of_slice_right_equiv: 
+  "Dlist.member (dl\<dagger>..i) v \<Longrightarrow> 
+  dlist_index_of (dl\<dagger>..i) v = dlist_index_of dl v"
+sorry
+
+lemma dlist_index_of_slice_left_equiv: 
+  "Dlist.member (dl\<dagger>i..) v \<Longrightarrow> 
+  i + the (dlist_index_of (dl\<dagger>i..) v) = the (dlist_index_of dl v)"
+sorry
 
 (*
 lemma slice_right_member_index_of: 
@@ -1097,10 +1146,11 @@ unfolding formulas_def by (auto simp add: Rep_formula_boolean_algebra_simps)
 
 lemma formulas_xbefore: "\<lbrakk> f\<^sub>1 \<in> formulas V; f\<^sub>2 \<in> formulas V \<rbrakk> \<Longrightarrow> 
   xbefore f\<^sub>1 f\<^sub>2 \<in> formulas V"
-apply (simp add: formulas_def xbefore_formula_def Abs_formula_inverse dlist_xbefore_def)
-(*apply (simp add: slice_left_def slice_right_def slice_dlist_def size_dlist_def )*)
-apply auto
+unfolding formulas_def 
+apply (simp add: formulas_def Rep_formula_xbefore_to_dlist_xbefore dlist_xbefore_def)
 
+apply (simp add: slice_left_def slice_right_def slice_dlist_def size_dlist_def 
+  )
 
 
 
