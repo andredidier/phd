@@ -903,36 +903,82 @@ apply (induct l, auto)
 lemma dlist_index_of_empty[simp]: "dlist_index_of Dlist.empty v = None"
 by (simp add: dlist_index_of_def)
 
+lemma dlist_index_of_insert_new[simp]: 
+  "\<not> Dlist.member dl v \<Longrightarrow> dlist_index_of (Dlist.insert v dl) v = Some 0"
+by (simp add: Dlist.member_def dlist_index_of_def member_def)
+
+lemma dlist_index_of_insert: "\<not> Dlist.member dl x \<Longrightarrow> 
+  dlist_index_of (Dlist.insert x dl) v = 
+  (if x = v then Some 0 else inc_nat_option (dlist_index_of dl v))"
+proof(cases "x = v")
+  case True
+  assume "\<not> Dlist.member dl x" "x = v"
+  thus ?thesis by simp
+  next
+  assume "\<not> Dlist.member dl x" "x \<noteq> v"
+  thus ?thesis
+    by (simp add: Dlist.length_def Dlist.member_def dlist_index_of_def in_set_member) 
+qed
+
+lemma dlist_index_of_insert_existing:
+  "\<lbrakk> \<not> Dlist.member dl x; Dlist.member dl v; dlist_index_of dl v \<noteq> None \<rbrakk> \<Longrightarrow> 
+  dlist_index_of (Dlist.insert x dl) v \<noteq> None"
+by (auto simp add: dlist_index_of_insert)
+
 lemma dlist_index_of_member: "dlist_index_of dl v \<noteq> None \<Longrightarrow> Dlist.member dl v"
-unfolding dlist_index_of_def Dlist.member_def List.member_def 
-apply (induct dl, auto)
-sorry
-
-
-(*
-lemma index_of_aux_member: 
-  "l \<noteq> [] \<Longrightarrow> index_of_aux l v (List.length l) < List.length l \<longleftrightarrow> List.member l v"
-apply (induct l, auto simp add: index_of_aux_member1)
-using member_rec by fastforce
-*)
+apply (induct dl, simp)
+by (metis Dlist.member_def dlist_index_of_insert inc_nat_option.simps(1) 
+  list_of_dlist_insert member_def member_rec(1) not_in_set_insert)
 
 lemma dlist_index_of_member_iff: "dlist_index_of dl v \<noteq> None \<longleftrightarrow> Dlist.member dl v"
 apply (rule iffI, simp add: dlist_index_of_member)
-apply (induct dl, simp add: Dlist.empty_def Dlist.member_def dlist_index_of_def 
-  List.member_def)
+apply (induct dl, simp add: dlist_index_of_def)
+by (metis Dlist.member_def dlist_index_of_insert dlist_index_of_insert_existing 
+  in_set_member insert_code(1) insert_iff list_of_dlist_insert option.simps(3))
 
-apply (simp add: Dlist.insert_def Dlist.member_def dlist_index_of_def)
-sorry
-
-lemma dlist_index_of_slice:
-  "dlist_index_of dl v \<noteq> None \<Longrightarrow> (\<exists>i. Dlist.member (dl\<dagger>..i) v \<or> Dlist.member (dl\<dagger>i..) v)"
+(*
+lemma dlist_index_of_slice_right: 
+  "dlist_index_of dl v \<noteq> None \<Longrightarrow> (\<exists>i. Dlist.member (dl\<dagger>..i) v)"
 apply (induct dl, simp)
-sorry
+by (metis dlist_index_of_member slice_none slice_right_def)
 
-lemma dlist_index_of_slice_iff: 
+lemma dlist_index_of_slice_right_iff: 
+  "dlist_index_of dl v \<noteq> None \<longleftrightarrow> (\<exists>i. Dlist.member (dl\<dagger>..i) v)"
+proof (rule iffI)
+  next
+  assume "dlist_index_of dl v \<noteq> None"
+  thus "\<exists>i. Dlist.member (dl\<dagger>..i) v" by (simp add: dlist_index_of_slice_right)
+  next
+  assume "\<exists>i. Dlist.member (dl\<dagger>..i) v"
+  hence "Dlist.member dl v" by (simp add: dlist_member_slice_right_member_dlist)
+  thus "dlist_index_of dl v \<noteq> None" by (meson dlist_index_of_member_iff) 
+qed
+
+lemma dlist_index_of_slice_left:
+  "dlist_index_of dl v \<noteq> None \<Longrightarrow> (\<exists>i. Dlist.member (dl\<dagger>i..) v)"
+apply (induct dl, simp)
+by (metis dlist_index_of_member slice_none slice_left_def)
+
+lemma dlist_index_of_slice_left_iff: 
+  "dlist_index_of dl v \<noteq> None \<longleftrightarrow> (\<exists>i. Dlist.member (dl\<dagger>i..) v)"
+proof (rule iffI)
+  next
+  assume "dlist_index_of dl v \<noteq> None"
+  thus "\<exists>i. Dlist.member (dl\<dagger>i..) v" by (simp add: dlist_index_of_slice_left)
+  next
+  assume "\<exists>i. Dlist.member (dl\<dagger>i..) v"
+  hence "Dlist.member dl v" by (simp add: dlist_member_slice_left_member_dlist)
+  thus "dlist_index_of dl v \<noteq> None" by (meson dlist_index_of_member_iff) 
+qed
+
+corollary dlist_index_of_slice:
+  "dlist_index_of dl v \<noteq> None \<Longrightarrow> (\<exists>i. Dlist.member (dl\<dagger>..i) v \<or> Dlist.member (dl\<dagger>i..) v)"
+by (meson dlist_index_of_slice_right)
+
+corollary dlist_index_of_slice_iff: 
   "dlist_index_of dl v \<noteq> None \<longleftrightarrow> (\<exists>i. Dlist.member (dl\<dagger>..i) v \<or> Dlist.member (dl\<dagger>i..) v)"
-apply (rule iffI, simp add: dlist_index_of_slice)
-sorry
+by (meson dlist_index_of_slice_left_iff dlist_index_of_slice_right_iff)
+*)
 
 (*
 lemma slice_right_member_index_of: 
@@ -1014,7 +1060,7 @@ by (metis Dlist.member_def dlist_member_suc_nth1 dlist_member_suc_nth2 drop_eq_N
 
 lemma formulas_var: "v \<in> V \<Longrightarrow> Abs_formula {dl. Dlist.member dl v} \<in> formulas V"
 apply (simp add: formulas_def Abs_formula_inverse)
-by (simp add: dlist_index_of_member_iff [symmetric])
+by (simp add: dlist_index_of_member_iff[symmetric])
 
 
 lemma formulas_var_iff: "v \<in> V \<longleftrightarrow> Abs_formula {ls. Dlist.member ls v} \<in> formulas V"
@@ -1052,7 +1098,7 @@ unfolding formulas_def by (auto simp add: Rep_formula_boolean_algebra_simps)
 lemma formulas_xbefore: "\<lbrakk> f\<^sub>1 \<in> formulas V; f\<^sub>2 \<in> formulas V \<rbrakk> \<Longrightarrow> 
   xbefore f\<^sub>1 f\<^sub>2 \<in> formulas V"
 apply (simp add: formulas_def xbefore_formula_def Abs_formula_inverse dlist_xbefore_def)
-apply (simp add: slice_left_def slice_right_def slice_dlist_def size_dlist_def )
+(*apply (simp add: slice_left_def slice_right_def slice_dlist_def size_dlist_def )*)
 apply auto
 
 

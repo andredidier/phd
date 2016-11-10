@@ -369,6 +369,11 @@ lemma dlist_member_suc_nth: "i < (#l) \<Longrightarrow>
 using dlist_member_suc_nth1 dlist_member_suc_nth2
 by fastforce
 
+corollary not_dlist_member_empty[simp]: 
+  "\<not> Dlist.member (Dlist.empty) v"
+  "\<not> (Dlist.member (Dlist []) v)"
+by (simp add: Dlist.member_def Dlist.empty_def List.member_def)+
+
 lemma dlist_empty_slice_none: "(Dlist.empty\<dagger>i..j) = Dlist.empty"
 by (simp add: Dlist.empty_def slice_dlist_def)
 
@@ -377,6 +382,47 @@ by (simp add: dlist_empty_slice_none slice_right_def)
 
 corollary dlist_empty_slice_left_none: "(Dlist.empty\<dagger>i..) = Dlist.empty"
 by (simp add: dlist_empty_slice_none slice_left_def)
+
+lemma dlist_member_slice_empty_none: 
+  "\<not> (Dlist.member (Dlist.empty\<dagger>i..j) v)"
+by (auto simp add: slice_dlist_def)
+
+corollary dlist_member_slice_right_empty_none[simp]: 
+  "\<not> (Dlist.member (Dlist.empty\<dagger>..j) v)"
+by (simp add: slice_right_def dlist_empty_slice_none)
+
+corollary dlist_member_slice_left_empty_none[simp]: 
+  "\<not> (Dlist.member (Dlist.empty\<dagger>i..) v)"
+by (simp add: slice_left_def dlist_empty_slice_none)
+
+lemma dlist_member_slice_member_dlist:
+  "\<exists> i j. Dlist.member (dl\<dagger>i..j) v \<Longrightarrow> Dlist.member dl v"
+unfolding Dlist.member_def List.member_def slice_dlist_def
+using in_set_dropD in_set_takeD by fastforce
+
+corollary dlist_member_slice_right_member_dlist:
+  "\<exists>j. Dlist.member (dl\<dagger>..j) v \<Longrightarrow> Dlist.member dl v"
+by (metis dlist_member_slice_member_dlist slice_right_def)
+
+corollary dlist_member_slice_left_member_dlist:
+  "\<exists>i. Dlist.member (dl\<dagger>i..) v \<Longrightarrow> Dlist.member dl v"
+by (metis dlist_member_slice_member_dlist slice_left_def)
+
+lemma sliceable_nth_member1: 
+  "sliceable_nth dl i = Dlist [v] \<Longrightarrow> Dlist.member dl v"
+by (metis Dlist.member_def distinct_remdups_id distinct_singleton 
+  dlist_member_slice_member_dlist in_set_member list.set_intros(1) list_of_dlist_Dlist)
+
+corollary sliceable_nth_member: 
+  "\<exists>i. sliceable_nth dl i = Dlist [v] \<Longrightarrow> Dlist.member dl v"
+by (auto simp add: sliceable_nth_member1)
+
+lemma sliceable_nth_member_iff: 
+  "(\<exists>i. sliceable_nth dl i = Dlist [v]) \<longleftrightarrow> Dlist.member dl v"
+apply (rule iffI, simp add: sliceable_nth_member)
+by (metis Dlist.member_def empty_iff empty_set in_set_conv_nth in_set_member 
+  list_of_dlist_slice size_dlist_def slice_dlist_def slice_singleton)
+
 
 (*
 lemma dlist_nth_forall_iff_eq : "(\<forall>i. (dlist_nth l1 i = dlist_nth l2 i)) \<longleftrightarrow> l1 = l2"
