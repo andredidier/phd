@@ -1,8 +1,12 @@
 theory Dlist_finiteness
 
-imports Main 
+imports Main Enum
   "~~/src/HOL/Library/Dlist"
 begin
+
+
+
+
 (*TODO
 lemma finite_dlists_length_le: 
   "finite A \<Longrightarrow> finite { dl. set (list_of_dlist dl) \<subseteq> A \<and> Dlist.length dl \<le> n }"
@@ -19,6 +23,7 @@ where
       A \<in> Rep_formula x \<longleftrightarrow> B \<in> Rep_formula x}"
 *)
 
+
 definition dlists2_pred :: "'a set \<Rightarrow> 'a dlist \<Rightarrow> bool" where
   "dlists2_pred A dl = (\<forall>X. (Dlist.set dl \<subseteq> X \<longrightarrow> X \<subseteq> A) \<longleftrightarrow> (Dlist.set dl \<subseteq> A ))"
 (*
@@ -34,17 +39,19 @@ definition dlists2 :: "'a set \<Rightarrow> 'a dlist set" where
 
 lemma "dlists2_pred A dl \<Longrightarrow> Dlist.set dl \<subseteq> A"
 by (auto simp add: dlists2_pred_def)
-
+(*
 lemma "\<not> dlists2_pred A dl \<Longrightarrow> Dlist.set dl \<subseteq> A"
 by (auto simp add: dlists2_pred_def)
+*)
 
 definition dlists :: "'a set \<Rightarrow> 'a dlist set" where
   "dlists A \<equiv> { dl . Dlist.set dl \<subseteq> A  }"
 
-
+(*
 lemma "dls \<subseteq> dlists2 A \<Longrightarrow> -dls \<subseteq> dlists2 A"
 unfolding dlists2_def
 apply auto
+*)
 
 definition lists_of_dlists :: "'a dlist set \<Rightarrow> 'a list set" where
   "lists_of_dlists dls \<equiv> { list_of_dlist dl | dl . dl \<in> dls  }"
