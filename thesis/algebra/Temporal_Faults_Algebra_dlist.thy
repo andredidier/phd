@@ -427,6 +427,12 @@ where
 "dlist_independent_events S T \<equiv> 
   (\<forall>i l. \<not> (S (l\<dagger>i..(Suc i)) \<and> T (l\<dagger>i..(Suc i))))"
 
+lemma dlist_indepentent_events_member: "a \<noteq> b \<Longrightarrow> 
+  dlist_independent_events (\<lambda> dl. Dlist.member dl a) (\<lambda> dl. Dlist.member dl b)"
+apply (simp add: dlist_independent_events_def Dlist.member_def List.member_def)
+by (metis dlist_member_suc_nth1)
+
+
 (*Verificar se faz sentido a regra abaixo. *)
 (*
 lemma "dlist_independent_events a b \<Longrightarrow> \<forall>xs. b xs \<longrightarrow> a xs \<Longrightarrow> False"
@@ -876,6 +882,129 @@ theorem temporal_faults_algebra_mapping_completeness:
     "\<forall> (S::'a dlist set). \<exists> f::'a formula. Rep_formula f = S"
 using Abs_formula_inverse by auto
 
+subsection {* Syntax for the Algebra of Temporal Faults *}
+
+datatype 'a formula_exp =
+  tFalse | 
+  tTrue |
+  tVar 'a |
+  tOR "'a formula_exp" "'a formula_exp" | 
+  tAND "'a formula_exp" "'a formula_exp" |
+  tNOT "'a formula_exp" | 
+  tXB "'a formula_exp" "'a formula_exp"
+  
+primrec formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula" where
+  "formula_exp_to_formula tFalse = bot" | 
+  "formula_exp_to_formula tTrue = top" |
+  "formula_exp_to_formula (tVar x) = Abs_formula { dl. Dlist.member dl x }" |
+  "formula_exp_to_formula (tOR a b) = sup (formula_exp_to_formula a) (formula_exp_to_formula b)" |
+  "formula_exp_to_formula (tAND a b) = inf (formula_exp_to_formula a) (formula_exp_to_formula b)" |
+  "formula_exp_to_formula (tNOT a) = (- formula_exp_to_formula a)" |
+  "formula_exp_to_formula (tXB a b) = (xbefore (formula_exp_to_formula a) (formula_exp_to_formula b))"
+
+(* TODO rever a forma normal
+fun formula_exp_to_NF :: "'a formula_exp \<Rightarrow> 'a formula_exp" where
+  "formula_exp_to_NF f = f"
+*)
+
+abbreviation eval where "eval \<equiv> formula_exp_to_formula"
+
+abbreviation empty_list_formula_exp :: "'a set \<Rightarrow> 'a formula_exp" where
+  "empty_list_formula_exp V \<equiv> tNOT (Finite_Set.fold (\<lambda> x f\<^sub>2 . tOR (tVar x) f\<^sub>2) tFalse V)"
+
+primrec list_to_formula_exp :: "'a list \<Rightarrow> 'a formula_exp" where
+ "list_to_formula_exp [] = (empty_list_formula_exp UNIV)" |
+ "list_to_formula_exp (x # xs) = tXB (tVar x) (list_to_formula_exp xs)"
+
+abbreviation dlist_to_formula_exp  where
+  "dlist_to_formula_exp dl \<equiv> list_to_formula_exp (list_of_dlist dl)"
+
+abbreviation dlist_set_to_formula_exp where
+  "dlist_set_to_formula_exp Dls \<equiv> Finite_Set.fold (\<lambda> dl f\<^sub>2 . tOR (dlist_to_formula_exp dl) f\<^sub>2  ) tFalse Dls"
+
+abbreviation formula_to_formula_exp where
+  "formula_to_formula_exp f \<equiv> dlist_set_to_formula_exp (Rep_formula f)"
+
+(* TODO From a set of formulas to a formula syntactic 'a formula \<Rightarrow> 'a formula_exp \<Longrightarrow> 
+  resolver com inductive? *) 
+inductive_set
+  formula_syn :: "'a set \<Rightarrow> 'a formula_exp set"
+  for "V"
+where 
+  "tFalse \<in> formula_syn V" |
+  "a \<in> V \<Longrightarrow> tVar a \<in> formula_syn V" |
+  "f \<in> formula_syn V \<Longrightarrow> tNOT f \<in> formula_syn V" |
+  "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tOR f\<^sub>1 f\<^sub>2 \<in> formula_syn V" |
+  "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tXB f\<^sub>1 f\<^sub>2 \<in> formula_syn V" 
+
+subsection {* Tautology check *}
+
+definition tautology :: "'a formula_exp \<Rightarrow> bool" where
+  "tautology fexp = (eval(fexp) = top)"
+
+lemma tempo_eval_tVar[simp]: 
+  "tempo1 (eval (tVar a))"
+  "tempo2 (eval (tVar a))"
+  "tempo3 (eval (tVar a))"
+  "tempo4 (eval (tVar a))"
+by (auto simp add: tempo1_formula_def tempo2_formula_def tempo3_formula_def
+  tempo4_formula_def Abs_formula_inverse dlist_tempo1_member dlist_tempo2_member
+  dlist_tempo3_member dlist_tempo4_member)
+
+lemma independent_events_eval_tVar[simp]: 
+  "a \<noteq> b \<Longrightarrow> independent_events (eval (tVar a)) (eval (tVar b))"
+by (auto simp add: independent_events_formula_def Abs_formula_inverse
+  dlist_indepentent_events_member)
+
+lemma xbefore_sub_equiv_inf_tVar: "a \<noteq> b \<Longrightarrow> sup 
+  (xbefore (eval (tVar a)) (eval (tVar b))) 
+  (xbefore (eval (tVar b)) (eval (tVar a))) = 
+  inf (eval (tVar a)) (eval (tVar b))"
+proof-
+  assume "a \<noteq> b"
+  hence "tempo1 (eval (tVar a))" "tempo2 (eval (tVar a))"
+    "tempo3 (eval (tVar a))" "tempo4 (eval (tVar a))"
+    "tempo1 (eval (tVar b))" "tempo2 (eval (tVar b))"
+    "tempo3 (eval (tVar b))" "tempo4 (eval (tVar b))"
+    "independent_events (eval (tVar a)) (eval (tVar b))"
+    using tempo_eval_tVar independent_events_eval_tVar by fastforce+
+  thus ?thesis by (simp add: xbefore_sup_equiv_inf)
+qed
+
+datatype MyVars = MyVarA | MyVarB
+
+lemma "tautology (tOR 
+  (tNOT (tVar MyVarA))
+  (tOR 
+    (tNOT (tVar MyVarB))
+    (tOR (tXB (tVar MyVarA) (tVar MyVarB)) (tXB (tVar MyVarB) (tVar MyVarA)))))" 
+
+proof-
+  have "tempo1 (eval (tVar MyVarA))" "tempo2 (eval (tVar MyVarA))"
+    "tempo3 (eval (tVar MyVarA))" "tempo4 (eval (tVar MyVarA))"
+    "tempo1 (eval (tVar MyVarB))" "tempo2 (eval (tVar MyVarB))"
+    "tempo3 (eval (tVar MyVarB))" "tempo4 (eval (tVar MyVarB))"
+    "independent_events (eval (tVar MyVarA)) (eval (tVar MyVarB))"
+    using tempo_eval_tVar independent_events_eval_tVar by fastforce+
+  hence "eval (tOR (tXB (tVar MyVarA) (tVar MyVarB)) (tXB (tVar MyVarB) (tVar MyVarA))) =
+    eval (tAND (tVar MyVarA) (tVar MyVarB))"
+    "sup 
+      (eval (tOR (tNOT (tVar MyVarA)) (tNOT (tVar MyVarB))))
+      (eval (tAND (tVar MyVarA) (tVar MyVarB))) = top"
+    apply (simp add: xbefore_sup_equiv_inf)
+    by (metis compl_inf compl_sup_top formula_exp_to_formula.simps(4) 
+      formula_exp_to_formula.simps(5) formula_exp_to_formula.simps(6))
+  hence "eval (tOR 
+    (tNOT (tVar MyVarA))
+    (tOR 
+      (tNOT (tVar MyVarB))
+      (tOR (tXB (tVar MyVarA) (tVar MyVarB)) (tXB (tVar MyVarB) (tVar MyVarA))))) =
+    top"
+    by (simp add: sup_assoc)
+  thus ?thesis unfolding tautology_def by simp
+qed
+
+
 subsection {* Soundness and completeness on the syntactical constructors *}
 
 primrec inc_nat_option :: "nat option \<Rightarrow> nat option" where
@@ -1158,58 +1287,6 @@ apply (simp add: slice_left_def slice_right_def slice_dlist_def size_dlist_def
 lemma finite_formula : "finite V \<Longrightarrow> finite (formulas V)"
 
 
-datatype 'a formula_exp =
-  tFalse | 
-  tVar 'a |
-  tOR "'a formula_exp" "'a formula_exp" | 
-  tNOT "'a formula_exp" | 
-  tXB "'a formula_exp" "'a formula_exp"
-  
-abbreviation tAND where "tAND a b \<equiv> tNOT (tOR (tNOT a) (tNOT b))"
-abbreviation tTrue where "tTrue \<equiv> tNOT tFalse"
-
-primrec formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula" where
-  "formula_exp_to_formula tFalse = bot" | 
-  "formula_exp_to_formula (tVar x) = Abs_formula { dl. Dlist.member dl x }" |
-  "formula_exp_to_formula (tOR a b) = sup (formula_exp_to_formula a) (formula_exp_to_formula b)" |
-  "formula_exp_to_formula (tNOT a) = (- formula_exp_to_formula a)" |
-  "formula_exp_to_formula (tXB a b) = (xbefore (formula_exp_to_formula a) (formula_exp_to_formula b))"
-
-(* TODO rever a forma normal
-fun formula_exp_to_NF :: "'a formula_exp \<Rightarrow> 'a formula_exp" where
-  "formula_exp_to_NF f = f"
-*)
-
-abbreviation eval where "eval \<equiv> formula_exp_to_formula"
-
-abbreviation empty_list_formula_exp :: "'a set \<Rightarrow> 'a formula_exp" where
-  "empty_list_formula_exp V \<equiv> tNOT (Finite_Set.fold (\<lambda> x f\<^sub>2 . tOR (tVar x) f\<^sub>2) tFalse V)"
-
-primrec list_to_formula_exp :: "'a list \<Rightarrow> 'a formula_exp" where
- "list_to_formula_exp [] = (empty_list_formula_exp UNIV)" |
- "list_to_formula_exp (x # xs) = tXB (tVar x) (list_to_formula_exp xs)"
-
-abbreviation dlist_to_formula_exp  where
-  "dlist_to_formula_exp dl \<equiv> list_to_formula_exp (list_of_dlist dl)"
-
-abbreviation dlist_set_to_formula_exp where
-  "dlist_set_to_formula_exp Dls \<equiv> Finite_Set.fold (\<lambda> dl f\<^sub>2 . tOR (dlist_to_formula_exp dl) f\<^sub>2  ) tFalse Dls"
-
-abbreviation formula_to_formula_exp where
-  "formula_to_formula_exp f \<equiv> dlist_set_to_formula_exp (Rep_formula f)"
-
-(* From a set of formulas to a formula syntactic 'a formula \<Rightarrow> 'a formula_exp \<Longrightarrow> 
-  resolver com inductive? *) 
-
-inductive_set
-  formula_syn :: "'a set \<Rightarrow> 'a formula_exp set"
-  for "V"
-where 
-  "tFalse \<in> formula_syn V" |
-  "a \<in> V \<Longrightarrow> tVar a \<in> formula_syn V" |
-  "f \<in> formula_syn V \<Longrightarrow> tNOT f \<in> formula_syn V" |
-  "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tOR f\<^sub>1 f\<^sub>2 \<in> formula_syn V" |
-  "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tXB f\<^sub>1 f\<^sub>2 \<in> formula_syn V" 
 
 theorem soundness: 
   "\<forall> V. finite V \<and> fexp \<in> formula_syn V \<longrightarrow> formula_exp_to_formula fexp \<in> formulas V"
