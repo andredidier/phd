@@ -72,8 +72,8 @@ class temporal_faults_algebra_mixed_ops = temporal_faults_algebra_trans +
     \<lbrakk>tempo3 a; tempo3 b\<rbrakk> \<Longrightarrow>
     \<lbrakk>tempo4 a; tempo4 b\<rbrakk> \<Longrightarrow>
     - (xbefore a b) = sup (sup (- a) (- b)) (xbefore b a)"
-  assumes inf_xbefore_equiv_sups_xbefore: "tempo2 a \<Longrightarrow> inf a (xbefore b c) = 
-    sup (xbefore (inf a b) c) (xbefore b (inf a c))"
+  assumes inf_xbefore_equiv_sups_xbefore: "tempo2 a \<Longrightarrow> 
+    inf a (xbefore b c) = sup (xbefore (inf a b) c) (xbefore b (inf a c))"
 
 class temporal_faults_algebra = temporal_faults_algebra_mixed_ops
 

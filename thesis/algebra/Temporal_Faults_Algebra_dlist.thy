@@ -337,16 +337,16 @@ by (metis (full_types) Dlist_list_of_dlist Rep_slice_append append.simps(1)
   dlist_of_list dlist_xbefore_def take_0 take_slice_right)
 
 corollary dlistset_xbefore_neutral_1: 
-  "dlist_tempo1 a \<Longrightarrow> Collect (dlist_xbefore (\<lambda>xs. xs = dlist_of_list []) a) = Collect a"
+  "dlist_tempo1 a \<Longrightarrow> Collect (dlist_xbefore (\<lambda>xs. xs = Dlist []) a) = Collect a"
 using dlist_xbefore_neutral_1 by auto
 
 lemma dlist_xbefore_neutral_2: 
-  "dlist_tempo1 a \<Longrightarrow> dlist_xbefore a (\<lambda>xs. xs = dlist_of_list []) zs = a zs"
+  "dlist_tempo1 a \<Longrightarrow> dlist_xbefore a (\<lambda>xs. xs = Dlist []) zs = a zs"
 by (smt Dlist_list_of_dlist append_Nil2 distinct_append distinct_list_of_dlist dlist_of_list 
   dlist_xbefore_append list_of_dlist_empty)
 
 corollary dlistset_xbefore_neutral_2: 
-  "dlist_tempo1 a \<Longrightarrow> Collect (dlist_xbefore a (\<lambda>xs. xs = dlist_of_list [])) = Collect a"
+  "dlist_tempo1 a \<Longrightarrow> Collect (dlist_xbefore a (\<lambda>xs. xs = Dlist [])) = Collect a"
 using dlist_xbefore_neutral_2 by auto
 
 subsubsection {* \acs*{XBefore} associativity*}
@@ -887,21 +887,34 @@ subsection {* Syntax for the Algebra of Temporal Faults *}
 datatype 'a formula_exp =
   tFalse | 
   tTrue |
+  tNeutral |
   tVar 'a |
   tOR "'a formula_exp" "'a formula_exp" | 
   tAND "'a formula_exp" "'a formula_exp" |
   tNOT "'a formula_exp" | 
-  tXB "'a formula_exp" "'a formula_exp"
+  tXB "'a formula_exp" "'a formula_exp" |
+  tLESS "'a formula_exp" "'a formula_exp" |
+  tDIFF "'a formula_exp" "'a formula_exp"
+
   
-primrec formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula" where
+primrec 
+    formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula" and
+    formula_exp_to_bool :: "'a formula_exp \<Rightarrow> bool"
+    where
   "formula_exp_to_formula tFalse = bot" | 
+  "formula_exp_to_formula tNeutral = Abs_formula { Dlist [] }" |
   "formula_exp_to_formula tTrue = top" |
   "formula_exp_to_formula (tVar x) = Abs_formula { dl. Dlist.member dl x }" |
   "formula_exp_to_formula (tOR a b) = sup (formula_exp_to_formula a) (formula_exp_to_formula b)" |
   "formula_exp_to_formula (tAND a b) = inf (formula_exp_to_formula a) (formula_exp_to_formula b)" |
   "formula_exp_to_formula (tNOT a) = (- formula_exp_to_formula a)" |
-  "formula_exp_to_formula (tXB a b) = (xbefore (formula_exp_to_formula a) (formula_exp_to_formula b))"
-
+  "formula_exp_to_formula (tXB a b) = (xbefore (formula_exp_to_formula a) (formula_exp_to_formula b))" |
+  "formula_exp_to_bool (tLESS a b) = 
+    (Rep_formula (formula_exp_to_formula a) \<subset> Rep_formula (formula_exp_to_formula b))" |
+  "formula_exp_to_formula (tDIFF a b) = 
+    Abs_formula 
+    ((Rep_formula (formula_exp_to_formula a)) - 
+    (Rep_formula (formula_exp_to_formula b)))"
 (* TODO rever a forma normal
 fun formula_exp_to_NF :: "'a formula_exp \<Rightarrow> 'a formula_exp" where
   "formula_exp_to_NF f = f"
@@ -925,6 +938,89 @@ abbreviation dlist_set_to_formula_exp where
 abbreviation formula_to_formula_exp where
   "formula_to_formula_exp f \<equiv> dlist_set_to_formula_exp (Rep_formula f)"
 
+typedef 'a formula_syn = "UNIV::'a formula_exp set" by simp
+
+(*<*)
+notation
+  bot ("\<bottom>") and
+  top ("\<top>") and
+  inf  (infixl "\<sqinter>" 70) and
+  sup  (infixl "\<squnion>" 65)
+(*>*)
+
+instantiation formula_syn :: (type) boolean_algebra
+begin
+
+definition
+  "x \<sqinter> y = Abs_formula_syn (tAND (Rep_formula_syn x) (Rep_formula_syn y))"
+
+definition
+  "x \<squnion> y = Abs_formula_syn (tOR (Rep_formula_syn x) (Rep_formula_syn y))"
+
+definition
+  "\<top> = Abs_formula_syn tTrue"
+
+definition
+  "\<bottom> = Abs_formula_syn tFalse"
+
+definition
+  "x \<le> y \<longleftrightarrow> Rep_formula x \<subseteq> Rep_formula y"
+
+definition
+  "x < y \<longleftrightarrow> Rep_formula x \<subset> Rep_formula y"
+
+definition
+  "- x = Abs_formula_syn (tNOT (Rep_formula_syn x))"
+
+definition
+  "x - y = Abs_formula_syn (Rep_formula_syn x - Rep_formula_syn y)"
+
+lemma Rep_formula_inf:
+  "Rep_formula (x \<sqinter> y) = Rep_formula x \<inter> Rep_formula y"
+unfolding inf_formula_def
+by (simp add: Abs_formula_inverse Rep_formula)
+
+lemma Rep_formula_sup:
+  "Rep_formula (x \<squnion> y) = Rep_formula x \<union> Rep_formula y"
+unfolding sup_formula_def
+by (simp add: Abs_formula_inverse Rep_formula)
+
+lemma Rep_formula_top[simp]: "Rep_formula \<top> = UNIV"
+unfolding top_formula_def
+by (simp add: Abs_formula_inverse)
+
+lemma Rep_formula_bot[simp]: "Rep_formula \<bottom> = {}"
+unfolding bot_formula_def 
+by (simp add: Abs_formula_inverse)
+
+lemma Rep_formula_compl: "Rep_formula (- x) = - Rep_formula x"
+unfolding uminus_formula_def
+by (simp add: Abs_formula_inverse Rep_formula)
+
+lemma Rep_formula_diff:
+  "Rep_formula (x - y) = Rep_formula x - Rep_formula y"
+unfolding minus_formula_def
+by (simp add: Abs_formula_inverse Rep_formula)
+
+lemmas eq_formula_iff = Rep_formula_inject [symmetric]
+
+lemmas Rep_formula_boolean_algebra_simps =
+  less_eq_formula_def less_formula_def eq_formula_iff
+  Rep_formula_sup Rep_formula_inf Rep_formula_top Rep_formula_bot
+  Rep_formula_compl Rep_formula_diff 
+  
+instance proof
+qed (unfold Rep_formula_boolean_algebra_simps, auto)
+end
+
+(*<*)
+no_notation
+  bot ("\<bottom>") and
+  top ("\<top>") and
+  inf  (infixl "\<sqinter>" 70) and
+  sup  (infixl "\<squnion>" 65)
+(*>*)
+
 (* TODO From a set of formulas to a formula syntactic 'a formula \<Rightarrow> 'a formula_exp \<Longrightarrow> 
   resolver com inductive? *) 
 inductive_set
@@ -942,7 +1038,9 @@ subsection {* Tautology check *}
 definition tautology :: "'a formula_exp \<Rightarrow> bool" where
   "tautology fexp = (eval(fexp) = top)"
 
-lemma tempo_eval_tVar[simp]: 
+subsubsection {* Algebra eval laws *}
+
+lemma eval_tempo_tVar: 
   "tempo1 (eval (tVar a))"
   "tempo2 (eval (tVar a))"
   "tempo3 (eval (tVar a))"
@@ -951,12 +1049,106 @@ by (auto simp add: tempo1_formula_def tempo2_formula_def tempo3_formula_def
   tempo4_formula_def Abs_formula_inverse dlist_tempo1_member dlist_tempo2_member
   dlist_tempo3_member dlist_tempo4_member)
 
-lemma independent_events_eval_tVar[simp]: 
+lemma eval_xbefore_bot_step:
+  "xbefore (eval tFalse) (eval (tVar a)) = bot"
+  "xbefore (eval (tVar a)) (eval tFalse) = bot"
+by (auto simp add: xbefore_formula_def Abs_formula_inverse dlist_xbefore_def 
+  bot_formula_def)
+
+corollary eval_xbefore_bot:
+  "eval (tXB tFalse (tVar a)) = bot"
+  "eval (tXB (tVar a) tFalse) = bot"
+using eval_xbefore_bot_step by force+
+
+lemma eval_xbefore_neutral_step:
+  "xbefore (eval tNeutral) (eval (tVar a)) = Abs_formula {dl. Dlist.member dl a}"
+  "xbefore (eval (tVar a)) (eval tNeutral) = Abs_formula {dl. Dlist.member dl a}"
+proof-
+  have "tempo1 (eval (tVar a))" using eval_tempo_tVar by simp
+  thus "xbefore (eval tNeutral) (eval (tVar a)) = 
+    Abs_formula {dl. Dlist.member dl a}" 
+    "xbefore (eval (tVar a)) (eval tNeutral) = 
+      Abs_formula {dl. Dlist.member dl a}"
+    by (auto simp add: xbefore_formula_def Abs_formula_inverse 
+      neutral_formula_def tempo1_formula_def dlistset_xbefore_neutral_1 
+      dlistset_xbefore_neutral_2)
+qed
+
+corollary eval_xbefore_neutral:
+  "eval (tXB tNeutral (tVar a)) = Abs_formula {dl. Dlist.member dl a}"
+  "eval (tXB (tVar a) tNeutral) = Abs_formula {dl. Dlist.member dl a}"
+using eval_xbefore_neutral_step by fastforce+
+
+lemma eval_xbefore_not_idempotent_step:
+  "xbefore (eval (tVar a)) (eval (tVar a)) = bot"
+proof-
+  have "tempo1 (eval (tVar a))" using eval_tempo_tVar by simp
+  thus ?thesis by (simp add: xbefore_not_idempotent) 
+qed
+
+corollary eval_xbefore_not_idempotent:
+  "eval (tXB (tVar a) (tVar a)) = bot"
+using eval_xbefore_not_idempotent_step by simp
+
+lemma eval_inf_tempo1_step: 
+  "tempo1 (inf (eval (tVar a)) (eval (tVar b)))"
+proof-
+  have "tempo1 (eval (tVar a))" "tempo1 (eval (tVar b))" 
+    using eval_tempo_tVar by auto
+  thus ?thesis using inf_tempo1 by simp
+qed
+
+corollary eval_inf_tempo1:
+  "tempo1 (eval (tAND (tVar a) (tVar b)))"
+using eval_inf_tempo1_step by simp
+
+lemma eval_xbefore_not_sym_step:
+  "xbefore (eval (tVar a)) (eval (tVar b)) \<le> 
+    - (xbefore (eval (tVar b)) (eval (tVar a)))"
+proof-
+  have "tempo1 (eval (tVar a))" "tempo1 (eval (tVar b))" 
+    using eval_tempo_tVar by auto
+  thus ?thesis using xbefore_not_sym by simp
+qed
+
+corollary eval_xbefore_not_sym:
+  "eval (tXB (tVar a) (tVar b)) \<le> - eval (tXB (tVar b) (tVar a))"
+using eval_xbefore_not_sym_step by simp
+
+lemma eval_xbefore_assoc_step:
+  "xbefore (xbefore (eval (tVar a)) (eval (tVar b))) (eval (tVar c)) = 
+    xbefore (eval (tVar a)) (xbefore (eval (tVar b)) (eval (tVar c)))"
+proof-
+  have "tempo1 (eval (tVar a))" "tempo1 (eval (tVar b))" "tempo1 (eval (tVar c))" 
+    using eval_tempo_tVar by auto
+  thus ?thesis using xbefore_assoc by simp
+qed
+
+corollary eval_xbefore_assoc:
+  "eval (tXB (tXB (tVar a) (tVar b)) (tVar c)) = 
+  eval (tXB (tVar a) (tXB (tVar b) (tVar c)))"
+using eval_xbefore_assoc_step by simp
+
+lemma eval_independent_events_step: 
   "a \<noteq> b \<Longrightarrow> independent_events (eval (tVar a)) (eval (tVar b))"
 by (auto simp add: independent_events_formula_def Abs_formula_inverse
   dlist_indepentent_events_member)
 
-lemma xbefore_sub_equiv_inf_tVar: "a \<noteq> b \<Longrightarrow> sup 
+lemma eval_xbefore_inf_equiv_bot_step: 
+  "inf 
+    (xbefore (eval (tVar a)) (eval (tVar b))) 
+    (xbefore (eval (tVar b)) (eval (tVar a))) = bot"
+proof-
+  have "tempo1 (eval (tVar a))" "tempo1 (eval (tVar b))" 
+    using eval_tempo_tVar by auto
+  thus ?thesis using xbefore_inf_equiv_bot by simp
+qed
+
+corollary eval_xbefore_inf_equiv_bot:
+  "eval (tAND (tXB (tVar a) (tVar b)) (tXB (tVar b) (tVar a))) = bot"
+using eval_xbefore_inf_equiv_bot_step by simp
+
+lemma eval_xbefore_sup_equiv_inf_step: "a \<noteq> b \<Longrightarrow> sup 
   (xbefore (eval (tVar a)) (eval (tVar b))) 
   (xbefore (eval (tVar b)) (eval (tVar a))) = 
   inf (eval (tVar a)) (eval (tVar b))"
@@ -967,9 +1159,92 @@ proof-
     "tempo1 (eval (tVar b))" "tempo2 (eval (tVar b))"
     "tempo3 (eval (tVar b))" "tempo4 (eval (tVar b))"
     "independent_events (eval (tVar a)) (eval (tVar b))"
-    using tempo_eval_tVar independent_events_eval_tVar by fastforce+
+    using eval_tempo_tVar eval_independent_events_step by fastforce+
   thus ?thesis by (simp add: xbefore_sup_equiv_inf)
 qed
+
+corollary eval_xbefore_sup_equiv_inf: "a \<noteq> b \<Longrightarrow> 
+  eval (tOR (tXB (tVar a) (tVar b)) (tXB (tVar b) (tVar a))) = 
+  eval (tAND (tVar a) (tVar b))"
+using eval_xbefore_sup_equiv_inf_step by simp
+
+lemma eval_xbefore_trans_step:
+  "less_eq 
+    (inf 
+      (xbefore (eval (tVar a)) (eval (tVar b))) 
+      (xbefore (eval (tVar b)) (eval (tVar c)))) 
+    (xbefore (eval (tVar a)) (eval (tVar c)))"
+proof-
+  have "tempo1 (eval (tVar a))" "tempo1 (eval (tVar b))" "tempo1 (eval (tVar c))" 
+    "tempo2 (eval (tVar a))" "tempo2 (eval (tVar b))" "tempo2 (eval (tVar c))" 
+    using eval_tempo_tVar by auto
+  thus ?thesis using xbefore_trans by simp
+qed
+
+corollary eval_xbefore_trans:
+  "less_eq (eval (tAND (tXB (tVar a) (tVar b)) (tXB (tVar b) (tVar c))))
+  (eval (tXB (tVar a) (tVar c)))"
+using eval_xbefore_trans_step by simp
+
+lemma eval_xbefore_sup_step:
+  "xbefore (sup (eval (tVar a)) (eval (tVar b))) (eval (tVar c)) = 
+    sup 
+      (xbefore (eval (tVar a)) (eval (tVar c))) 
+      (xbefore (eval (tVar b)) (eval (tVar c)))"
+  "xbefore (eval (tVar a)) (sup (eval (tVar b)) (eval (tVar c))) = 
+    sup 
+      (xbefore (eval (tVar a)) (eval (tVar b))) 
+      (xbefore (eval (tVar a)) (eval (tVar c)))"
+by (simp add: xbefore_sup_1 xbefore_sup_2)+
+
+corollary eval_xbefore_sup:
+  "eval (tXB (tOR (tVar a) (tVar b)) (tVar c)) = 
+    eval (tOR (tXB (tVar a) (tVar c)) (tXB (tVar b) (tVar c)))"
+  "eval (tXB (tVar a) (tOR (tVar b) (tVar c))) = 
+    eval (tOR (tXB (tVar a) (tVar b)) (tXB (tVar a) (tVar c)))"
+by (simp add: xbefore_sup_1 xbefore_sup_2)+
+
+
+lemma eval_xbefore_not_step:
+  "a \<noteq> b \<Longrightarrow> - (xbefore (eval (tVar a)) (eval (tVar b))) = 
+    sup 
+      (sup (- (eval (tVar a))) (- (eval (tVar b)))) 
+      (xbefore (eval (tVar b)) (eval (tVar a)))"
+proof-
+  assume "a \<noteq> b"
+  hence "tempo1 (eval (tVar a))" "tempo1 (eval (tVar b))" 
+    "tempo2 (eval (tVar a))" "tempo2 (eval (tVar b))" 
+    "tempo3 (eval (tVar a))" "tempo3 (eval (tVar b))" 
+    "tempo4 (eval (tVar a))" "tempo4 (eval (tVar b))" 
+    "independent_events (eval (tVar a)) (eval (tVar b))"
+    using eval_tempo_tVar eval_independent_events_step by fastforce+
+  thus ?thesis using xbefore_not by simp
+qed
+
+corollary eval_xbefore_not: "a \<noteq> b \<Longrightarrow> 
+  eval (tNOT (tXB (tVar a) (tVar b))) =
+  eval (
+    tOR 
+      (tOR (tNOT (tVar a)) (tNOT (tVar b))) 
+      (tXB (tVar b) (tVar a)))"
+using eval_xbefore_not_step by simp
+
+lemma eval_inf_xbefore_equiv_sups_xbefore_step: 
+  "inf (eval (tVar a)) (xbefore (eval (tVar b)) (eval (tVar c))) = 
+  sup 
+    (xbefore (inf (eval (tVar a)) (eval (tVar b))) (eval (tVar c))) 
+    (xbefore (eval (tVar b)) (inf (eval (tVar a)) (eval (tVar c))))"
+proof-
+  have "tempo2 (eval (tVar a))" using eval_tempo_tVar by simp
+  thus ?thesis using inf_xbefore_equiv_sups_xbefore by simp
+qed
+
+corollary eval_inf_xbefore_equiv_sups_xbefore:
+  "eval (tAND (tVar a) (tXB (tVar b) (tVar c))) =
+  eval (tOR 
+    (tXB (tAND (tVar a) (tVar b)) (tVar c)) 
+    (tXB (tVar b) (tAND (tVar a) (tVar c))))"
+using eval_inf_xbefore_equiv_sups_xbefore_step by simp
 
 datatype MyVars = MyVarA | MyVarB
 
@@ -977,7 +1252,24 @@ lemma "tautology (tOR
   (tNOT (tVar MyVarA))
   (tOR 
     (tNOT (tVar MyVarB))
-    (tOR (tXB (tVar MyVarA) (tVar MyVarB)) (tXB (tVar MyVarB) (tVar MyVarA)))))" 
+    (tOR (tXB (tVar MyVarA) (tVar MyVarB)) (tXB (tVar MyVarB) (tVar MyVarA)))))"
+proof-
+  have 0: "MyVarA \<noteq> MyVarB" by simp
+  hence "eval (tOR (tXB (tVar MyVarA) (tVar MyVarB)) (tXB (tVar MyVarB) (tVar  
+    MyVarA))) = eval (tAND (tVar MyVarA) (tVar MyVarB))"
+    using eval_xbefore_sup_equiv_inf by force
+  hence "eval (tOR 
+    (tNOT (tVar MyVarA))
+    (tOR 
+      (tNOT (tVar MyVarB))
+      (tOR (tXB (tVar MyVarA) (tVar MyVarB)) 
+        (tXB (tVar MyVarB) (tVar MyVarA))))) =
+    eval (tOR 
+    (tNOT (tVar MyVarA))
+    (tOR 
+      (tNOT (tVar MyVarB))
+      (tAND (tVar MyVarA) (tVar MyVarB))))" by simp
+  thus ?thesis using 0 unfolding tautology_def
 
 proof-
   have "tempo1 (eval (tVar MyVarA))" "tempo2 (eval (tVar MyVarA))"
