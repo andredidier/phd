@@ -13,10 +13,8 @@ In the following we present the algebraic laws for the \ac{algebra}.
 
 subsection {* Basic \ac{algebra} operators and tempo1 *}
 
-class temporal_faults_algebra_neutral = boolean_algebra +
+class temporal_faults_algebra_basic = boolean_algebra  +
   fixes neutral :: "'a"
-
-class temporal_faults_algebra_basic = temporal_faults_algebra_neutral +
   fixes xbefore :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
   fixes tempo1 :: "'a \<Rightarrow> bool"
   assumes xbefore_bot_1: "xbefore bot a = bot"
@@ -65,7 +63,7 @@ class temporal_faults_algebra_mixed_ops = temporal_faults_algebra_trans +
     "xbefore (sup a b) c = sup (xbefore a c) (xbefore b c)"
   assumes xbefore_sup_2: 
     "xbefore a (sup b c) = sup (xbefore a b) (xbefore a c)"
-  assumes xbefore_not: "
+  assumes not_xbefore: "
     independent_events a b \<Longrightarrow>
     \<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow>
     \<lbrakk>tempo2 a; tempo2 b\<rbrakk> \<Longrightarrow>
@@ -74,6 +72,8 @@ class temporal_faults_algebra_mixed_ops = temporal_faults_algebra_trans +
     - (xbefore a b) = sup (sup (- a) (- b)) (xbefore b a)"
   assumes inf_xbefore_equiv_sups_xbefore: "tempo2 a \<Longrightarrow> 
     inf a (xbefore b c) = sup (xbefore (inf a b) c) (xbefore b (inf a c))"
+  assumes not_1_xbefore_equiv: "\<lbrakk>tempo1 a; tempo2 b \<rbrakk> \<Longrightarrow> xbefore (- a) b = b"
+  assumes not_2_xbefore_equiv: "\<lbrakk>tempo1 b; tempo2 a \<rbrakk> \<Longrightarrow> xbefore a (- b) = a"
 
 class temporal_faults_algebra = temporal_faults_algebra_mixed_ops
 
@@ -215,7 +215,7 @@ proof -
   assume a8: "tempo4 a"
   assume a9: "tempo4 b"
   then have f10: "- sup (inf a (- b)) (xbefore a b) = inf (sup (- a) (- (- b))) (sup (sup (- a) (- b)) (xbefore b a))"
-    using a8 a7 a6 a5 a4 a3 a2 a1 local.compl_inf local.compl_sup local.xbefore_not by presburger
+    using a8 a7 a6 a5 a4 a3 a2 a1 local.compl_inf local.compl_sup local.not_xbefore by presburger
   have f11: "sup (- a) (- a) = - a"
     by auto
   have f12: "\<forall>f a aa. \<not> abel_semigroup f \<or> f (a::'a) aa = f aa a"
@@ -245,6 +245,8 @@ proof -
   then show ?thesis
     using f12 by (metis (no_types) local.compl_eq_compl_iff local.inf.abel_semigroup_axioms)
 qed
+
+
 
 end
 

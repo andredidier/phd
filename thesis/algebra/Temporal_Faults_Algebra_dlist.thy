@@ -625,6 +625,67 @@ proof-
   thus ?thesis using 0 mixed_not_dlist_xbefore by blast
 qed 
 
+theorem not_1_dlist_xbefore: 
+  "\<lbrakk> dlist_tempo1 a;  dlist_tempo2 b\<rbrakk> \<Longrightarrow> 
+    dlist_xbefore (\<lambda>xs. \<not> a xs) b zs = b zs"
+by (metis Dlist_list_of_dlist dlist_tempo_1_no_gap dlist_xbefore_def dlist_xbefore_implies_member2 drop_0 slice_left_drop slice_right_take take_0)
+
+corollary not_1_dlistset_xbefore: 
+  "\<lbrakk> dlist_tempo1 a;  dlist_tempo2 b\<rbrakk> \<Longrightarrow> 
+    Collect (dlist_xbefore (\<lambda>xs. \<not> a xs) b) = Collect b"
+using not_1_dlist_xbefore by blast
+
+theorem not_2_dlist_xbefore: 
+  "\<lbrakk> dlist_tempo1 b; dlist_tempo2 a \<rbrakk> \<Longrightarrow> dlist_xbefore a (\<lambda>xs. \<not> b xs) zs = a zs"
+by (metis Dlist.empty_def append_Nil2 dlist_tempo_1_no_gap 
+  dlist_xbefore_append dlist_xbefore_implies_member1 drop_0 inf.commute 
+  inf_bot_left list.set(1) list_of_dlist_empty slice_left_drop 
+  slice_right_take take_0)
+
+corollary not_2_dlistset_xbefore: 
+  "\<lbrakk> dlist_tempo1 b; dlist_tempo2 a \<rbrakk> \<Longrightarrow> 
+  Collect (dlist_xbefore a (\<lambda>xs. \<not> b xs)) = Collect a"
+using not_2_dlist_xbefore by blast
+
+lemma dlist_xbefore_inf_equiv_assoc:
+  "\<lbrakk> dlist_tempo1 a; dlist_tempo1 b; dlist_tempo1 c;
+    dlist_tempo2 a; dlist_tempo2 b; dlist_tempo2 c;
+    dlist_tempo3 a; dlist_tempo3 b; dlist_tempo3 c;
+    dlist_tempo4 a; dlist_tempo4 b; dlist_tempo4 c;
+    dlist_independent_events a b; 
+    dlist_independent_events a c; 
+    dlist_independent_events b c
+  \<rbrakk> \<Longrightarrow> (dlist_xbefore a b zs) \<and> (dlist_xbefore b c zs) = 
+    (dlist_xbefore (\<lambda>xs. dlist_xbefore a b xs) c) zs"
+(*unfolding dlist_xbefore_def slice_right_slice_right_absorb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     slice_right_slice_left_absorb
+apply (simp add: slice_dlist_def slice_left_def slice_right_def size_dlist_def)
+*)
+proof-
+  assume 0: "dlist_tempo1 a" "dlist_tempo1 b" "dlist_tempo1 c"
+    "dlist_tempo2 a" "dlist_tempo2 b" "dlist_tempo2 c"
+    "dlist_tempo3 a" "dlist_tempo3 b" "dlist_tempo3 c"
+    "dlist_tempo4 a" "dlist_tempo4 b" "dlist_tempo4 c"
+    "dlist_independent_events a b"
+    "dlist_independent_events a c" 
+    "dlist_independent_events b c"
+  hence 1: "\<exists> i. (\<exists> j. a (zs\<dagger>..i) \<and> b(zs\<dagger>i..) \<and> b (zs\<dagger>..j) \<and> c (zs\<dagger>j..) \<longleftrightarrow>
+      a (zs\<dagger>..i) \<and> b (zs\<dagger>i..j) \<and> c (zs\<dagger>j..))"
+    by (metis slice_left_def slice_right_def)
+  fix x y
+  have 2: "a (zs\<dagger>..x) \<and> b(zs\<dagger>x..) \<and> b (zs\<dagger>..y) \<and> c (zs\<dagger>y..) \<longleftrightarrow>
+      a (zs\<dagger>..x) \<and> b (zs\<dagger>x..y) \<and> c (zs\<dagger>y..)"
+    using 0 1
+    by (metis diff_zero dlist_empty_slice dlist_tempo1_le_uniqueness dlist_tempo2_right_absorb dlist_tempo3_def list_of_dlist_simps(3) max_0L not_less slice_right_def take_0)
+  thus ?thesis using 0 1 
+    unfolding dlist_xbefore_def slice_right_slice_right_absorb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     slice_right_slice_left_absorb
+qed
+(*
+unfolding dlist_xbefore_def slice_right_slice_right_absorb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     slice_right_slice_left_absorb
+apply (simp add: slice_dlist_def slice_left_def slice_right_def size_dlist_def)
+*)
+
+
+
 
 subsection {* Formulas as \ac{algebra} *}
 
@@ -632,22 +693,13 @@ text {*
 In the following we prove that a formula is a valid type instantation for all \ac{algebra} classes.
 *}
 
-subsubsection {* Neutral element of \ac{algebra} *}
-
-instantiation formula :: (type) temporal_faults_algebra_neutral
-begin
-
-definition
-  "neutral = Abs_formula { dlist_of_list [] }"
-instance proof
-qed
-
-end
-
 subsubsection {* Basic properties of \ac{algebra} *}
 
 instantiation formula :: (type) temporal_faults_algebra_basic
 begin
+
+definition
+  "neutral = Abs_formula { dlist_of_list [] }"
 
 definition
   "xbefore a b = Abs_formula { zs . 
@@ -853,6 +905,22 @@ instance proof
     tempo2_formula_def Abs_formula_inverse)
   using and_dlistset_xbefore_equiv_or_dlistset_xbefore Abs_formula_inverse
   by fastforce
+  next
+  fix a::"'a formula" and b::"'a formula"
+  assume "tempo1 a" "tempo2 b"
+  thus "xbefore (- a) b = b"
+  unfolding xbefore_formula_def tempo1_formula_def tempo2_formula_def
+    uminus_formula_def 
+  by (auto simp add: Abs_formula_inverse not_1_dlistset_xbefore 
+    Rep_formula_inverse)
+  next
+  fix a::"'a formula" and b::"'a formula"
+  assume "tempo1 b" "tempo2 a"
+  thus "xbefore a (- b) = a"
+  unfolding xbefore_formula_def tempo1_formula_def tempo2_formula_def
+    uminus_formula_def 
+  by (auto simp add: Abs_formula_inverse not_2_dlistset_xbefore 
+    Rep_formula_inverse)
 qed
 end
 
@@ -893,13 +961,10 @@ datatype 'a formula_exp =
   tAND "'a formula_exp" "'a formula_exp" |
   tNOT "'a formula_exp" | 
   tXB "'a formula_exp" "'a formula_exp" |
-  tLESS "'a formula_exp" "'a formula_exp" |
   tDIFF "'a formula_exp" "'a formula_exp"
 
-  
 primrec 
-    formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula" and
-    formula_exp_to_bool :: "'a formula_exp \<Rightarrow> bool"
+    formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula"
     where
   "formula_exp_to_formula tFalse = bot" | 
   "formula_exp_to_formula tNeutral = Abs_formula { Dlist [] }" |
@@ -909,8 +974,6 @@ primrec
   "formula_exp_to_formula (tAND a b) = inf (formula_exp_to_formula a) (formula_exp_to_formula b)" |
   "formula_exp_to_formula (tNOT a) = (- formula_exp_to_formula a)" |
   "formula_exp_to_formula (tXB a b) = (xbefore (formula_exp_to_formula a) (formula_exp_to_formula b))" |
-  "formula_exp_to_bool (tLESS a b) = 
-    (Rep_formula (formula_exp_to_formula a) \<subset> Rep_formula (formula_exp_to_formula b))" |
   "formula_exp_to_formula (tDIFF a b) = 
     Abs_formula 
     ((Rep_formula (formula_exp_to_formula a)) - 
@@ -964,53 +1027,54 @@ definition
   "\<bottom> = Abs_formula_syn tFalse"
 
 definition
-  "x \<le> y \<longleftrightarrow> Rep_formula x \<subseteq> Rep_formula y"
+  "x \<le> y \<longleftrightarrow> (eval (Rep_formula_syn x)) \<le> (eval (Rep_formula_syn y))"
 
 definition
-  "x < y \<longleftrightarrow> Rep_formula x \<subset> Rep_formula y"
+  "x < y \<longleftrightarrow> (eval (Rep_formula_syn x)) < (eval (Rep_formula_syn y))"
 
 definition
   "- x = Abs_formula_syn (tNOT (Rep_formula_syn x))"
 
 definition
-  "x - y = Abs_formula_syn (Rep_formula_syn x - Rep_formula_syn y)"
+  "x - y = Abs_formula_syn (tDIFF (Rep_formula_syn x)  (Rep_formula_syn y))"
 
-lemma Rep_formula_inf:
-  "Rep_formula (x \<sqinter> y) = Rep_formula x \<inter> Rep_formula y"
-unfolding inf_formula_def
-by (simp add: Abs_formula_inverse Rep_formula)
+lemma Rep_formula_syn_inf:
+  "Rep_formula_syn (x \<sqinter> y) = tAND (Rep_formula_syn x) (Rep_formula_syn y)"
+unfolding inf_formula_syn_def
+by (simp add: Abs_formula_syn_inverse)
 
-lemma Rep_formula_sup:
-  "Rep_formula (x \<squnion> y) = Rep_formula x \<union> Rep_formula y"
-unfolding sup_formula_def
-by (simp add: Abs_formula_inverse Rep_formula)
+lemma Rep_formula_syn_sup:
+  "Rep_formula_syn (x \<squnion> y) = tOR (Rep_formula_syn x) (Rep_formula_syn y)"
+unfolding sup_formula_syn_def
+by (simp add: Abs_formula_syn_inverse)
 
-lemma Rep_formula_top[simp]: "Rep_formula \<top> = UNIV"
-unfolding top_formula_def
-by (simp add: Abs_formula_inverse)
+lemma Rep_formula_syn_top[simp]: "Rep_formula_syn \<top> = tTrue"
+unfolding top_formula_syn_def
+by (simp add: Abs_formula_syn_inverse)
 
-lemma Rep_formula_bot[simp]: "Rep_formula \<bottom> = {}"
-unfolding bot_formula_def 
-by (simp add: Abs_formula_inverse)
+lemma Rep_formula_syn_bot[simp]: "Rep_formula_syn \<bottom> = tFalse"
+unfolding bot_formula_syn_def 
+by (simp add: Abs_formula_syn_inverse)
 
-lemma Rep_formula_compl: "Rep_formula (- x) = - Rep_formula x"
-unfolding uminus_formula_def
-by (simp add: Abs_formula_inverse Rep_formula)
+lemma Rep_formula_syn_compl: 
+  "Rep_formula_syn (- x) = tNOT (Rep_formula_syn x)"
+unfolding uminus_formula_syn_def
+by (simp add: Abs_formula_syn_inverse Rep_formula_syn)
 
-lemma Rep_formula_diff:
-  "Rep_formula (x - y) = Rep_formula x - Rep_formula y"
-unfolding minus_formula_def
-by (simp add: Abs_formula_inverse Rep_formula)
+lemma Rep_formula_syn_diff:
+  "Rep_formula_syn (x - y) = tDIFF (Rep_formula_syn x) (Rep_formula_syn y)"
+unfolding minus_formula_syn_def
+by (simp add: Abs_formula_syn_inverse)
 
-lemmas eq_formula_iff = Rep_formula_inject [symmetric]
+lemmas eq_formula_syn_iff = Rep_formula_syn_inject [symmetric]
 
-lemmas Rep_formula_boolean_algebra_simps =
-  less_eq_formula_def less_formula_def eq_formula_iff
-  Rep_formula_sup Rep_formula_inf Rep_formula_top Rep_formula_bot
-  Rep_formula_compl Rep_formula_diff 
+lemmas Rep_formula_syn_boolean_algebra_simps =
+  less_eq_formula_syn_def less_formula_syn_def eq_formula_syn_iff
+  Rep_formula_syn_sup Rep_formula_syn_inf Rep_formula_syn_top 
+  Rep_formula_syn_bot Rep_formula_syn_compl Rep_formula_syn_diff 
   
 instance proof
-qed (unfold Rep_formula_boolean_algebra_simps, auto)
+qed (unfold Rep_formula_syn_boolean_algebra_simps, auto)
 end
 
 (*<*)
@@ -1205,7 +1269,7 @@ corollary eval_xbefore_sup:
 by (simp add: xbefore_sup_1 xbefore_sup_2)+
 
 
-lemma eval_xbefore_not_step:
+lemma eval_not_xbefore_step:
   "a \<noteq> b \<Longrightarrow> - (xbefore (eval (tVar a)) (eval (tVar b))) = 
     sup 
       (sup (- (eval (tVar a))) (- (eval (tVar b)))) 
@@ -1218,16 +1282,16 @@ proof-
     "tempo4 (eval (tVar a))" "tempo4 (eval (tVar b))" 
     "independent_events (eval (tVar a)) (eval (tVar b))"
     using eval_tempo_tVar eval_independent_events_step by fastforce+
-  thus ?thesis using xbefore_not by simp
+  thus ?thesis using not_xbefore by simp
 qed
 
-corollary eval_xbefore_not: "a \<noteq> b \<Longrightarrow> 
+corollary eval_not_xbefore: "a \<noteq> b \<Longrightarrow> 
   eval (tNOT (tXB (tVar a) (tVar b))) =
   eval (
     tOR 
       (tOR (tNOT (tVar a)) (tNOT (tVar b))) 
       (tXB (tVar b) (tVar a)))"
-using eval_xbefore_not_step by simp
+using eval_not_xbefore_step by simp
 
 lemma eval_inf_xbefore_equiv_sups_xbefore_step: 
   "inf (eval (tVar a)) (xbefore (eval (tVar b)) (eval (tVar c))) = 
