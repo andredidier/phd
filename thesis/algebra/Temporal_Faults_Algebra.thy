@@ -55,6 +55,8 @@ class temporal_faults_algebra_trans = temporal_faults_algebra_equivs +
   assumes xbefore_trans: 
     "\<lbrakk>tempo1 a; tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo2 a; tempo2 b; tempo2 c\<rbrakk> \<Longrightarrow>
     less_eq (inf (xbefore a b) (xbefore b c)) (xbefore a c)"
+  assumes inf_xbefore_trans: "\<lbrakk> tempo1 b; tempo3 b \<rbrakk> \<Longrightarrow>
+    inf (xbefore a b) (xbefore b c) = xbefore (xbefore a b) c"
 
 subsection {* Mixed operators in \ac{algebra} *}
 

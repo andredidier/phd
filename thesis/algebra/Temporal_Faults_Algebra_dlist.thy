@@ -647,45 +647,60 @@ corollary not_2_dlistset_xbefore:
   Collect (dlist_xbefore a (\<lambda>xs. \<not> b xs)) = Collect a"
 using not_2_dlist_xbefore by blast
 
-lemma dlist_xbefore_inf_equiv_assoc:
-  "\<lbrakk> dlist_tempo1 a; dlist_tempo1 b; dlist_tempo1 c;
-    dlist_tempo2 a; dlist_tempo2 b; dlist_tempo2 c;
-    dlist_tempo3 a; dlist_tempo3 b; dlist_tempo3 c;
-    dlist_tempo4 a; dlist_tempo4 b; dlist_tempo4 c;
-    dlist_independent_events a b; 
-    dlist_independent_events a c; 
-    dlist_independent_events b c
-  \<rbrakk> \<Longrightarrow> (dlist_xbefore a b zs) \<and> (dlist_xbefore b c zs) = 
-    (dlist_xbefore (\<lambda>xs. dlist_xbefore a b xs) c) zs"
-(*unfolding dlist_xbefore_def slice_right_slice_right_absorb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     slice_right_slice_left_absorb
-apply (simp add: slice_dlist_def slice_left_def slice_right_def size_dlist_def)
-*)
+lemma empty_dlist_implies_false[simp]: 
+  "\<lbrakk> dlist_tempo1 a; dlist_tempo2 a \<rbrakk> \<Longrightarrow> a (Dlist []) \<Longrightarrow> False"
+unfolding dlist_tempo1_def dlist_tempo2_def dlist_tempo3_def dlist_tempo4_def
+  slice_left_def slice_right_def size_dlist_def slice_dlist_def
+by (metis Dlist.empty_def list.size(3) list_of_dlist_empty nat_le_linear)
+
+
+lemma dlist_inf_xbefore_trans:
+  "\<lbrakk> dlist_tempo1 b; dlist_tempo3 b \<rbrakk> \<Longrightarrow> ((dlist_xbefore a b zs) \<and> (dlist_xbefore b c zs)) \<longleftrightarrow> 
+    (dlist_xbefore (dlist_xbefore a b) c) zs"
 proof-
-  assume 0: "dlist_tempo1 a" "dlist_tempo1 b" "dlist_tempo1 c"
-    "dlist_tempo2 a" "dlist_tempo2 b" "dlist_tempo2 c"
-    "dlist_tempo3 a" "dlist_tempo3 b" "dlist_tempo3 c"
-    "dlist_tempo4 a" "dlist_tempo4 b" "dlist_tempo4 c"
-    "dlist_independent_events a b"
-    "dlist_independent_events a c" 
-    "dlist_independent_events b c"
-  hence 1: "\<exists> i. (\<exists> j. a (zs\<dagger>..i) \<and> b(zs\<dagger>i..) \<and> b (zs\<dagger>..j) \<and> c (zs\<dagger>j..) \<longleftrightarrow>
+  assume 0: "dlist_tempo1 b" "dlist_tempo3 b" 
+  hence 1: "\<exists> i. (\<exists> j. a (zs\<dagger>..i) \<and> b (zs\<dagger>i..) \<and> b (zs\<dagger>..j) \<and> c (zs\<dagger>j..) \<longleftrightarrow>
       a (zs\<dagger>..i) \<and> b (zs\<dagger>i..j) \<and> c (zs\<dagger>j..))"
     by (metis slice_left_def slice_right_def)
-  fix x y
-  have 2: "a (zs\<dagger>..x) \<and> b(zs\<dagger>x..) \<and> b (zs\<dagger>..y) \<and> c (zs\<dagger>y..) \<longleftrightarrow>
-      a (zs\<dagger>..x) \<and> b (zs\<dagger>x..y) \<and> c (zs\<dagger>y..)"
-    using 0 1
-    by (metis diff_zero dlist_empty_slice dlist_tempo1_le_uniqueness dlist_tempo2_right_absorb dlist_tempo3_def list_of_dlist_simps(3) max_0L not_less slice_right_def take_0)
-  thus ?thesis using 0 1 
-    unfolding dlist_xbefore_def slice_right_slice_right_absorb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     slice_right_slice_left_absorb
+  have 2: "(\<exists> x y. a (zs\<dagger>..x) \<and> b (zs\<dagger>x..) \<and> b (zs\<dagger>..y) \<and> c (zs\<dagger>y..)) \<longleftrightarrow>
+      (\<exists> x y. a (zs\<dagger>..x) \<and> b (zs\<dagger>x..y) \<and> c (zs\<dagger>y..))"
+    using 0
+    by (metis (no_types, hide_lams) diff_zero dlist_empty_slice dlist_tempo1_le_uniqueness dlist_tempo3_def dlist_tempo_1_no_gap drop_0 list_of_dlist_empty list_of_dlist_simps(3) max_0L not_le slice_left_drop slice_right_def take_0)
+  have 3: "((\<exists>i. a (zs\<dagger>..i) \<and> b (zs\<dagger>i..)) \<and> (\<exists>j. b (zs\<dagger>..j) \<and> c (zs\<dagger>j..))) \<longleftrightarrow> 
+    (\<exists> i j. a (zs\<dagger>..i) \<and> b (zs\<dagger>i..) \<and> b (zs\<dagger>..j) \<and> c (zs\<dagger>j..))"
+    "(\<exists>i. (\<exists>j. a (zs\<dagger>..min i j) \<and> b (zs\<dagger>j..i)) \<and> c (zs\<dagger>i..)) \<longleftrightarrow> 
+      (\<exists>i j. a (zs\<dagger>..min i j) \<and> b (zs\<dagger>j..i) \<and> c (zs\<dagger>i..))"
+    by auto
+  have 4: "(\<exists> x y. a (zs\<dagger>..min x y) \<and> b (zs\<dagger>x..y) \<and> c (zs\<dagger>y..)) \<longleftrightarrow>
+    (\<exists> x y. a (zs\<dagger>..x) \<and> b (zs\<dagger>x..y) \<and> c (zs\<dagger>y..))"
+    using 0
+    by (metis (no_types, lifting) Dlist.empty_def append_Nil2 dlist_empty_slice dlist_tempo_1_no_gap_append list_of_dlist_empty min.cobounded1 min_def)
+  have "(\<exists>i j. a (zs\<dagger>..i) \<and> b (zs\<dagger>i..j) \<and> c (zs\<dagger>j..)) \<longleftrightarrow> 
+    (\<exists>i j. a (zs\<dagger>..min i j) \<and> b (zs\<dagger>i..j) \<and> c (zs\<dagger>j..))"
+    using 4 by simp
+  hence "(\<exists>i j. a (zs\<dagger>..i) \<and> b (zs\<dagger>i..) \<and> b (zs\<dagger>..j) \<and> c (zs\<dagger>j..)) \<longleftrightarrow> 
+    (\<exists>i j. a (zs\<dagger>..min i j) \<and> b (zs\<dagger>i..j) \<and> c (zs\<dagger>j..))"
+    using 0 2 by simp
+  hence "((\<exists>i. a (zs\<dagger>..i) \<and> b (zs\<dagger>i..)) \<and> (\<exists>j. b (zs\<dagger>..j) \<and> c (zs\<dagger>j..))) \<longleftrightarrow> 
+    (\<exists>i j. a (zs\<dagger>..min i j) \<and> b (zs\<dagger>i..j) \<and> c (zs\<dagger>j..))"
+    using 0 3 by simp
+  hence "((\<exists>i. a (zs\<dagger>..i) \<and> b (zs\<dagger>i..)) \<and> (\<exists>j. b (zs\<dagger>..j) \<and> c (zs\<dagger>j..))) \<longleftrightarrow> 
+    (\<exists>j. (\<exists>i. a (zs\<dagger>..min i j) \<and> b (zs\<dagger>i..j)) \<and> c (zs\<dagger>j..))"
+    using 3 by auto
+  hence "(dlist_xbefore a b zs \<and> dlist_xbefore b c zs) \<longleftrightarrow> 
+    (\<exists>j. (\<exists>i. a (zs\<dagger>..min i j) \<and> b (zs\<dagger>i..j)) \<and> c (zs\<dagger>j..))"
+    using dlist_xbefore_def by auto
+  hence "(dlist_xbefore a b zs \<and> dlist_xbefore b c zs) \<longleftrightarrow> 
+    (\<exists>j. (\<exists>i. a ((zs\<dagger>..j)\<dagger>..i) \<and> b ((zs\<dagger>..j)\<dagger>i..)) \<and> c (zs\<dagger>j..))"
+    by (simp add: min.commute slice_right_slice_left_absorb slice_right_slice_right_absorb)
+  thus ?thesis unfolding dlist_xbefore_def by simp
 qed
-(*
-unfolding dlist_xbefore_def slice_right_slice_right_absorb                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     slice_right_slice_left_absorb
-apply (simp add: slice_dlist_def slice_left_def slice_right_def size_dlist_def)
-*)
 
-
-
+lemma dlistset_inf_xbefore_trans:
+  "\<lbrakk> dlist_tempo1 b; dlist_tempo3 b \<rbrakk> \<Longrightarrow> (Collect  (dlist_xbefore a b) \<inter> Collect (dlist_xbefore b c)) = 
+    Collect (dlist_xbefore (dlist_xbefore a b) c)"
+using dlist_inf_xbefore_trans
+using Collect_cong Collect_conj_eq by blast
 
 subsection {* Formulas as \ac{algebra} *}
 
@@ -870,6 +885,13 @@ instance proof
   unfolding tempo1_formula_def tempo2_formula_def xbefore_formula_def 
     less_eq_formula_def inf_formula_def
   by (simp add: dlistset_xbefore_trans Abs_formula_inverse)
+  next
+  fix a::"'a formula" and b::"'a formula" and c::"'a formula"
+  assume "tempo1 b" "tempo3 b"
+  thus "inf (xbefore a b) (xbefore b c) = xbefore (xbefore a b) c"
+  unfolding xbefore_formula_def inf_formula_def tempo1_formula_def 
+    tempo3_formula_def
+  by (simp add: Abs_formula_inverse dlistset_inf_xbefore_trans)
 qed
 end
 
