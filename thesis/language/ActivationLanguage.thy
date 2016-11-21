@@ -5,71 +5,59 @@ begin
 
 section {* A term in the language  *}
 
-class term_predicate =
-  fixes implies :: "'a \<Rightarrow> 'a \<Rightarrow> bool"
-  fixes tautology :: "'a \<Rightarrow> bool"
-  fixes or :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
-  fixes term_false :: "'a"
+class term_predicate = boolean_algebra +
+  fixes implies_bool :: "'a \<Rightarrow> 'a \<Rightarrow> bool"
 
 instantiation bool :: term_predicate
 begin
-definition
-  "implies a b = (a \<longrightarrow> b)"
-
-definition
-  "tautology a = (a \<longleftrightarrow> True)"
-
-definition
-  "or a b = (a \<or> b)"
-
-definition 
-  "term_false = False"
-
+  definition
+    "implies_bool a b = (a \<longrightarrow> b)"
 instance proof  
 qed
-
 end
 
 datatype ('n, 'f) Mode = 
   Nominal "'n option" |
   Failure 'f
 
-datatype ('e, 'n, 'f) Expression = 
-  Term (pred: "'e::term_predicate") (mode: "('n, 'f) Mode") |
-  Alt "('e, 'n, 'f) Expression" "('e, 'n, 'f) Expression"
+typedef ('e::term_predicate, 'n, 'f) Expression = 
+  "UNIV::(('e \<times> (('n, 'f) Mode)) list set)" by simp
 
-primrec Expression_to_predicate_list :: 
-  "('e, 'n, 'f) Expression \<Rightarrow> 'e::term_predicate list" where
-"Expression_to_predicate_list (Term p m) = [p]" |
-"Expression_to_predicate_list (Alt exp1 exp2) = 
-  (Expression_to_predicate_list exp1) @ (Expression_to_predicate_list exp2)"
-
-primrec Expression_to_term_set :: 
-  "('e, 'n, 'f) Expression \<Rightarrow> 
-    ('e::term_predicate \<times> ('n, 'f) Mode) set" where
-"Expression_to_term_set (Term p m) = {(p, m)}" |
-"Expression_to_term_set (Alt exp1 exp2) = 
-  (Expression_to_term_set exp1) \<union> (Expression_to_term_set exp2)"
+abbreviation Expression_to_predicate_list :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> 'e list" where
+  "Expression_to_predicate_list E \<equiv> map fst (Rep_Expression E)"
 
 subsection {* Healthiness 1 *}
 
-primrec health1_aux1 :: 
-  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> ('e::term_predicate, 'n, 'f) Expression" where
-"health1_aux1 (Term)"
+primrec h1_aux1 :: 
+  "('e::term_predicate \<times> ('n, 'f) Mode) \<Rightarrow> ('e \<times> ('n, 'f) Mode) list \<Rightarrow> 
+    ('e \<times> ('n, 'f) Mode) list" where
+"h1_aux1 _ [] = []" |
+"h1_aux1 t1 (t2 # E) = 
+  (if implies_bool (fst t2) (fst t1) then 
+    (if snd t1 = snd t2 
+      then h1_aux1 t1 E 
+      else (inf (fst t1) (- (fst t2)), snd t2) # h1_aux1 t1 E) 
+    else t2 # h1_aux1 t1 E
+  )"
 
 definition Expression_healthiness_1 :: 
   "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> bool" ("H\<^sub>1") where
-  "Expression_healthiness_1 e = (let S = 
-    Expression_to_term_set e in
-    (\<forall> (p1,m1) \<in> S. (\<forall> (p2,m2) \<in> S. implies p1 p2 \<longrightarrow> m1 = m2 )))"
+  "Expression_healthiness_1 E = 
+    (\<forall> (p1,m1) \<in> set (Rep_Expression E). 
+    (\<forall> (p2,m2) \<in> set (Rep_Expression E). 
+      implies p1 p2 \<longrightarrow> m1 = m2 ))"
 
 subsection {* Healthiness 2 *}
 
 definition Expression_healthiness_2 :: 
   "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> 
     ('e::term_predicate, 'n, 'f) Expression" ("H\<^sub>2") where
-  "Expression_healthiness_2 e = Alt e (
-    Term (fold or (Expression_to_predicate_list e) term_false) (Nominal None))"
+  "Expression_healthiness_2 E = 
+    (let missing = 
+      (not (fold or (Expression_to_predicate_list E) term_false), Nominal None)
+      in Abs_Expression (missing # (Rep_Expression E)))"
+
 
 subsection {* Healthiness condition *}
 
