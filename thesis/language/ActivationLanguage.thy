@@ -3,6 +3,81 @@ theory ActivationLanguage
 imports Complex_Main
 begin
 
+section {* A term in the language  *}
+
+class term_predicate =
+  fixes implies :: "'a \<Rightarrow> 'a \<Rightarrow> bool"
+  fixes tautology :: "'a \<Rightarrow> bool"
+  fixes or :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
+  fixes term_false :: "'a"
+
+instantiation bool :: term_predicate
+begin
+definition
+  "implies a b = (a \<longrightarrow> b)"
+
+definition
+  "tautology a = (a \<longleftrightarrow> True)"
+
+definition
+  "or a b = (a \<or> b)"
+
+definition 
+  "term_false = False"
+
+instance proof  
+qed
+
+end
+
+datatype ('n, 'f) Mode = 
+  Nominal "'n option" |
+  Failure 'f
+
+datatype ('e, 'n, 'f) Expression = 
+  Term (pred: "'e::term_predicate") (mode: "('n, 'f) Mode") |
+  Alt "('e, 'n, 'f) Expression" "('e, 'n, 'f) Expression"
+
+primrec Expression_to_predicate_list :: 
+  "('e, 'n, 'f) Expression \<Rightarrow> 'e::term_predicate list" where
+"Expression_to_predicate_list (Term p m) = [p]" |
+"Expression_to_predicate_list (Alt exp1 exp2) = 
+  (Expression_to_predicate_list exp1) @ (Expression_to_predicate_list exp2)"
+
+primrec Expression_to_term_set :: 
+  "('e, 'n, 'f) Expression \<Rightarrow> 
+    ('e::term_predicate \<times> ('n, 'f) Mode) set" where
+"Expression_to_term_set (Term p m) = {(p, m)}" |
+"Expression_to_term_set (Alt exp1 exp2) = 
+  (Expression_to_term_set exp1) \<union> (Expression_to_term_set exp2)"
+
+subsection {* Healthiness 1 *}
+
+primrec health1_aux1 :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> ('e::term_predicate, 'n, 'f) Expression" where
+"health1_aux1 (Term)"
+
+definition Expression_healthiness_1 :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> bool" ("H\<^sub>1") where
+  "Expression_healthiness_1 e = (let S = 
+    Expression_to_term_set e in
+    (\<forall> (p1,m1) \<in> S. (\<forall> (p2,m2) \<in> S. implies p1 p2 \<longrightarrow> m1 = m2 )))"
+
+subsection {* Healthiness 2 *}
+
+definition Expression_healthiness_2 :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> 
+    ('e::term_predicate, 'n, 'f) Expression" ("H\<^sub>2") where
+  "Expression_healthiness_2 e = Alt e (
+    Term (fold or (Expression_to_predicate_list e) term_false) (Nominal None))"
+
+subsection {* Healthiness condition *}
+
+definition Expression_healthiness ("H") where 
+  "Expression_healthiness = H\<^sub>1 \<circ> H\<^sub>2"
+
+(* ======= ANTIGO*)
+
 text {* It's the main datatype for the theories.  *}
 datatype ('a, 'b) IfValue =
   Value 'b
