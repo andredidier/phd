@@ -6,12 +6,16 @@ begin
 section {* A term in the language  *}
 
 class term_predicate = boolean_algebra +
-  fixes implies_bool :: "'a \<Rightarrow> 'a \<Rightarrow> bool"
+  fixes implies_pred :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
+  fixes tautology :: "'a \<Rightarrow> bool"
 
 instantiation bool :: term_predicate
 begin
   definition
-    "implies_bool a b = (a \<longrightarrow> b)"
+    "implies_pred a b = (a \<longrightarrow> b)"
+
+  definition
+    "tautology a = (a = True)"
 instance proof  
 qed
 end
@@ -51,17 +55,20 @@ definition Expression_health_1 ::
 
 subsection {* Healthiness 2: no term intersection (true at the same time) *}
 
-primrec Expression_healthiness_2_list_fixpred_one :: 
-  "'e::term_predicate \<Rightarrow> ('e \<times> (('n, 'f) Mode)) list \<Rightarrow> 
+primrec Expression_healthiness_2_list_fixpred :: 
+  "nat \<Rightarrow> nat \<Rightarrow> (('e::term_predicate) \<times> (('n, 'f) Mode)) list \<Rightarrow> 
     ('e \<times> (('n, 'f) Mode)) list" where
-  "Expression_healthiness_2_list_fixpred_one _ [] = []" |
-  "Expression_healthiness_2_list_fixpred_one p (t # ts) = 
-    (if implies_bool p (fst t) 
-      then (if (inf (fst t) (- p)) = bot 
-        then Expression_healthiness_2_list_fixpred_one p ts
-        else (inf (fst t) (- p), snd t) # 
-          Expression_healthiness_2_list_fixpred_one p ts)
-      else t # Expression_healthiness_2_list_fixpred_one p ts)"
+  "Expression_healthiness_2_list_fixpred _ _ [] = []" |
+  "Expression_healthiness_2_list_fixpred i c (t # ts) = 
+    (if i = c 
+      then t # Expression_healthiness_2_list_fixpred i (Suc c) ts
+      else (let p = (fst ((t#ts)!i)) in
+        (if tautology (implies_pred p (fst t))
+          then (if (inf (fst t) (- p)) = bot 
+            then Expression_healthiness_2_list_fixpred p ts
+            else (inf (fst t) (- p), snd t) # 
+              Expression_healthiness_2_list_fixpred p ts)
+          else t # Expression_healthiness_2_list_fixpred p ts)))"
 
 primrec Expression_healthiness_2_list_fixout ::
   "nat \<Rightarrow> (('e::term_predicate) \<times> (('n, 'f) Mode)) list \<Rightarrow> 
@@ -97,7 +104,7 @@ primrec Expression_healthiness_3_list ::
   "('e::term_predicate) \<Rightarrow> ('e \<times> (('n, 'f) Mode)) list \<Rightarrow> 
     ('e \<times> (('n, 'f) Mode)) list" where
   "Expression_healthiness_3_list ptaut [] = 
-    (if ptaut = top then [] else [(- ptaut, Nominal None)])" |
+    (if tautology ptaut then [] else [(- ptaut, Nominal None)])" |
   "Expression_healthiness_3_list ptaut (t # ts) = 
     t # Expression_healthiness_3_list (sup (fst t) ptaut) ts"
 
@@ -112,6 +119,7 @@ definition Expression_health_3 ::
   "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> bool" where
   "Expression_health_3 E = (Expression_healthiness_3 (E) = E)"
 
+(* TODO: predicates over expressions (see old notebook) *)
 
 (*** old definitions ***)
 
