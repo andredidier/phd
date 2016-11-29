@@ -18,7 +18,8 @@ end
 
 datatype ('n, 'f) Mode = 
   Nominal "'n option" |
-  Failure 'f
+  Failure 'f |
+  NonDeterministic "('n, 'f) Mode" "('n, 'f) Mode"
 
 typedef ('e::term_predicate, 'n, 'f) Expression = 
   "UNIV::(('e \<times> (('n, 'f) Mode)) list set)" by simp
@@ -27,7 +28,92 @@ abbreviation Expression_to_predicate_list ::
   "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> 'e list" where
   "Expression_to_predicate_list E \<equiv> map fst (Rep_Expression E)"
 
-subsection {* Healthiness 1 *}
+subsection {* Healthiness 1: no term is false *}
+
+primrec Expression_healthiness_1_list :: 
+  "(('e::term_predicate) \<times> (('n, 'f) Mode)) list \<Rightarrow> 
+    ('e \<times> (('n, 'f) Mode)) list" where
+  "Expression_healthiness_1_list [] = []" |
+  "Expression_healthiness_1_list (t # ts) = 
+    (if fst t = bot 
+      then Expression_healthiness_1_list ts 
+      else t # Expression_healthiness_1_list ts)"
+
+definition Expression_healthiness_1 :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> 
+    ('e, 'n, 'f) Expression"  ("H\<^sub>1") where
+    "Expression_healthiness_1 E = 
+      Abs_Expression (Expression_healthiness_1_list (Rep_Expression E))"
+
+definition Expression_health_1 :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> bool" where
+  "Expression_health_1 E = (Expression_healthiness_1 (E) = E)"
+
+subsection {* Healthiness 2: no term intersection (true at the same time) *}
+
+primrec Expression_healthiness_2_list_fixpred_one :: 
+  "'e::term_predicate \<Rightarrow> ('e \<times> (('n, 'f) Mode)) list \<Rightarrow> 
+    ('e \<times> (('n, 'f) Mode)) list" where
+  "Expression_healthiness_2_list_fixpred_one _ [] = []" |
+  "Expression_healthiness_2_list_fixpred_one p (t # ts) = 
+    (if implies_bool p (fst t) 
+      then (if (inf (fst t) (- p)) = bot 
+        then Expression_healthiness_2_list_fixpred_one p ts
+        else (inf (fst t) (- p), snd t) # 
+          Expression_healthiness_2_list_fixpred_one p ts)
+      else t # Expression_healthiness_2_list_fixpred_one p ts)"
+
+primrec Expression_healthiness_2_list_fixout ::
+  "nat \<Rightarrow> (('e::term_predicate) \<times> (('n, 'f) Mode)) list \<Rightarrow> 
+    ('e \<times> (('n, 'f) Mode)) list" where
+  "Expression_healthiness_2_list_fixout 0 l = l" |
+  "Expression_healthiness_2_list_fixout (Suc n) l =
+    Expression_healthiness_2_list_fixout n 
+      (Expression_healthiness_2_list_fixout_one (length l - n))"  
+
+primrec Expression_healthiness_2_list_fixout_one :: 
+  "('e::term_predicate) \<times> (('n, 'f) Mode) \<Rightarrow> ('e \<times> (('n, 'f) Mode)) list \<Rightarrow> 
+    ('e \<times> (('n, 'f) Mode)) list" where
+  "Expression_healthiness_2_list_fixout_one _ [] = []" |
+  "Expression_healthiness_2_list_fixout_one t1 (t2 # ts) = 
+    (if implies_bool (fst t2) (fst t1)
+      then (fst t2, NonDeterministic (snd t2) (snd t1)) # 
+        Expression_healthiness_2_list_fixout_one t1 ts
+      else t2 # Expression_healthiness_2_list_fixout_one t1 ts)"
+
+definition Expression_healthiness_2 :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> 
+    ('e, 'n, 'f) Expression"  ("H\<^sub>2") where
+    "Expression_healthiness_2 E = 
+      Abs_Expression (Expression_healthiness_2_list (Rep_Expression E))"
+
+definition Expression_health_2 :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> bool" where
+  "Expression_health_2 E = (Expression_healthiness_2 (E) = E)"
+
+subsection {* Healthiness 3: tautology (disjunction of all terms forms a tautology) *}
+
+primrec Expression_healthiness_3_list :: 
+  "('e::term_predicate) \<Rightarrow> ('e \<times> (('n, 'f) Mode)) list \<Rightarrow> 
+    ('e \<times> (('n, 'f) Mode)) list" where
+  "Expression_healthiness_3_list ptaut [] = 
+    (if ptaut = top then [] else [(- ptaut, Nominal None)])" |
+  "Expression_healthiness_3_list ptaut (t # ts) = 
+    t # Expression_healthiness_3_list (sup (fst t) ptaut) ts"
+
+definition Expression_healthiness_3 :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> 
+    ('e::term_predicate, 'n, 'f) Expression"  ("H\<^sub>3") where
+    "Expression_healthiness_3 E = 
+      Abs_Expression (
+        Expression_healthiness_3_list bot (Rep_Expression E))"
+
+definition Expression_health_3 :: 
+  "('e::term_predicate, 'n, 'f) Expression \<Rightarrow> bool" where
+  "Expression_health_3 E = (Expression_healthiness_3 (E) = E)"
+
+
+(*** old definitions ***)
 
 primrec h1_aux1 :: 
   "('e::term_predicate \<times> ('n, 'f) Mode) \<Rightarrow> ('e \<times> ('n, 'f) Mode) list \<Rightarrow> 
