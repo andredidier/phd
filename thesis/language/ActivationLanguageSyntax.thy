@@ -2,18 +2,23 @@ theory ActivationLanguageSyntax
 
 imports 
   Main
-  "~~/src/HOL/Library/Dlist"
 begin
 
 class activation_language_algebra =
-  fixes al_bot :: "'a"
-  fixes al_top :: "'a"
-  fixes al_not :: "'a \<Rightarrow> 'a"
-  fixes al_or :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
-  fixes al_and :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
+  fixes bot :: "'a"
+  fixes compl :: "'a \<Rightarrow> 'a"
+  fixes inf :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
   fixes tautology :: "'a \<Rightarrow> bool"
   fixes contradiction :: "'a \<Rightarrow> bool"
-  fixes eval :: "'a \<Rightarrow> bool"
+
+abbreviation sup where
+  "sup x y \<equiv> compl (inf (compl x) (compl y))"
+
+abbreviation implies where
+  "implies x y \<equiv> sup (compl x) y"
+
+abbreviation top where
+  "top \<equiv> compl (bot)"
 
 (* TODO : parametrizar os números *)
 datatype 'a OperationalMode =
@@ -45,7 +50,7 @@ primrec al_filter ::
 "al_filter f (Term pred operMode) = 
   (if f (pred, operMode) 
     then Term pred operMode 
-    else Term al_bot (Nominal None))" |
+    else Term bot (Nominal None))" |
 "al_filter f (Cons pred operMode exp) =
   (if f (pred, operMode) 
     then Cons pred operMode (al_filter f exp)
@@ -58,8 +63,8 @@ definition al_h_1 ::
 
 primrec tau_al_h_2 :: 
   "('a::activation_language_algebra, 'o) activationLogic \<Rightarrow> 'a" where
-"tau_al_h_2 (Term pred _) = al_not pred" |
-"tau_al_h_2 (Cons pred _ exp) = al_and (al_not pred) (tau_al_h_2 exp)"
+"tau_al_h_2 (Term pred _) = compl pred" |
+"tau_al_h_2 (Cons pred _ exp) = inf (compl pred) (tau_al_h_2 exp)"
 
 definition al_h_2 :: 
   "('a::activation_language_algebra, 'o) activationLogic \<Rightarrow> 
@@ -76,33 +81,33 @@ primrec al_concat ::
 "al_concat (Cons pred operMode exp1) exp2 = 
   Cons pred operMode (al_concat exp1 exp2)"
 
-primrec operMode_absorb :: "('a \<times> 'o OperationalMode) \<Rightarrow> 
+primrec al_pred :: "
   ('a::activation_language_algebra, 'o) activationLogic \<Rightarrow>
-  ('a, 'o) activationLogic" where
-"operMode_absorb t (Term pred operMode) = 
-  (if snd t = operMode 
-    then Term (al_or pred (fst t)) operMode
-    else Term pred operMode)" |
-"operMode_absorb t (Cons pred operMode exp) = 
-  (if snd t = operMode 
-    then Cons (al_or pred (fst t)) operMode 
-      (operMode_absorb t exp)
-    else Cons pred operMode (operMode_absorb t exp)) "
+  'o OperationalMode \<Rightarrow> 'a" where
+"al_pred (Term pred operMode) operMode_x = 
+  (if operMode = operMode_x then pred else bot)" |
+"al_pred (Cons pred operMode exp) operMode_x = 
+  (if operMode = operMode_x 
+    then sup pred (al_pred exp operMode_x)
+    else al_pred exp operMode_x)"
 
-primrec al_h_3_aux :: "
-  ('a::activation_language_algebra, 'o) activationLogic \<Rightarrow> 
-  ('a, 'o) activationLogic \<Rightarrow>
-  ('a, 'o) activationLogic" where
-"al_h_3_aux (Term pred operMode) exp2 = "
+primrec al_modes :: "
+  ('a::activation_language_algebra, 'o) activationLogic \<Rightarrow>
+  'a \<Rightarrow> ('a, 'o) activationLogic" where
+"al_modes (Term pred operMode) pred_x = 
+  (Term (inf pred pred_x) operMode)" |
+"al_modes (Cons pred operMode exp) pred_x = 
+  Cons (inf pred pred_x) operMode (al_modes exp pred_x)"
 
-definition al_h_3 :: 
-  "('a::activation_language_algebra, 'o) activationLogic \<Rightarrow> 
-  ('a, 'o) activationLogic" where
-"al_h_3 exp = al_concat (al_filter () exp) ()"
-(*
-Semantics
-typedef ('a, 'o) activationLogic = 
-  "UNIV::('a:: activation_language_algebra \<times> 'o) dlist set"
-*)
+primrec al_activation :: "
+  ('a::activation_language_algebra, 'o) activationLogic \<Rightarrow>
+  'a \<Rightarrow> 'o OperationalMode set" where
+"al_activation (Term pred operMode) pred_x = 
+  (if tautology (implies pred_x pred) then { operMode } else {})" |
+"al_activation (Cons pred operMode exp) pred_x = 
+  (if tautology (implies pred_x pred) 
+    then { operMode } \<union> (al_activation exp pred_x)
+    else al_activation exp pred_x)"
+
 
 end
