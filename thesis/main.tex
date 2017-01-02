@@ -1,4 +1,4 @@
-\documentclass[12pt,openright,twoside,a4paper,oldfontcommands,english,brazil,draft]{abntex2}
+\documentclass[12pt,openright,twoside,a4paper,oldfontcommands,english,brazil,final]{abntex2}
 
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
@@ -430,11 +430,12 @@ My two grandfathers couldn't see how far I got.
 My heart was with them all the time, but I was physically far away from them in their very last breath.
 May God have them in his arms.
 
-It is now ten years since I graduated.
+It is now eleven years since I graduated.
 I met professors Alexandre and Augusto still during the Computing Science undergrad course.
 They have been present in my academic life ever since.
 Their comments, instructions, talks, (even jokes), are what molded my path to here.
-I have no words to express how much I thank them, specially Alexandre, who have guided me since my undergrad course.
+I have no words to express how much I thank them, specially Alexandre.
+%, who have guided me since my undergrad course.
 %I hope this is the beginning of a healthy partnership for the improvement of science.
 
 CNPq and FACEPE were keen to guarantee my existential needs.
@@ -491,9 +492,12 @@ Em um trabalho anterior, mostramos uma estratégia baseada na álgebra de proces
 A partir dos rastros de falhas nós descartamos a informação de ordenamento para obter expressões de estrutura  para Ávores de Falhas Estáticas.
 Ao contrário de descartar tal informação de ordenamento, poderíamos usá-la para obter expressões de estrutura para Árvores de Falhas Temporais ou Dinâmicas.
 
-No presente trabalho, apresentamos uma álgebra temporal de falhas (com noção de propagação de falhas) para analisar defeitos em sistemas e provamos que ela é de fato uma álgebra Booleana.
-Isso permite herdar as propriedades de álgebras Booleanas, leis e técnicas de redução existentes, as quais são muito benéficas para a modelagem e análise de falhas.
+
+No presente trabalho apresentamos: (i) uma álgebra temporal de falhas (com noção de propagação de falhas) para analisar defeitos em sistemas e provamos que ela é de fato uma álgebra Booleana, e (ii) uma lógia de ativação parametrizada para expressar comportamentos nominais e de falha, incluindo a modelagem de falhas a partir de uma álgebra e um conjunto de modos de operação.
+A álgebra permite herdar as propriedades de álgebras Booleanas, leis e técnicas de redução existentes, as quais são muito benéficas para a modelagem e análise de falhas.
 Com expressões na álgebra temporal de falhas nós permitimos a verificação de propriedades de segurança (\emph{safety}) baseadas em Árvores de Falhas Estáticas, Temporais ou Dinâmicas.
+Mostramos como usar a lógica de ativação conjuntamente com a álgebra temporal de falhas para analisar a ocorrência de falhas, assim como suas ordens de ocorrência e propagações.
+A lógia criada neste trabalho tem a intenção de ajudar os analistas a considerar todas as possíveis situações em expressões complexas com operadores relacionados à ordem, evitando esquecer combinações sutis (porém relevantes).
 Nós ilustramos nosso trabalho com alguns estudos de caso simples, mas reais, fornecidos pelo nosso parceiro industrial, a EMBRAER.
 
 Isabelle/HOL foi utilizado para a mecanização das provas dos teoremas da álgebra temporal de falhas.
@@ -970,24 +974,25 @@ We detail \acp{DFT} in \cref{sec:dynamic-fault-trees}.
 \section{Time relation of fault events}
 \label{sec:time-relations}
 
-The most general case for time relations\index{time relations}\index{order!time relations} is to consider that each fault event has a continuous time duration.
+The most general case for time relations is to consider that each fault event has a continuous time duration.
 They are the basis on how fault events discretisation are defined.
-In \cref{fig:time-relations} we show all possibilities of event relations in a continuous time line (from $A$ to $B$; the converse relation is similar):
+The point of view in this work is the analysis of the effects caused by a combination of faults in a snapshot of a system state.
+In \cref{fig:time-relations} we show all possibilities of events relations in a continuous time line (from A to B; the converse relation is similar):
 
-\begin{description}
-  \item[a.] $A$ starts and ends before $B$ starts;
-  \item[b.] $A$ starts before and ends after $B$ has started, but before $B$ has ended;
-  \item[c.] $A$ starts before $B$ and ends after $B$ has ended ($A$ contains $B$);
-  \item[d.] $A$ and $B$ start at the same time, but $A$ ends before $B$;
-  \item[e.] $B$ starts after $A$, but they end at the same time;
-  \item[f.] $A$ and $B$ start and end at the same time;
-  \item[g.] $A$ starts before $B$ and ends when $B$ starts.
-\end{description}
+\begin{enumerate}\renewcommand{\theenumi}{\alph{enumi}}
+  \item A starts before and ends after B has started, but before B has ended;
+  \item A starts before B and ends after B has ended (A contains B);
+  \item B starts after A, but they end at the same time;
+  \item A and B start at the same time, but A ends before B;
+  \item A and B start and end at the same time;
+  \item A starts before B and ends when B starts.
+  \item A starts and ends before B starts;
+\end{enumerate}
 
-Although the occurrence of fault events has at least seven possibilities, what really matters when analysing systems is when a fault is \emph{detected}.
-Considering that fault detection corresponds to the start of a fault event, from \cref{fig:time-relations} we clearly identify which event comes first: $A$ comes before $B$, except in the cases (d) and (f), where they start exactly at the same time.
-If fault events are independent (they are not susceptible to have a common cause) then the probability of them starting at the same time is very low.
-In \cref{chap:strategy} we abstract event relations in continuous time as an \emph{exclusive before} relation, based on fault \emph{detection} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
+Considering that fault occurrence corresponds to the start of a fault event and its duration, from \cref{fig:time-relations} we clearly identify which event comes first: A comes before B, except in the cases (d) and (e), where they start exactly at the same time.
+If fault events are independent (they are not susceptible to have a common cause) then the probability of their occurrences starting at the same time is very low.
+The relations (f) and (g) shows the case that the system was repaired, thus A is not active when B starts.
+In \cref{sec:strategy} we abstract the relation of events in continuous time as an \emph{exclusive before} relation, based on fault \emph{occurrence} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
 
 
 \begin{figure}[htb]
