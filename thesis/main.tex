@@ -645,6 +645,10 @@ The tool combines these expressions with regard to the architecture to generate 
 The work reported in~\cite{WP2008} shows a strategy to use the semi-automatic \ac{FT} generation of \ac{hiphops} with \pandora to generate structure expressions of \acp{TFT}.
 \end{sloppypar}
 
+\Ac{AADL} is a standard language to model (among other features) system structure and component interaction. 
+\Ac{AADL} has several tools to perform different analyses to obtain \ac{SFT} to perform \ac{FTA}.
+But \acp{AADL} assertions framework does not express order explicitly as needed for \ac{TFT} and \ac{DFT} analyses.
+
 In previous work~\cite{Didier2012,DM2012}, we proposed a systematic hardware-based faults identification strategy to obtain failure expressions as defined in \acifused{hiphops}{\acs{hiphops}}{\acscite{hiphops}} for \acp{SFT}.
 %
 We considered faults in components or subsystems, but if we obtain failure expressions of a whole system, they are in fact structure expressions\index{structure expression} of \iac{FT}.
@@ -717,9 +721,15 @@ Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{F
 
 %The work reported in~\cite{AH2015} shows the formalisation of probabilistic analysis of \ac{SFT} and uses the same concept of date-of-occurrence shown in \adnote{cite Merle work}.
 
-From the exposed in this section, our research question is:
+\begin{sloppypar}
+Another concern, left untreated in the literature, is the undesirable possibility of non-determinism in structure expressions.
+For example, if a commission is observed when fault A is active and an omission is observed when faults A and B are active, then the system may behave non-deterministically with a commission or omission when both A and B are active (A and B implies A).
+\end{sloppypar}
+
+From the exposed in this section, our research questions are:
 \begin{rqenum}[series=researchquestion]
-  \item Is there a mathematical model to analyse \acp{TFT} and \acp{DFT} that is set-based and similar to \ac{FBA}?\label{question:mathematical-model}
+  \item Is there a consistent mathematical model to analyse \acp{TFT} and \acp{DFT} that is set-based and similar to \ac{FBA}?\label{question:mathematical-model}
+  \item What guarantees can we provide to detect non-determinism in erroneous behaviour?\label{question:non-determinism}
 \end{rqenum}
 %
 Also, does such a model:
@@ -728,7 +738,7 @@ Also, does such a model:
   \item have the capacity of representing events ordering similar to \ac{TFT} and \ac{DFT}\label{question:ordering-representation}?
   \item represent systems behaviour by construction\label{question:gap}?
   \item allow both qualitative and quantitative analyses as supported by \ac{TFT} and \ac{DFT}\label{question:analyses}?
-  \item perform reduction of structure expressions to a normal form at least as efficiently as current approaches\label{question:efficiency}?
+  %\item perform reduction of structure expressions to a normal form at least as efficiently as current approaches\label{question:efficiency}?
 \end{rqenum}
 
 %
@@ -759,6 +769,16 @@ We depict traditional \ac{FTA} in path C to compare to our strategy and because 
 System and fault modelling is an essential step towards safety analysis.
 Architectural modelling is the first step of the strategy and can be executed either in a graphical tool, or as requirements in natural language.
 For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling in \ac{SysML} to verify fault tolerance of \acp{SoS}.
+
+%TODO acm: Aqui eu pegaria o gancho da AADL (assertion framework)...
+Writing and analysing expressions with order-related operators is more complex than analysing expressions with Boolean\index{Boolean} operators only.
+The \ac{activation} works together with an inner algebra to perform analysis of system structure and component interaction with a focus on fault modelling and fault propagation, tackling the complexity introduced by order-related operators.
+\ac{activation} receives an algebra and the set of operational modes of a system as parameters.
+The choice of algebra defines which structure expressions can be obtained: if Boolean algebra is passed as a parameter, the \ac{activation} can generate structure expressions with Boolean operators (\ac{SFT}); if the \ac{algebra} is passed as a parameter, the \ac{activation} can generate structure expressions with order-related operators (\ac{TFT} and \ac{DFT}).
+The \ac{activation} requires that the inner algebras provide a set of properties (tautology and contradiction) and semantic values.
+The use of the NOT is essential: besides its use in expressions, we use the complement to normalise the expressions to provide \emph{healthy} expressions.
+To obtain critical event expressions used in \acp{FT} and to denote faults propagation, the \ac{activation} provides a predicates notation and verification of non-determinism. 
+We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: (i) verify its existence, (ii) indicate which set of operational modes are active for a combination of faults, or (iii) what is the combination of faults that activates a set of operational modes.
 
 The ``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
 It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault event sequences.
@@ -945,6 +965,13 @@ In this work, we use a combination of:
 We use these methods to obtain an erroneous behaviour of the system which is compared to the system dependability attributes\index{Dependability!attributes of} (safety).
 We explain how these methods are combined in \cref{chap:strategy}.
 
+On the analyses of systems and its constituents, there is a distinction of operational modes and error events.
+Operational modes refer to the behaviour that is perceived on the boundaries of a system (\emph{failure}).
+Error events, on the other hand, represent the behaviour detected in a constituent of a system.
+Such error events may relate to an operational mode, but not necessarily.
+Further in \cref{chap:strategy} we abstract these differences and leave the distinction as a parameter.
+We refer to such a set as \emph{operational modes}.
+
 \subsection{Fault Modelling}
 
 Fault modelling plays an important role in reasoning about the fault-error-failure chain.
@@ -995,7 +1022,6 @@ Considering that fault occurrence corresponds to the start of a fault event and 
 If fault events are independent (they are not susceptible to have a common cause) then the probability of their occurrences starting at the same time is very low.
 The relations (f) and (g) shows the case that the system was repaired, thus A is not active when B starts.
 In \cref{sec:strategy} we abstract the relation of events in continuous time as an \emph{exclusive before} relation, based on fault \emph{occurrence} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
-
 
 \begin{figure}[htb]
   \centering
