@@ -633,7 +633,7 @@ There is no consensus about the relevance of its use:
   \item it can be essential in practical use~\cite{Andrews2001}.
 \end{alineasinline}
 Our concern is that the decision of the relevance of its use should not be due to the choice of events-occurrence representation.
-The algebra created in this work defines the \ac{NOT} operator and allows its use, as we show in \cref{chap:strategy}.
+The algebra created in this work defines the \ac{NOT} operator and allows its use, as we show in \cref{chap:algebra}.
 \end{sloppypar}
 
 \begin{sloppypar}
@@ -754,7 +754,7 @@ In this work we present an algebra, called \acf{algebra}, to analyse acceptance 
 The laws of \ac{algebra} are given in a denotational semantics based on sets of lists of distinct elements.
 \Theac{algebra} aims at answering the \cref{question:mathematical-model,question:ordering-representation}.
 The analysis of acceptance criteria is a decision problem and we use first-order logic and \isabellehol as verification tool.
-Indeed, \ac{algebra} is part of a bigger strategy the relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
+Indeed, \ac{algebra} is part of a bigger strategy that relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
 In \cref{fig:strategy-overview} the strategy starts in the top (green) node and ends in the bottom (red) node.
 Fault events are either extracted from a nominal model with injected faults (\cref{fig:strategy-overview}, path A), or modelled using a proposed notation, called \ac{activation} (\cref{fig:strategy-overview}, path B).
 We depict traditional \ac{FTA} in path C to compare to our strategy and because we still need part of the traditional \ac{FTA} to obtain the acceptance criteria, which are the expected properties of system's \acp{FT}.
@@ -776,7 +776,8 @@ The \ac{activation} works together with an inner algebra to perform analysis of 
 \ac{activation} receives an algebra and the set of operational modes of a system as parameters.
 The choice of algebra defines which structure expressions can be obtained: if Boolean algebra is passed as a parameter, the \ac{activation} can generate structure expressions with Boolean operators (\ac{SFT}); if the \ac{algebra} is passed as a parameter, the \ac{activation} can generate structure expressions with order-related operators (\ac{TFT} and \ac{DFT}).
 The \ac{activation} requires that the inner algebras provide a set of properties (tautology and contradiction) and semantic values.
-The use of the NOT is essential: besides its use in expressions, we use the complement to normalise the expressions to provide \emph{healthy} expressions.
+The use of the \ac{NOT} is essential: besides its use in expressions, we use the complement to normalise the expressions to provide \emph{healthy} expressions.
+
 To obtain critical event expressions used in \acp{FT} and to denote faults propagation, the \ac{activation} provides a predicates notation and verification of non-determinism. 
 We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: (i) verify its existence, (ii) indicate which set of operational modes are active for a combination of faults, or (iii) what is the combination of faults that activates a set of operational modes.
 
@@ -784,17 +785,15 @@ The ``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtai
 It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault event sequences.
 The fault event sequences are then mapped to \theac{algebra}, which have a denotational semantics based on sets of lists.
 As fault names are obtained directly from components and subsystems in a \simulink model, \theac{activation} (in the ``Fault Modelling'' group) allows them to be modified or complemented.
-\Theac{activation} also allows reasoning about faults that are not modelled in \simulink as, for example, common cause or environmental faults.
+\Theac{activation} allows reasoning about faults that are not modelled in \simulink as, for example, common cause or environmental faults.
 Path A aims at answering the \cref{question:gap}.
-Given the flexibility of the \ac{activation} notation, it can be used directly (path B) to model faults formally, reasoning about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
+Given the flexibility of the \ac{activation} notation, it can also be used directly (path B) to model faults formally, reasoning about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
 Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability, which is related to~\ref{question:mathematical-model}.
 %Paths A and B aim at answering the \ref{question:gap}.
 
-\Theac{FTA} has associated non-functional system requirements which are in fact acceptance criteria for \acp{FT}.
-Once acceptance criteria are modelled as expressions in \ac{algebra}, we formally check whether they are accepted by system models' expressions.
-The acceptance criteria can be either qualitative or quantitative.
-An example of qualitative acceptance criteria is: ``\iac{FT} cannot have \ac{MCS} with less than three basic events''.
-A quantitative acceptance criteria example is: ``the top-level event probability shall be less than $10^{-8}$''.
+Safety requirements are stated in terms of critical failures as, for example, ``the probability of a complete failure of an airplane engine should be less than $10^{-9}$'' (quantitative), or ``a complete failure of the propulsion system shouldn't be caused by a single failure'' (qualitative).
+In this work we call \emph{acceptance criteria} the verification of a safety requirement on \iac{FT}, where \acg{FT} top event is the undesired failure.
+Positive requirements as, for example, ``the communications system should be operational $99.99\%$ of the cruise phase'' are treated as a complement (the complete failure should have a probability in less than $0.01\%$ of the cruise phase).
 The acceptance criteria analysis aims at answering the \ref{question:analyses}.
 
 \section{Contributions}
@@ -802,22 +801,29 @@ The acceptance criteria analysis aims at answering the \ref{question:analyses}.
 The main contributions of this work are:
 
 \begin{contrenum}[series=contributions]
-  \item Define a denotational and algebraic model to express fault events order with \theac{algebra}---see \cref{chap:strategy};
-  %\item Formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance---to do;
-  \item From \simulink models, obtaining fault event sequences and mapping to \ac{algebra}---partially done, see \cref{chap:strategy};
-  \item Reason about fault modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures)---see discussion in~\cref{sec:activation};
-  \item Illustrate the application of the laws on a real case study, provided by our industrial partner, \EMBRAER---see \cref{chap:case-study}.
-  \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016})---see \cref{chap:strategy};
+  \item Define a denotational and algebraic model to express fault events order with \theac{algebra} (\cref{chap:algebra});
+  \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016})---see \cref{chap:algebra};
+  \item From \simulink models, obtain fault event sequences and mapping to \ac{algebra} (\cref{chap:algebra});
+  \item Reason about fault modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures, \cref{chap:activation});
+  \item Illustrate the application of the laws on a real case study, provided by our industrial partner, \EMBRAER (\cref{chap:case-study}).
   %\item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}---to do.
+  %\item Formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance criteria (\cref{chap:acceptance});
 \end{contrenum}
 
 We use \isabellehol, theories in \isabellehol{'s} library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
+
+The contributions cover the following scenarios, presented as a case study in \cref{chap:case-study}:
+\begin{enumerate}
+  \item From a model in \simulink, obtain the failure expression of a critical failure, analyse the ordering relation of fault events, and verify its acceptance criteria;
+  \item Given a set of \ac{FT} structure expressions, verify which fault combinations analysis are missing.
+\end{enumerate}
+
 %We omit the proofs in the paper, but they are available in Online Resource 1.\todo{publish theory files online: ``Specialized format such as .pdb (chemical), .wrl (VRML), .nb (Mathematica notebook), and .tex can also be supplied.''}
 
 \section{Thesis organization}
 
 This thesis is organized as follows: in \cref{chap:basic-concepts,chap:analysis} we show the concepts and tools used as basis for this work.
-\Cref{chap:strategy} presents our strategy, \cref{chap:case-study} the case study and the application of the proposed strategy, and we present our conclusions and future work in \cref{sec:conclusion}.
+\Cref{chap:algebra} presents \theac{algebra}, \cref{chap:activation} presents \theac{activation}, \cref{chap:case-study} the case study and the application of the proposed strategy, and we present our conclusions and future work in \cref{sec:conclusion}.
 The contributions presented in this work are summarized in terms of proved results.
 To facilitate the understanding of the presented strategy, the effort to build laws and theirs (mechanized) proofs are shown in \cref{app:formal-proofs-isabelle-hol}.
 
@@ -963,13 +969,13 @@ In this work, we use a combination of:
   \item symbolic execution.
 \end{alineasinline}
 We use these methods to obtain an erroneous behaviour of the system which is compared to the system dependability attributes\index{Dependability!attributes of} (safety).
-We explain how these methods are combined in \cref{chap:strategy}.
+We explain how these methods are combined in \cref{chap:algebra}.
 
 On the analyses of systems and its constituents, there is a distinction of operational modes and error events.
 Operational modes refer to the behaviour that is perceived on the boundaries of a system (\emph{failure}).
 Error events, on the other hand, represent the behaviour detected in a constituent of a system.
 Such error events may relate to an operational mode, but not necessarily.
-Further in \cref{chap:strategy} we abstract these differences and leave the distinction as a parameter.
+Further in \cref{chap:algebra} we abstract these differences and leave the distinction as a parameter.
 We refer to such a set as \emph{operational modes}.
 
 \subsection{Fault Modelling}
@@ -1039,7 +1045,7 @@ Basic events become variables and gates become operators (a gate may become one 
 In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their respective structure expressions\index{structure expression}.
 
 \Acp{FBA} and \acp{BDD}\index{Binary Decision Diagrams} are the basis to analyse structure expressions.
-Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{chap:strategy}).
+Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{chap:algebra}).
 We explain \acp{BDD}\index{Binary Decision Diagrams} and derived techniques in \cref{sec:structure-expression-analysis}, and \acp{FBA} in \cref{sec:fba}.
 
 The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}:
@@ -2371,7 +2377,7 @@ Our strategy avoids this kind of issue by being completely systematic.
 \adnote{Write the problem: simple mathematical notation for all fault trees. Include direct DFT-to-ATF mapping.}
 
 \chapter{A free algebra to express structure expressions of ordered events}
-\label{chap:strategy}
+\label{chap:algebra}
 
 \todo{De Augusto: ``Este capítulo é desnecessariamente conciso, principalmente por se tratar da contribuição. Seria importante, na versão final, ilustrar cada conceito e propriedade com exemplos.   
 Tem que destacar resultados importantes, como o fato da mecanização com Isabelle. Deveria ter uma seção ou um capítulo dedicado à mecanização, não incluindo tudo, obviamente, mas ilustrando um pequeno exemplo.''}
@@ -2891,6 +2897,9 @@ Let $F$ be the set of all formulas in \ac{activation}, $G$ be the set of all for
 \end{subequations}
 \end{proposition}
 
+\chapter{Reasoning fault activation}
+\label{chap:activation}
+
 \chapter{Case study}
 \label{chap:case-study}
 \asnote{Vocês confirmaram com a Embraer que isso pode ser divulgado mesmo? No caso de Gustavo, mesmo exemplos que eles descaracterizam, não permitem que apresentemos assim de forma explícita a modelagem. Nós temos apresentado apenas os resultados. }
@@ -3150,14 +3159,14 @@ The definition and the theory of ``Fault Modelling and Fault Tolerance Patterns'
 \chapter{Formal proofs in Isabelle/HOL}
 \label{app:formal-proofs-isabelle-hol}
 
-In the following we list all theorems and proofs concerning the laws presented in \cref{chap:strategy}.
+In the following we list all theorems and proofs concerning the laws presented in \cref{chap:algebra}.
 The complete set of verifiable theory files is available at \algebraurl.
 We list only those files created in our work.
 Each theorem, proof or corollary is followed by its own proof.
 
 The theory about lists of distinct elements (\distinctlists) is available in~\cite{HL2016} (we used the 2015 version that is available with \isabellehol).
 
-%\Cref{tbl:laws-theorems-slice} shows a mapping of the equations shown in~\cref{chap:strategy} and theorem names in the \isabellehol code presented in this \namecref{app:formal-proofs-isabelle-hol}.
+%\Cref{tbl:laws-theorems-slice} shows a mapping of the equations shown in~\cref{chap:algebra} and theorem names in the \isabellehol code presented in this \namecref{app:formal-proofs-isabelle-hol}.
 
 %\begin{table}[htb]
 %  \caption{Laws and theorems}%
