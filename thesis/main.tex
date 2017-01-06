@@ -385,7 +385,8 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\ibefore{\ensuremath\operatorname{\unlhd}}
 \def\simultaneous{\ensuremath\operatorname{\bigtriangleup}}
 \def\probabilityop{\ensuremath \Pr}
-\newcommand{\probability}[1]{\ensuremath \probabilityop\parsin{#1}}
+\newcommand{\probability}[1]{\ensuremath \probabilityop\left\{#1\right\}}
+\newcommand{\probabilityt}[1]{\ensuremath \probabilityop\left\{#1\right\}^{<t}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2827,7 +2828,49 @@ In \cref{sec:fault-trees} we showed the kind of results that are obtained in \ac
 In this section we show how to formalize two kinds of acceptance criteria of \acp{FT}: (i) \ac{MCSeq}, the quantity of faults in the minimal sequences that cause the root failure, and (ii) root probability, provided the probability of sequences occurrences.
 These criteria are representative and other criteria can be modelled similarly.
 
+Using the denotational semantics of \ac{algebra}, the \ac{MCSeq} are the lists with least length, because all list have no repeated elements and each list represent a possible combination the leads to a failure.
 
+\begin{definition}[Minimal cut sequence]
+Given ...
+%TODO
+\todo{Continuar daqui}
+\end{definition}
+
+The acceptance criteria
+
+Following the same idea with denotational semantics, we can calculate root probability from a formula in \ac{algebra}.
+The work reported in~\cite{ADH2003} shows how to calculate the probability of \iac{PAND} gate:
+\begin{align}
+P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
+& = \int_{x_1 = 0}^t P'_1\left(x_1\right)\left[P_2\left(t\right) - P_2\left(x_1\right)\right]d x_1\label{eq:pand-probability}
+\end{align}
+%
+where $P_i$ is the probability of the occurrence of the $i$th fault (input), and $T_i$ is the time that the $i$th fault occurs.
+
+In \ac{algebra}, we abstract the probability calculation, assuming that the probability of all \ac{XBefore} relations and the probability of individual faults are given.
+For example, if a system have three faults $a$, $b$, and $c$, and a failure formula is given by $\left(a \land c\right) \lor \left(\xbefore{a}{b}\right)$, then the needed probabilities to calculate $\probabilityt{\left(a \land c\right) \lor \left(\xbefore{a}{b}\right)}$ are $\probabilityt{\xbefore{a}{b}}$, $\probabilityt{a}$ and $\probabilityt{c}$.
+The probabilities for other operators, are given as usual:
+\begin{align*}
+\probabilityt{a \land b} &= \probabilityt{a} \times \probabilityt{b}\\
+\probabilityt{a \lor b} &= \probabilityt{a} + \probabilityt{b} -\probabilityt{a} \times \probabilityt{b}\\
+\probabilityt{\lnot a} &= 1 - \probabilityt{a}
+\end{align*}
+%
+The \ac{NOT} operator is a special case in the probability analysis.
+When analysing \acp{FT}, the probability of a component be functional is near $1$, which causes the probability to be ignored in general.
+The \ac{NOT} operator when combined with any other (\ac{AND}, \ac{OR}, and \ac{XBefore}) results on a nearly safe approximation to $1$:
+\begin{align*}
+\probabilityt{\lnot a \land b} &= \probabilityt{\lnot a} \times \probabilityt{b} \approx \probabilityt{b}\\
+\probabilityt{\lnot a \lor b}  &= \probabilityt{\lnot a} + \probabilityt{b} - \probabilityt{\lnot a} \times \probabilityt{b} \approx 1\\
+\probabilityt{\xbefore{\lnot a}{b}} &\approx \probabilityt{b} \text{(see \cref{eq:pand-probability})}
+\end{align*}
+
+
+\begin{definition}[Root probability]
+Given...
+%TODO
+\todo{Continuar daqui}
+\end{definition}
 
 \section{Propositions}
 \label{sec:propositions}
