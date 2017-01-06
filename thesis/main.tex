@@ -603,6 +603,10 @@ These minimal terms are also called \emph{prime implicants} or \emph{minterms}.
 The Shannon's method\index{Binary Decision Diagrams!Shannon's method} originated a formalism to reduce structure expressions called \ac{BDD}\index{Binary Decision Diagrams}.
 Another approach to reduce structure expressions is to use a mathematical model---called \acf{FBA}---that uses sets of sets to represent Boolean expressions.
 
+Although structure expressions are formulas with logical operators, they are formalisms to enable automatic \ac{FTA}.
+As shown in~\cite{Ericson2005}, \acp{FT} are a much richer model enabling a visual indication of fault paths, and includes description of subsystems as intermediate events.
+%% Este parágrafo foi incluído após discussão de Paulo sobre avaliação de confiabilidade/disponibilidade.
+
 Besides the traditional \ac{OR} and \ac{AND} gates, the \FThandbook defines other gates.
 For example the \ac{PAND} gate, which considers the order of occurrence of events.
 Although the \FThandbook defines these new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
@@ -750,7 +754,7 @@ Also, does such a model:
 %In this work we present an algebra, called \acf{algebra}, defined  denota
 \adnote{Continue from here: what's denotational semantics?}
 
-In this work we present an algebra, called \acf{algebra}, to analyse acceptance criteria of \acp{FT} with ordering of fault events (\ac{TFT} and \ac{DFT}).
+In this work we present an algebra, called \acf{algebra}, to express ordering of fault events (\ac{TFT} and \ac{DFT}), enabling analysis of acceptance criteria of \acp{FT}.
 The laws of \ac{algebra} are given in a denotational semantics based on sets of lists of distinct elements.
 \Theac{algebra} aims at answering the \cref{question:mathematical-model,question:ordering-representation}.
 The analysis of acceptance criteria is a decision problem and we use first-order logic and \isabellehol as verification tool.
@@ -1141,7 +1145,6 @@ This removes components without impacting the overall failure probability, which
 In important stages of critical systems, \ac{FTA} plays an essential role.
 At least three dependability means\index{Dependability!means to attain} can be achieved using \acp{FT}:
 %
-\todo{Improve the relations of dependability and FTA}
 \begin{description}
   \item[Removal.]
   \Iac{FTA} calculates the probability of failure of a subsystem.
@@ -2816,6 +2819,15 @@ The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer 
 %\end{subequations}
 %
 %From \eqref{thm:xbefore-not-idempotent} and~\eqref{thm:and_xbefore_equiv_or_xbefore}, intersection and \ac{XBefore} also have an absorption law.
+
+\section{Formal acceptance criteria}
+\label{sec:formal-acceptance-criteria}
+
+In \cref{sec:fault-trees} we showed the kind of results that are obtained in \ac{FTA}.
+In this section we show how to formalize two kinds of acceptance criteria of \acp{FT}: (i) \ac{MCSeq}, the quantity of faults in the minimal sequences that cause the root failure, and (ii) root probability, provided the probability of sequences occurrences.
+These criteria are representative and other criteria can be modelled similarly.
+
+
 
 \section{Propositions}
 \label{sec:propositions}
