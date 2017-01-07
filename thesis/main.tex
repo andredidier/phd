@@ -2858,13 +2858,19 @@ The probabilities for other operators, are given as usual:
 %
 The \ac{NOT} operator is a special case in the probability analysis.
 When analysing \acp{FT}, the probability of a component be functional is near $1$, which causes the probability to be ignored in general.
-The \ac{NOT} operator when combined with any other (\ac{AND}, \ac{OR}, and \ac{XBefore}) results on a nearly safe approximation to $1$:
-\begin{align*}
+The \ac{NOT} operator when combined with any other (\ac{AND}, \ac{OR}, and \ac{XBefore}) results on a nearly safe approximation to $1$, for variables $a$ and $b$:
+\begin{subequations}
+\begin{align}
 \probabilityt{\lnot a \land b} &= \probabilityt{\lnot a} \times \probabilityt{b} \approx \probabilityt{b}\\
 \probabilityt{\lnot a \lor b}  &= \probabilityt{\lnot a} + \probabilityt{b} - \probabilityt{\lnot a} \times \probabilityt{b} \approx 1\\
-\probabilityt{\xbefore{\lnot a}{b}} &\approx \probabilityt{b} \text{(see \cref{eq:pand-probability})}
-\end{align*}
+\probabilityt{\xbefore{\lnot a}{b}} &\approx \probabilityt{b} ~\text{(see \cref{eq:pand-probability})}\label{eq:prob-not-xbefore}\\
+\probabilityt{\xbefore{a}{\lnot b}} &\approx \probabilityt{a} ~\text{(see \cref{eq:pand-probability})}\label{eq:prob-xbefore-not}
+\end{align}
+\end{subequations}
 
+\Cref{eq:prob-not-xbefore,eq:prob-xbefore-not} follow the same approximation shown in the work reported in~\cite{Andrews2001}.
+The probability of a component be in an operational state before the failure of another is \emph{approximately} the probability of a failure in the second.
+Similarly, the probability of a component fail before the operational state of another is \emph{approximately} the probability of the failure of the first.
 
 \begin{definition}[Root probability]
 Given...
