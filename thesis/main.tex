@@ -387,6 +387,11 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\probabilityop{\ensuremath \Pr}
 \newcommand{\probability}[1]{\ensuremath \probabilityop\left\{#1\right\}}
 \newcommand{\probabilityt}[1]{\ensuremath \probabilityop\left\{#1\right\}^{<t}}
+\def\mcseqop{\ensuremath\operatorname{\mathrm{MCSeq}}}
+\newcommand{\mcseq}[1]{\ensuremath\mcseqop\left(#1\right)}
+\def\Minop{\ensuremath\mathrm{Min}}
+\newcommand{\Min}[1]{\ensuremath\Minop\left(#1\right)}
+\newcommand{\lengthacceptance}[2]{\ensuremath\length{#1}^{\le#2}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2830,15 +2835,32 @@ These criteria are representative and other criteria can be modelled similarly.
 
 Using the denotational semantics of \ac{algebra}, the \ac{MCSeq} are the lists with least length, because all list have no repeated elements and each list represent a possible combination the leads to a failure.
 
-\begin{definition}[Minimal cut sequence]
-Given ...
-%TODO
-\todo{Continuar daqui}
+\begin{definition}[Minimal cut sequences]
+Let $F$ be a formula in \ac{algebra} and $L$ the denotational semantics of $F$ (a set of \distinctlists), the minimal cut sequences $\mcseqop$ of $F$ is:
+%
+\begin{equation}
+\mcseq{F} = \left\{ xs \middle| xs \in L \bullet \length{xs} = minL \right\}
+\end{equation}
+%
+where
+\[
+minL = \Min{\left\{ \length{xs} \middle | xs \in L\right\}}
+\]
+%
+and $\Minop$ returns the smallest number in the given set.
 \end{definition}
 
-The acceptance criteria
+The acceptance criteria for a structure expression (written as a formula $F$) is given in terms of the minimal cut sequences length.
 
-Following the same idea with denotational semantics, we can calculate root probability from a formula in \ac{algebra}.
+\begin{definition}[Minimal cut sequences length]
+Let $F$ be a formula in \ac{algebra} and $L$ the denotational semantics of $F$, the qualitative acceptance criteria of the minimal cut sequences length be less than or equal to $n$ is:
+
+\begin{equation}
+\lengthacceptance{F}{n} = \Min{\left\{ \length{xs} \middle | xs \in L\right\}} \le n
+\end{equation}
+\end{definition}
+
+Following the use of the denotational semantics, we can calculate the root probability from a formula in \ac{algebra}.
 The work reported in~\cite{ADH2003} shows how to calculate the probability of \iac{PAND} gate:
 \begin{align}
 P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
@@ -2847,14 +2869,55 @@ P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
 %
 where $P_i$ is the probability of the occurrence of the $i$th fault (input), and $T_i$ is the time that the $i$th fault occurs.
 
+Each list in the denotational semantics of \ac{algebra} is equivalent to \iac{PAND} gate in \cref{eq:pand-probability}.
+For example, given the formula $\xbefore{\left(\xbefore{\var{f_1}}{\var{f_2}}\right)}{\var{f_3}}$ (with all $f_i$ independent and distinct), its denotational semantics is $\left\{\left[f_1,f_2,f_3\right]\right\}$, hence, considering $T_i$ the time that $f_i$ occurs, the probability of the formula is is given by the probability of the list $\left[f_1,f_2,f_3\right]$:
+\begin{align*}
+\probabilityt{\left[f_1,f_2,f_3\right]} = &\probabilityt{\left[f_1,f_2\right]} \times \probability{\left[f_2,f_3\right]}\\
+=& \left(\probabilityt{T_1 < T_2}\right) \times \left(\probabilityt{T_2 < T_3}\right)
+\end{align*}
+
+The $\le$ can be safely replaced by $<$ in the formula because $T_1 = T_2$ if, and only if, the faults are the same or are dependent.
+
+The formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ (considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is:
+%
+\begin{align*}
+\probabilityt{\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}} = & \probabilityt{\left[f_1, f_2\right]} + \probabilityt{\left[f_2, f_1\right]} \\
+& - \probabilityt{\left[f_1, f_2\right]} \times \probabilityt{\left[f_2, f_1\right]}\\
+= & \probabilityt{\left[f_1, f_2\right]} + \probabilityt{\left[f_2, f_1\right]}\\
+= & \probabilityt{T_1 < T_2} + \probabilityt{T_2 < T_1}
+\end{align*}
+%
+The term $\probabilityt{\left[f_1, f_2\right]} \times \probabilityt{\left[f_2, f_1\right]}$ can be safely removed because both situations cannot occur simultaneously.
+
+\begin{definition}[Probability of a formula in \ac{algebra}]
+Let $F$ be a formula in \ac{algebra}, and $L$ its denotational semantics (a set of \distinctlists), then:
+%
+\begin{equation}
+\probabilityt{F} = \sum_{xs \in L}\probabilityt{xs}
+\end{equation}
+\end{definition}
+
+The probability of a formula like $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ must be equal to the probability of a formula $\var{f_1} \land \var{f_2}$, as a these formulas are equivalent accordingly to \cref{thm:xbefore-sup-equiv-inf}.
+
+\begin{Theo}
+Let $f_1$ and $f_2$ be distinct faults and independent events, then
+\[
+\probabilityt{\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)} = \probabilityt{\var{f_1} \land \var{f_2}}
+\]
+\end{Theo}
+
+%%%%%%%%%%%%%%%%%%Apagar daqui em diante.
 In \ac{algebra}, we abstract the probability calculation, assuming that the probability of all \ac{XBefore} relations and the probability of individual faults are given.
 For example, if a system have three faults $a$, $b$, and $c$, and a failure formula is given by $\left(a \land c\right) \lor \left(\xbefore{a}{b}\right)$, then the needed probabilities to calculate $\probabilityt{\left(a \land c\right) \lor \left(\xbefore{a}{b}\right)}$ are $\probabilityt{\xbefore{a}{b}}$, $\probabilityt{a}$ and $\probabilityt{c}$.
+The probability of $\probabilityt{\xbefore{a}{b}}$ can be calculated as shown in \cref{eq:pand-probability}, assuming $T_1$ the time fault $a$ occurs, and $T_2$ the time $b$ occurs.
 The probabilities for other operators, are given as usual:
-\begin{align*}
+\begin{subequations}
+\begin{align}
 \probabilityt{a \land b} &= \probabilityt{a} \times \probabilityt{b}\\
 \probabilityt{a \lor b} &= \probabilityt{a} + \probabilityt{b} -\probabilityt{a} \times \probabilityt{b}\\
-\probabilityt{\lnot a} &= 1 - \probabilityt{a}
-\end{align*}
+\probabilityt{\lnot a} &= 1 - \probabilityt{a} \approx 1
+\end{align}
+\end{subequations}
 %
 The \ac{NOT} operator is a special case in the probability analysis.
 When analysing \acp{FT}, the probability of a component be functional is near $1$, which causes the probability to be ignored in general.
@@ -2869,8 +2932,8 @@ The \ac{NOT} operator when combined with any other (\ac{AND}, \ac{OR}, and \ac{X
 \end{subequations}
 
 \Cref{eq:prob-not-xbefore,eq:prob-xbefore-not} follow the same approximation shown in the work reported in~\cite{Andrews2001}.
-The probability of a component be in an operational state before the failure of another is \emph{approximately} the probability of a failure in the second.
-Similarly, the probability of a component fail before the operational state of another is \emph{approximately} the probability of the failure of the first.
+The probability of an operational state before a failure is \emph{approximately} the probability of the failure---\cref{eq:prob-not-xbefore}.
+Similarly, the probability of a failure before an operational state is \emph{approximately} the probability of the failure---\cref{eq:prob-xbefore-not}.
 
 \begin{definition}[Root probability]
 Given...
