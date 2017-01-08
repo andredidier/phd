@@ -2861,10 +2861,10 @@ Let $F$ be a formula in \ac{algebra} and $L$ the denotational semantics of $F$, 
 \end{definition}
 
 Following the use of the denotational semantics, we can calculate the root probability from a formula in \ac{algebra}.
-The work reported in~\cite{ADH2003} shows how to calculate the probability of \iac{PAND} gate:
+The work reported in~\cite{FAR1976} shows how to calculate the probability of \iac{PAND} gate:
 \begin{align}
 P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
-& = \int_{x_1 = 0}^t P'_1\left(x_1\right)\left[P_2\left(t\right) - P_2\left(x_1\right)\right]d x_1\label{eq:pand-probability}
+& = \int_0^t P'_1(x) P_2(x) dx\label{eq:pand-probability}
 \end{align}
 %
 where $P_i$ is the probability of the occurrence of the $i$th fault (input), and $T_i$ is the time that the $i$th fault occurs.
@@ -2880,14 +2880,36 @@ The $\le$ can be safely replaced by $<$ in the formula because $T_1 = T_2$ if, a
 
 The formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ (considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is:
 %
-\begin{align*}
-\probabilityt{\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}} = & \probabilityt{\left[f_1, f_2\right]} + \probabilityt{\left[f_2, f_1\right]} \\
-& - \probabilityt{\left[f_1, f_2\right]} \times \probabilityt{\left[f_2, f_1\right]}\\
-= & \probabilityt{\left[f_1, f_2\right]} + \probabilityt{\left[f_2, f_1\right]}\\
-= & \probabilityt{T_1 < T_2} + \probabilityt{T_2 < T_1}
-\end{align*}
+\begin{align}
+\probabilityt{\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}} = & \probabilityt{\left[f_1, f_2\right]} + \probabilityt{\left[f_2, f_1\right]} \nonumber\\
+& - \probabilityt{\left[f_1, f_2\right]} \times \probabilityt{\left[f_2, f_1\right]}\nonumber\\
+= & \probabilityt{\left[f_1, f_2\right]} + \probabilityt{\left[f_2, f_1\right]}\nonumber\\
+= & \probabilityt{T_1 < T_2} + \probabilityt{T_2 < T_1}\label{eq:prob-xbefore-sup-equiv-inf}
+\end{align}
 %
 The term $\probabilityt{\left[f_1, f_2\right]} \times \probabilityt{\left[f_2, f_1\right]}$ can be safely removed because both situations cannot occur simultaneously.
+
+The probability of a formula like $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ must be equal to the probability of a formula $\var{f_1} \land \var{f_2}$, as a these formulas are equivalent accordingly to \cref{thm:xbefore-sup-equiv-inf}.
+
+\begin{lemma}
+Let $f_1$ and $f_2$ be distinct faults and independent events, then
+\[
+\probabilityt{\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)} = \probabilityt{\var{f_1} \land \var{f_2}}
+\]
+\end{lemma}
+\begin{proof}
+Let $P_i$ be the probability of occurrence of fault $i$ before $t$ ($P_i(t) = \probabilityt{T_i}$), and $T_i$ the time fault $i$ occurs.
+From \cref{eq:prob-xbefore-sup-equiv-inf}
+\begin{align*}
+\probabilityt{T_1 < T_2} + \probabilityt{T_2 < T_1} = &
+\int_0^t P_1'(x) P_2(x) dx +
+\int_0^t P_2'(x) P_1(x) dx \\
+%
+= & \int_0^t \left(P_1'(x) P_2(x) + P_2'(x) P_1(x)\right) dx\\
+= & \int_0^t \left(P_1(x) P_2(x)\right)' dx\\
+= & P_1(t) P_2(t)
+\end{align*}
+\end{proof}
 
 \begin{definition}[Probability of a formula in \ac{algebra}]
 Let $F$ be a formula in \ac{algebra}, and $L$ its denotational semantics (a set of \distinctlists), then:
@@ -2897,14 +2919,9 @@ Let $F$ be a formula in \ac{algebra}, and $L$ its denotational semantics (a set 
 \end{equation}
 \end{definition}
 
-The probability of a formula like $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ must be equal to the probability of a formula $\var{f_1} \land \var{f_2}$, as a these formulas are equivalent accordingly to \cref{thm:xbefore-sup-equiv-inf}.
-
-\begin{Theo}
-Let $f_1$ and $f_2$ be distinct faults and independent events, then
-\[
-\probabilityt{\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)} = \probabilityt{\var{f_1} \land \var{f_2}}
-\]
-\end{Theo}
+The interesting part behind the probabilistic calculus over the denotational semantics is that it is only about ordering of events.
+It means that even if a formula contains \iac{NOT} operator, we still safely obtain a probability value, without concerning about complement probabilities as tackled in~\cite{Andrews2001}.
+For example, the $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$ has probability: $\probabilityt{\left[f_1,f_2\right]} + \probabilityt{\left[f_2,f_1\right]}$.
 
 %%%%%%%%%%%%%%%%%%Apagar daqui em diante.
 In \ac{algebra}, we abstract the probability calculation, assuming that the probability of all \ac{XBefore} relations and the probability of individual faults are given.
