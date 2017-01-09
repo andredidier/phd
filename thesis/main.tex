@@ -387,11 +387,20 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\probabilityop{\ensuremath \Pr}
 \newcommand{\probability}[1]{\ensuremath \probabilityop\left\{#1\right\}}
 \newcommand{\probabilityt}[1]{\ensuremath \probabilityop\left\{#1\right\}^{<t}}
+\def\denotationalprobop{\ensuremath\mathrm{DPr}}
+\newcommand{\denotationalprob}[2]{\ensuremath \denotationalprobop_{#1}\left\{#2\right\}}
 \def\mcseqop{\ensuremath\operatorname{\mathrm{MCSeq}}}
 \newcommand{\mcseq}[1]{\ensuremath\mcseqop\left(#1\right)}
 \def\Minop{\ensuremath\mathrm{Min}}
 \newcommand{\Min}[1]{\ensuremath\Minop\left(#1\right)}
 \newcommand{\lengthacceptance}[2]{\ensuremath\length{#1}^{\le#2}}
+\newcommand{\fiti}[1]{\ensuremath P'_{#1}\left(t_{#1}\right)}
+\newcommand{\Fit}[1]{\ensuremath P_{#1}\left(t\right)}
+\newcommand{\Fiti}[1]{\ensuremath P_{#1}\left(t_{#1}\right)}
+\newcommand{\vari}[1]{\ensuremath\var{f_{#1}}}
+\def\filterop{\ensuremath\mathrm{filter}}
+\newcommand{\filter}[2]{\ensuremath\filterop_{#1}\left(#2\right)}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2826,17 +2835,18 @@ The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer 
 %
 %From \eqref{thm:xbefore-not-idempotent} and~\eqref{thm:and_xbefore_equiv_or_xbefore}, intersection and \ac{XBefore} also have an absorption law.
 
-\section{Formal acceptance criteria}
-\label{sec:formal-acceptance-criteria}
+\section{Qualitative and quantitative properties}
+\label{sec:qualitative-quantitative-properties}
 
 In \cref{sec:fault-trees} we showed the kind of results that are obtained in \ac{FTA}.
-In this section we show how to formalize two kinds of acceptance criteria of \acp{FT}: (i) \ac{MCSeq}, the quantity of faults in the minimal sequences that cause the root failure, and (ii) root probability, provided the probability of sequences occurrences.
-These criteria are representative and other criteria can be modelled similarly.
+In this section we show how to formalize two kinds of properties of \acp{FT}: (i) \ac{MCSeq}, the quantity of faults in the minimal sequences that cause the root failure, and (ii) root probability, provided the probability of sequences occurrences.
+These properties are representative and other criteria can be modelled similarly.
 
-Using the denotational semantics of \ac{algebra}, the \ac{MCSeq} are the lists with least length, because all list have no repeated elements and each list represent a possible combination the leads to a failure.
+The denotational semantics of \ac{algebra} is a set of \distinctlists, thus each list has no repeated elements and each list represent a possible combination of faults that causes the root failure.
+\Acp{MCSeq} are the lists with least length, thus have minimal lengths of the lists.
 
 \begin{definition}[Minimal cut sequences]
-Let $F$ be a formula in \ac{algebra} and $L$ the denotational semantics of $F$ (a set of \distinctlists), the minimal cut sequences $\mcseqop$ of $F$ is:
+Let $F$ be a formula in \ac{algebra} and $L$ the denotational semantics of $F$, the minimal cut sequences $\mcseqop$ of $F$ are:
 %
 \begin{equation}
 \mcseq{F} = \left\{ xs \middle| xs \in L \bullet \length{xs} = minL \right\}
@@ -2850,6 +2860,106 @@ minL = \Min{\left\{ \length{xs} \middle | xs \in L\right\}}
 and $\Minop$ returns the smallest number in the given set.
 \end{definition}
 
+Following the use of the denotational semantics, we can calculate the root probability from a formula in \ac{algebra}.
+The work reported in~\cite{Merle2010} shows how to calculate the probability of \iac{PAND} gate:
+\begin{align}
+P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
+& = \int_0^t P'_2(x) P_1(x) dx\label{eq:pand-probability}
+\end{align}
+%
+where $P_i$ is the probability of the occurrence of the $i$th fault (cumulative distribution function), and $T_i$ is the time that the $i$th fault occurs.
+The general case (reported in~\cite{FAR1976}) of a \ac{PAND} gate with $n$ inputs is:
+%
+\begin{align}
+\probability{\left[f_n,f_{n-1}\ldots,f_2,f_1\right]} = &\int_0^t\fiti{1}\int_0^{t_1}\fiti{2}\ldots\int_0^{t_{n-2}}\fiti{n-1}\nonumber\\
+& \int_0^{t_{n-1}}\fiti{n} dt_n dt_{n-1}\ldots dt_2 dt_1
+\end{align}
+
+\begin{sloppypar}
+The probability of occurrence in each list in the denotational semantics of \ac{algebra} uses the probability in the \ac{PAND} gate.
+The repeated situations must be removed.
+For example, $\probability{\left[f_1,f_2\right]}$ contains the situations of $\probability{\left[f_1,f_2,f_3\right]}$.
+To isolate these cases, we use the filter notation, grouping all lists that contains repeated situations to calculate probability:
+The probability of a list $xs$ in the denotational semantics of \ac{algebra} $L$ is:
+\begin{align}
+\denotationalprob{L}{xs} = \probability{xs} - 
+\sum_{\left\{ ys | ys \in L - \left\{xs\right\} \bullet xs = \filter{xs}{ys}\right\}} \probability{ys}\label{eq:denotational-probability}
+\end{align}
+%
+where $\filter{xs}{ys}$ removes all elements from $ys$ that are not in $xs$.
+For example, $\filter{\left[f_1,f_2\right]}{\left[f_1, f_2, f_3\right]}$ = \left[f_1,f_2\right].
+\end{sloppypar}
+
+We use the traditional probabilities calculations~\cite{Merle2010} as reference, and to calculate probabilities of formulas in \ac{algebra}.
+\begin{subequations}
+\begin{align}
+\probability{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
+\probability{\vari{1} \lor \vari{2}} = & \Fit{1} + \Fit{2} - \Fit{1} \times \Fit{2}
+\end{align}
+\end{subequations}
+
+The probability in a formula in \ac{algebra} is calculated using its denotational semantics as \acp{OR} of \acp{XBefore}.
+For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$, considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is:
+%
+\begin{align}
+\denotationalprob{L}{\left[f_1, f_2\right], \left[f_2, f_1\right]} =&
+\denotationalprob{L}{\left[f_1,f_2\right]} + \denotationalprob{L}{\left[f_2,f_1\right]} - \nonumber\\
+&\denotationalprob{L}{\left[f_1,f_2\right]} \times \denotationalprob{L}{\left[f_2,f_1\right]} \nonumber\\
+%%%%
+=&\denotationalprob{L}{\left[f_1,f_2\right]} + \denotationalprob{L}{\left[f_2,f_1\right]} & \text{ignored $\times$} \nonumber\\
+%%%%
+= &\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]} & \text{\cref{eq:denotational-probability}, both $\sum$ is $0$}\nonumber\\
+%%%%
+=&\int_0^t P'_2(x) P_1(x) dx + \int_0^t P'_1(x) P_2(x) dx & \text{by \cref{eq:pand-probability}} \nonumber\\
+%%%%
+= & \int_0^t \left(P'_2(x) P_1(x) + P'_1(x) P_2(x)\right) dx & \text{by sum of $\int$} \nonumber\\
+%%%%
+= & \int_0^t \left(P_1(x) P_2(x)\right)' dx & \text{by inv. deriv. product} \nonumber\\
+%%%%
+= & P_1(t) \times P_2(t)\label{eq:prob-xbefore-sup-equiv-inf}
+\end{align}
+%
+The term $\denotationalprob{L}{\left[f_1, f_2\right]} \times \denotationalprob{L}{\left[f_2, f_1\right]}$ can be safely removed because both situations cannot occur simultaneously.
+
+
+In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$), shown in \cref{eq:and-probability}.
+This is expected as these two formulas are equivalent, as shown in \cref{thm:xbefore-sup-equiv-inf}.
+
+\begin{definition}[Probability of a formula in \ac{algebra}]
+Let $F$ be a formula in \ac{algebra}, and $L$ its denotational semantics, then:
+%
+\begin{equation}
+\label{eq:algebra-probability}
+\probability{F} = \sum_{xs \in L}\denotationalprob{L}{xs}
+\end{equation}
+\end{definition}
+
+The interesting part behind the probabilistic calculus over the denotational semantics is that it is only about ordering of events.
+It means that even if a formula contains \iac{NOT} operator, we still safely obtain a probability value, without concerning about complement probabilities as tackled in~\cite{Andrews2001}.
+For example, the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$ has probability $P_1(t) \times P_2(t)$.
+
+Finally, using \cref{eq:algebra-probability}, we demonstrate the equivalence to probability of \iac{OR} operator, calculated using the denotational semantics:
+%
+\begin{align}
+\probability{\vari{1} \lor \vari{2}} = & \denotationalprob{L}{
+  \left[f_1\right],
+  \left[f_2\right],
+  \left[f_1,f_2\right],
+  \left[f_2,f_1\right]
+}\nonumber\\
+%%%%%%%%%%%
+= &\probability{\left[f_1\right]} - \probability{\left[f_1,f_2\right]} - \probability{\left[f_2,f_1\right]} +\nonumber\\
+&\probability{\left[f_2\right]} - \probability{\left[f_1,f_2\right]} - \probability{\left[f_2,f_1\right]} +\nonumber\\
+&\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]}\nonumber\\
+%%%%%%%%%%%
+= &\probability{\left[f_1\right]} + \probability{\left[f_2\right]} - \left(\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]}\right)\nonumber\\
+%%%%%%%%%%%
+= &P_1(t) + P_2(t) - P_1(t) \times P_2(t)
+\end{align}
+
+\section{Formal acceptance criteria}
+\label{sec:formal-acceptance-criteria}
+
 The acceptance criteria for a structure expression (written as a formula $F$) is given in terms of the minimal cut sequences length.
 
 \begin{definition}[Minimal cut sequences length]
@@ -2860,68 +2970,6 @@ Let $F$ be a formula in \ac{algebra} and $L$ the denotational semantics of $F$, 
 \end{equation}
 \end{definition}
 
-Following the use of the denotational semantics, we can calculate the root probability from a formula in \ac{algebra}.
-The work reported in~\cite{FAR1976} shows how to calculate the probability of \iac{PAND} gate:
-\begin{align}
-P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
-& = \int_0^t P'_1(x) P_2(x) dx\label{eq:pand-probability}
-\end{align}
-%
-where $P_i$ is the probability of the occurrence of the $i$th fault (input), and $T_i$ is the time that the $i$th fault occurs.
-
-Each list in the denotational semantics of \ac{algebra} is equivalent to \iac{PAND} gate in \cref{eq:pand-probability}.
-For example, given the formula $\xbefore{\left(\xbefore{\var{f_1}}{\var{f_2}}\right)}{\var{f_3}}$ (with all $f_i$ independent and distinct), its denotational semantics is $\left\{\left[f_1,f_2,f_3\right]\right\}$, hence, considering $T_i$ the time that $f_i$ occurs, the probability of the formula is is given by the probability of the list $\left[f_1,f_2,f_3\right]$:
-\begin{align*}
-\probabilityt{\left[f_1,f_2,f_3\right]} = &\probabilityt{\left[f_1,f_2\right]} \times \probability{\left[f_2,f_3\right]}\\
-=& \left(\probabilityt{T_1 < T_2}\right) \times \left(\probabilityt{T_2 < T_3}\right)
-\end{align*}
-
-The $\le$ can be safely replaced by $<$ in the formula because $T_1 = T_2$ if, and only if, the faults are the same or are dependent.
-
-The formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ (considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is:
-%
-\begin{align}
-\probabilityt{\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}} = & \probabilityt{\left[f_1, f_2\right]} + \probabilityt{\left[f_2, f_1\right]} \nonumber\\
-& - \probabilityt{\left[f_1, f_2\right]} \times \probabilityt{\left[f_2, f_1\right]}\nonumber\\
-= & \probabilityt{\left[f_1, f_2\right]} + \probabilityt{\left[f_2, f_1\right]}\nonumber\\
-= & \probabilityt{T_1 < T_2} + \probabilityt{T_2 < T_1}\label{eq:prob-xbefore-sup-equiv-inf}
-\end{align}
-%
-The term $\probabilityt{\left[f_1, f_2\right]} \times \probabilityt{\left[f_2, f_1\right]}$ can be safely removed because both situations cannot occur simultaneously.
-
-The probability of a formula like $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ must be equal to the probability of a formula $\var{f_1} \land \var{f_2}$, as a these formulas are equivalent accordingly to \cref{thm:xbefore-sup-equiv-inf}.
-
-\begin{lemma}
-Let $f_1$ and $f_2$ be distinct faults and independent events, then
-\[
-\probabilityt{\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)} = \probabilityt{\var{f_1} \land \var{f_2}}
-\]
-\end{lemma}
-\begin{proof}
-Let $P_i$ be the probability of occurrence of fault $i$ before $t$ ($P_i(t) = \probabilityt{T_i}$), and $T_i$ the time fault $i$ occurs.
-From \cref{eq:prob-xbefore-sup-equiv-inf}
-\begin{align*}
-\probabilityt{T_1 < T_2} + \probabilityt{T_2 < T_1} = &
-\int_0^t P_1'(x) P_2(x) dx +
-\int_0^t P_2'(x) P_1(x) dx \\
-%
-= & \int_0^t \left(P_1'(x) P_2(x) + P_2'(x) P_1(x)\right) dx\\
-= & \int_0^t \left(P_1(x) P_2(x)\right)' dx\\
-= & P_1(t) P_2(t)
-\end{align*}
-\end{proof}
-
-\begin{definition}[Probability of a formula in \ac{algebra}]
-Let $F$ be a formula in \ac{algebra}, and $L$ its denotational semantics (a set of \distinctlists), then:
-%
-\begin{equation}
-\probabilityt{F} = \sum_{xs \in L}\probabilityt{xs}
-\end{equation}
-\end{definition}
-
-The interesting part behind the probabilistic calculus over the denotational semantics is that it is only about ordering of events.
-It means that even if a formula contains \iac{NOT} operator, we still safely obtain a probability value, without concerning about complement probabilities as tackled in~\cite{Andrews2001}.
-For example, the $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$ has probability: $\probabilityt{\left[f_1,f_2\right]} + \probabilityt{\left[f_2,f_1\right]}$.
 
 %%%%%%%%%%%%%%%%%%Apagar daqui em diante.
 In \ac{algebra}, we abstract the probability calculation, assuming that the probability of all \ac{XBefore} relations and the probability of individual faults are given.
