@@ -1,0 +1,710 @@
+%
+\begin{isabellebody}%
+\setisabellecontext{Sliceable}%
+%
+\isamarkupsection{Sliceable%
+}
+\isamarkuptrue%
+%
+\begin{isamarkuptext}%
+\label{sec:theory-sliceable}%
+\end{isamarkuptext}\isamarkuptrue%
+%
+\isadelimtheory
+%
+\endisadelimtheory
+%
+\isatagtheory
+%
+\endisatagtheory
+{\isafoldtheory}%
+%
+\isadelimtheory
+%
+\endisadelimtheory
+%
+\begin{isamarkuptext}%
+In this section we present a class to express sub-structures for a data type, and laws over such a class.
+  For example, for lists, \emph{sliceable} defines operators and theorems to obtain sublists.%
+\end{isamarkuptext}\isamarkuptrue%
+\isacommand{class}\isamarkupfalse%
+\ sliceable\ {\isacharequal}\ \isanewline
+\ \ \isakeyword{fixes}\ slice\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ nat\ {\isasymRightarrow}\ nat\ {\isasymRightarrow}\ {\isacharprime}a{\isachardoublequoteclose}\ {\isacharparenleft}{\isachardoublequoteopen}{\isacharparenleft}{\isadigit{3}}{\isacharunderscore}{\isasymdagger}{\isacharunderscore}{\isachardot}{\isachardot}{\isacharunderscore}{\isacharparenright}{\isachardoublequoteclose}\ \ {\isacharbrackleft}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharbrackright}\ {\isadigit{8}}{\isadigit{0}}{\isacharparenright}\isanewline
+\ \ \isakeyword{fixes}\ size\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ nat{\isachardoublequoteclose}\ {\isacharparenleft}{\isachardoublequoteopen}{\isacharparenleft}{\isadigit{1}}{\isacharhash}{\isacharunderscore}{\isacharparenright}{\isachardoublequoteclose}\ {\isadigit{6}}{\isadigit{5}}{\isacharparenright}\isanewline
+\ \ \isakeyword{fixes}\ empty{\isacharunderscore}inter\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ {\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{fixes}\ disjoint\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\isanewline
+\ \ \isanewline
+\ \ \isakeyword{assumes}\ slice{\isacharunderscore}none{\isacharcolon}\ {\isachardoublequoteopen}x{\isasymdagger}{\isadigit{0}}{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}x{\isacharparenright}\ {\isacharequal}\ x{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ empty{\isacharunderscore}seq{\isacharunderscore}inter\ {\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ \isanewline
+\ \ \ \ {\isachardoublequoteopen}disjoint\ x\ {\isasymLongrightarrow}\ c\ {\isasymle}\ k\ {\isasymLongrightarrow}\ empty{\isacharunderscore}inter\ {\isacharparenleft}x{\isasymdagger}{\isadigit{0}}{\isachardot}{\isachardot}c{\isacharparenright}\ {\isacharparenleft}x{\isasymdagger}k{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}x{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ size{\isacharunderscore}slice{\isacharcolon}\ {\isachardoublequoteopen}size\ {\isacharparenleft}x{\isasymdagger}i{\isachardot}{\isachardot}j{\isacharparenright}\ {\isacharequal}\ max\ {\isadigit{0}}\ {\isacharparenleft}{\isacharparenleft}min\ j\ {\isacharparenleft}size\ x{\isacharparenright}{\isacharparenright}{\isacharminus}i{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ slice{\isacharunderscore}slice{\isacharcolon}\ {\isachardoublequoteopen}{\isacharparenleft}x{\isasymdagger}i{\isachardot}{\isachardot}j{\isacharparenright}{\isasymdagger}a{\isachardot}{\isachardot}b\ {\isacharequal}\ x{\isasymdagger}{\isacharparenleft}i{\isacharplus}a{\isacharparenright}{\isachardot}{\isachardot}{\isacharparenleft}min\ j\ {\isacharparenleft}i{\isacharplus}b{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ disjoint{\isacharunderscore}slice{\isacharunderscore}suc{\isacharcolon}\ \isanewline
+\ \ \ \ {\isachardoublequoteopen}disjoint\ x\ {\isasymLongrightarrow}\ i{\isasymnoteq}j\ {\isasymLongrightarrow}\ i\ {\isacharless}\ {\isacharparenleft}{\isacharhash}x{\isacharparenright}\ {\isasymLongrightarrow}\ j\ {\isacharless}\ {\isacharparenleft}{\isacharhash}x{\isacharparenright}\ {\isasymLongrightarrow}\ \isanewline
+\ \ \ \ x{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}Suc\ i{\isacharparenright}\ {\isasymnoteq}\ x{\isasymdagger}j{\isachardot}{\isachardot}{\isacharparenleft}Suc\ j{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ disjoint{\isacharunderscore}slice{\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ {\isachardoublequoteopen}disjoint\ x\ {\isasymLongrightarrow}\ disjoint\ {\isacharparenleft}x{\isasymdagger}i{\isachardot}{\isachardot}j{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{assumes}\ forall{\isacharunderscore}slice{\isacharunderscore}implies{\isacharunderscore}eq{\isacharcolon}\ {\isachardoublequoteopen}{\isacharparenleft}{\isacharhash}x{\isacharparenright}\ {\isacharequal}\ {\isacharparenleft}{\isacharhash}y{\isacharparenright}\ {\isasymand}\ {\isacharparenleft}{\isasymforall}i\ j{\isachardot}\ {\isacharparenleft}x{\isasymdagger}i{\isachardot}{\isachardot}j{\isacharparenright}\ {\isacharequal}\ \isanewline
+\ \ \ \ {\isacharparenleft}y{\isasymdagger}i{\isachardot}{\isachardot}j{\isacharparenright}{\isacharparenright}\ {\isasymlongleftrightarrow}\ {\isacharparenleft}x\ {\isacharequal}\ y{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \isanewline
+\isacommand{notation}\isamarkupfalse%
+\ {\isacharparenleft}latex\ \isakeyword{output}{\isacharparenright}\ slice\ \ {\isacharparenleft}{\isachardoublequoteopen}{\isacharparenleft}{\isadigit{3}}{\isacharunderscore}\isactrlbsub {\isacharbrackleft}{\isacharunderscore}{\isachardot}{\isachardot}{\isacharunderscore}{\isacharbrackright}\isactrlesub {\isacharparenright}{\isachardoublequoteclose}\ {\isacharbrackleft}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharbrackright}\ {\isadigit{8}}{\isadigit{0}}{\isacharparenright}%
+\begin{isamarkuptext}%
+Teste \isa{x\isactrlbsub {\isacharbrackleft}i{\isachardot}{\isachardot}j{\isacharbrackright}\isactrlesub }%
+\end{isamarkuptext}\isamarkuptrue%
+\isacommand{definition}\isamarkupfalse%
+\ slice{\isacharunderscore}right\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a{\isacharcolon}{\isacharcolon}sliceable\ {\isasymRightarrow}\ nat\ {\isasymRightarrow}\ {\isacharprime}a{\isachardoublequoteclose}\ {\isacharparenleft}{\isachardoublequoteopen}{\isacharparenleft}{\isadigit{2}}{\isacharunderscore}{\isasymdagger}{\isachardot}{\isachardot}{\isacharunderscore}{\isacharparenright}{\isachardoublequoteclose}\ {\isacharbrackleft}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharbrackright}\ {\isadigit{8}}{\isadigit{0}}{\isacharparenright}\isanewline
+\isakeyword{where}\ {\isachardoublequoteopen}slice{\isacharunderscore}right\ x\ i\ {\isacharequal}\ x{\isasymdagger}{\isadigit{0}}{\isachardot}{\isachardot}i{\isachardoublequoteclose}\isanewline
+\isanewline
+\isacommand{notation}\isamarkupfalse%
+\ {\isacharparenleft}{\isachardoublequoteopen}latex{\isachardoublequoteclose}{\isacharparenright}\ slice{\isacharunderscore}right\ \ {\isacharparenleft}{\isachardoublequoteopen}{\isacharparenleft}{\isadigit{2}}{\isacharunderscore}\isactrlbsub {\isacharbrackleft}{\isachardot}{\isachardot}{\isacharunderscore}{\isacharbrackright}\isactrlesub {\isacharparenright}{\isachardoublequoteclose}\ {\isacharbrackleft}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharbrackright}\ {\isadigit{8}}{\isadigit{0}}{\isacharparenright}\isanewline
+\isanewline
+\isanewline
+\isanewline
+\isacommand{definition}\isamarkupfalse%
+\ slice{\isacharunderscore}left\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a{\isacharcolon}{\isacharcolon}sliceable\ {\isasymRightarrow}\ nat\ {\isasymRightarrow}\ {\isacharprime}a{\isachardoublequoteclose}\ {\isacharparenleft}{\isachardoublequoteopen}{\isacharparenleft}{\isadigit{2}}{\isacharunderscore}{\isasymdagger}{\isacharunderscore}{\isachardot}{\isachardot}{\isacharparenright}{\isachardoublequoteclose}\ {\isacharbrackleft}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharbrackright}\ {\isadigit{8}}{\isadigit{0}}{\isacharparenright}\isanewline
+\isakeyword{where}\ {\isachardoublequoteopen}x{\isasymdagger}i{\isachardot}{\isachardot}\ {\isacharequal}\ x{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}\ x{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\isanewline
+\isacommand{notation}\isamarkupfalse%
+\ {\isacharparenleft}{\isachardoublequoteopen}latex{\isachardoublequoteclose}{\isacharparenright}\ slice{\isacharunderscore}left\ \ {\isacharparenleft}{\isachardoublequoteopen}{\isacharparenleft}{\isadigit{2}}{\isacharunderscore}\isactrlbsub {\isacharbrackleft}{\isacharunderscore}{\isachardot}{\isachardot}{\isacharbrackright}\isactrlesub {\isacharparenright}{\isachardoublequoteclose}\ {\isacharbrackleft}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharbrackright}\ {\isadigit{8}}{\isadigit{0}}{\isacharparenright}%
+\isamarkupsubsection{Disjoint elements and sliceable%
+}
+\isamarkuptrue%
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}right{\isacharunderscore}disjoint{\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ {\isachardoublequoteopen}disjoint\ xs\ {\isasymLongrightarrow}\ \isanewline
+\ \ disjoint\ {\isacharparenleft}slice{\isacharunderscore}right\ xs\ i{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}right{\isacharunderscore}def\isanewline
+\isacommand{by}\isamarkupfalse%
+\ simp%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\begin{isamarkuptext}%
+The notation for \isa{x\isactrlbsub {\isacharbrackleft}{\isachardot}{\isachardot}i{\isacharbrackright}\isactrlesub } is \isa{x\isactrlbsub {\isacharbrackleft}{\isachardot}{\isachardot}i{\isacharbrackright}\isactrlesub }%
+\end{isamarkuptext}\isamarkuptrue%
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}left{\isacharunderscore}disjoint{\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ {\isachardoublequoteopen}disjoint\ xs\ {\isasymLongrightarrow}\ \isanewline
+\ \ disjoint\ {\isacharparenleft}xs{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}left{\isacharunderscore}def\isanewline
+\isacommand{by}\isamarkupfalse%
+\ simp%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isamarkupsubsection{n-th element in a sliceable%
+}
+\isamarkuptrue%
+\isacommand{abbreviation}\isamarkupfalse%
+\ sliceable{\isacharunderscore}nth\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a{\isacharcolon}{\isacharcolon}sliceable\ {\isasymRightarrow}\ nat\ {\isasymRightarrow}\ {\isacharprime}a{\isachardoublequoteclose}\isanewline
+\isakeyword{where}\isanewline
+{\isachardoublequoteopen}sliceable{\isacharunderscore}nth\ l\ i\ {\isasymequiv}\ l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}Suc\ i{\isacharparenright}{\isachardoublequoteclose}%
+\isamarkupsubsection{Theorems for sliceable%
+}
+\isamarkuptrue%
+\isacommand{theorem}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ empty{\isacharunderscore}seq{\isacharunderscore}inter{\isacharunderscore}eq\ {\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}disjoint\ x\ {\isasymLongrightarrow}\ empty{\isacharunderscore}inter\ {\isacharparenleft}x{\isasymdagger}{\isachardot}{\isachardot}i{\isacharparenright}\ {\isacharparenleft}x{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ slice{\isacharunderscore}right{\isacharunderscore}def\ slice{\isacharunderscore}left{\isacharunderscore}def{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{theorem}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ empty{\isacharunderscore}seq{\isacharunderscore}sliced{\isacharunderscore}inter\ {\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}disjoint\ x\ {\isasymLongrightarrow}\ b\ {\isasymle}\ i\ {\isasymLongrightarrow}\ j\ {\isasymle}\ a\ {\isasymLongrightarrow}\ i\ {\isasymle}\ j\ {\isasymLongrightarrow}\ a\ {\isasymle}\ size\ x\ {\isasymLongrightarrow}\ \isanewline
+\ \ \ \ empty{\isacharunderscore}inter\ {\isacharparenleft}x{\isasymdagger}b{\isachardot}{\isachardot}i{\isacharparenright}\ {\isacharparenleft}x{\isasymdagger}j{\isachardot}{\isachardot}a{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{proof}\isamarkupfalse%
+{\isacharminus}\isanewline
+\ \ \isacommand{let}\isamarkupfalse%
+\ {\isacharquery}l\ {\isacharequal}\ {\isachardoublequoteopen}x{\isasymdagger}b{\isachardot}{\isachardot}a{\isachardoublequoteclose}\isanewline
+\ \ \isacommand{assume}\isamarkupfalse%
+\ lt{\isadigit{0}}{\isacharcolon}\ {\isachardoublequoteopen}i\ {\isasymle}\ j{\isachardoublequoteclose}\isanewline
+\ \ \isacommand{assume}\isamarkupfalse%
+\ lt{\isadigit{1}}{\isacharcolon}\ {\isachardoublequoteopen}j\ {\isasymle}\ a{\isachardoublequoteclose}\isanewline
+\ \ \isacommand{assume}\isamarkupfalse%
+\ lt{\isadigit{2}}{\isacharcolon}\ {\isachardoublequoteopen}b\ {\isasymle}\ i{\isachardoublequoteclose}\isanewline
+\ \ \isacommand{assume}\isamarkupfalse%
+\ lt{\isadigit{3}}{\isacharcolon}\ {\isachardoublequoteopen}a\ {\isasymle}\ size\ x{\isachardoublequoteclose}\isanewline
+\ \ \isacommand{assume}\isamarkupfalse%
+\ lt{\isadigit{4}}{\isacharcolon}\ {\isachardoublequoteopen}disjoint\ x{\isachardoublequoteclose}\isanewline
+\ \ \isacommand{have}\isamarkupfalse%
+\ blta{\isacharcolon}\ {\isachardoublequoteopen}b\ {\isasymle}\ a{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ lt{\isadigit{0}}\ lt{\isadigit{1}}\ lt{\isadigit{2}}\ \isacommand{by}\isamarkupfalse%
+\ simp\isanewline
+\ \ \isacommand{have}\isamarkupfalse%
+\ ilta{\isacharcolon}\ {\isachardoublequoteopen}i\ {\isasymle}\ a{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ lt{\isadigit{0}}\ lt{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
+\ simp\isanewline
+\ \ \isacommand{hence}\isamarkupfalse%
+\ {\isadigit{2}}{\isacharcolon}\ {\isachardoublequoteopen}empty{\isacharunderscore}inter\ {\isacharparenleft}{\isacharquery}l{\isasymdagger}{\isadigit{0}}{\isachardot}{\isachardot}{\isacharparenleft}i{\isacharminus}b{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}{\isacharquery}l{\isasymdagger}{\isacharparenleft}j{\isacharminus}b{\isacharparenright}{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}{\isacharquery}l{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\ \isanewline
+\ \ \ \ \isacommand{using}\isamarkupfalse%
+\ lt{\isadigit{0}}\ lt{\isadigit{4}}\ disjoint{\isacharunderscore}slice\ \isacommand{by}\isamarkupfalse%
+\ simp\isanewline
+\ \ \isacommand{hence}\isamarkupfalse%
+\ {\isachardoublequoteopen}empty{\isacharunderscore}inter\ {\isacharparenleft}{\isacharparenleft}x{\isasymdagger}b{\isachardot}{\isachardot}a{\isacharparenright}{\isasymdagger}{\isadigit{0}}{\isachardot}{\isachardot}{\isacharparenleft}i{\isacharminus}b{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}{\isacharparenleft}x{\isasymdagger}b{\isachardot}{\isachardot}a{\isacharparenright}{\isasymdagger}{\isacharparenleft}j{\isacharminus}b{\isacharparenright}{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}{\isacharquery}l{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\ \isacommand{by}\isamarkupfalse%
+\ simp\isanewline
+\ \ \isacommand{hence}\isamarkupfalse%
+\ {\isadigit{3}}{\isacharcolon}\ {\isachardoublequoteopen}empty{\isacharunderscore}inter\ {\isacharparenleft}x{\isasymdagger}b{\isachardot}{\isachardot}i{\isacharparenright}\ {\isacharparenleft}{\isacharparenleft}x{\isasymdagger}b{\isachardot}{\isachardot}a{\isacharparenright}{\isasymdagger}{\isacharparenleft}j{\isacharminus}b{\isacharparenright}{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}{\isacharparenleft}x{\isasymdagger}b{\isachardot}{\isachardot}a{\isacharparenright}{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\ \isacommand{using}\isamarkupfalse%
+\ ilta\ lt{\isadigit{2}}\isanewline
+\ \ \ \ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ slice{\isacharunderscore}slice\ min{\isacharunderscore}absorb{\isadigit{2}}{\isacharparenright}\isanewline
+\ \ \isacommand{hence}\isamarkupfalse%
+\ {\isadigit{3}}{\isacharcolon}\ {\isachardoublequoteopen}empty{\isacharunderscore}inter\ {\isacharparenleft}x{\isasymdagger}b{\isachardot}{\isachardot}i{\isacharparenright}\ {\isacharparenleft}x{\isasymdagger}j{\isachardot}{\isachardot}a{\isacharparenright}{\isachardoublequoteclose}\ \ \isanewline
+\ \ \ \ \isacommand{using}\isamarkupfalse%
+\ blta\ lt{\isadigit{0}}\ lt{\isadigit{2}}\ lt{\isadigit{3}}\ \isanewline
+\ \ \ \ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}auto\ simp\ add{\isacharcolon}\ size{\isacharunderscore}slice\ slice{\isacharunderscore}slice\ min{\isacharunderscore}def{\isacharparenright}\isanewline
+\ \ \isacommand{thus}\isamarkupfalse%
+\ {\isacharquery}thesis\ \isacommand{by}\isamarkupfalse%
+\ simp\isanewline
+\isacommand{qed}\isamarkupfalse%
+%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{theorem}\isamarkupfalse%
+\ distinct{\isacharunderscore}slice{\isacharunderscore}lte{\isacharunderscore}inter{\isacharunderscore}empty{\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}distinct\ l\ {\isasymLongrightarrow}\ i\ {\isasymle}\ j\ {\isasymLongrightarrow}\ \isanewline
+\ \ \ \ set\ {\isacharparenleft}take\ i\ {\isacharparenleft}drop\ {\isadigit{0}}\ l{\isacharparenright}{\isacharparenright}\ \isanewline
+\ \ \ \ {\isasyminter}\ set\ {\isacharparenleft}take\ {\isacharparenleft}length\ l{\isacharminus}i{\isacharparenright}\ {\isacharparenleft}drop\ i\ l{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ {\isacharbraceleft}{\isacharbraceright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ set{\isacharunderscore}take{\isacharunderscore}disj{\isacharunderscore}set{\isacharunderscore}drop{\isacharunderscore}if{\isacharunderscore}distinct\ {\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ size{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb{\isacharcolon}\ {\isachardoublequoteopen}{\isacharparenleft}{\isacharhash}{\isacharparenleft}l{\isasymdagger}{\isachardot}{\isachardot}i{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ min\ i\ {\isacharparenleft}{\isacharhash}l{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ slice{\isacharunderscore}right{\isacharunderscore}def\ sliceable{\isacharunderscore}class{\isachardot}size{\isacharunderscore}slice{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ size{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb{\isacharcolon}\ {\isachardoublequoteopen}{\isacharparenleft}{\isacharhash}{\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ {\isacharparenleft}{\isacharhash}l{\isacharparenright}{\isacharminus}i{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ slice{\isacharunderscore}left{\isacharunderscore}def\ sliceable{\isacharunderscore}class{\isachardot}size{\isacharunderscore}slice{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}right{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb{\isacharcolon}\ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}{\isachardot}{\isachardot}i{\isacharparenright}{\isasymdagger}j{\isachardot}{\isachardot}\ {\isacharequal}\ l{\isasymdagger}j{\isachardot}{\isachardot}i{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}left{\isacharunderscore}def\ slice{\isacharunderscore}right{\isacharunderscore}def\isanewline
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ {\isacharparenleft}mono{\isacharunderscore}tags{\isacharcomma}\ hide{\isacharunderscore}lams{\isacharparenright}\ add{\isachardot}left{\isacharunderscore}neutral\ add{\isachardot}right{\isacharunderscore}neutral\ max{\isacharunderscore}{\isadigit{0}}L\ \isanewline
+\ \ min{\isachardot}left{\isacharunderscore}idem\ size{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb\ slice{\isacharunderscore}right{\isacharunderscore}def\ \isanewline
+\ \ sliceable{\isacharunderscore}class{\isachardot}size{\isacharunderscore}slice\ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}none\ \isanewline
+\ \ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}slice{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}right{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb{\isacharunderscore}empty{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}i\ {\isasymle}\ j\ {\isasymLongrightarrow}\ {\isacharparenleft}{\isacharhash}{\isacharparenleft}{\isacharparenleft}l{\isasymdagger}{\isachardot}{\isachardot}i{\isacharparenright}{\isasymdagger}j{\isachardot}{\isachardot}{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ {\isadigit{0}}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ size{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb\ size{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}left{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenright}{\isasymdagger}{\isachardot}{\isachardot}j\ {\isacharequal}\ l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}i{\isacharplus}j{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}left{\isacharunderscore}def\ slice{\isacharunderscore}right{\isacharunderscore}def\isanewline
+\isacommand{proof}\isamarkupfalse%
+\ {\isacharminus}\isanewline
+\ \ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}l{\isacharparenright}{\isacharparenright}{\isasymdagger}{\isadigit{0}}{\isachardot}{\isachardot}j\ {\isacharequal}\ {\isacharparenleft}l{\isasymdagger}{\isadigit{0}}{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}l{\isacharparenright}{\isacharparenright}{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}i\ {\isacharplus}\ j{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}slice{\isacharparenright}\isanewline
+\ \ \isacommand{thus}\isamarkupfalse%
+\ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}l{\isacharparenright}{\isacharparenright}{\isasymdagger}{\isadigit{0}}{\isachardot}{\isachardot}j\ {\isacharequal}\ l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}i\ {\isacharplus}\ j{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}none{\isacharparenright}\isanewline
+\isacommand{qed}\isamarkupfalse%
+%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}right{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}{\isachardot}{\isachardot}i{\isacharparenright}{\isasymdagger}{\isachardot}{\isachardot}j\ {\isacharequal}\ {\isacharparenleft}l{\isasymdagger}{\isachardot}{\isachardot}{\isacharparenleft}min\ i\ j{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}left{\isacharunderscore}def\ slice{\isacharunderscore}right{\isacharunderscore}def\isanewline
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}slice{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}left{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenright}{\isasymdagger}j{\isachardot}{\isachardot}\ {\isacharequal}\ l{\isasymdagger}{\isacharparenleft}i{\isacharplus}j{\isacharparenright}{\isachardot}{\isachardot}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}left{\isacharunderscore}def\ slice{\isacharunderscore}right{\isacharunderscore}def\isanewline
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}slice\ sliceable{\isacharunderscore}class{\isachardot}size{\isacharunderscore}slice\ \isanewline
+\ \ min{\isacharunderscore}absorb{\isadigit{1}}{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}j{\isacharparenright}{\isasymdagger}{\isachardot}{\isachardot}b\ {\isacharequal}\ l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}min\ j\ {\isacharparenleft}i{\isacharplus}b{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}left{\isacharunderscore}def\ slice{\isacharunderscore}right{\isacharunderscore}def\isanewline
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ add{\isachardot}commute\ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}slice{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}j{\isacharparenright}{\isasymdagger}a{\isachardot}{\isachardot}\ {\isacharequal}\ l{\isasymdagger}{\isacharparenleft}i{\isacharplus}a{\isacharparenright}{\isachardot}{\isachardot}j{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}left{\isacharunderscore}def\ slice{\isacharunderscore}right{\isacharunderscore}def\isanewline
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ {\isacharparenleft}mono{\isacharunderscore}tags{\isacharcomma}\ hide{\isacharunderscore}lams{\isacharparenright}\ add{\isachardot}assoc\ diff{\isacharunderscore}diff{\isacharunderscore}left\ max{\isacharunderscore}{\isadigit{0}}L\ \isanewline
+\ \ slice{\isacharunderscore}left{\isacharunderscore}def\ slice{\isacharunderscore}left{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb\ slice{\isacharunderscore}right{\isacharunderscore}def\ \isanewline
+\ \ slice{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb\ sliceable{\isacharunderscore}class{\isachardot}size{\isacharunderscore}slice\ \isanewline
+\ \ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}none\ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}slice{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}left{\isacharunderscore}slice{\isacharunderscore}absorb{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenright}{\isasymdagger}a{\isachardot}{\isachardot}b\ {\isacharequal}\ l{\isasymdagger}{\isacharparenleft}i{\isacharplus}a{\isacharparenright}{\isachardot}{\isachardot}{\isacharparenleft}i{\isacharplus}b{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}left{\isacharunderscore}def\ slice{\isacharunderscore}right{\isacharunderscore}def\isanewline
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ {\isacharparenleft}mono{\isacharunderscore}tags{\isacharcomma}\ lifting{\isacharparenright}\ slice{\isacharunderscore}left{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb\ slice{\isacharunderscore}right{\isacharunderscore}def\ \isanewline
+\ \ slice{\isacharunderscore}right{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb\ slice{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb\ \isanewline
+\ \ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}none{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}right{\isacharunderscore}slice{\isacharunderscore}absorb{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}l{\isasymdagger}{\isachardot}{\isachardot}j{\isacharparenright}{\isasymdagger}a{\isachardot}{\isachardot}b\ {\isacharequal}\ l{\isasymdagger}a{\isachardot}{\isachardot}{\isacharparenleft}min\ j\ b{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{unfolding}\isamarkupfalse%
+\ slice{\isacharunderscore}left{\isacharunderscore}def\ slice{\isacharunderscore}right{\isacharunderscore}def\isanewline
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ sliceable{\isacharunderscore}class{\isachardot}slice{\isacharunderscore}slice{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isanewline
+\isacommand{lemmas}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}slice{\isacharunderscore}simps\ {\isacharequal}\ \isanewline
+\ \ slice{\isacharunderscore}left{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb\ slice{\isacharunderscore}left{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb\isanewline
+\ \ slice{\isacharunderscore}right{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb\ slice{\isacharunderscore}right{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb\ slice{\isacharunderscore}slice\isanewline
+\ \ slice{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb\ slice{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb\ slice{\isacharunderscore}left{\isacharunderscore}slice{\isacharunderscore}absorb\ \isanewline
+\ \ slice{\isacharunderscore}right{\isacharunderscore}slice{\isacharunderscore}absorb\isanewline
+\isanewline
+\isacommand{lemmas}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ size{\isacharunderscore}slice{\isacharunderscore}defs\ {\isacharequal}\ \isanewline
+\ \ size{\isacharunderscore}slice\ size{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}absorb\ size{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}absorb\isanewline
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}f{\isacharunderscore}min{\isacharunderscore}neutral{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}min\ f\ k{\isacharparenright}{\isacharparenright}\ {\isasymand}\ f\ {\isasymle}\ k{\isacharparenright}\ {\isasymlongleftrightarrow}\ {\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ f\ {\isasymle}\ k{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ linarith%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}i{\isacharunderscore}min{\isacharunderscore}neutral{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}{\isacharparenleft}min\ i\ k{\isacharparenright}{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ i\ {\isasymle}\ k{\isacharparenright}\ {\isasymlongleftrightarrow}\ {\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ i\ {\isasymle}\ k{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ linarith%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}i{\isacharunderscore}min{\isacharunderscore}neutral{\isacharunderscore}lt{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}{\isacharparenleft}min\ k\ i{\isacharparenright}{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ i\ {\isacharless}\ k{\isacharparenright}\ {\isasymlongleftrightarrow}\ {\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ i\ {\isacharless}\ k{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ linarith%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}foral{\isacharunderscore}i{\isacharunderscore}min{\isacharunderscore}neutral{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}{\isasymforall}\ i\ f\ {\isachardot}\ P\ {\isacharparenleft}l{\isasymdagger}{\isacharparenleft}min\ i\ k{\isacharparenright}{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ i\ {\isasymle}\ k{\isacharparenright}\ {\isasymlongleftrightarrow}\ {\isacharparenleft}{\isasymforall}\ i\ f\ {\isachardot}\ P\ {\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ i\ {\isasymle}\ k{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{using}\isamarkupfalse%
+\ not{\isacharunderscore}less\ \isacommand{by}\isamarkupfalse%
+\ auto%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}f{\isacharunderscore}max{\isacharunderscore}neutral{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}max\ f\ k{\isacharparenright}{\isacharparenright}\ {\isasymand}\ f\ {\isasymge}\ k{\isacharparenright}\ {\isasymlongleftrightarrow}\ {\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ f\ {\isasymge}\ k{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ max{\isachardot}orderE{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}i{\isacharunderscore}max{\isacharunderscore}neutral{\isacharcolon}\ \isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}{\isacharparenleft}max\ i\ k{\isacharparenright}{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ i\ {\isasymge}\ k{\isacharparenright}\ {\isasymlongleftrightarrow}\ {\isacharparenleft}P\ {\isacharparenleft}l{\isasymdagger}i{\isachardot}{\isachardot}f{\isacharparenright}\ {\isasymand}\ i\ {\isasymge}\ k{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ max{\isachardot}orderE{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ empty{\isacharunderscore}slice{\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ {\isachardoublequoteopen}i\ {\isasymle}\ j\ {\isasymLongrightarrow}\ {\isacharparenleft}{\isacharhash}{\isacharparenleft}l{\isasymdagger}j{\isachardot}{\isachardot}i{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ {\isadigit{0}}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{using}\isamarkupfalse%
+\ local{\isachardot}size{\isacharunderscore}slice\ \isacommand{by}\isamarkupfalse%
+\ auto%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ forall{\isacharunderscore}disjoint{\isacharunderscore}slice{\isacharunderscore}suc{\isacharcolon}\isanewline
+\ \ {\isachardoublequoteopen}{\isasymforall}\ i\ j\ {\isachardot}\ {\isacharparenleft}disjoint\ x\ {\isasymand}\ i{\isasymnoteq}j\ {\isasymand}\ i\ {\isacharless}\ {\isacharparenleft}{\isacharhash}x{\isacharparenright}\ {\isasymand}\ j\ {\isacharless}\ {\isacharparenleft}{\isacharhash}x{\isacharparenright}{\isacharparenright}\ {\isasymlongrightarrow}\ \isanewline
+\ \ \ \ {\isacharparenleft}x{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}Suc\ i{\isacharparenright}\ {\isasymnoteq}\ x{\isasymdagger}j{\isachardot}{\isachardot}{\isacharparenleft}Suc\ j{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ local{\isachardot}disjoint{\isacharunderscore}slice{\isacharunderscore}suc{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{lemma}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ empty{\isacharunderscore}slice{\isacharunderscore}none{\isacharcolon}\isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}{\isacharhash}x{\isacharparenright}\ {\isacharequal}\ {\isadigit{0}}\ {\isasymLongrightarrow}\ {\isacharparenleft}{\isacharhash}{\isacharparenleft}x{\isasymdagger}i{\isachardot}{\isachardot}j{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ {\isadigit{0}}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ size{\isacharunderscore}slice{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ empty{\isacharunderscore}slice{\isacharunderscore}right{\isacharunderscore}none{\isacharcolon}\isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}{\isacharhash}x{\isacharparenright}\ {\isacharequal}\ {\isadigit{0}}\ {\isasymLongrightarrow}\ {\isacharparenleft}{\isacharhash}{\isacharparenleft}x{\isasymdagger}{\isachardot}{\isachardot}j{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ {\isadigit{0}}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ slice{\isacharunderscore}right{\isacharunderscore}def\ sliceable{\isacharunderscore}class{\isachardot}empty{\isacharunderscore}slice{\isacharunderscore}none{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ empty{\isacharunderscore}slice{\isacharunderscore}left{\isacharunderscore}none{\isacharcolon}\isanewline
+\ \ {\isachardoublequoteopen}{\isacharparenleft}{\isacharhash}x{\isacharparenright}\ {\isacharequal}\ {\isadigit{0}}\ {\isasymLongrightarrow}\ {\isacharparenleft}{\isacharhash}{\isacharparenleft}x{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ {\isadigit{0}}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ slice{\isacharunderscore}left{\isacharunderscore}def\ sliceable{\isacharunderscore}class{\isachardot}empty{\isacharunderscore}slice{\isacharunderscore}none{\isacharparenright}\isanewline
+%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isadelimtheory
+%
+\endisadelimtheory
+%
+\isatagtheory
+%
+\endisatagtheory
+{\isafoldtheory}%
+%
+\isadelimtheory
+%
+\endisadelimtheory
+%
+\end{isabellebody}%
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "root"
+%%% End:
