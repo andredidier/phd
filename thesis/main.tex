@@ -394,6 +394,7 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\Minop{\ensuremath\mathrm{Min}}
 \newcommand{\Min}[1]{\ensuremath\Minop\left(#1\right)}
 \newcommand{\lengthacceptance}[2]{\ensuremath\length{#1}^{\le#2}}
+\newcommand{\probacceptance}[2]{\ensuremath\probability{#1}^{<#2}}
 \newcommand{\fiti}[1]{\ensuremath P'_{#1}\left(t_{#1}\right)}
 \newcommand{\Fit}[1]{\ensuremath P_{#1}\left(t\right)}
 \newcommand{\Fiti}[1]{\ensuremath P_{#1}\left(t_{#1}\right)}
@@ -2982,54 +2983,23 @@ Finally, using \cref{eq:algebra-probability}, we demonstrate the equivalence to 
 = &P_1(t) + P_2(t) - P_1(t) \times P_2(t)
 \end{align}
 
-\section{Formal acceptance criteria}
+\subsection{Formal acceptance criteria}
 \label{sec:formal-acceptance-criteria}
 
-The acceptance criteria for a structure expression (written as a formula $F$) is given in terms of the minimal cut sequences length.
+To enable the formal verification of structure expressions we use the concept of \emph{acceptance criteria}.
+Safety requirements are written in terms of the properties of \iac{FT}, for example: (i) no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or (ii) the probability of all critical failure should be less than $P_x$.
+To check these requirements we translate these requirements into a value and verify in the theorem prover.
 
-\begin{definition}[Minimal cut sequences length]
-Let $F$ be a formula in \ac{algebra} and $L$ the denotational semantics of $F$, the qualitative acceptance criteria of the minimal cut sequences length be less than or equal to $n$ is:
-
-\begin{equation}
-\lengthacceptance{F}{n} = \Min{\left\{ \length{xs} \middle | xs \in L\right\}} \le n
-\end{equation}
-\end{definition}
-
-
-%%%%%%%%%%%%%%%%%%Apagar daqui em diante.
-In \ac{algebra}, we abstract the probability calculation, assuming that the probability of all \ac{XBefore} relations and the probability of individual faults are given.
-For example, if a system have three faults $a$, $b$, and $c$, and a failure formula is given by $\left(a \land c\right) \lor \left(\xbefore{a}{b}\right)$, then the needed probabilities to calculate $\probabilityt{\left(a \land c\right) \lor \left(\xbefore{a}{b}\right)}$ are $\probabilityt{\xbefore{a}{b}}$, $\probabilityt{a}$ and $\probabilityt{c}$.
-The probability of $\probabilityt{\xbefore{a}{b}}$ can be calculated as shown in \cref{eq:pand-probability}, assuming $T_1$ the time fault $a$ occurs, and $T_2$ the time $b$ occurs.
-The probabilities for other operators, are given as usual:
+For the two properties shown in this section, we define the two acceptance criteria:
+%
 \begin{subequations}
 \begin{align}
-\probabilityt{a \land b} &= \probabilityt{a} \times \probabilityt{b}\\
-\probabilityt{a \lor b} &= \probabilityt{a} + \probabilityt{b} -\probabilityt{a} \times \probabilityt{b}\\
-\probabilityt{\lnot a} &= 1 - \probabilityt{a} \approx 1
+\lengthacceptance{F}{n} = & \Min{\left\{ \length{xs} \middle | xs \in L\right\}} \le n & \text{length of \acp{MCSeq}}\\
+\probacceptance{F}{P_x} = & \probability{F} < P_x & \text{root-event probability}
 \end{align}
 \end{subequations}
 %
-The \ac{NOT} operator is a special case in the probability analysis.
-When analysing \acp{FT}, the probability of a component be functional is near $1$, which causes the probability to be ignored in general.
-The \ac{NOT} operator when combined with any other (\ac{AND}, \ac{OR}, and \ac{XBefore}) results on a nearly safe approximation to $1$, for variables $a$ and $b$:
-\begin{subequations}
-\begin{align}
-\probabilityt{\lnot a \land b} &= \probabilityt{\lnot a} \times \probabilityt{b} \approx \probabilityt{b}\\
-\probabilityt{\lnot a \lor b}  &= \probabilityt{\lnot a} + \probabilityt{b} - \probabilityt{\lnot a} \times \probabilityt{b} \approx 1\\
-\probabilityt{\xbefore{\lnot a}{b}} &\approx \probabilityt{b} ~\text{(see \cref{eq:pand-probability})}\label{eq:prob-not-xbefore}\\
-\probabilityt{\xbefore{a}{\lnot b}} &\approx \probabilityt{a} ~\text{(see \cref{eq:pand-probability})}\label{eq:prob-xbefore-not}
-\end{align}
-\end{subequations}
-
-\Cref{eq:prob-not-xbefore,eq:prob-xbefore-not} follow the same approximation shown in the work reported in~\cite{Andrews2001}.
-The probability of an operational state before a failure is \emph{approximately} the probability of the failure---\cref{eq:prob-not-xbefore}.
-Similarly, the probability of a failure before an operational state is \emph{approximately} the probability of the failure---\cref{eq:prob-xbefore-not}.
-
-\begin{definition}[Root probability]
-Given...
-%TODO
-\todo{Continuar daqui}
-\end{definition}
+Both equations have Boolean\index{Boolean} return value, which can be verified by a theorem prover.
 
 \section{Propositions}
 \label{sec:propositions}
