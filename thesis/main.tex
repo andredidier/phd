@@ -2954,8 +2954,9 @@ For example, the probability of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2
 \end{align}
 
 The empty list is the special case to represent the approximation of the probability calculation of \ac{NOT} operators.
-When the empty list appears in a denotational semantics it works as the universal complement probability of any other list.
-Or, in other words, the root-failure occurs if all constituents are operational, and such a probability is approximately $1$.
+It works as the universal complement probability of any other list.
+When the empty list appears in a denotational semantics it means that the top-event occurs if no fault occurs, thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
+This is the only assumption in the calculations shown in this section.
 
 Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$, which has probability $P_1(t) \times P_2(t)$:
 %
