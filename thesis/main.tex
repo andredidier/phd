@@ -2860,7 +2860,6 @@ minL = \Min{\left\{ \length{xs} \middle | xs \in L\right\}}
 and $\Minop$ returns the smallest number in the given set.
 \end{definition}
 
-Following the use of the denotational semantics, we can calculate the root probability from a formula in \ac{algebra}.
 The work reported in~\cite{Merle2010} shows how to calculate the probability of \iac{PAND} gate:
 \begin{align}
 P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
@@ -2874,12 +2873,14 @@ The general case (reported in~\cite{FAR1976}) of a \ac{PAND} gate with $n$ input
 \probability{\left[f_n,f_{n-1}\ldots,f_2,f_1\right]} = &\int_0^t\fiti{1}\int_0^{t_1}\fiti{2}\ldots\int_0^{t_{n-2}}\fiti{n-1}\nonumber\\
 & \int_0^{t_{n-1}}\fiti{n} dt_n dt_{n-1}\ldots dt_2 dt_1
 \end{align}
+%
+where $f_n$ is the first fault to occur, and $f_1$ is the last.
 
 \begin{sloppypar}
 The probability of occurrence in each list in the denotational semantics of \ac{algebra} uses the probability in the \ac{PAND} gate.
-The repeated situations must be removed.
+The difference from the \ac{PAND} calculation is that repeated situations must be removed.
 For example, $\probability{\left[f_1,f_2\right]}$ contains the situations of $\probability{\left[f_1,f_2,f_3\right]}$.
-To isolate these cases, we use the filter notation, grouping all lists that contains repeated situations to calculate probability:
+To isolate these cases, we use the filter notation, grouping all lists that contains repeated situations to calculate probability.
 The probability of a list $xs$ in the denotational semantics of \ac{algebra} $L$ is:
 \begin{align}
 \denotationalprob{L}{xs} = \probability{xs} - 
@@ -2887,7 +2888,7 @@ The probability of a list $xs$ in the denotational semantics of \ac{algebra} $L$
 \end{align}
 %
 where $\filter{xs}{ys}$ removes all elements from $ys$ that are not in $xs$.
-For example, $\filter{\left[f_1,f_2\right]}{\left[f_1, f_2, f_3\right]} = \left[f_1,f_2\right]$.
+For example, $\filter{\left[f_1,f_2\right]}{\left[f_1, f_3, f_2\right]} = \left[f_1,f_2\right]$.
 \end{sloppypar}
 
 We use the traditional probabilities calculations~\cite{Merle2010} as reference, and to calculate probabilities of formulas in \ac{algebra}.
@@ -2898,8 +2899,8 @@ We use the traditional probabilities calculations~\cite{Merle2010} as reference,
 \end{align}
 \end{subequations}
 
-The probability in a formula in \ac{algebra} is calculated using its denotational semantics as \acp{OR} of \acp{XBefore}.
-For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$, considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is:
+The probability in a formula in \ac{algebra} is calculated using its denotational semantics.
+For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$, considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is the probability of $\left[f_1, f_2\right]$ \emph{or} $\left[f_2, f_1\right]$ (but not both):
 %
 \begin{align}
 \denotationalprob{L}{\left[f_1, f_2\right], \left[f_2, f_1\right]} =&
@@ -2936,7 +2937,31 @@ Let $F$ be a formula in \ac{algebra}, and $L$ its denotational semantics, then:
 
 The interesting part behind the probabilistic calculus over the denotational semantics is that it is only about ordering of events.
 It means that even if a formula contains \iac{NOT} operator, we still safely obtain a probability value, without concerning about complement probabilities as tackled in~\cite{Andrews2001}.
-For example, the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$ has probability $P_1(t) \times P_2(t)$.
+For example, the probability of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2$) is:
+%
+\begin{align}
+\probability{\lnot \var{f_1}} = & \denotationalprob{L}{\left[\right],\left[f_2\right]} \nonumber\\
+%%%%%%%%%%%%%
+= &\denotationalprob{L}{\left[\right]} + \denotationalprob{L}{\left[f_2\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
+%%%%%%%%%%%%%
+= &\probability{\left[\right]} - \probability{\left[f_2\right]}
++ \probability{\left[f_2\right]} & \text{by \cref{eq:denotational-probability}} \nonumber\\
+%%%%%%%%%%%%%
+= &\probability{\left[\right]} \nonumber\\
+%%%%%%%
+\approx & 1
+\end{align}
+
+The empty list is the special case to represent the approximation of the probability calculation.
+When the empty list appears in a denotational semantics it works as the universal complement probability of any other list.
+
+Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$, which has probability $P_1(t) \times P_2(t)$:
+%
+\begin{align}
+\probability{\var{f_1} \land \var{f_2} \land \lnot \var{f_3}} &= 
+\denotationalprob{L}{\left[f_1,f_2\right], \left[f_2,f_1\right]} \nonumber\\
+&= P_1(t) \times P_2(t) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf}}
+\end{align}
 
 Finally, using \cref{eq:algebra-probability}, we demonstrate the equivalence to probability of \iac{OR} operator, calculated using the denotational semantics:
 %
