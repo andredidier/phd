@@ -41,6 +41,7 @@
 
 \usepackage{indentfirst}
 \usepackage{microtype}      % para melhorias de justificação
+%\usepackage{braket}
 
 %%%%%%%%%%%%%%%%% NOTAS
 %TODONOTES
@@ -334,7 +335,7 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \newcommand{\var}[1]{\ensuremath\varop #1}
 \def\xbeforeop{\ensuremath\rightarrow}
 \newcommand{\xbefore}[2]{\ensuremath #1 \xbeforeop #2 }
-\newcommand{\xbeforedef}[2]{\ensuremath \left\{ zs | \exists i \bullet \sliceright{zs}{i} \land \sliceleft{zs}{i}  \right\}}
+\newcommand{\xbeforedef}[2]{\ensuremath \left\{~  zs ~\middle|~ \exists i ~\bullet~ \sliceright{zs}{i} \land \sliceleft{zs}{i} ~\right\}}
 \def\Tempotext{Tempo\xspace}
 \def\tempotext{tempo\xspace}
 \def\tempoop{\ensuremath\operatorname{\mathbf{tempo}}}
@@ -403,7 +404,10 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\filterop{\ensuremath\mathrm{filter}}
 \newcommand{\filter}[2]{\ensuremath\filterop_{#1}\left(#2\right)}
 \newcommand{\denote}[1]{\ensuremath\left[\!\left[#1\right]\!\right]}
-
+\def\generators{\ensuremath\mathrm{Gen}}
+\def\permutationsop{\ensuremath\mathrm{permutations}}
+\newcommand{\permutations}[1]{\ensuremath\permutationsop\left(#1\right)}
+\newcommand{\listsof}[2]{\ensuremath\mathrm{lists}\left(#1, #2\right)}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2467,11 +2471,10 @@ We give the definition of \ac{XBefore} ($\xbeforeop$) in terms of list concatena
 %
 \begin{align}
 \denote{\xbefore{S}{T}} = &
-  \left\{
-    zs | \exists xs, ys \bullet \parsin{\listset{xs}} \inter \parsin{\listset{ys}} = \{\}
-      \land \right.\nonumber \\
-& \left. xs \in \denote{S} \land ys \in \denote{T} \land zs = \append{xs}{ys}
-  \right\}\label{def:xbefore-append}
+  \left\{~
+    zs ~\middle|~ \exists xs, ys ~\bullet~ \parsin{\listset{xs}} \inter \parsin{\listset{ys}} = \{\} \land \right.\nonumber\\
+  & \left. xs \in \denote{S} \land ys \in \denote{T} \land zs = \append{xs}{ys}
+  ~\right\}\label{def:xbefore-append}
 \end{align}
 %
 where the $\listset{}$ function returns the set of the elements of a list, $\append{}{}$ concatenates two lists, and $\denote{.}$ extracts the denotational semantics of the formula.
@@ -2503,7 +2506,7 @@ where $L = \max{0,i}$ and $U = \min{j,\length{xs}}$.
 List slicing and concatenation are complementary: concatenating two consecutive slices results in the original list:
 \begin{equation}
 \label{law:slice-append}
-\forall i \bullet \append{\sliceright{xs}{i}}{\sliceleft{xs}{i}} = xs
+\forall i ~\bullet~ \append{\sliceright{xs}{i}}{\sliceleft{xs}{i}} = xs
 \end{equation}
 
 There is an equivalent definition of \ac{XBefore} with concatenation using lists slicing:
@@ -2511,9 +2514,9 @@ There is an equivalent definition of \ac{XBefore} with concatenation using lists
 \begin{equation}
 \label{def:xbefore-slice}
 \denote{\xbefore{S}{T}} =
-  \setsin{
-    zs | \exists i \bullet \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{i} \in \denote{T}
-  }
+  \left\{~
+    zs ~\middle|~ \exists i ~\bullet~ \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{i} \in \denote{T}
+  ~\right\}
 \end{equation}
 
 A variable in \ac{algebra} is defined by one generator, and denotes its occurrence:
@@ -2521,9 +2524,9 @@ A variable in \ac{algebra} is defined by one generator, and denotes its occurren
 \begin{equation}
 \label{def:var}
 \denote{\var{x}} =
-  \setsin{
-    zs | x \in zs
-  }
+  \left\{
+    zs ~\middle|~ x \in zs
+  \right\}
 \end{equation}
 %
 where $\mathop{set}zs$ is the set of the elements of $zs$, and $x \in zs$ is defined as $x \in \mathop{set} zs$.
@@ -2585,6 +2588,13 @@ The following expressions are valid for generators $a$ and $b$ and are sufficien
 Expressions \eqref{def:algebraset-var} to \eqref{def:algebraset-sup} and \eqref{eqs:generators-independence-eq-eq} to \eqref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \eqref{def:xbefore-append} forms a Boolean\index{Boolean Algebra} algebra based on sets of lists.
 And this is also equivalent to \iac{FBA}\index{Boolean Algebra!Free} with the same generators.
 
+We denote the set of generators $\generators(S)$ of a formula $S$ as:
+\begin{equation}
+\generators(S) = \bigcup_{xs \in S} \listset{xs}\label{eq:generators}
+\end{equation}
+%
+The generators of \ac{algebra} are $\generators(\True)$, or simply $\generators$.
+
 In our previous work~\cite{DM2015} we stated a relation of \ac{XBefore} and \emph{supremum}, provided the operands are variables \eqref{def:var}.
 Now we generalise this relation in terms of abstract properties of the operands of the \ac{XBefore}.
 We name these properties as \emph{temporal properties}.
@@ -2607,25 +2617,25 @@ So, if a generator is in the beginning of a list, it must not be at the end (and
 %
 \begin{subequations}
 \begin{align}
-\tempo[1]{S} &= \forall i, j, zs \bullet
+\tempo[1]{S} &= \forall i, j, zs ~\bullet~
   i \le j \implies
   \lnot \left(
     \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
   \right)\label{def:tempo1}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\tempo[2]{S} &= \forall i, zs \bullet
+\tempo[2]{S} &= \forall i, zs ~\bullet~
   zs \in \denote{S} \iff
   \sliceright{zs}{i} \in \denote{S} \lor \sliceleft{zs}{i} \in \denote{S}\label{def:tempo2}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\tempo[3]{S} &= \forall i, j, zs \bullet
+\tempo[3]{S} &= \forall i, j, zs ~\bullet~
   j < i \implies
   \left(
     \slice{zs}{j}{i} \in \denote{S} \iff \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
   \right)\label{def:tempo3}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\tempo[4]{S} &= \forall zs \bullet zs \in \denote{S} \iff (\exists i \bullet \slice{zs}{i}{\left(i+1\right)} \in \denote{S})\label{def:tempo4}
+\tempo[4]{S} &= \forall zs ~\bullet~ zs \in \denote{S} \iff (\exists i ~\bullet~ \slice{zs}{i}{\left(i+1\right)} \in \denote{S})\label{def:tempo4}
 %\intertext{Replace $\tempo[4]{S}$ by (less restrictive):}
-%&= \forall zs \bullet zs \in S \iff \exists i,j \bullet i < j \land \slice{zs}{i}{j} \in S
+%&= \forall zs ~\bullet~ zs \in S \iff \exists i,j ~\bullet~ i < j \land \slice{zs}{i}{j} \in S
 \end{align}
 \end{subequations}
 
@@ -2670,8 +2680,8 @@ In our previous work~\cite{DM2015} we used set difference to specify the \ac{XBe
 Provided $\tempo[1]{S}$ and $\tempo[1]{T}$, \ac{XBefore} in~\cite{DM2015} is equivalent to \eqref{def:xbefore-append}:
 %
 \begin{align}
-\denote{\xbefore{S}{T}} = &\left\{ zs | \exists xs, ys \bullet xs \in \denote{S}-\denote{T} \land ys \in \denote{T}-\denote{S} \land \right.\nonumber\\
-& \left.\distinct{zs} \land zs = \append{xs}{ys}  \right\}\label{law:old-xbefore}
+\denote{\xbefore{S}{T}} = &\left\{ zs ~\middle|~ \exists xs, ys ~\bullet~ xs \in \denote{S}-\denote{T} \land ys \in \denote{T}-\denote{S} \land \right.\nonumber\\
+& \left. \distinct{zs} \land zs = \append{xs}{ys} \right\}\label{law:old-xbefore}
 \end{align}
 \end{sloppypar}
 
@@ -2723,7 +2733,7 @@ For example, we need to avoid that the operands of \ac{XBefore} are $\var{a}$ an
 %
 \begin{equation}
 \label{law:independent-events}
-\denote{\independentevents{S}{T}} = \forall i, zs \bullet
+\denote{\independentevents{S}{T}} = \forall i, zs ~\bullet~
   \lnot \left(
     \slice{zs}{i}{\left(i+1\right)} \in \denote{S} \land
     \slice{zs}{i}{\left(i+1\right)} \in \denote{T}
@@ -2878,92 +2888,81 @@ Thus each list has no repeated elements and represent a possible combination of 
 \Acp{MCSeq} are those \distinctlists with the least length, defined in what follows.
 
 \begin{definition}[Minimal cut sequences]
-Let $F$ be a formula in \ac{algebra} and $L$ its denotational semantics ($L = \denote{F}$), the minimal cut sequences $\mcseqop$ of $F$ are:
+Let $S$ be a formula in \ac{algebra} and its denotational semantics ($\denote{S}$). 
+The \aclp{MCSeq} $\mcseqop$ of $S$ are:
 %
 \begin{equation}
-\mcseq{F} = \left\{ xs \middle| xs \in L \bullet \length{xs} = minL \right\}
+\mcseq{S} = \left\{~ xs ~\middle|~ xs \in \denote{S} ~\bullet~ \length{xs} = min_S ~\right\}
 \end{equation}
 %
 where
 \[
-minL = \Min{\left\{ \length{xs} \middle | xs \in L\right\}}
+min_S = \Min{\left\{~ \length{xs} ~\middle|~ xs \in \denote{S} ~\right\}}
 \]
 %
 and $\Minop$ returns the smallest number in the given set.
 \end{definition}
 
-The work reported in~\cite{Merle2010} shows how to calculate the probability of \iac{PAND} gate:
+The work reported in~\cite{Merle2010} shows how to calculate the probability of \iac{PAND} gate as:
+%
 \begin{align}
 P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
 & = \int_0^t P'_2(x) P_1(x) dx\label{eq:pand-probability}
 \end{align}
 %
-where $P_i$ is the probability of the occurrence of the $i$th fault (cumulative distribution function), and $T_i$ is the time that the $i$th fault occurs.
-The general case (reported in~\cite{FAR1976}) of a \ac{PAND} gate with $n$ inputs is:
+where $P_1$ and $P_2$ are the probability of the occurrence of the the first and the second faults (cumulative distribution function), respectively, and $T_1$ and $T_2$ are the times the first and the second faults occur.
+The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs is the probability of the sequence of faults $f_i$, $i \in \left\{~1, \ldots, n~\right\}$, where $f_n$ is the first fault, and $f_1$ is the last one:
 %
 \begin{align}
 \probability{\left[f_n,f_{n-1}\ldots,f_2,f_1\right]} = &\int_0^t\fiti{1}\int_0^{t_1}\fiti{2}\ldots\int_0^{t_{n-2}}\fiti{n-1}\nonumber\\
 & \int_0^{t_{n-1}}\fiti{n} dt_n dt_{n-1}\ldots dt_2 dt_1
 \end{align}
 %
-where $f_n$ is the first fault to occur, and $f_1$ is the last.
+where $P_i$ is the probability of the occurrence of fault $f_i$.
 
-\begin{sloppypar}
 The probability of occurrence in each list in the denotational semantics of \ac{algebra} uses the probability in the \ac{PAND} gate.
 The difference from the \ac{PAND} calculation is that repeated situations must be removed.
-For example, $\probability{\left[f_1,f_2\right]}$ contains the situations of $\probability{\left[f_1,f_2,f_3\right]}$.
-To isolate these cases, we use the filter notation, grouping all lists that contains repeated situations to calculate probability.
-The probability of a list $xs$ in the denotational semantics of \ac{algebra} $L$ is:
-\begin{align}
-\denotationalprob{L}{xs} = \probability{xs} - 
-\sum_{\left\{ ys | ys \in L - \left\{xs\right\} \bullet xs = \filter{xs}{ys}\right\}} \probability{ys}\label{eq:denotational-probability}
-\end{align}
+For example, $\probability{\left[f_1,f_2\right]}$ contains the situations that $f_3$ does not occur, or occurs in some time: $\probability{\left[f_1,f_2,f_3\right]}$, $\probability{\left[f_1,f_3,f_2\right]}$, and $\probability{\left[f_3,f_1,f_2\right]}$.
+To isolate these cases, we use the following definitions:
 %
-where $\filter{xs}{ys}$ removes all elements from $ys$ that are not in $xs$.
-For example, $\filter{\left[f_1,f_2\right]}{\left[f_1, f_3, f_2\right]} = \left[f_1,f_2\right]$.
-\end{sloppypar}
-
-We use the traditional probabilities calculations~\cite{Merle2010} as reference, and to calculate probabilities of formulas in \ac{algebra}.
 \begin{subequations}
 \begin{align}
-\probability{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
-\probability{\vari{1} \lor \vari{2}} = & \Fit{1} + \Fit{2} - \Fit{1} \times \Fit{2}
+%\permutations{A} = & \left\{~ ys ~\middle|~ \listset{ys} \in A ~\right\}\label{eq:permutations}\\
+%%%%%
+\filter{xs}{ys} = & ys / \left(\listset{ys} - \listset{xs}\right) \label{eq:filter}\\
+%%%%
+\listsof{S}{xs} = & \left\{~ ys ~\middle|~ ys \in \denote{S} ~\bullet~xs = \filter{xs}{ys} ~\right\}\label{eq:listsof}
 \end{align}
 \end{subequations}
-
-The probability in a formula in \ac{algebra} is calculated using its denotational semantics.
-For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$, considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is the probability of $\left[f_1, f_2\right]$ \emph{or} $\left[f_2, f_1\right]$ (but not both):
 %
+where $ys / A$ removes the elements of $A$ in $ys$.
+
+Using \cref{eq:listsof,eq:generators} we define the denotational probability\index{denotational probability} $\denotationalprobop$ of a list as:
 \begin{align}
-\denotationalprob{L}{\left[f_1, f_2\right], \left[f_2, f_1\right]} =&
-\denotationalprob{L}{\left[f_1,f_2\right]} + \denotationalprob{L}{\left[f_2,f_1\right]} - \nonumber\\
-&\denotationalprob{L}{\left[f_1,f_2\right]} \times \denotationalprob{L}{\left[f_2,f_1\right]} \nonumber\\
-%%%%
-=&\denotationalprob{L}{\left[f_1,f_2\right]} + \denotationalprob{L}{\left[f_2,f_1\right]} & \text{ignored $\times$} \nonumber\\
-%%%%
-= &\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]} & \text{\cref{eq:denotational-probability}, both $\sum$ is $0$}\nonumber\\
-%%%%
-=&\int_0^t P'_2(x) P_1(x) dx + \int_0^t P'_1(x) P_2(x) dx & \text{by \cref{eq:pand-probability}} \nonumber\\
-%%%%
-= & \int_0^t \left(P'_2(x) P_1(x) + P'_1(x) P_2(x)\right) dx & \text{by sum of $\int$} \nonumber\\
-%%%%
-= & \int_0^t \left(P_1(x) P_2(x)\right)' dx & \text{by inv. deriv. product} \nonumber\\
-%%%%
-= & P_1(t) \times P_2(t)\label{eq:prob-xbefore-sup-equiv-inf}
+\denotationalprob{S}{xs} = &
+  \probability{xs} - 
+  \sum_{ys \in R\left(S, xs\right)}\probability{ys}\label{eq:denotational-probability}\\
+%%%%%%%%%%%%%
+R\left(S, xs\right) = & \listsof{S}{xs} - \left\{xs\right\}\nonumber
 \end{align}
 %
-The term $\denotationalprob{L}{\left[f_1, f_2\right]} \times \denotationalprob{L}{\left[f_2, f_1\right]}$ can be safely removed because both situations cannot occur simultaneously.
-
-
-In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$), shown in \cref{eq:and-probability}.
-This is expected as these two formulas are equivalent, as shown in \cref{thm:xbefore-sup-equiv-inf}.
+%For example, to calculate $\denotationalprob{S}{\left[f_1, f_2\right]}$ for set of generators $\left\{f_1,f_2,f_3\right\}$, we have:
+%\begin{align*}
+%\denotationalprob{S}{\left[f_1,f_2\right]} = & \probability{\left[f_1,f_2\right]}
+%- \probability{\left[f_1,f_2,f_3\right]}\nonumber\\
+%%%%%%
+%&- \probability{\left[f_1,f_3,f_2\right]}
+%- \probability{\left[f_3,f_1,f_2\right]}
+%\end{align*}
+%
+%In other words, the denotational probability gives the probability of the occurrence of the faults in the order of the list \emph{and no other fault occurs}.
 
 \begin{definition}[Probability of a formula in \ac{algebra}]
-Let $F$ be a formula in \ac{algebra}, and $L$ its denotational semantics, then:
+Let $F$ be a formula in \ac{algebra}, then:
 %
 \begin{equation}
 \label{eq:algebra-probability}
-\probability{F} = \sum_{xs \in L}\denotationalprob{L}{xs}
+\probability{F} = \sum_{xs \in \denote{F}}\denotationalprob{S}{xs}
 \end{equation}
 \end{definition}
 
@@ -2972,9 +2971,7 @@ It means that even if a formula contains \iac{NOT} operator, we still safely obt
 For example, the probability of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2$) is:
 %
 \begin{align}
-\probability{\lnot \var{f_1}} = & \denotationalprob{L}{\left[\right],\left[f_2\right]} \nonumber\\
-%%%%%%%%%%%%%
-= &\denotationalprob{L}{\left[\right]} + \denotationalprob{L}{\left[f_2\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
+\probability{\lnot \var{f_1}} = & \denotationalprob{\lnot \var{f_1}}{\left[\right]} + \denotationalprob{\lnot \var{f_1}}{\left[f_2\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
 %%%%%%%%%%%%%
 = &\probability{\left[\right]} - \probability{\left[f_2\right]}
 + \probability{\left[f_2\right]} & \text{by \cref{eq:denotational-probability}} \nonumber\\
@@ -2986,26 +2983,59 @@ For example, the probability of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2
 
 The empty list is the special case to represent the approximation of the probability calculation of \ac{NOT} operators.
 It works as the universal complement probability of any other list.
-When the empty list appears in a denotational semantics it means that the top-event occurs if no fault occurs, thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
+When the empty list appears in a denotational semantics it means that the top-event occurs if no fault occurs.
+Thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
 This is the only assumption in the calculations shown in this \lcnamecref{sec:qualitative-quantitative-properties}.
+
+We use the traditional probability calculations~\cite{Merle2010} as reference to calculate the probabilities of formulas in \ac{algebra}.
+\begin{subequations}
+\begin{align}
+\probability{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
+\probability{\vari{1} \lor \vari{2}} = & \Fit{1} + \Fit{2} - \Fit{1} \times \Fit{2}
+\end{align}
+\end{subequations}
+
+For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$, considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is the probability of $\left[f_1, f_2\right]$ \emph{or} $\left[f_2, f_1\right]$ (but not both):
+%
+\begin{align}
+\denotationalprobop_L&\left\{\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)\right\}\nonumber\\
+%%%%
+=&\denotationalprob{S}{\left[f_1,f_2\right]} + \denotationalprob{S}{\left[f_2,f_1\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
+%%%%
+= &\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]} & \text{\cref{eq:denotational-probability}, both $\sum$ is $0$}\nonumber\\
+%%%%
+=&\int_0^t P'_2(x) P_1(x) dx + \int_0^t P'_1(x) P_2(x) dx & \text{by \cref{eq:pand-probability}} \nonumber\\
+%%%%
+= & \int_0^t \left(P'_2(x) P_1(x) + P'_1(x) P_2(x)\right) dx & \text{by sum of $\int$} \nonumber\\
+%%%%
+= & \int_0^t \left(P_1(x) P_2(x)\right)' dx & \text{by inv. deriv. product} \nonumber\\
+%%%%
+= & P_1(t) \times P_2(t)\label{eq:prob-xbefore-sup-equiv-inf}
+\end{align}
+
+In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$), shown in \cref{eq:and-probability}.
+This is expected as these two formulas are equivalent, as shown in \cref{thm:xbefore-sup-equiv-inf}.
 
 Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$, which has probability $P_1(t) \times P_2(t)$:
 %
 \begin{align}
-\probability{\var{f_1} \land \var{f_2} \land \lnot \var{f_3}} &= 
-\denotationalprob{L}{\left[f_1,f_2\right], \left[f_2,f_1\right]} \nonumber\\
+S &= \var{f_1} \land \var{f_2} \land \lnot \var{f_3}\nonumber\\
+\probability{S} &= 
+\denotationalprob{S}{\left[f_1,f_2\right]} + \denotationalprob{S}{\left[f_2,f_1\right]} \nonumber\\
+%%%%%%%%
 &= P_1(t) \times P_2(t) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf}}
 \end{align}
 
 Finally, using \cref{eq:algebra-probability}, we demonstrate the equivalence to probability of \iac{OR} operator, calculated using the denotational semantics:
 %
 \begin{align}
-\probability{\vari{1} \lor \vari{2}} = & \denotationalprob{L}{
-  \left[f_1\right],
-  \left[f_2\right],
-  \left[f_1,f_2\right],
-  \left[f_2,f_1\right]
-}\nonumber\\
+S &= \vari{1} \lor \vari{2}\nonumber\\
+%%%
+\probability{S} = & \denotationalprob{S}{\left[f_1\right]} +
+  \denotationalprob{S}{\left[f_2\right]} +
+  \denotationalprob{S}{\left[f_1,f_2\right]} +
+  \denotationalprob{S}{\left[f_2,f_1\right]}
+\nonumber\\
 %%%%%%%%%%%
 = &\probability{\left[f_1\right]} - \probability{\left[f_1,f_2\right]} - \probability{\left[f_2,f_1\right]} +\nonumber\\
 &\probability{\left[f_2\right]} - \probability{\left[f_1,f_2\right]} - \probability{\left[f_2,f_1\right]} +\nonumber\\
@@ -3027,7 +3057,7 @@ For the two properties shown in this \lcnamecref{sec:qualitative-quantitative-pr
 %
 \begin{subequations}
 \begin{align}
-\lengthacceptance{F}{n} = & \Min{\left\{ \length{xs} \middle | xs \in L\right\}} \le n & \text{length of \acp{MCSeq}}\\
+\lengthacceptance{F}{n} = & \Min{\left\{~ \length{xs} ~\middle|~ xs \in L ~\right\}} \le n & \text{length of \acp{MCSeq}}\\
 \probacceptance{F}{P_x} = & \probability{F} < P_x & \text{root-event probability}
 \end{align}
 \end{subequations}
@@ -3285,7 +3315,7 @@ The second quarter of 2016 is from April to June/2016, the third quarter is from
     \toprule
     Task & 2nd & 3rd & 4th & 1st\\
     \midrule \midrule
-    Qualification & $\bullet$ &  &  & \\
+    Qualification & $~\bullet~$ &  &  & \\
     \midrule
     Elaborate a theory for the \ac{activation} & $\bullet$ &  &  & \\
     \midrule
