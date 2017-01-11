@@ -295,8 +295,9 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 }
 \newcommand{\distinctlists}{%
   distinct lists\footnote{Although some may use the terminology ``disjoint lists'' to call the lists of non-repeated elements, we use the same terminology (distinct lists) of the theories built-in the \isabellehol tool.}%
-  \global\renewcommand{\distinctlist}{distinct list}%
-  \global\renewcommand{\distinctlists}{distinct lists}%
+  \global\renewcommand{\distinctlist}{distinct list\xspace}%
+  \global\renewcommand{\distinctlists}{distinct lists\xspace}%
+  \xspace%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -401,6 +402,7 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \newcommand{\vari}[1]{\ensuremath\var{f_{#1}}}
 \def\filterop{\ensuremath\mathrm{filter}}
 \newcommand{\filter}[2]{\ensuremath\filterop_{#1}\left(#2\right)}
+\newcommand{\denote}[1]{\ensuremath\left[\!\left[#1\right]\!\right]}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -692,6 +694,7 @@ It then runs \acs{FDR} to obtain several counter-examples (which are fault trace
 For two case studies provided by our industrial partner, \EMBRAER, we showed that our automatically created failure expressions match with the engineer's provided ones or are better (a weaker proposition).
 
 \section{Research questions}
+\label{sec:research-questions}
 
 Both \ac{TFT} and \ac{DFT} lack a first-order logic mathematical model like the one defined for \ac{SFT}.
 For \acp{SFT}, mathematical models to reduce structure expressions are either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}\index{Binary Decision Diagrams}.
@@ -746,7 +749,7 @@ Another concern, left untreated in the literature, is the undesirable possibilit
 For example, if a commission is observed when fault A is active and an omission is observed when faults A and B are active, then the system may behave non-deterministically with a commission or omission when both A and B are active (A and B implies A).
 \end{sloppypar}
 
-From the exposed in this section, our research questions are:
+From the exposed in this \lcnamecref{sec:research-questions}, our research questions are:
 \begin{rqenum}[series=researchquestion]
   \item Is there a consistent mathematical model to analyse \acp{TFT} and \acp{DFT} that is set-based and similar to \ac{FBA}?\label{question:mathematical-model}
   \item What guarantees can we provide to detect non-determinism in erroneous behaviour?\label{question:non-determinism}
@@ -1179,7 +1182,7 @@ We detail its structure expression extraction because they are a common means to
 \label{sec:static-fault-trees}
 
 \Ac{SFT} gates and structure expressions were used as basis for other kinds of tree, as in \acp{TFT} and \acp{DFT}.
-We explain their symbology and semantics in this section.
+We explain their symbology and semantics in this \lcnamecref{sec:static-fault-trees}.
 
 The \FThandbook shows traditional symbols for gates and events.
 Basic events are usually drawn as rectangle (for the text) and a circle below it, as shown in \cref{fig:sft-example-ald-software}, or as a circle with the text of the basic event, as shown in \cref{fig:sft-example-traditional-gates}.
@@ -1696,7 +1699,7 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
 \section{Structure expression analysis}
 \label{sec:structure-expression-analysis}
 
-In this section we explain the difference of stateful and stateless methods to analyse structure expressions and detail the stateless methods.
+In this \lcnamecref{sec:structure-expression-analysis} we explain the difference of stateful and stateless methods to analyse structure expressions and detail the stateless methods.
 %As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based
 %\todo{cite all dft works that are state-based}.
 Another common approach to analyse \iac{FT} is to perform structure expression analysis based on algebraic laws.
@@ -1836,7 +1839,7 @@ Each node represents \iac{MCSeq}.
 The reduction of a structure expression is given by the activation (true values) of nodes.
 If a node is active (true), then all child nodes are also active; the converse is also true: if all node's children are active, then it is also active.
 The reduced expression is given by the \ac{DNF} created with the expressions of higher active level nodes.
-To reduce the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$, given on the beginning of this section, we create the \ac{DT} depicted in \cref{fig:dependency-tree-reduction}.
+To reduce the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$, given on the beginning of this \lcnamecref{sec:dependency-trees}, we create the \ac{DT} depicted in \cref{fig:dependency-tree-reduction}.
 Nodes marked with ``1'' are those \acp{MCSeq} given directly by the formula.
 Nodes marked with ``2'' are child nodes of the ``1'''s nodes, and so forth.
 The node of the expression $\parsin{\parsin{X \pand Y} \land Z}$ is a grandchild of $X \land Y$ and thus it is not necessary.
@@ -1906,7 +1909,7 @@ The evaluation is similar to \acg{BDD}: each path ending in true is a minimal te
 \index{Boolean Algebra!Free}
 
 Another means to analyse \acp{SFT} is to use \iac{FBA} to perform set-theoretical operations (intersection, difference, etc.) to reduce expressions.
-In this section we briefly present the \ac{FBA} theory and its elements.
+In this \lcnamecref{sec:fba} we briefly present the \ac{FBA} theory and its elements.
 
 Instead of using an axiomatic definition of a Boolean\index{Boolean Algebra} algebra directly, we follow its set-theoretical definition, as shown in~\cite[pp. 254--258]{Stoll1979} and~\cite[pp. 8--11]{GH2009}.
 This definition represents a Boolean\index{Boolean Algebra} algebra as an algebra of sets and does not rely on Boolean axioms (which can be misleading, case there is an unfounded axiom).
@@ -2042,7 +2045,7 @@ $x\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, \ldots, x_n}$
 \subsection{Non-coherent \acl*{FT} misleads}
 \label{sec:non-coherent-misleads-example}
 
-In this section we illustrate---with the second example detailed in~\cite{Oliv2006}---how non-coherent \ac{FT} misleads.
+In this \lcnamecref{sec:non-coherent-misleads-example} we illustrate---with the second example detailed in~\cite{Oliv2006}---how non-coherent \ac{FT} misleads.
 
 A college student who wants to visit her mother in another city has two options: wake up early ($x_3$) and take a ride with a friend ($x_1$), or wake up late ($\lnot x_3$) and take the metro ($x_2$).
 The top-event failure is ``visit mother'' with expression $S = \parsin{x_1 \land x_3} \lor \parsin{x_2 \land \lnot x_3}$.
@@ -2063,7 +2066,7 @@ Quantitatively, the analysis of the probabilities shows that this result is not 
 \subsection[Usefulness of NOT gates in FTA]{Usefulness of \ac{NOT} gates in \ac{FTA}}
 \label{sec:non-coherent-usefulness}
 
-In this section we show the second example detailed in~\cite{Andrews2001}.
+In this \lcnamecref{sec:non-coherent-usefulness} we show the second example detailed in~\cite{Andrews2001}.
 
 The gas detection system\index{gas detection system} depicted in \cref{fig:gas-detection-system} has two sensors $D_1$ and $D_2$ which are used to detect a leakage in a confined space.
 When a leakage is detected, these sensors send a signal to the logic control unit $LU$, which performs three tasks:
@@ -2456,22 +2459,22 @@ So, if $x$ is in $xs$, then it has a unique associated index $i$ and we denote i
 Furthermore, as we follow \iac{FBA}\index{Boolean Algebra!Free} characterisation, we also need to show that the generators are independent.
 
 The \ac{algebra} form a free algebra, similarly to \acp{FBA}\index{Boolean Algebra!Free}.
-\emph{Infimum} and \emph{Supremum} are defined as set intersection ($\inter$) and union ($\union$) respectively.
-The order within the algebra is defined with set inclusion ($\subseteq$).
+\emph{Infimum} and \emph{Supremum} are denoted as set intersection ($\inter$) and union ($\union$) respectively.
+The order within the algebra is denoted with set inclusion ($\subseteq$).
 
 To distinguish the permutations that are not defined in \ac{FBA}\index{Boolean Algebra!Free}, we need a new operator.
 We give the definition of \ac{XBefore} ($\xbeforeop$) in terms of list concatenation, similar to the work reported in~\cite{DM2015}:
 %
-\begin{equation}
-\label{def:xbefore-append}
-\xbefore{S}{T} =
-  \setsin{
+\begin{align}
+\denote{\xbefore{S}{T}} = &
+  \left\{
     zs | \exists xs, ys \bullet \parsin{\listset{xs}} \inter \parsin{\listset{ys}} = \{\}
-      \land xs \in S \land ys \in T \land zs = \append{xs}{ys}
-  }
-\end{equation}
+      \land \right.\nonumber \\
+& \left. xs \in \denote{S} \land ys \in \denote{T} \land zs = \append{xs}{ys}
+  \right\}\label{def:xbefore-append}
+\end{align}
 %
-where the $\listset{}$ function returns the set of the elements of a list, and $\append{}{}$ concatenates two lists.
+where the $\listset{}$ function returns the set of the elements of a list, $\append{}{}$ concatenates two lists, and $\denote{.}$ extracts the denotational semantics of the formula.
 
 In some cases it is more intuitive to use the \ac{XBefore} definition in terms of lists slicing because it uses indexes explicitly.
 %\Cref{thm:xbefore} shows that the two definitions are equivalent.
@@ -2507,9 +2510,9 @@ There is an equivalent definition of \ac{XBefore} with concatenation using lists
 %
 \begin{equation}
 \label{def:xbefore-slice}
-\xbefore{S}{T} =
+\denote{\xbefore{S}{T}} =
   \setsin{
-    zs | \exists i \bullet \sliceright{zs}{i} \in S \land \sliceleft{zs}{i} \in T
+    zs | \exists i \bullet \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{i} \in \denote{T}
   }
 \end{equation}
 
@@ -2517,27 +2520,47 @@ A variable in \ac{algebra} is defined by one generator, and denotes its occurren
 %
 \begin{equation}
 \label{def:var}
-\var{x} =
+\denote{\var{x}} =
   \setsin{
     zs | x \in zs
   }
 \end{equation}
 %
-where $\mathop{set}zs$ is the set of the elements of $zs$, and $x \in zs$ is defined as $x \in \mathop{set} zs$
+where $\mathop{set}zs$ is the set of the elements of $zs$, and $x \in zs$ is defined as $x \in \mathop{set} zs$.
+
+Boolean\index{Boolean} operators are denoted as in \ac{FBA}:
+\begin{subequations}
+\begin{align}
+\denote{S \land T} & = \denote{S} \inter \denote{T}\\
+%%%%%%%%%%%%%%%%%
+\denote{S \lor T} & = \denote{S} \union \denote{T}\\
+%%%%%%%%%%%%%%%%%
+\denote{\lnot S} & = - \denote{S}\\
+%%%%%%%%%%%%%%%%%
+\denote{\bot} &= \False\\
+%%%%%%%%%%%%%%%%%
+\denote{\top} &= \True
+\end{align}
+\end{subequations}
+
 
 The following expressions are sufficient to define the \ac{algebra} in terms of an inductively defined set ($\algebraset$):
 %
 \begin{subequations}
 \label{def:algebraset}
 \begin{align}
-\var x & \in \algebraset & \text{Variable}\label{def:algebraset-var}\\
-S \in \algebraset \implies -S & \in \algebraset & \text{Complement, Negation}\label{def:algebraset-compl}\\
-S \in \algebraset \land T \in \algebraset \implies S \inter T & \in \algebraset & \text{Intersection, \emph{Infimum}}\label{def:algebraset-inf}\\
-S \in \algebraset \land T \in \algebraset \implies \xbefore{S}{T} & \in \algebraset & \text{\ac{XBefore}}\label{def:algebraset-xbefore}\\
+\denote{\var x} & \in \algebraset & \text{Variable}\label{def:algebraset-var}\\
+\denote{S} \in \algebraset \implies \denote{\lnot S} & \in \algebraset & \text{Complement, Negation}\label{def:algebraset-compl}\\
+%%%%%%%%%%%%%%%%%
+\denote{S} \in \algebraset \land \denote{T} \in \algebraset \implies \denote{S \land T} & \in \algebraset & \text{Intersection, \emph{Infimum}}\label{def:algebraset-inf}\\
+%%%%%%%%%%%%%%%%%
+\denote{S} \in \algebraset \land \denote{T} \in \algebraset \implies \denote{\xbefore{S}{T}} & \in \algebraset & \text{\ac{XBefore}}\label{def:algebraset-xbefore}\\
+%%%%%%%%%%%%%%%%%
 \intertext{Following the definitions, the expressions below are also valid for $\algebraset$:}
+%%%%%%%%%%%%%%%%%
 \True &\in \algebraset & \text{Universal set, True}\label{def:algebraset-true}\\
 \False &\in \algebraset & \text{Empty set, False}\label{def:algebraset-false}\\
-S \in \algebraset \land T \in \algebraset \implies S \union T &\in \algebraset & \text{Union, \emph{Supremum}}\label{def:algebraset-sup}
+\denote{S} \in \algebraset \land \denote{T} \in \algebraset \implies \denote{S \lor T} &\in \algebraset & \text{Union, \emph{Supremum}}\label{def:algebraset-sup}
 \end{align}
 \end{subequations}
 
@@ -2547,15 +2570,19 @@ The following expressions are valid for generators $a$ and $b$ and are sufficien
 \label{eqs:generators-independence}
 \begin{align}
 %&\var a \subseteq \var b \iff a = b\label{eqs:generators-independence-subseteq-eq}\\
-&\var a = \var b \iff a = b\\
-&\var a \not\subseteq - \var b\\
-&\var a \neq -\var b\label{eqs:generators-independence-subseteq-neq-compl} \\
-&- \var a \not\subseteq \var b\\
-&- \var a \neq \var b\label{eqs:generators-independence-subseteq-compl-neq}
+&\denote{\var{a}} = \denote{\var{b}} \iff a = b\label{eqs:generators-independence-eq-eq}\\
+%%%%%%%%%%%%%%
+&\denote{\var{a}} \not\subseteq - \denote{\var{b}}\\
+%%%%%%%%%%%%%%
+&\denote{\var{a}} \neq -\denote{\var{b}}\label{eqs:generators-independence-subseteq-neq-compl} \\
+%%%%%%%%%%%%%%
+&- \denote{\var{a}} \not\subseteq \denote{\var{b}}\\
+%%%%%%%%%%%%%%
+&- \denote{\var{a}} \neq \denote{\var{b}}\label{eqs:generators-independence-subseteq-compl-neq}
 \end{align}
 \end{subequations}
 
-Expressions \eqref{def:algebraset-var} to \eqref{def:algebraset-sup} and \eqref{eqs:generators-independence-subseteq-eq} to \eqref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \eqref{def:xbefore-append} forms a Boolean\index{Boolean Algebra} algebra based on sets of lists.
+Expressions \eqref{def:algebraset-var} to \eqref{def:algebraset-sup} and \eqref{eqs:generators-independence-eq-eq} to \eqref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \eqref{def:xbefore-append} forms a Boolean\index{Boolean Algebra} algebra based on sets of lists.
 And this is also equivalent to \iac{FBA}\index{Boolean Algebra!Free} with the same generators.
 
 In our previous work~\cite{DM2015} we stated a relation of \ac{XBefore} and \emph{supremum}, provided the operands are variables \eqref{def:var}.
@@ -2583,17 +2610,20 @@ So, if a generator is in the beginning of a list, it must not be at the end (and
 \tempo[1]{S} &= \forall i, j, zs \bullet
   i \le j \implies
   \lnot \left(
-    \sliceright{zs}{i} \in S \land \sliceleft{zs}{j} \in S
+    \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
   \right)\label{def:tempo1}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tempo[2]{S} &= \forall i, zs \bullet
-  zs \in S \iff
-  \sliceright{zs}{i} \in S \lor \sliceleft{zs}{i} \in S\label{def:tempo2}\\
+  zs \in \denote{S} \iff
+  \sliceright{zs}{i} \in \denote{S} \lor \sliceleft{zs}{i} \in \denote{S}\label{def:tempo2}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tempo[3]{S} &= \forall i, j, zs \bullet
   j < i \implies
   \left(
-    \slice{zs}{j}{i} \in S \iff \sliceright{zs}{i} \in S \land \sliceleft{zs}{j} \in S
+    \slice{zs}{j}{i} \in \denote{S} \iff \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
   \right)\label{def:tempo3}\\
-\tempo[4]{S} &= \forall zs \bullet zs \in S \iff (\exists i \bullet \slice{zs}{i}{\left(i+1\right)} \in S)\label{def:tempo4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tempo[4]{S} &= \forall zs \bullet zs \in \denote{S} \iff (\exists i \bullet \slice{zs}{i}{\left(i+1\right)} \in \denote{S})\label{def:tempo4}
 %\intertext{Replace $\tempo[4]{S}$ by (less restrictive):}
 %&= \forall zs \bullet zs \in S \iff \exists i,j \bullet i < j \land \slice{zs}{i}{j} \in S
 \end{align}
@@ -2639,19 +2669,19 @@ Variables have all four temporal properties. For a generator $x$, the following 
 In our previous work~\cite{DM2015} we used set difference to specify the \ac{XBefore} operator.
 Provided $\tempo[1]{S}$ and $\tempo[1]{T}$, \ac{XBefore} in~\cite{DM2015} is equivalent to \eqref{def:xbefore-append}:
 %
-\begin{equation}
-\label{law:old-xbefore}
-\xbefore{S}{T} = \left\{ zs | \exists xs, ys \bullet xs \in S-T \land ys \in T-S \land \distinct{zs} \land zs = \append{xs}{ys}  \right\}
-\end{equation}
+\begin{align}
+\denote{\xbefore{S}{T}} = &\left\{ zs | \exists xs, ys \bullet xs \in \denote{S}-\denote{T} \land ys \in \denote{T}-\denote{S} \land \right.\nonumber\\
+& \left.\distinct{zs} \land zs = \append{xs}{ys}  \right\}\label{law:old-xbefore}
+\end{align}
 \end{sloppypar}
 
 Other expressions also meet one or more temporal properties:
 \begin{subequations}
 \begin{align}
-\tempo[1]{S} \land \tempo[1]{T} & \implies \tempo[1]{\parsin{S \inter T}}\label{law:tempo1-inter}\\
-\tempo[3]{S} \land \tempo[3]{T} & \implies \tempo[3]{\parsin{S \inter T}}\label{law:tempo3-inter}\\
-\tempo[2]{S} \land \tempo[2]{T} & \implies \tempo[2]{\parsin{S \union T}}\label{law:tempo2-union}\\
-\tempo[4]{S} \land \tempo[4]{T} & \implies \tempo[4]{\parsin{S \union T}}\label{law:tempo4-union}
+\tempo[1]{S} \land \tempo[1]{T} & \implies \tempo[1]{\parsin{S \land T}}\label{law:tempo1-inter}\\
+\tempo[3]{S} \land \tempo[3]{T} & \implies \tempo[3]{\parsin{S \land T}}\label{law:tempo3-inter}\\
+\tempo[2]{S} \land \tempo[2]{T} & \implies \tempo[2]{\parsin{S \lor T}}\label{law:tempo2-union}\\
+\tempo[4]{S} \land \tempo[4]{T} & \implies \tempo[4]{\parsin{S \lor T}}\label{law:tempo4-union}
 \end{align}
 \end{subequations}
 
@@ -2668,20 +2698,20 @@ Each sub-expression is a set of minimal cut sequences\index{Minimal Cut!Sequence
 The following formulas are in \ac{DNF}:
 %
 \begin{align*}
-&\parsin{A \inter -B} \union \parsin{\parsin{\xbefore{A}{B}} \inter C}\\
-&A \union B\\
+&\parsin{A \land -B} \lor \parsin{\parsin{\xbefore{A}{B}} \land C}\\
+&A \lor B\\
 &\xbefore{A}{B}\\
-&A \inter B\\
+&A \land B\\
 &\xbefore{\xbefore{A}{B}}{C}
 \end{align*}
 %
 The following formulas are \emph{not} in \ac{DNF}:
 %
 \begin{align*}
-&-\parsin{A \union B}\\
-&A \inter \parsin{B \union C}\\
-&\xbefore{A}{\parsin{B \union C}}\\
-&\xbefore{A}{\parsin{B \inter C}}
+&-\parsin{A \lor B}\\
+&A \land \parsin{B \lor C}\\
+&\xbefore{A}{\parsin{B \lor C}}\\
+&\xbefore{A}{\parsin{B \land C}}
 \end{align*}
 
 \begin{sloppypar}
@@ -2693,10 +2723,10 @@ For example, we need to avoid that the operands of \ac{XBefore} are $\var{a}$ an
 %
 \begin{equation}
 \label{law:independent-events}
-\independentevents{S}{T} = \forall i, zs \bullet
+\denote{\independentevents{S}{T}} = \forall i, zs \bullet
   \lnot \left(
-    \slice{zs}{i}{\left(i+1\right)} \in S \land
-    \slice{zs}{i}{\left(i+1\right)} \in T
+    \slice{zs}{i}{\left(i+1\right)} \in \denote{S} \land
+    \slice{zs}{i}{\left(i+1\right)} \in \denote{T}
   \right)
 \end{equation}
 
@@ -2704,27 +2734,27 @@ The absence of occurrences ($\False$, the empty set of $\algebraset$) is a ``0''
 %
 \begin{subequations}
 \begin{align}
-\xbefore{\False}{S} =&
-  \False &
+\xbefore{\bot}{S} =&
+  \bot &
   \text{left-false-absorb}
   \label{thm:xbefore-of-false-1}\\
 %
-\xbefore{S}{\False} =&
-  \False &
+\xbefore{S}{\bot} =&
+  \bot &
   \text{right-false-absorb}
   \label{thm:xbefore-of-false-2}\\
 %
-\left(\xbefore{S}{T}\right) \union S =& S &
+\left(\xbefore{S}{T}\right) \lor S =& S &
   \text{left-union-absorb}
   \label{thm:xbefore-sup-absorb-1}\\
 %
-\left(\xbefore{T}{S}\right) \union S =& S &
+\left(\xbefore{T}{S}\right) \lor S =& S &
   \text{right-union-absorb}
   \label{thm:xbefore-sup-absorb-2}\\
 %
 \tempo[1]{S} \implies
   \xbefore{S}{S} =&
-  \False &
+  \bot &
   \text{non-idempotent}
   \label{thm:xbefore-not-idempotent}\\
 %
@@ -2747,14 +2777,14 @@ First we use the \ac{XBefore} as operands of union and intersection.
 \begin{subequations}
 \begin{align}
 \tempo[1]{S} \land \tempo[1]{T}\implies&\nonumber\\
-  \parsin{\xbefore{S}{T}} \inter \parsin{\xbefore{T}{S}} =&
-  \False &
+  \parsin{\xbefore{S}{T}} \land \parsin{\xbefore{T}{S}} =&
+  \bot &
   \text{inter-equiv-false}
   \label{thm:xbefore-inf-equiv-bot}\\
 %
 \tempo{S} \land \tempo{T} \land \independentevents{S}{T}\implies&\nonumber\\
-  \parsin{\xbefore{S}{T}} \union \parsin{\xbefore{T}{S}} =&
-  S \inter T &
+  \parsin{\xbefore{S}{T}} \lor \parsin{\xbefore{T}{S}} =&
+  S \land T &
   \text{union-equiv-inter}
   \label{thm:xbefore-sup-equiv-inf}
 %
@@ -2772,33 +2802,33 @@ Boolean\index{Boolean Algebra} operators are used as operands of the \ac{XBefore
 %
 \begin{subequations}
 \begin{align}
-\xbefore{\left(S \union T\right)}{U} =&
-  \parsin{\xbefore{S}{U}} \union \parsin{\xbefore{T}{U}} &
+\xbefore{\left(S \lor T\right)}{U} =&
+  \parsin{\xbefore{S}{U}} \lor \parsin{\xbefore{T}{U}} &
   \text{left-union-dist}
   \label{thm:xbefore-sup-1}\\
 %
-\xbefore{S}{\left(T \union U\right)} =&
-  \parsin{\xbefore{S}{T}} \union \parsin{\xbefore{S}{U}} &
+\xbefore{S}{\left(T \lor U\right)} =&
+  \parsin{\xbefore{S}{T}} \lor \parsin{\xbefore{S}{U}} &
   \text{right-union-dist}
   \label{thm:xbefore-sup-2}\\
 %
 \tempo{S} \land \tempo{T} \land \independentevents{S}{T} & \implies\nonumber \\
-  \xbefore{\left(S \inter T\right)}{U} =&
-  \parsin{\xbefore{\xbefore{S}{T}}{U}} \union \nonumber\\
+  \xbefore{\left(S \land T\right)}{U} =&
+  \parsin{\xbefore{\xbefore{S}{T}}{U}} \lor \nonumber\\
   &\parsin{\xbefore{\xbefore{T}{S}}{U}} &
   \text{left-inter-dist}
   \label{thm:xbefore-inf-1}\\
 %
 \tempo{T} \land \tempo{U} \land \independentevents{T}{U} & \implies \nonumber\\
-  \xbefore{S}{\left(T \inter U\right)} =&
-  \parsin{\xbefore{S}{\xbefore{T}{U}}} \union \nonumber\\
+  \xbefore{S}{\left(T \land U\right)} =&
+  \parsin{\xbefore{S}{\xbefore{T}{U}}} \lor \nonumber\\
   &\parsin{\xbefore{S}{\xbefore{U}{T}}} &
   \text{right-inter-dist}
   \label{thm:xbefore-inf-2}\\
 %
-\tempo[2]{S} \implies S \inter \parsin{\xbefore{T}{U}} =&
-  \parsin{\xbefore{\parsin{S \inter T}}{U}} \union \nonumber\\
-  &\parsin{\xbefore{T}{\parsin{S \inter U}}} &
+\tempo[2]{S} \implies S \land \parsin{\xbefore{T}{U}} =&
+  \parsin{\xbefore{\parsin{S \land T}}{U}} \lor \nonumber\\
+  &\parsin{\xbefore{T}{\parsin{S \land U}}} &
   \text{unordered}
   \label{thm:and_xbefore_equiv_or_xbefore}
 \end{align}
@@ -2815,9 +2845,9 @@ The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer 
 \begin{align}
 \tempo{S} \land \tempo{T} \land \nonumber\\
   \tempo{U} \land \independentevents{S}{T} \land \independentevents{S}{U} & \implies \nonumber\\
-  S \inter \parsin{\xbefore{T}{U}} = &
-  \parsin{\xbefore{\xbefore{S}{T}}{U}} \union \nonumber\\
-  & \parsin{\xbefore{\xbefore{T}{S}}{U}} \union \nonumber\\
+  S \lor \parsin{\xbefore{T}{U}} = &
+  \parsin{\xbefore{\xbefore{S}{T}}{U}} \lor \nonumber\\
+  & \parsin{\xbefore{\xbefore{T}{S}}{U}} \lor \nonumber\\
   & \parsin{\xbefore{\xbefore{T}{U}}{S}} &
   \text{expanded-unordered}
   \label{thm:and_xbefore_equiv_or_xbefore_expanded}
@@ -2840,14 +2870,15 @@ The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer 
 \label{sec:qualitative-quantitative-properties}
 
 In \cref{sec:fault-trees} we showed the kind of results that are obtained in \ac{FTA}.
-In this section we show how to formalize two kinds of properties of \acp{FT}: (i) \ac{MCSeq}, the quantity of faults in the minimal sequences that cause the root failure, and (ii) root probability, provided the probability of sequences occurrences.
-These properties are representative and other criteria can be modelled similarly.
+In this \lcnamecref{sec:qualitative-quantitative-properties} we show how to formalize two kinds of properties of \acp{FT}: (i) \ac{MCSeq}, the number of fault elements in the minimal sequences that cause a root failure, and (ii) root probability, given the availability of basic fault occurrences probabilities.
+These properties are the most representative, but other criteria can be modelled similarly.
 
-The denotational semantics of \ac{algebra} is a set of \distinctlists, thus each list has no repeated elements and each list represent a possible combination of faults that causes the root failure.
-\Acp{MCSeq} are the lists with least length, thus have minimal lengths of the lists.
+Recall from the beginning of this \lcnamecref{chap:algebra} that the denotational semantics of \ac{algebra} is a set of \distinctlists.
+Thus each list has no repeated elements and represent a possible combination of faults that causes the root failure.
+\Acp{MCSeq} are those \distinctlists with the least length, defined in what follows.
 
 \begin{definition}[Minimal cut sequences]
-Let $F$ be a formula in \ac{algebra} and $L$ the denotational semantics of $F$, the minimal cut sequences $\mcseqop$ of $F$ are:
+Let $F$ be a formula in \ac{algebra} and $L$ its denotational semantics ($L = \denote{F}$), the minimal cut sequences $\mcseqop$ of $F$ are:
 %
 \begin{equation}
 \mcseq{F} = \left\{ xs \middle| xs \in L \bullet \length{xs} = minL \right\}
@@ -2956,7 +2987,7 @@ For example, the probability of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2
 The empty list is the special case to represent the approximation of the probability calculation of \ac{NOT} operators.
 It works as the universal complement probability of any other list.
 When the empty list appears in a denotational semantics it means that the top-event occurs if no fault occurs, thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
-This is the only assumption in the calculations shown in this section.
+This is the only assumption in the calculations shown in this \lcnamecref{sec:qualitative-quantitative-properties}.
 
 Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$, which has probability $P_1(t) \times P_2(t)$:
 %
@@ -2992,7 +3023,7 @@ To enable the formal verification of structure expressions we use the concept of
 Safety requirements are written in terms of the properties of \iac{FT}, for example: (i) no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or (ii) the probability of all critical failure should be less than $P_x$.
 To check these requirements we translate these requirements into a value and verify in the theorem prover.
 
-For the two properties shown in this section, we define the two acceptance criteria:
+For the two properties shown in this \lcnamecref{sec:qualitative-quantitative-properties}, we define the two acceptance criteria:
 %
 \begin{subequations}
 \begin{align}
@@ -3118,8 +3149,9 @@ s &= \text{SwitchFailure}& S = \var s
 
 \section{Structure expressions with Boolean operators}
 \index{structure expression}
+\label{sec:structure-expressions-boolean-operators}
 
-In this section we show that the same result reported in~\cite{DM2012} in terms of static failure expression (or Boolean\index{Boolean Algebra} propositions) can be obtained with our Boolean\index{Boolean Algebra} operator without using \ac{XBefore}.
+In this \lcnamecref{sec:structure-expressions-boolean-operators} we show that the same result reported in~\cite{DM2012} in terms of static failure expression (or Boolean\index{Boolean Algebra} propositions) can be obtained with our Boolean\index{Boolean Algebra} operator without using \ac{XBefore}.
 For each trace shown in \cref{sec:faults-injection}, a mapping function\footnote{In this work we do not show the mapping function from traces to \ac{algebra} (and the mapping function with \ac{XBefore} in \cref{sec:case-study-xbefore}).
 The mapping rules follow the traces: \ac{XBefore} is obtained by the order of occurrence and the absence of an event is the complement ($-$).} ($\tracetobool$) generates the following sets of lists:
 %
