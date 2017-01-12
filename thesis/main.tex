@@ -390,7 +390,9 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \newcommand{\probability}[1]{\ensuremath \probabilityop\left\{#1\right\}}
 \newcommand{\probabilityt}[1]{\ensuremath \probabilityop\left\{#1\right\}^{<t}}
 \def\denotationalprobop{\ensuremath\mathrm{DPr}}
-\newcommand{\denotationalprob}[2]{\ensuremath \denotationalprobop_{#1}\left\{#2\right\}}
+\newcommand{\denotationalprob}[1]{\ensuremath \denotationalprobop\left\{#1\right\}}
+\def\formulaprobop{\ensuremath\mathrm{FPr}}
+\newcommand{\formulaprob}[1]{\ensuremath \formulaprobop\left\{#1\right\}}
 \def\mcseqop{\ensuremath\operatorname{\mathrm{MCSeq}}}
 \newcommand{\mcseq}[1]{\ensuremath\mcseqop\left(#1\right)}
 \def\Minop{\ensuremath\mathrm{Min}}
@@ -2911,44 +2913,48 @@ P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
 \end{align}
 %
 where $P_1$ and $P_2$ are the probability of the occurrence of the the first and the second faults (cumulative distribution function), respectively, and $T_1$ and $T_2$ are the times the first and the second faults occur.
-The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs is the probability of the sequence of faults $f_i$, $i \in \left\{~1, \ldots, n~\right\}$, where $f_n$ is the first fault, and $f_1$ is the last one:
+The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs is the probability of the sequence of faults $f_i$, $i \in \left\{~1, \ldots, n~\right\}$:
 %
 \begin{align}
-\probability{\left[f_n,f_{n-1}\ldots,f_2,f_1\right]} = &\int_0^t\fiti{1}\int_0^{t_1}\fiti{2}\ldots\int_0^{t_{n-2}}\fiti{n-1}\nonumber\\
-& \int_0^{t_{n-1}}\fiti{n} dt_n dt_{n-1}\ldots dt_2 dt_1
+\probability{\left[f_1,f_2\ldots,f_{n-1},f_n\right]} = &\int_0^t\fiti{n}\int_0^{t_n}\fiti{n-1}\ldots\int_0^{t_3}\fiti{2}\nonumber\\
+& \int_0^{t_2}\fiti{1} dt_1 dt_2\ldots dt_{n-1} dt_n\label{eq:general-pand-probability}
 \end{align}
 %
-where $P_i$ is the probability of the occurrence of fault $f_i$.
+where $P_i$ is the cumulative probability function of fault $f_i$.
 
 The probability of occurrence in each list in the denotational semantics of \ac{algebra} uses the probability in the \ac{PAND} gate.
 The difference from the \ac{PAND} calculation is that repeated situations must be removed.
-For example, $\probability{\left[f_1,f_2\right]}$ contains the situations that $f_3$ does not occur, or occurs in some time: $\probability{\left[f_1,f_2,f_3\right]}$, $\probability{\left[f_1,f_3,f_2\right]}$, and $\probability{\left[f_3,f_1,f_2\right]}$.
-To isolate these cases, we use the following definitions:
+For example, the probability of $\denote{\xbefore{\var{f_1}}{\var{f_2}}}$ contains the situations that $f_1$ occurs before $f_2$ \emph{and} $f_3$ does not occur, or $f_3$ occurs in some time: $\probability{\left[f_1,f_2,f_3\right]}$, $\probability{\left[f_1,f_3,f_2\right]}$, and $\probability{\left[f_3,f_1,f_2\right]}$.
 %
-\begin{subequations}
-\begin{align}
+%To isolate these cases, we use the following definitions:
+%
+%\begin{subequations}
+%\begin{align}
 %\permutations{A} = & \left\{~ ys ~\middle|~ \listset{ys} \in A ~\right\}\label{eq:permutations}\\
 %%%%%
-\filter{xs}{ys} = & ys / \left(\listset{ys} - \listset{xs}\right) \label{eq:filter}\\
+%\filter{xs}{ys} = & ys / \left(\listset{ys} - \listset{xs}\right) \label{eq:filter}\\
 %%%%
-\listsof{S}{xs} = & \left\{~ ys ~\middle|~ ys \in \denote{S} ~\bullet~xs = \filter{xs}{ys} ~\right\}\label{eq:listsof}
-\end{align}
-\end{subequations}
+%\listsof{S}{xs} = & \left\{~ ys ~\middle|~ ys \in \denote{S} ~\bullet~xs = \filter{xs}{ys} ~\right\}\label{eq:listsof}
+%\end{align}
+%\end{subequations}
 %
-where $ys / A$ removes the elements of $A$ in $ys$.
+%where $ys / A$ removes the elements of $A$ in $ys$.
 
-Using \cref{eq:listsof,eq:generators} we define the denotational probability\index{denotational probability} $\denotationalprobop$ of a list as:
+Using \cref{eq:general-pand-probability,eq:generators} we define the denotational probability\index{denotational probability} $\denotationalprobop$ of a list as:
 \begin{align}
-\denotationalprob{S}{xs} = &
-  \probability{xs} - 
-  \sum_{ys \in R\left(S, xs\right)}\probability{ys}\label{eq:denotational-probability}\\
+\denotationalprob{xs} = &
+  \probability{xs} \times \prod_{f_j \in \generators_{xs}} \left(1-P_j\left(t\right)\right)\label{eq:denotational-probability}\\
+  % - 
+  %\sum_{ys \in R\left(S, xs\right)}\probability{ys}\label{eq:denotational-probability}\\
 %%%%%%%%%%%%%
-R\left(S, xs\right) = & \listsof{S}{xs} - \left\{xs\right\}\nonumber
+\generators_{xs} = & \generators\left(\True\right) - \listset{xs}\nonumber
+%%%%%
+%R\left(S, xs\right) = & \listsof{S}{xs} - \left\{xs\right\}\nonumber
 \end{align}
 %
-%For example, to calculate $\denotationalprob{S}{\left[f_1, f_2\right]}$ for set of generators $\left\{f_1,f_2,f_3\right\}$, we have:
+%For example, to calculate $\denotationalprob{\left[f_1, f_2\right]}$ for set of generators $\left\{f_1,f_2,f_3\right\}$, we have:
 %\begin{align*}
-%\denotationalprob{S}{\left[f_1,f_2\right]} = & \probability{\left[f_1,f_2\right]}
+%\denotationalprob{\left[f_1,f_2\right]} = & \probability{\left[f_1,f_2\right]}
 %- \probability{\left[f_1,f_2,f_3\right]}\nonumber\\
 %%%%%%
 %&- \probability{\left[f_1,f_3,f_2\right]}
@@ -2956,13 +2962,19 @@ R\left(S, xs\right) = & \listsof{S}{xs} - \left\{xs\right\}\nonumber
 %\end{align*}
 %
 %In other words, the denotational probability gives the probability of the occurrence of the faults in the order of the list \emph{and no other fault occurs}.
+%%%%
+For example, for generators $f_1$, $f_2$, and $f_3$, $\denotationalprob{\left[f_1,f_2\right]} = \probability{\left[f_1,f_2\right]}\times\left(1-P_3(t)\right)$, which is the probability of $f_1$ occurring before $f_2$ and $f_3$ not occurring.
+
+The set of lists of the denotational semantics of a formula is an exclusive or, so two possibilities (lists) are not active simultaneously.
+For example, if $f_1$ occurs before $f_2$, then $f_2$ cannot occur before $f_1$.
+Thus the formula is the sum of the denotational probabilities of the lists.
 
 \begin{definition}[Probability of a formula in \ac{algebra}]
-Let $F$ be a formula in \ac{algebra}, then:
+Let $S$ be a formula in \ac{algebra}, then the probability of $S$, $\formulaprob{S}$, is:
 %
 \begin{equation}
 \label{eq:algebra-probability}
-\probability{F} = \sum_{xs \in \denote{F}}\denotationalprob{S}{xs}
+\formulaprob{S} = \sum_{xs \in \denote{S}}\denotationalprob{xs}
 \end{equation}
 \end{definition}
 
@@ -2971,21 +2983,22 @@ It means that even if a formula contains \iac{NOT} operator, we still safely obt
 For example, the probability of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2$) is:
 %
 \begin{align}
-\probability{\lnot \var{f_1}} = & \denotationalprob{\lnot \var{f_1}}{\left[\right]} + \denotationalprob{\lnot \var{f_1}}{\left[f_2\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
+\probability{\lnot \var{f_1}} = & \denotationalprob{\left[\right]} + \denotationalprob{\left[f_2\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
 %%%%%%%%%%%%%
-= &\probability{\left[\right]} - \probability{\left[f_2\right]}
-+ \probability{\left[f_2\right]} & \text{by \cref{eq:denotational-probability}} \nonumber\\
+= &\probability{\left[\right]}\times\left(1 - P_1(t)\right)\times\left(1 - P_2(t)\right)\nonumber\\
+& + \probability{\left[f_2\right]}\times\left(1 - P_1(t)\right) & \text{by \cref{eq:denotational-probability}} \nonumber\\
 %%%%%%%%%%%%%
-= &\probability{\left[\right]} \nonumber\\
-%%%%%%%
-\approx & 1
+= & 1 \times \left(1- P_1(t)\right) \times \left(1 - P_2(t)\right)\nonumber\\
+& + P_2(t) \times \left(1 - P_1(t)\right) & \text{by \cref{eq:general-pand-probability}}\nonumber\\
+%%%%%%%%%%%%%
+= & 1 - P_1(t)
 \end{align}
 
-The empty list is the special case to represent the approximation of the probability calculation of \ac{NOT} operators.
+The empty list is the special and has value $1$.
 It works as the universal complement probability of any other list.
 When the empty list appears in a denotational semantics it means that the top-event occurs if no fault occurs.
-Thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
-This is the only assumption in the calculations shown in this \lcnamecref{sec:qualitative-quantitative-properties}.
+%Thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
+%This is the only assumption in the calculations shown in this \lcnamecref{sec:qualitative-quantitative-properties}.
 
 We use the traditional probability calculations~\cite{Merle2010} as reference to calculate the probabilities of formulas in \ac{algebra}.
 \begin{subequations}
@@ -2998,9 +3011,9 @@ We use the traditional probability calculations~\cite{Merle2010} as reference to
 For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$, considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is the probability of $\left[f_1, f_2\right]$ \emph{or} $\left[f_2, f_1\right]$ (but not both):
 %
 \begin{align}
-\denotationalprobop_L&\left\{\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)\right\}\nonumber\\
+\formulaprobop&\left\{\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)\right\}\nonumber\\
 %%%%
-=&\denotationalprob{S}{\left[f_1,f_2\right]} + \denotationalprob{S}{\left[f_2,f_1\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
+=&\denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
 %%%%
 = &\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]} & \text{\cref{eq:denotational-probability}, both $\sum$ is $0$}\nonumber\\
 %%%%
@@ -3021,7 +3034,7 @@ Another example including complement is the formula $\var{f_1} \land \var{f_2} \
 \begin{align}
 S &= \var{f_1} \land \var{f_2} \land \lnot \var{f_3}\nonumber\\
 \probability{S} &= 
-\denotationalprob{S}{\left[f_1,f_2\right]} + \denotationalprob{S}{\left[f_2,f_1\right]} \nonumber\\
+\denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} \nonumber\\
 %%%%%%%%
 &= P_1(t) \times P_2(t) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf}}
 \end{align}
@@ -3031,10 +3044,10 @@ Finally, using \cref{eq:algebra-probability}, we demonstrate the equivalence to 
 \begin{align}
 S &= \vari{1} \lor \vari{2}\nonumber\\
 %%%
-\probability{S} = & \denotationalprob{S}{\left[f_1\right]} +
-  \denotationalprob{S}{\left[f_2\right]} +
-  \denotationalprob{S}{\left[f_1,f_2\right]} +
-  \denotationalprob{S}{\left[f_2,f_1\right]}
+\probability{S} = & \denotationalprob{\left[f_1\right]} +
+  \denotationalprob{\left[f_2\right]} +
+  \denotationalprob{\left[f_1,f_2\right]} +
+  \denotationalprob{\left[f_2,f_1\right]}
 \nonumber\\
 %%%%%%%%%%%
 = &\probability{\left[f_1\right]} - \probability{\left[f_1,f_2\right]} - \probability{\left[f_2,f_1\right]} +\nonumber\\
