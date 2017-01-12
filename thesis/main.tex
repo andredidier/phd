@@ -410,6 +410,31 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\permutationsop{\ensuremath\mathrm{permutations}}
 \newcommand{\permutations}[1]{\ensuremath\permutationsop\left(#1\right)}
 \newcommand{\listsof}[2]{\ensuremath\mathrm{lists}\left(#1, #2\right)}
+\def\healthinesscmd{\ensuremath\mathrm{H}}
+\newcommand{\healthiness}[1][]{
+  \ensuremath%
+  \def\healthyarg{#1}%
+  \ifx\healthyarg\empty%
+    \healthinesscmd
+  \else%
+    \healthinesscmd_#1
+  \fi%
+}
+\newcommand{\healthinessfun}[2][]{\ensuremath\healthiness[#1]\left(#2\right)}
+\newcommand{\healthy}[1][]{\ensuremath\healthiness[#1]\text{-healthy}}
+\def\undefinednominal{\ensuremath undefined}
+\newcommand{\contradiction}[1]{\ensuremath\mathrm{contradiction}\left(#1\right)}
+\newcommand{\tautology}[1]{\ensuremath\mathrm{tautology}\left(#1\right)}
+\newcommand{\eval}[1]{\ensuremath\mathrm{eval}\left(#1\right)}
+\newcommand{\Nominal}[1]{\ensuremath\mathop{\mathrm{Nominal}} #1}
+\newcommand{\Failure}[1]{\ensuremath\mathop{\mathrm{Failure}} #1}
+%\newcommand{\ND}[2]{\ensuremath #1|#2}
+\newcommand{\predicate}[2]{\ensuremath\left\langle \mathrm{out}\left(#1\right) = #2 \right\rangle}
+\newcommand{\modes}[2]{\ensuremath\mathrm{modes}\left(#1,#2\right)}
+\def\nondetcmd{\ensuremath\mathrm{nondeterministic}}
+\newcommand{\nondet}[1]{\nondetcmd\left(#1\right)}
+\def\activationcmd{\ensuremath\mathrm{activation}}
+\newcommand{\activation}[2]{\activationcmd\left(#1, #2\right)}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -3084,88 +3109,330 @@ For the two properties shown in this \lcnamecref{sec:qualitative-quantitative-pr
 %
 Both equations have Boolean\index{Boolean} return value, which can be verified by a theorem prover.
 
-\section{Propositions}
-\label{sec:propositions}
-
-In this section we discuss the theorems and definitions that still need to be proved.
-We present them as propositions.
-
-Soundness and completeness of the \ac{algebra} is given in terms of the algebraic form and its denotational semantics (\cref{sec:soundness-completeness-algebra}).
-The \ac{activation} is defined in terms of a logic that is decidable and some output value (\cref{sec:activation}).
-
-\subsection{Soundness and completeness of \acs*{algebra}}
-\label{sec:soundness-completeness-algebra}
-
-%Soundness: if it is wrong, we cannot prove
-%Completeness: everything that is right can be proved
-
-Given the semantics of a formula of~\ac{algebra}, there is always a set of sequences that represents exactly the formula.
-To guarantee the completeness we show that for every set of sequences there is a corresponding formula in \ac{algebra}.
-
-\begin{proposition}[Soundness and completeness of \ac{algebra}]
-\amnote{Está de acordo com os livros de lógica?}
-\adnote{Não tive muito tempo para pensar, mas sim. Eu olhei o significado de ambos e montei a proposição.}
-\asnote{A definição de completess é intuitiva, mas a de soundness, não. Esperaria que fosse algo como a equivalência de duas formulas estivesse relacionada à equivalência das duas sequencias que representassem estas formulas. Da forma como está, uma mesma formula pode ser equivalente a duas sequencias diferentes, o que geraria uma inconsistência. }
-Let $F$ be the set of all formulas in \ac{algebra}, and $SS$ be the set of all sets of sequences:
-%
-\begin{subequations}
-  \begin{align}
-    \forall f \in F \ldotp \exists S \in SS \ldotp f & = S & \text{Soundness}\\
-    \forall S \in SS \ldotp \exists f \in F \ldotp f & = S & \text {Completeness}
-  \end{align}
-\end{subequations}
-\end{proposition}
-%
-The equality in the proposition is set-based, thus, in both cases, $f \subseteq S \land S \subseteq f$.
-
-\subsection{\acs*{activation} concepts}
-\label{sec:activation}
-
-The \acf{activation} is used to model system faults.
-When reasoning about faults, engineers analyse component by component, defining its outputs in the presence of each possible fault.
-The \ac{activation} is nothing more than this: the outputs of the components in the presence of (some combination of) faults.
-To ensure that all possibilities are considered (those that the engineer reasoned about them), the formula that results from the output conditions shall be a \emph{tautology}.
-For example, if the engineer defines that a component produces as outputs:
-\begin{alineasinline}
-  \item $A$ if $F_1$ occurs, and
-  \item $B$ if $F_2$ occurs,
-\end{alineasinline}
-then there should be an output for condition $\lnot F_1 \land \lnot F_2$, and $A$ and $B$ must converge when both $F_1$ and $F_2$ occur.
-By convergence, an initial idea is that $A = B$ in this case.
-To connect components and to generate \acp{FT}, we ask questions to the \ac{activation} formulas: we define \emph{predicates}.
-
-A nominal value is required to handle the conditions that do not result in a failure.
-Recall from previous example, if $F_1$ and $F_2$ do not occur, then the system should be in a normal state, and its output is signalled as nominal with some nominal value.
-Nominal values are used to analyse value-based failures.
-In general, failure outputs do not have an associated value.
-
-In some cases a degraded state can be an undesired state, as for example, if one wants to check the probability of operating in high-cost conditions.
-For these situations, the output values are signalled as degraded, but they have an associated value.
-
-To connect components, instead of using a fixed condition like $F_1$ and $F_2$, we use a predicate.
-For example: if an omission is detected in the first input, the output of this component is $A$; the component outputs $B$ if $F_1$ occurs, and it outputs its nominal value, otherwise.
-
-To obtain a fault tree from \ac{activation} we define a predicate over a whole \ac{activation} formula of a system.
-For example: what are the conditions that generate and output \emph{omission}?
-
-The underlying conditions in \ac{activation} can be in Boolean\index{Boolean Algebra} algebra or in \ac{algebra}.
-In any case, soundness and completeness in \ac{activation} is given in terms of the underlying algebra: given a formula in \ac{activation}, any predicate generates a valid expression in the underlying algebra, and there exists a formula and a predicate for any expression in the underlying algebra.
-
-\begin{proposition}[Soundness and completeness of \ac{activation}]
-\asnote{P não deveria estar quantificado universalmente no primeiro predicado? E no segundo, a quantificação é existencial mesmo?
-A noção de soundness, como no caso anterior, continua parecendo muito fraca. }
-Let $F$ be the set of all formulas in \ac{activation}, $G$ be the set of all formulas in its underlying algebra, and $P$ a predicate over output values of \ac{activation}, then:
-%
-\begin{subequations}
-  \begin{align}
-    \forall f \in F \ldotp \exists g \in G \ldotp P\parsin{f} & \equiv g & \text{Soundness} \\
-    \forall g \in G \ldotp \exists f \in F, P \ldotp P\parsin{f} & \equiv g & \text{Completeness}
-  \end{align}
-\end{subequations}
-\end{proposition}
-
 \chapter{Reasoning fault activation}
 \label{chap:activation}
+
+The \ac{activation} proposed in this work emerges from the need to analyse the behaviour of a system when a subset of the faults is active during the same time period, and to provide completeness analysis of system behaviour.
+%
+There are at least two strategies to use \ac{activation} to obtain structure expressions of \ac{SFT}, \ac{TFT}, or \ac{DFT}: (i) model systems directly in \ac{activation}, and (ii) obtaining operational mode expressions extracted from failure traces, as shown in the work reported in~\cite{DM2016}.
+%
+In approaches as those reported in~\cite{WP2009,Merle2010}, behavioural completeness is left for the analyst.
+Using tautology and the indication of undefined nominal values, we ensure that no situation is left forgotten.
+
+The \ac{activation} associates: (i) an operational mode, and (ii) the expression of fault events that \emph{activates} the operational mode or error event.
+The expressions of fault events can be written in any algebra that provides tautology and contradiction properties.
+Thus, \ac{activation} is parametrized by: (i) an algebra that provides at least tautology and contradiction, and (ii) operational modes.
+\Cref{fig:logic-overview} depicts an overview of \ac{activation}.
+%
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{logic-overview}
+  \caption{\Ac{activation} overview}
+  \label{fig:logic-overview}
+\end{figure}
+
+%Finally, structure expressions with order-related operators can be complex to analyse.
+%Even to determine whether they are a contradiction or not~\cite{WP2009}.
+
+%For example, what is the system behaviour when fault A occurs and then fault B occurs?
+%What is a component behaviour when it detects a faulty behaviour in some of its inputs?
+%Or, does the analyst considered all possibilities?
+%Is there any erroneous behaviour case missing?
+
+\begin{sloppypar}
+We summarise the properties of the \ac{activation} as follows:
+%
+\begin{enumerate}
+  \item No expression predicate is a contradiction: there are no \emph{false} predicates in activation expressions;
+  %\item There are no two terms that are \emph{active} simultaneously: only explicit non-determinism is allowed;
+  \item The predicates in the terms of an expression consider all possible situations: expression tautology;
+  \item There are no two terms with exactly the same operational mode: all expression terms are related to a unique operational mode.
+\end{enumerate}
+%
+These properties form the \emph{healthiness conditions}~\cite{HH1998} of an expression in the \ac{activation}.
+\end{sloppypar}
+
+We show the general form of the \ac{activation} to model faults in \cref{sec:grammar}, the healthiness conditions to normalize expressions in \cref{sec:healthiness-conditions}, how to identify non-determinism in an expression in \cref{sec:non-determinism}, and the predicates notation to analyse systems and model fault propagation in \cref{sec:predicates-notation}.
+
+\section{The \acl{activation} Grammar}
+\label{sec:grammar}
+
+Each term in an expression is a pair of a predicate and an operational mode.
+The predicate is written in either Boolean algebra, \ac{algebra}, or any algebra that provides these properties: tautology and contradiction.
+We assume that the set of possible faults on a system is finite and that each variable declared in a predicate represents a fault event.
+
+The operational mode has two generic values: (i) Nominal, and (ii) Failure.
+Nominal values either determine value, or an undefined value (in this case, the constant value ``$\undefinednominal$'' is assumed).
+Failure values denote an erroneous behaviour, which can be a total failure (for example, signal omission) or a failure that causes degradation (for example, a signal below or above its nominal range).
+The choice of the operational modes depends on the system being analysed and its definition is generic and is left for the analyst.
+For the \ac{activation}, it is sufficient to specify that it is an erroneous behaviour.
+
+The grammar is parametrized by the syntax of an algebra (\verb|Algebra|) and a set of operational modes (\verb|OperModes|).
+The initial rules of the grammar are defined as follows:
+\begin{verbatim}
+AL(Algebra, OperModes)     = TERM(Algebra, OperModes) 
+                             | TERM(Algebra, OperModes) 
+                               `|' AL(Algebra, OperModes)
+TERM(Algebra, OperModes)   = `(' Algebra `,' OM(OperModes) `)'
+OM(OperModes)              = `Nominal' NominalValue 
+                             | `Failure' OperModes
+NominalValue               = `undefined' | Number
+Number                     = Integer | Bool | Decimal
+\end{verbatim}
+%
+The denotational semantics of the expressions in \ac{activation} is a set of pairs.
+The predicate in each term of an expression depends on the semantics of the inner algebra.
+Thus the predicate evaluates to either \emph{true}~($\top$) or \emph{false}~($\bot$) depending on the valuation in the algebra.
+In what follows we show a sketch of the denotational semantics of \ac{activation}.
+%
+\begin{align*}
+  \ac{activation}InFormula{\left(P_1, O_1\right)} &\mapsto \{\left(P_1, O_1\right)\}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \ac{activation}InFormula{\left(P_1, O_1\right) | \left(P_2, O_2\right)} &\mapsto
+    \{\left(P_1, O_1\right), \left(P_2, O_2\right)\}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \ac{activation}InFormula{Nominal~100} &\mapsto \Nominal{100}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \ac{activation}InFormula{Nominal~undefined} &\mapsto \Nominal{\undefinednominal}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \ac{activation}InFormula{Failure~Omission} &\mapsto \Failure{Omission}
+\end{align*}
+%
+In an expression, if the $i$th predicate evaluates to $true$ ($\top$), we say that the $i$th operational mode is \emph{activated}.
+To simplify the presentation of the expressions and to ease the understanding, we use the denotational semantics in the remainder of this article (the right-hand side of the sketch above).
+
+
+In this \lcnamecref{sec:grammar}, to illustrate the properties and possible analyses, we use an example of a system with faults $A$ and $B$ and the following outputs:
+\begin{description}
+  \item[$O_1$:] when $A$ is active;
+  \item[$O_2$:] when $B$ is active;
+  \item[$O_3$:] when $A$ is active, but $B$ is not;
+  \item[$O_4$:] when $A$ or $B$ are active.
+\end{description}
+%
+The expression for this example in \ac{activation} is:
+\begin{equation}
+S = \left\{\left(A, O_1\right), \left(B, O_2\right), \left(A \land \lnot B, O_3\right), \left(A \lor B, O_4\right)\right\}
+\end{equation}
+
+In this example we see that one of the healthiness conditions is not satisfied: when for instance, $A$ and $B$ are both inactive ($\lnot \left(A \land B\right)$), there is no explicit output defined.
+%
+In \cref{sec:case-study} we show a more detailed case study to illustrate the reasoning about temporal faults.
+In the next \lcnamecref{sec:healthiness-conditions}, we show how to normalise the expression, so that the three healthiness conditions are satisfied.
+
+\section{Healthiness Conditions}
+\label{sec:healthiness-conditions}
+
+The healthiness conditions are fix points of a language.
+The property is defined as a function of an expression and returns another expression.
+For example, if a healthiness condition $\healthiness$ is satisfied for an expression $Exp$, thus $\healthinessfun{Exp} = Exp$.
+
+In what follows we show the three healthiness conditions for the \ac{activation}.
+All definitions in this \lcnamecref{sec:healthiness-conditions} refer to an algebra that has the following properties:
+\begin{description}
+  \item[contradiction:] the expression always evaluates to \emph{false};
+  \item[tautology:] the expression always evaluates to \emph{true}.
+\end{description}
+
+\subsection{$\healthiness[1]$: No predicate is a contradiction.}
+\label{sec:h1}
+
+This property is very simple and it is used to eliminate any term that has a predicate that always evaluates to false.
+
+\begin{definition}
+Let $exp$ be an expression in the \ac{activation}, then:
+%
+\begin{equation}
+\healthinessfun[1]{exp} = \left\{\left(P,O\right) | \left(P,O\right) \in exp \bullet \lnot \contradiction{P}\right\}
+\end{equation}
+\end{definition}
+%
+where the operator $\in$ indicates that a term is present in the expression.
+
+Applying the first healthiness condition to our example results in:
+\[\healthinessfun[1]{S} = S\]
+
+Thus, we conclude that $S$ \emph{is} $\healthy[1]$.
+
+\subsection{$\healthiness[2]$: All possibilities are covered.}
+\label{sec:h2}
+
+This property is used to make explicit that there are uncovered operational modes.
+In this case, there is a combination of variables in the inner algebra that was not declared in the expression.
+Very often the focus when modelling faults is the erroneous behaviour, so we assume that such an uncovered operational mode is nominal, but has an undefined value.
+
+\begin{definition}
+Let $exp$ be an expression in the \ac{activation}, and $\tau$ is:
+\[
+\tau = \lnot \left (\bigvee_{\left(P,O\right)\in exp} P\right)
+\]
+%
+then:
+%
+\begin{equation}
+\healthinessfun[2]{exp} = 
+  \begin{cases}
+    exp, & \text{if } \contradiction{\tau}\\
+    exp \cup \left\{\left(\tau,\Nominal{\undefinednominal}\right)\right\}, & \text{otherwise}
+  \end{cases}
+\end{equation}
+
+\end{definition}
+
+This property states that if the expression is already complete, so all possibilities are already covered, thus the expression is healthy.
+
+Applying the second healthiness condition to our example results in the following expression after simplification:
+\[\healthinessfun[2]{S} = S \cup \left\{\left(\lnot A \land \lnot B, \Nominal{\undefinednominal}\right)\right\}\]
+
+Thus, we conclude that $S$ \emph{is not} $\healthy[2]$.
+
+\subsection{$\healthiness[3]$: There are no two terms with exactly the same operational mode.}
+\label{sec:h3}
+This property merges terms that contain the same operational mode.
+It avoids unnecessary formulas and may reduce the expression.
+
+\begin{definition}
+Let $exp$ be an expression in the \ac{activation}. Then:
+%
+\begin{equation}
+\label{eq:h3}
+\begin{split}
+\healthinessfun[3]{exp} = \left\{ \right.&\left(P_1, O_1\right) | \left(P_1, O_1\right) \in exp \land \\
+    &\forall \left(P_2,O_2\right) \in exp \bullet 
+      \left(P_1, O_1\right) = \left(P_2, O_2\right) \lor O_1 \neq O_2
+  \left.\right\} \cup \\
+  & \left\{ \left(P_1 \lor P_2, O_1\right) | \left(P_1, O_1\right),\left(P_2, O_2\right) \in exp \land O_1 = O_2 \right\}
+\end{split}
+\end{equation}
+\end{definition}
+
+Applying $\healthiness[3]$ in the example in the beginning of the \lcnamecref{chap:activation}, we conclude that $S$ \emph{is} $\healthy[3]$.
+On the other hand, if we consider an $S'$ system being a copy of $S$, but making $O_1 = O_2$, then:
+\[
+\healthinessfun[3]{S'} = \left\{ 
+  \left(A \lor B, O_1\right),
+  \left(A \land \lnot B, O_3\right),
+  \left(A \lor B, O_4\right)
+\right\}
+\]
+Thus, we conclude that $S'$ \emph{is not} $\healthy[3]$.
+
+\subsection{Healthy expression}
+\label{sec:h}
+
+To obtain a healthy expression, we apply all three healthiness conditions.
+The order of application of each healthiness condition does not change the resulting expression.
+The healthiness function is written as composition of functions as follows:
+\begin{equation}
+\label{eq:h}
+\healthiness = \healthiness[1] \circ \healthiness[2] \circ \healthiness[3]\end{equation}
+
+After applying the three healthiness conditions to $S$, the resulting expression is:
+\[
+\begin{split}
+\healthinessfun{S} = \left\{\right.
+  & \left(A, O_1\right), \left(B, O_2\right),\\
+  & \left(A \land \lnot B, O_3\right), \left(A \lor B, O_4\right),\\
+  & \left(\lnot A \land \lnot B, \Nominal{undefined}\right)
+\left.\right\}
+\end{split}
+\]
+
+The healthiness conditions are useful to faults modelling, aiding the faults analyst to check contradictions and completeness.
+Also, obtaining safe predicates is only possible in healthy expressions.
+In the next \lcnamecref{sec:non-determinism}, we show how to verify non-determinism in \ac{activation} expressions.
+
+
+\section{Non-determinism}
+\label{sec:non-determinism}
+
+The non-determinism is usually an undesirable property.
+It causes an unexpected behaviour, so the analysis shall consider the activation of fault even if the fault might or not be active.
+
+To identify a non-determinism, we can check for the negation of a contradiction in a pair of predicates in the inner algebra.
+
+\begin{definition}[Non-determinism]
+\label{def:non-determinism}
+Let $exp$ be an expression in \ac{activation}.
+
+\begin{equation}
+\label{eq:non-determinism}
+\begin{split}
+\nondet{exp} = & \exists \left(P_1,O_1\right),\left(P_2, O_2\right) \in exp~\bullet \\
+  & \lnot \contradiction{P_1 \land P_2}
+\end{split}
+\end{equation}
+
+\end{definition}
+
+If there is at least one combination that evaluates $P_1 \land P_2$ to true (it is not a contradiction), then $exp$ is non-deterministic.
+Our example is clearly non-deterministic as at least $A \land \left(A \lor B\right)$ is not a contradiction.
+
+To analyse components and systems, and to model faults propagation, a predicates notation is shown in the next \lcnamecref{sec:predicates-notation}.
+The predicates notation offers more two ways to check non-determinism.
+
+\section{Predicates Notation}
+\label{sec:predicates-notation}
+
+The \ac{activation} needs a special notation to enable the analysis of: (i) a particular faults expression, or (ii) a propagation in components.
+Such a special notation extracts predicates in the inner algebra given an output of interest.
+
+\begin{definition}[Predicate]
+\label{def:predicate}
+Let $exp$ be an expression in \ac{activation}, and $O_x$ an operational mode.
+A predicate over $exp$ that matches $O_x$ is then:
+\begin{equation}
+\label{eq:predicate}
+\predicate{exp}{O_x} \iff \left.\exists \left(P, O\right) \in \healthinessfun{exp}\ \middle|\ O = O_x \bullet P\right.
+\end{equation}
+\end{definition}
+
+
+The predicate notation function returns a predicate in the inner algebra.
+For the example in the beginning of this \lcnamecref{sec:predicates-notation}, the predicate for $O_2$ is obtained as follows:
+\[
+\predicate{S}{O_2} = B
+\]
+
+To allow fault propagation of components we need another special notation that expands the modes of an expression with a predicate in the inner algebra.
+
+\begin{definition}[Modes]
+Let $exp$ be an expression in \ac{activation}, and $P$ a predicate in the inner algebra, then:
+\begin{equation}
+\label{eq:modes}
+\modes{exp}{P} = \left\{ \left(P_i \land P, O_i\right)\ \middle|\ (P_i, O_i) \in \healthinessfun{exp} \right\}
+\end{equation}
+
+\end{definition}
+
+Finally, to check the possible outputs, we need a function to obtain a set of outputs given an expression.
+
+\begin{definition}[Activation]
+\label{def:activation}
+Let $exp$ be an expression in \ac{activation}, and $P_x$ a predicate in the inner algebra, then:
+
+\begin{equation}
+\label{eq:activation}
+\activation{exp}{P_x} = \left\{
+    O | (P, O) \in \healthinessfun{exp} \land \tautology{P_x \implies P}
+  \right\}
+\end{equation}
+
+\end{definition}
+
+The non-determinism can also be checked using the predicates notation and the activation property:
+\begin{subequations}
+\begin{align}
+\activation{S}{A \land \lnot B} = &
+  \left\{O_1, O_3\right\}\label{eq:s-nondet-activation}\\
+\predicate{S}{O_1} \land 
+  \predicate{S}{O_3} = & A \land \lnot B\label{eq:s-nondet-pred}
+\end{align}
+\end{subequations}
+%
+\Cref{eq:s-nondet-activation} shows that both $O_1$ and $O_3$ can be observed if $A \land \lnot B$ is \emph{true}. 
+\Cref{eq:s-nondet-pred} states that if the possible operational modes of healthy $S$ are $O_1$ and $O_3$, then the predicate is $A \land \lnot B$.
+In the next \lcnamecref{chap:case-study}, we show a practical case study using these properties and notations.
 
 \chapter{Case study}
 \label{chap:case-study}
