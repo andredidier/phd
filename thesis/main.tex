@@ -2973,7 +2973,7 @@ Thus the formula is the sum of the denotational probabilities of the lists.
 Let $S$ be a formula in \ac{algebra}, then the probability of $S$, $\formulaprob{S}$, is:
 %
 \begin{equation}
-\label{eq:algebra-probability}
+\label{eq:formula-probability}
 \formulaprob{S} = \sum_{xs \in \denote{S}}\denotationalprob{xs}
 \end{equation}
 \end{definition}
@@ -2983,7 +2983,7 @@ It means that even if a formula contains \iac{NOT} operator, we still safely obt
 For example, the probability of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2$) is:
 %
 \begin{align}
-\probability{\lnot \var{f_1}} = & \denotationalprob{\left[\right]} + \denotationalprob{\left[f_2\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
+\probability{\lnot \var{f_1}} = & \denotationalprob{\left[\right]} + \denotationalprob{\left[f_2\right]} & \text{by \cref{eq:formula-probability}} \nonumber\\
 %%%%%%%%%%%%%
 = &\probability{\left[\right]}\times\left(1 - P_1(t)\right)\times\left(1 - P_2(t)\right)\nonumber\\
 & + \probability{\left[f_2\right]}\times\left(1 - P_1(t)\right) & \text{by \cref{eq:denotational-probability}} \nonumber\\
@@ -3004,7 +3004,7 @@ We use the traditional probability calculations~\cite{Merle2010} as reference to
 \begin{subequations}
 \begin{align}
 \probability{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
-\probability{\vari{1} \lor \vari{2}} = & \Fit{1} + \Fit{2} - \Fit{1} \times \Fit{2}
+\probability{\vari{1} \lor \vari{2}} = & \Fit{1} + \Fit{2} - \Fit{1} \times \Fit{2}\label{eq:or-probability}
 \end{align}
 \end{subequations}
 
@@ -3013,7 +3013,7 @@ For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left
 \begin{align}
 \formulaprobop&\left\{\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)\right\}\nonumber\\
 %%%%
-=&\denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} & \text{by \cref{eq:algebra-probability}} \nonumber\\
+=&\denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} & \text{by \cref{eq:formula-probability}} \nonumber\\
 %%%%
 = &\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]} & \text{\cref{eq:denotational-probability}, both $\sum$ is $0$}\nonumber\\
 %%%%
@@ -3029,34 +3029,41 @@ For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left
 In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$), shown in \cref{eq:and-probability}.
 This is expected as these two formulas are equivalent, as shown in \cref{thm:xbefore-sup-equiv-inf}.
 
-Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$, which has probability $P_1(t) \times P_2(t)$:
+Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$:
 %
 \begin{align}
-S &= \var{f_1} \land \var{f_2} \land \lnot \var{f_3}\nonumber\\
-\probability{S} &= 
-\denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} \nonumber\\
-%%%%%%%%
-&= P_1(t) \times P_2(t) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf}}
+S = & \var{f_1} \land \var{f_2} \land \lnot \var{f_3}
+  & \text{by \cref{eq:formula-probability}}\nonumber\\
+%%%%%
+\probability{S} = &
+\denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} 
+  & \text{by \cref{eq:denotational-probability}}\nonumber\\
+%%%%%
+= & \probability{\left[f_1,f_2\right]}\times \left(1 - P_3(t)\right)
++ \probability{\left[f_2,f_1\right]}\times \left(1 - P_3(t)\right)\nonumber\\
+%%%%%
+= & P_1(t) \times P_2(t) \times \left(1 - P_3(t)\right) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf}}
 \end{align}
 
-Finally, using \cref{eq:algebra-probability}, we demonstrate the equivalence to probability of \iac{OR} operator, calculated using the denotational semantics:
+Finally, using \cref{eq:formula-probability}, and for generators $f_1$ and $f_2$, we demonstrate the equivalence to \cref{eq:or-probability} (the probability of \iac{OR} operator), calculated using the denotational semantics:
 %
 \begin{align}
-S &= \vari{1} \lor \vari{2}\nonumber\\
+S = & \vari{1} \lor \vari{2}\nonumber\\
 %%%
-\probability{S} = & \denotationalprob{\left[f_1\right]} +
-  \denotationalprob{\left[f_2\right]} +
-  \denotationalprob{\left[f_1,f_2\right]} +
+\formulaprob{S} = & \denotationalprob{\left[f_1\right]} +
+  \denotationalprob{\left[f_2\right]} + \nonumber\\
+  & \denotationalprob{\left[f_1,f_2\right]} +
   \denotationalprob{\left[f_2,f_1\right]}
+  & \text{by \cref{eq:formula-probability}}
 \nonumber\\
 %%%%%%%%%%%
-= &\probability{\left[f_1\right]} - \probability{\left[f_1,f_2\right]} - \probability{\left[f_2,f_1\right]} +\nonumber\\
-&\probability{\left[f_2\right]} - \probability{\left[f_1,f_2\right]} - \probability{\left[f_2,f_1\right]} +\nonumber\\
-&\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]}\nonumber\\
+= &\probability{\left[f_1\right]}\times\left(1 - P_2(t)\right) + 
+\probability{\left[f_2\right]}\times\left(1 - P_1(t)\right) +\nonumber\\
+&P_1(t) \times P_2(t) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf,eq:denotational-probability}}\nonumber\\
 %%%%%%%%%%%
-= &\probability{\left[f_1\right]} + \probability{\left[f_2\right]} - \left(\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]}\right)\nonumber\\
-%%%%%%%%%%%
-= &P_1(t) + P_2(t) - P_1(t) \times P_2(t)
+= & P_1(t) \times \left(1 - P_2(t)\right) + P_2(t) \times \left(1 - P_1\right) + \nonumber\\
+  & P_1(t) \times P_2(t)\nonumber\\
+= & P_1(t) + P_2(t) - P_1(t) \times P_2(t)
 \end{align}
 
 \subsection{Formal acceptance criteria}
