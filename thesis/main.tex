@@ -810,6 +810,20 @@ The laws of \ac{algebra} are given in a denotational semantics based on sets of 
 The analysis of acceptance criteria is a decision problem and we use first-order logic and \isabellehol as verification tool.
 Indeed, \ac{algebra} is part of a bigger strategy that relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
 
+System and fault modelling is an essential step towards safety analysis.
+Architectural modelling is the first step of the strategy and can be executed either in a graphical tool, or as requirements in natural language.
+For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling in \ac{SysML} to verify fault tolerance of \acp{SoS}.
+
+Writing and analysing expressions with order-related operators is more complex than analysing expressions with Boolean\index{Boolean} operators only.
+The \ac{activation} works together with an inner algebra to perform analysis of system structure and component interaction with a focus on fault modelling and fault propagation, tackling the complexity introduced by order-related operators.
+\ac{activation} receives an algebra and the set of operational modes of a system as parameters.
+The choice of algebra defines which structure expressions can be obtained: if Boolean algebra is passed as a parameter, the \ac{activation} can generate structure expressions with Boolean operators (\ac{SFT}); if the \ac{algebra} is passed as a parameter, the \ac{activation} can generate structure expressions with order-related operators (\ac{TFT} and \ac{DFT}).
+The \ac{activation} requires that the inner algebras provide a set of properties (tautology and contradiction) and semantic values.
+The use of the \ac{NOT} is essential: besides its use in expressions, we use the complement to normalise the expressions to provide \emph{healthy} expressions.
+
+To obtain critical event expressions used in \acp{FT} and to denote faults propagation, the \ac{activation} provides a predicates notation and verification of non-determinism. 
+We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: (i) verify its existence, (ii) indicate which set of operational modes are active for a combination of faults, or (iii) what is the combination of faults that activates a set of operational modes.
+
 \Cref{fig:strategy-overview-traditional} shows how \ac{FTA} is traditionally performed.
 It starts with an architectural model, then faults are identified and modelled in \iac{FT}.
 System requirements are identified and are checked with \ac{FTA} results.
@@ -827,15 +841,20 @@ The analyses are executed until system requirements are met.
 In our proposed solution, depending on how much clear are the faults, the analyst may follow one of the paths: (i) model the system in \simulink to allow fault injection and discovery, or (ii) model faults using the \acl{activation}.
 
 \Cref{fig:strategy-overview-csp} shows how to perform \ac{FTA} using faults injection.
-Our work reported in~\cite{Didier2012,DM2012} describes the ``Faults injection'' rectangle.
-From a \simulink model of the system, we extract the \ac{CSPm} model, and modify the signals that connects each component.
-Such a modification allows faults injection in the generated \ac{CSPm} model.
-The model is then loaded in model-checkers (like \ac{FDR}) and the traces that the model-checker produces are the fault events sequences.
-These sequences are then mapped to \ac{algebra} to be verified with the acceptance criteria.
-The acceptance criteria are system requirements mapped as \ac{MCSeq} or top-event probability.
-If the criteria are accepted the process finishes.
-Otherwise the system is modified, and the process continues as in the traditional \ac{FTA}.
+The ``Faults injection'' block is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
+It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault event sequences.
+The fault event sequences are then mapped to \theac{algebra}, which have a denotational semantics based on sets of lists.
+This strategy aims at answering the \cref{question:gap}.
 
+Safety requirements are stated in terms of critical failures as, for example, ``the probability of a complete failure of an airplane engine should be less than $10^{-9}$'' (quantitative), or ``a complete failure of the propulsion system shouldn't be caused by a single failure'' (qualitative).
+In this work we call \emph{acceptance criteria} the verification of a safety requirement on \iac{FT}, where \acg{FT} top event is the undesired failure.
+Positive requirements as, for example, ``the communications system should be operational $99.99\%$ of the cruise phase'' are treated as a complement (the complete failure should have a probability in less than $0.01\%$ of the cruise phase).
+The acceptance criteria analysis aims at answering the \ref{question:analyses}.
+
+From the model in \ac{algebra} (\cref{fig:strategy-overview-csp}), the acceptance criteria are then verified.
+If the criteria are accepted the process finishes.
+Otherwise the system is modified, and the process continues, modifying system's architecture, using fault tolerance patterns, improving system's dependability.
+%
 \begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.8]{StrategyOverview-csp-path}
@@ -844,9 +863,11 @@ Otherwise the system is modified, and the process continues as in the traditiona
 \end{figure}
 
 \Cref{fig:strategy-overview-activation} shows a faults modelling strategy directly in the \ac{activation}.
-After modelling all faults, the top events are extracted in a predicates notation. For example, ``does the behaviour of the system is the operational mode $X$?'', where $X$ can omission, commission, etc.
-The automatic \ac{FTA} follows as described in the faults injection strategy.
-The difference is that with the system modelled in \ac{activation}, the fault tolerance patterns can be applied directly on the model.
+After modelling all faults, the top events are extracted in a predicates notation. 
+For example, ``does the behaviour of the system is the operational mode $X$?'', where $X$ can omission, commission, etc.
+Given the flexibility of the \ac{activation} notation it is used to reason about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
+Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability, which is related to~\ref{question:mathematical-model}.
+With the system modelled in \ac{activation}, the fault tolerance patterns can be applied directly on the model.
 %
 \begin{figure}[htb]
   \centering
@@ -855,46 +876,14 @@ The difference is that with the system modelled in \ac{activation}, the fault to
   \label{fig:strategy-overview-activation}
 \end{figure}
 
-In \cref{fig:strategy-overview} the strategy starts in the top (green) node and ends in the bottom (red) node.
-Fault events are either extracted from a nominal model with injected faults (\cref{fig:strategy-overview}, path A), or modelled using a proposed notation, called \ac{activation} (\cref{fig:strategy-overview}, path B).
-We depict traditional \ac{FTA} in path C to compare to our strategy and because we still need part of the traditional \ac{FTA} to obtain the acceptance criteria, which are the expected properties of system's \acp{FT}.
-
+Joining the paths described in \cref{fig:strategy-overview-traditional,fig:strategy-overview-csp,fig:strategy-overview-activation}, the complete proposed solution is summarized in \cref{fig:strategy-overview}.
+%
 \begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.9]{StrategyOverview}
   \caption{Strategy overview}
   \label{fig:strategy-overview}
 \end{figure}
-
-System and fault modelling is an essential step towards safety analysis.
-Architectural modelling is the first step of the strategy and can be executed either in a graphical tool, or as requirements in natural language.
-For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling in \ac{SysML} to verify fault tolerance of \acp{SoS}.
-
-%TODO acm: Aqui eu pegaria o gancho da AADL (assertion framework)...
-Writing and analysing expressions with order-related operators is more complex than analysing expressions with Boolean\index{Boolean} operators only.
-The \ac{activation} works together with an inner algebra to perform analysis of system structure and component interaction with a focus on fault modelling and fault propagation, tackling the complexity introduced by order-related operators.
-\ac{activation} receives an algebra and the set of operational modes of a system as parameters.
-The choice of algebra defines which structure expressions can be obtained: if Boolean algebra is passed as a parameter, the \ac{activation} can generate structure expressions with Boolean operators (\ac{SFT}); if the \ac{algebra} is passed as a parameter, the \ac{activation} can generate structure expressions with order-related operators (\ac{TFT} and \ac{DFT}).
-The \ac{activation} requires that the inner algebras provide a set of properties (tautology and contradiction) and semantic values.
-The use of the \ac{NOT} is essential: besides its use in expressions, we use the complement to normalise the expressions to provide \emph{healthy} expressions.
-
-To obtain critical event expressions used in \acp{FT} and to denote faults propagation, the \ac{activation} provides a predicates notation and verification of non-determinism. 
-We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: (i) verify its existence, (ii) indicate which set of operational modes are active for a combination of faults, or (iii) what is the combination of faults that activates a set of operational modes.
-
-The ``Faults injection'' block in \cref{fig:strategy-overview}, path A, is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
-It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault event sequences.
-The fault event sequences are then mapped to \theac{algebra}, which have a denotational semantics based on sets of lists.
-As fault names are obtained directly from components and subsystems in a \simulink model, \theac{activation} (in the ``Fault Modelling'' group) allows them to be modified or complemented.
-\Theac{activation} allows reasoning about faults that are not modelled in \simulink as, for example, common cause or environmental faults.
-Path A aims at answering the \cref{question:gap}.
-Given the flexibility of the \ac{activation} notation, it can also be used directly (path B) to model faults formally, reasoning about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
-Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability, which is related to~\ref{question:mathematical-model}.
-%Paths A and B aim at answering the \ref{question:gap}.
-
-Safety requirements are stated in terms of critical failures as, for example, ``the probability of a complete failure of an airplane engine should be less than $10^{-9}$'' (quantitative), or ``a complete failure of the propulsion system shouldn't be caused by a single failure'' (qualitative).
-In this work we call \emph{acceptance criteria} the verification of a safety requirement on \iac{FT}, where \acg{FT} top event is the undesired failure.
-Positive requirements as, for example, ``the communications system should be operational $99.99\%$ of the cruise phase'' are treated as a complement (the complete failure should have a probability in less than $0.01\%$ of the cruise phase).
-The acceptance criteria analysis aims at answering the \ref{question:analyses}.
 
 \section{Contributions}
 
