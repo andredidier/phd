@@ -809,6 +809,34 @@ The laws of \ac{algebra} are given in a denotational semantics based on sets of 
 \Theac{algebra} aims at answering the \cref{question:mathematical-model,question:ordering-representation}.
 The analysis of acceptance criteria is a decision problem and we use first-order logic and \isabellehol as verification tool.
 Indeed, \ac{algebra} is part of a bigger strategy that relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
+
+\Cref{fig:strategy-overview-traditional} shows how \ac{FTA} is traditionally performed.
+It starts with an architectural model, then faults are identified and modelled in \iac{FT}.
+System requirements are identified and are checked with \ac{FTA} results.
+If the requirements are satisfied (accepted), the process ends and the modelled system may be implemented.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.55]{StrategyOverview-traditional-path}
+  \caption{Traditional \ac{FTA}}
+  \label{fig:strategy-overview-traditional}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.8]{StrategyOverview-csp-path}
+  \caption{Faults injection and \ac{algebra} to perform \ac{FTA}}
+  \label{fig:strategy-overview-csp}
+\end{figure}
+
+%TODO Talk about the possibility of connection csp to activation in the general path.
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.8]{StrategyOverview-activation-path}
+  \caption{\Ac{activation} and \ac{algebra} to perform \ac{FTA}}
+  \label{fig:strategy-overview-activation}
+\end{figure}
+
 In \cref{fig:strategy-overview} the strategy starts in the top (green) node and ends in the bottom (red) node.
 Fault events are either extracted from a nominal model with injected faults (\cref{fig:strategy-overview}, path A), or modelled using a proposed notation, called \ac{activation} (\cref{fig:strategy-overview}, path B).
 We depict traditional \ac{FTA} in path C to compare to our strategy and because we still need part of the traditional \ac{FTA} to obtain the acceptance criteria, which are the expected properties of system's \acp{FT}.
