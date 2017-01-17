@@ -814,6 +814,8 @@ Indeed, \ac{algebra} is part of a bigger strategy that relates fault injection o
 It starts with an architectural model, then faults are identified and modelled in \iac{FT}.
 System requirements are identified and are checked with \ac{FTA} results.
 If the requirements are satisfied (accepted), the process ends and the modelled system may be implemented.
+Otherwise, fault tolerance patterns are used, adding or modifying the original architecture to improve dependability.
+The analyses are executed until system requirements are met.
 
 \begin{figure}[htb]
   \centering
@@ -822,6 +824,18 @@ If the requirements are satisfied (accepted), the process ends and the modelled 
   \label{fig:strategy-overview-traditional}
 \end{figure}
 
+In our proposed solution, depending on how much clear are the faults, the analyst may follow one of the paths: (i) model the system in \simulink to allow fault injection and discovery, or (ii) model faults using the \acl{activation}.
+
+\Cref{fig:strategy-overview-csp} shows how to perform \ac{FTA} using faults injection.
+Our work reported in~\cite{Didier2012,DM2012} describes the ``Faults injection'' rectangle.
+From a \simulink model of the system, we extract the \ac{CSPm} model, and modify the signals that connects each component.
+Such a modification allows faults injection in the generated \ac{CSPm} model.
+The model is then loaded in model-checkers (like \ac{FDR}) and the traces that the model-checker produces are the fault events sequences.
+These sequences are then mapped to \ac{algebra} to be verified with the acceptance criteria.
+The acceptance criteria are system requirements mapped as \ac{MCSeq} or top-event probability.
+If the criteria are accepted the process finishes.
+Otherwise the system is modified, and the process continues as in the traditional \ac{FTA}.
+
 \begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.8]{StrategyOverview-csp-path}
@@ -829,7 +843,11 @@ If the requirements are satisfied (accepted), the process ends and the modelled 
   \label{fig:strategy-overview-csp}
 \end{figure}
 
-%TODO Talk about the possibility of connection csp to activation in the general path.
+\Cref{fig:strategy-overview-activation} shows a faults modelling strategy directly in the \ac{activation}.
+After modelling all faults, the top events are extracted in a predicates notation. For example, ``does the behaviour of the system is the operational mode $X$?'', where $X$ can omission, commission, etc.
+The automatic \ac{FTA} follows as described in the faults injection strategy.
+The difference is that with the system modelled in \ac{activation}, the fault tolerance patterns can be applied directly on the model.
+%
 \begin{figure}[htb]
   \centering
   \includegraphicsaspectratio[0.8]{StrategyOverview-activation-path}
