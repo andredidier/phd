@@ -362,7 +362,10 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\algebraset{\ensuremath\mathbf{atf}}
 \def\tracetobool{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny B}}}}
 \def\tracetofba{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny F}}}}
-\def\tracetoalgebra{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny XB}}}}
+%TODO remove tracetoalgebraop
+\def\tracetoalgebraop{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny XB}}}}
+\newcommand{\tracetoalgebra}[1]{\ensuremath\langle{#1}\rangle_{XB}}
+\newcommand{\trace}[1]{\ensuremath\left[~#1~\right]}
 \newcommand{\setsin}[1]{\ensuremath\left\{ #1 \right\}}
 \newcommand{\listsin}[1]{\ensuremath\left[ #1 \right]}
 \newcommand{\parsin}[1]{\ensuremath\left( #1 \right)}
@@ -2480,7 +2483,7 @@ In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are i
 We showed in \cref{sec:fault-trees} that there is a consistent presence of order-based operators to analyse \acp{TFT} and \acp{DFT}, and that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a canonical form.
 
 From the need to tackle events ordering and from the ordering information we had from fault injection that we developed in~\cite{DM2012}, we defined a list-based algebra, called \acf{algebra}, to express and analyse systems considering events ordering.
-We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra.
+We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra, shown in \cref{sec:mapping-cspm-algebra}.
 The order-specific operations are expressed with a new operator ($\xbeforeop$) that we call \ac{XBefore}.
 
 The set of sets for \acp{FBA}\index{Boolean Algebra!Free} are the denotational semantics for Boolean\index{Boolean Algebra} algebras.
@@ -3006,7 +3009,7 @@ Using \cref{eq:general-pand-probability,eq:generators} we define the denotationa
   % - 
   %\sum_{ys \in R\left(S, xs\right)}\probability{ys}\label{eq:denotational-probability}\\
 %%%%%%%%%%%%%
-\generators_{xs} = & \generators\left(\True\right) - \listset{xs}\nonumber
+\generators_{xs} = & \generators\left(\True\right) - \listset{xs}\label{eq:generators-minus-list}
 %%%%%
 %R\left(S, xs\right) = & \listsof{S}{xs} - \left\{xs\right\}\nonumber
 \end{align}
@@ -3137,11 +3140,60 @@ For the two properties shown in this \lcnamecref{sec:qualitative-quantitative-pr
 \begin{subequations}
 \begin{align}
 \lengthacceptance{F}{n} = & \Min{\left\{~ \length{xs} ~\middle|~ xs \in L ~\right\}} \le n & \text{length of \acp{MCSeq}}\\
+%
 \probacceptance{F}{P_x} = & \probability{F} < P_x & \text{root-event probability}
 \end{align}
 \end{subequations}
 %
 Both equations have Boolean\index{Boolean} return value, which can be verified by a theorem prover.
+
+\section{Mapping \ac{CSPm} traces to \ac{algebra}}
+\label{sec:mapping-cspm-algebra}
+
+In our previous work~\cite{DM2012,Didier2012} we reported a strategy to inject faults in a \ac{CSPm} model generated from an architectural model of a system in \simulink.
+Using a model-checker we are able to obtain failure traces with the injected faults, which we produce failure expression in Boolean algebra.
+Thus, the order-related information was lost, as there are no means to represent them in Boolean algebra\index{Boolean algebra}.
+
+Using the same strategy, but now mapping the traces to \ac{algebra} we are able to analyse order-related failures.
+In this section we show how to map the same failure traces reported in the strategy of~\cite{DM2012} to \ac{algebra}.
+
+The mapping function takes the set of traces as input and produces a structure expression in \ac{algebra}.
+Each event in the traces becomes a variable, and each list becomes \iac{XBefore} with the \acp{AND} of the variables of the remaining generators.
+%
+\begin{subequations}
+\begin{align}
+\tracetoalgebra{\trace{}} = & \top\\
+%
+\tracetoalgebra{\trace{f}} = & \var{f}\\
+%
+\tracetoalgebra{\append{\trace{f_1}}{tr}} = & 
+  \xbefore
+    {\var{f_1}}
+    {\tracetoalgebra{tr}}\\
+%
+\tracetoalgebra{\left\{ tr_1, tr_2, \ldots, tr_n  \right\}} =& 
+  \bigvee_{i ~\in~ \left\{1,\ldots,n\right\}} 
+  \left(\tracetoalgebra{tr_i} \land 
+  \lnot \bigvee_{j ~\in~ \generators_{tr_i}} \var{f_j}\right)
+\end{align}
+\end{subequations}
+%
+where $\append{}{}$ concatenates two traces, and $\generators_{tr_i}$ is the same as in \cref{eq:generators-minus-list} for traces.
+The following examples shows how it works for generators $f_1$, $f_2$, $f_3$:
+%
+\begin{subequations}
+\begin{align}
+\tracetoalgebra{\trace{f_1}} = & \var{f_1} \land \lnot \left(\var{f_2} \lor \var{f_3}\right)\\
+%
+\tracetoalgebra{\trace{f_1,f_2}} = & \xbefore{\var{f_1}}{\var{f_2}} \land \lnot \var{f_3}\\
+%
+\tracetoalgebra{\trace{f_3,f_2,f_1}} = & \xbefore{\var{f_3}}{\left(\xbefore{\var{f_2}}{\var{f_1}}\right)}\\
+%
+\tracetoalgebra{\left\{\trace{f_1},\trace{f_1,f_2}\right\}} = & 
+  \left(\var{f_1} \land \lnot \var{f_2} \land \lnot \var{f_3}\right) \lor \nonumber\\
+  & \left(\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \land \lnot \var{f_3}\right)
+\end{align}
+\end{subequations}
 
 \chapter{Reasoning fault activation}
 \label{chap:activation}
@@ -3539,17 +3591,17 @@ This shows that \ac{algebra} can represent (static) failure expression as in our
 \label{sec:case-study-xbefore}
 \index{structure expression}
 
-Now, by using \ac{algebra} with the \ac{XBefore} operator and a mapping function ($\tracetoalgebra$), we can capture each possible individual sequences as generated by the work~\cite{DM2012}:
+Now, by using \ac{algebra} with the \ac{XBefore} operator and a mapping function ($\tracetoalgebraop$), we can capture each possible individual sequences as generated by the work~\cite{DM2012}:
 %
 \begin{align*}
-\text{\texttt{TRACE 1: }}&[s,b] \tracetoalgebra \parsin{\xbefore{S}{B}} \inter -A & \left\{[s,b]\right\}\\
-\text{\texttt{TRACE 2: }}&[b,s] \tracetoalgebra \parsin{\xbefore{B}{S}} \inter -A & \left\{[b,s]\right\}\\
-\text{\texttt{TRACE 3: }}&[a,b] \tracetoalgebra \parsin{\xbefore{A}{B}} \inter -S & \left\{[a,b]\right\}\\
-\text{\texttt{TRACE 4: }}&[b,a] \tracetoalgebra \parsin{\xbefore{B}{A}} \inter -S & \left\{[b,a]\right\}\\
-\text{\texttt{TRACE 5: }}&[a,s] \tracetoalgebra \parsin{\xbefore{A}{S}} \inter -B & \left\{[a,s]\right\}\\
-\text{\texttt{TRACE 6: }}&[a,s,b] \tracetoalgebra \xbefore{\xbefore{A}{S}}{B} & \left\{[a,s,b]\right\}\\
-\text{\texttt{TRACE 7: }}&[a,b,s] \tracetoalgebra \xbefore{\xbefore{A}{B}}{S} & \left\{[a,b,s]\right\}\\
-\text{\texttt{TRACE 8: }}&[b,a,s] \tracetoalgebra \xbefore{\xbefore{B}{A}}{S} & \left\{[b,a,s]\right\}
+\text{\texttt{TRACE 1: }}&[s,b] \tracetoalgebraop \parsin{\xbefore{S}{B}} \inter -A & \left\{[s,b]\right\}\\
+\text{\texttt{TRACE 2: }}&[b,s] \tracetoalgebraop \parsin{\xbefore{B}{S}} \inter -A & \left\{[b,s]\right\}\\
+\text{\texttt{TRACE 3: }}&[a,b] \tracetoalgebraop \parsin{\xbefore{A}{B}} \inter -S & \left\{[a,b]\right\}\\
+\text{\texttt{TRACE 4: }}&[b,a] \tracetoalgebraop \parsin{\xbefore{B}{A}} \inter -S & \left\{[b,a]\right\}\\
+\text{\texttt{TRACE 5: }}&[a,s] \tracetoalgebraop \parsin{\xbefore{A}{S}} \inter -B & \left\{[a,s]\right\}\\
+\text{\texttt{TRACE 6: }}&[a,s,b] \tracetoalgebraop \xbefore{\xbefore{A}{S}}{B} & \left\{[a,s,b]\right\}\\
+\text{\texttt{TRACE 7: }}&[a,b,s] \tracetoalgebraop \xbefore{\xbefore{A}{B}}{S} & \left\{[a,b,s]\right\}\\
+\text{\texttt{TRACE 8: }}&[b,a,s] \tracetoalgebraop \xbefore{\xbefore{B}{A}}{S} & \left\{[b,a,s]\right\}
 \end{align*}
 
 Using \ac{algebra} and combining each trace with \acp{OR} (unions), we obtain the following set:
