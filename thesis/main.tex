@@ -547,6 +547,7 @@ Com expressões na álgebra temporal de falhas nós permitimos a verificação d
 %Mostramos como usar a lógica de ativação conjuntamente com a álgebra temporal de falhas para analisar a ocorrência e propagação de falhas relacionadas.
 A lógica criada neste trabalho pode ser usada com outras álgebras além das apresentadas.
 Sendo usada em conjunto com a álgebra temporal de falhas, tem a intenção de ajudar os analistas a considerar todas as possíveis situações em expressões complexas com operadores relacionados ao ordenamento das falhas, evitando esquecer combinações de falhas sutis (porém relevantes).
+Além disso, nossa álgebra temporal de falhas trata operadores NOT, que têm sido deixados de fora em outros trabalhos.
 Nós ilustramos nosso trabalho com alguns estudos de caso simples, mas reais, fornecidos pelo nosso parceiro industrial, a EMBRAER.
 
 Isabelle/HOL foi utilizado para a mecanização das provas dos teoremas da álgebra temporal de falhas.
@@ -575,6 +576,7 @@ The algebra allows us to inherit Boolean algebra's properties, laws and existing
 With expressions in the algebra of temporal faults we allow the verification of safety properties based on Static, Temporal or Dynamic Fault Trees.
 The logic created in this work can be combined with other algebra beyond those shown here.
 Being used with the algebra of temporal faults it is intended to help analysts to consider all possible situations in complex expressions with order-related operators, avoiding missing subtle (but relevant) faults combinations.
+Furthermore, our algebra of temporal faults tackles NOT operators which have been left out in other works.
 We illustrate our work on simple but real case studies, some supplied by our industrial partner EMBRAER.
 
 Isabelle/HOL was used to mechanize the theorems proofs of the algebra of temporal faults.
@@ -628,9 +630,6 @@ Isabelle/HOL was used to mechanize the theorems proofs of the algebra of tempora
 \chapter{Introduction}
 \label{chap:intro}
 
-\adnote{use all figure captions before figures (ABNT)}
-\adnote{fix table lines (ABNT)}
-
 The development process of critical control systems is based essentially on the rigorous execution of guides and regulations~\cite{ANAC2011,FAA1993,FAA2007,SAE1996b}.
 Specialized agencies (like FAA, EASA and ANAC in the aviation field) use these guides and regulations to certify such systems.
 
@@ -655,6 +654,20 @@ Another approach to reduce structure expressions is to use a mathematical model-
 Although structure expressions are formulas with logical operators, they are formalisms to enable automatic \ac{FTA}.
 As shown in~\cite{Ericson2005}, \acp{FT} are a much richer model enabling a visual indication of fault paths, and includes description of subsystems as intermediate events.
 %% Este parágrafo foi incluído após discussão de Paulo sobre avaliação de confiabilidade/disponibilidade.
+
+\Cref{fig:strategy-overview-traditional} shows how \ac{FTA} is traditionally performed.
+It starts with an architectural model, then faults are identified and modelled in \iac{FT}.
+System requirements are identified and are checked with \ac{FTA} results.
+If the requirements are satisfied (accepted), the process ends and the modelled system may be implemented.
+Otherwise, fault tolerance patterns are used, adding or modifying the original architecture to improve dependability.
+The analyses are executed until system requirements are met.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.55]{StrategyOverview-traditional-path}
+  \caption{Traditional \ac{FTA}}
+  \label{fig:strategy-overview-traditional}
+\end{figure}
 
 Besides the traditional \ac{OR} and \ac{AND} gates, the \FThandbook defines other gates.
 For example the \ac{PAND} gate, which considers the order of occurrence of events.
@@ -823,20 +836,6 @@ The use of the \ac{NOT} is essential: besides its use in expressions, we use the
 
 To obtain critical event expressions used in \acp{FT} and to denote faults propagation, the \ac{activation} provides a predicates notation and verification of non-determinism. 
 We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: (i) verify its existence, (ii) indicate which set of operational modes are active for a combination of faults, or (iii) what is the combination of faults that activates a set of operational modes.
-
-\Cref{fig:strategy-overview-traditional} shows how \ac{FTA} is traditionally performed.
-It starts with an architectural model, then faults are identified and modelled in \iac{FT}.
-System requirements are identified and are checked with \ac{FTA} results.
-If the requirements are satisfied (accepted), the process ends and the modelled system may be implemented.
-Otherwise, fault tolerance patterns are used, adding or modifying the original architecture to improve dependability.
-The analyses are executed until system requirements are met.
-
-\begin{figure}[htb]
-  \centering
-  \includegraphicsaspectratio[0.55]{StrategyOverview-traditional-path}
-  \caption{Traditional \ac{FTA}}
-  \label{fig:strategy-overview-traditional}
-\end{figure}
 
 In our proposed solution, depending on how much clear are the faults, the analyst may follow one of the paths: (i) model the system in \simulink to allow fault injection and discovery, or (ii) model faults using the \acl{activation}.
 
