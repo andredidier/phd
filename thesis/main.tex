@@ -815,8 +815,6 @@ Also, does such a model:
 \section{Proposed solution}
 
 %In this work we present an algebra, called \acf{algebra}, defined  denota
-\adnote{Continue from here: what's denotational semantics?}
-
 In this work we present an algebra, called \acf{algebra}, to express ordering of fault events (\ac{TFT} and \ac{DFT}), enabling analysis of acceptance criteria of \acp{FT}.
 The laws of \ac{algebra} are given in a denotational semantics based on sets of lists of distinct elements.
 \Theac{algebra} aims at answering the \cref{question:mathematical-model,question:ordering-representation}.
@@ -838,6 +836,7 @@ To obtain critical event expressions used in \acp{FT} and to denote faults propa
 We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: (i) verify its existence, (ii) indicate which set of operational modes are active for a combination of faults, or (iii) what is the combination of faults that activates a set of operational modes.
 
 In our proposed solution, depending on how much clear are the faults, the analyst may follow one of the paths: (i) model the system in \simulink to allow fault injection and discovery, or (ii) model faults using the \acl{activation}.
+Both paths ends with structure expressions and the \ac{FTA} is performed using \ac{algebra}.
 
 \Cref{fig:strategy-overview-csp} shows how to perform \ac{FTA} using faults injection.
 The ``Faults injection'' block is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
@@ -862,10 +861,11 @@ Otherwise the system is modified, and the process continues, modifying system's 
 \end{figure}
 
 \Cref{fig:strategy-overview-activation} shows a faults modelling strategy directly in the \ac{activation}.
+The logic associates each operational mode with a faults expression.
 After modelling all faults, the top events are extracted in a predicates notation. 
 For example, ``does the behaviour of the system is the operational mode $X$?'', where $X$ can omission, commission, etc.
 Given the flexibility of the \ac{activation} notation it is used to reason about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
-Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability, which is related to~\ref{question:mathematical-model}.
+Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a canonical form to obtain \acp{MCSeq} and to calculate top-events probability.
 With the system modelled in \ac{activation}, the fault tolerance patterns can be applied directly on the model.
 %
 \begin{figure}[htb]
@@ -875,7 +875,7 @@ With the system modelled in \ac{activation}, the fault tolerance patterns can be
   \label{fig:strategy-overview-activation}
 \end{figure}
 
-Joining the paths described in \cref{fig:strategy-overview-traditional,fig:strategy-overview-csp,fig:strategy-overview-activation}, the complete proposed solution is summarized in \cref{fig:strategy-overview}.
+Joining the paths described in \cref{fig:strategy-overview-csp,fig:strategy-overview-activation}, the complete proposed solution is summarized in \cref{fig:strategy-overview}.
 %
 \begin{figure}[htb]
   \centering
