@@ -3698,16 +3698,18 @@ M_A = &
   = & \left(S \land B \land \lnot A\right) \lor 
   \left(A \land B \land \lnot S\right) \lor
   \left(\xbefore{A}{S} \land \lnot B\right) \lor \nonumber \\
-  & \left(\xbefore{A}{\left(\xbefore{S}{B}\right)}\right) \lor 
-  \left(B \lor \left(\xbefore{A}{S}\right)\right) \lor
-  \left(B \lor \left(\xbefore{S}{A}\right)\right)
+  & \left(B \land \left(\xbefore{A}{S}\right)\right) \lor
+  \left(B \land \left(\xbefore{S}{A}\right)\right)
   & \text{by \cref{thm:and_xbefore_equiv_or_xbefore_expanded}} \nonumber \\
+%
+  = &\left(A \land B\right) \lor \left(B \land S\right) \lor
+    \left(\xbefore{A}{S} \land \lnot B\right) 
 \end{align}
 
 The semantics of the above expression is:
 \begin{alineasinline}
-  \item fault $b$ ($\var{b}$) occurs and fault $a$ ($\var{a}$) or fault $s$ ($\var{s}$) occurs (but not both $a$ and $s$), or
-  \item fault $a$ occurs before fault $s$, which is more precise than the expression found without considering order of events.
+  \item fault $b$ ($\var{b}$) occurs and fault $a$ ($\var{a}$) or fault $s$ ($\var{s}$) occurs, or
+  \item fault $a$ occurs before fault $s$ and fault $b$ does not occur, which is more precise than the expression found without considering order of events.
 \end{alineasinline}
 
 \chapter{Conclusion}
