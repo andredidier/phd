@@ -1,0 +1,671 @@
+
+include "Block.csp"
+
+
+
+
+
+
+{- BLOCK LIBRARY -}
+
+-- Inport
+-- A port receives a new value but filters the propagation of the received
+-- value (holds the last value) when not in sample step.
+B_Inport(num, Tin)(priSig)(sampler) =
+  ( Port__0(Tin) [[ in.0.x <- in.num.x, out.0.x <- priSig.x | x<-Tin ]]
+    [| aSampler |]
+    sampler
+  ) \ aSampling
+
+
+
+
+-- Outport
+B_Outport(num, Tout)(proSig)(sampler) =
+  ( Port__0(Tout) [[ in.0.x <- proSig.x, out.0.x <- out.num.x | x<-Tout ]]
+    [| aSampler |]
+    sampler
+  ) \ aSampling
+
+
+
+B_EnablePort =
+  let B_EnablePort' =
+        tick -> ( in.0.TRUE -> enabled -> B_EnablePort'
+                  [] in.0.FALSE -> B_EnablePort' )
+  within B_EnablePort'
+
+
+-- FromWorkspace
+B_FromWorkspace(Tout) =
+  let B_FromWorkspace' = tick -> workspace.1?k:Tout -> out.1!k -> B_FromWorkspace'
+  within B_FromWorkspace'
+
+  
+-- ToWorkspace
+B_ToWorkspace(Tin) =
+  let B_ToWorkspace' = tick -> in.1?k:Tin -> workspace.1!k -> B_ToWorkspace'
+  within B_ToWorkspace'
+
+
+
+-- Terminator
+B_Terminator(Tin) =
+  let B_Terminator' = tick -> in.1?u:Tin -> B_Terminator'
+  within explicate(B_Terminator')
+
+
+-- Scope
+B_Scope(Tin) =
+  let B_Scope' = tick -> in.1?k:Tin -> scope.1!k -> B_Scope'
+  within B_Scope'
+
+
+-- Constant
+B_Constant(k) =
+  let B_Constant' = tick -> out.1.k -> B_Constant'
+  within B_Constant'
+  
+  
+-- Step
+B_Step(offset, iv, fv) =
+  let B_Step' = tick -> out.1.fv -> B_Step'
+  within Offset(offset) [[ step<-out.1.iv ]]; B_Step'
+
+
+
+-- Ground
+B_Ground =
+  let B_Ground' = tick -> (out.1.I.0 -> B_Ground'
+                           [] out.1.S.0.1 -> B_Ground'
+                           [] out.1.D.0.1 -> B_Ground')
+  within B_Ground'
+
+
+
+-- Memory
+B_Memory(Tin)(initialCondition) =
+  let B_Memory'(s) = tick -> out.1!s -> in.1?u:Tin -> B_Memory'(u)
+  within explicate(B_Memory'(initialCondition))
+
+
+
+-- ZeroOrderHold
+B_ZeroOrderHold(Tin)(sampler) = SISOBlock(id, Tin)(sampler)
+
+
+
+{--- IntegerDelay
+B_IntegerDelay(Tin)(initialConditions)(sampler) =
+  let B_IntegerDelay'(UNDEFINED) = Sampled(out.1!UNDEFINED -> in.1?u:Tin -> B_IntegerDelay'(UNDEFINED),
+                                           out.1!initialConditions -> in.1?u:Tin -> B_IntegerDelay'(u))
+      B_IntegerDelay'(s) = Sampled(out.1!s -> in.1?u:Tin -> B_IntegerDelay'(s),
+                                   out.1!s -> in.1?u:Tin -> B_IntegerDelay'(u))
+  within ( explicate(B_IntegerDelay'(UNDEFINED))
+           [| aSampler |]
+           sampler
+         ) \ aSampling
+-}
+
+
+
+-- UnitDelay
+B_UnitDelay(Tin)(initialConditions)(sampler) =
+  let B_UnitDelay'(UNDEFINED) =
+        Sampled(out.1!UNDEFINED -> in.1?u:Tin -> B_UnitDelay'(UNDEFINED),
+                out.1!initialConditions -> in.1?u:Tin -> B_UnitDelay'(u))
+      B_UnitDelay'(s) = Sampled(out.1!s -> in.1?u:Tin -> B_UnitDelay'(s),
+                                out.1!s -> in.1?u:Tin -> B_UnitDelay'(u))
+  within ( explicate(B_UnitDelay'(UNDEFINED))
+           [| aSampler |]
+           sampler
+         ) \ aSampling
+
+
+
+-- Mux
+-- Create (homogeneous) vectors
+B_Mux(numInputs, sTin)(sampler) =
+  let Outputs(<>) = out.1!UNDEFINED -> SKIP
+      Outputs(s) = out.1!V.s -> SKIP -- #s == numInputs
+  within Block(numInputs, sTin, Outputs)(sampler)
+
+
+
+-- Demux
+-- Split (homogeneous) vectors
+B_Demux(Tin, numOutputs)(sampler) =
+  let Tvectors = vectors(Tin, numOutputs)
+      Outputs(UNDEFINED) = ||| i: {1..numOutputs} @ out.i!UNDEFINED -> SKIP
+      Outputs(V.v) = ||| (i,y): vectorToRelation(V.v) @ out.i!y -> SKIP
+      B_Demux'(s) = Sampled(in.1?u:Tvectors -> (Outputs(s); B_Demux'(s)),
+                            in.1?u:Tvectors -> (Outputs(u); B_Demux'(u)))
+  within ( explicate(B_Demux'(UNDEFINED))
+           [| aSampler |]
+           sampler
+         ) \ aSampling
+
+
+
+-- DataTypeConversion
+B_DataTypeConversion(Tin)(f)(sampler) =
+  let outputs(UNDEFINED) = UNDEFINED
+      outputs(V.v)       = vectorMap(f)(V.v)
+      outputs(u)         = f(u)
+  within SISOBlock(outputs, Tin)(sampler)
+
+
+
+-- truthTable is an array of bitsets
+B_CombinatorialLogic(numInputs, numOutputs, truthTable, sampler) =
+  let Tvectors = vectors(Tboolean, numInputs)
+      i2e(0) = 1
+      i2e(y) = 2 * i2e(y-1)
+      bitSeqToInt(s) =
+        let initialSize = #s
+            bitSeqToInt'(<>) = 0
+            bitSeqToInt'(s'^<x>) = bitSeqToInt'(s')
+                                 + (if x == TRUE
+                                    then i2e(initialSize-(#s'+1))
+                                    else 0)
+        within bitSeqToInt'(s)
+      outputs(UNDEFINED) = UNDEFINED
+      outputs(V.v) = V.( elementAt(truthTable, 1 + bitSeqToInt(v)) )
+  within SISOBlock(outputs, Tvectors)(sampler)
+
+
+
+-- Logical
+B_Logic(f)(numInputs)(sampler) =
+  let Outputs(<>) = out.1!UNDEFINED -> SKIP
+      Outputs(s) = out.1!f(s) -> SKIP
+  within Block(numInputs, seqs({Tboolean},numInputs), Outputs)(sampler)
+
+
+
+-- Relational
+B_Relational(f)(sTin)(sampler) =
+  let Outputs(<>) = out.1!UNDEFINED -> SKIP
+      Outputs(<a,b>) = out.1!f(a, b) -> SKIP
+  within Block(2, sTin, Outputs)(sampler)
+
+
+
+-- Sum
+B_Sum(ops)(sTin)(sampler) =
+  let Sum(<x>, <>) = x
+      Sum(<x>^s, <f>^fs) = f(x, Sum(s, fs))
+      Outputs(<>) = out.1!UNDEFINED -> SKIP
+      Outputs(s) = out.1!Sum(<tagOf(head(s)).0>^s, ops) -> SKIP
+  within Block(#ops, sTin, Outputs)(sampler)
+
+
+
+-- Product
+B_Product(ops)(sTin)(sampler) =
+  let Product(<x>, <>) = x
+      Product(<x>^s, <op>^ops) = op(x, Product(s, ops))
+      Outputs(<>) = out.1!UNDEFINED -> SKIP
+      Outputs(s) = out.1!Product(<tagOf(head(s)).1>^s, ops) -> SKIP
+  within Block(#ops, sTin, Outputs)(sampler)
+
+
+
+-- Abs
+B_Abs(Tin)(sampler) =
+  let outputs(UNDEFINED) = UNDEFINED
+      outputs(u) = abs(u)
+  within SISOBlock(outputs, Tin)(sampler)
+
+
+
+-- MinMax
+B_MinMax(f)(sTin)(sampler) =
+  let Outputs(<>) = out.1!UNDEFINED -> SKIP
+      Outputs(<a,b>) = out.1!f(a, b) -> SKIP
+  within Block(2, sTin, Outputs)(sampler)
+
+
+
+-- Gain
+B_Gain(Tin)(k)(sampler) =
+  let outputs(UNDEFINED) = UNDEFINED
+      outputs(u) = mul(k, u)
+  within SISOBlock(outputs, Tin)(sampler)
+
+
+
+-- Switch
+B_Switch(condition)(sTin)(sampler) =
+  let Outputs(<>) = out.1!UNDEFINED -> SKIP
+      Outputs(<u1,u2,u3>) = if condition(u2) == TRUE
+                            then out.1!u1 -> SKIP
+                            else out.1!u3 -> SKIP
+  within Block(3, sTin, Outputs)(sampler)
+
+
+
+-- Saturation
+B_Saturation(Tin)(lowerLimit, upperLimit)(sampler) =
+  let outputs(UNDEFINED) = out.1!UNDEFINED -> SKIP
+      outputs(u) = min(max(lowerLimit, u), upperLimit)
+  within SISOBlock(outputs, Tin)(sampler)
+
+
+
+-- Lookup
+B_Lookup(method)(Tin)(table)(sampler) =
+  let outputs(UNDEFINED) = UNDEFINED
+      outputs(u) = method(u, table)
+  within SISOBlock(outputs, Tin)(sampler)
+
+
+-- RateLimiter
+B_RateLimiter(Tin)(fallingSlewLimit, risingSlewLimit)(sampler) =
+  let FallingSlewLimit = mul(fallingSlewLimit, STEP_SIZE)
+      RisingSlewLimit = mul(risingSlewLimit, STEP_SIZE)
+      outputs(UNDEFINED, u) = outputs(u, u)
+      outputs(s, UNDEFINED) = outputs(s, s)
+      outputs(s, u) =
+        let rate = sub(u, s) -- rate = u(i) - y(i-1) / t(i) - t(i-1)
+        within
+            if lt(rate, FallingSlewLimit) == TRUE
+            then add(fallingSlewLimit, s) -- y(i) = Dt.F+y(i-1)
+            else if gt(rate, RisingSlewLimit) == TRUE
+            then add(risingSlewLimit, s) -- y(i) = Dt.R+y(i-1)
+            else u -- y(i) = u(i)
+      update(u, s, y) = y
+  within SISSSOBlock(outputs, update, Tin)(sampler)
+
+
+
+
+
+
+
+{- COMMON USAGES -}
+
+Port__0_Tboolean = Port__0(Tboolean)
+Port__0_Tinteger = Port__0(Tinteger)
+Port__0_Tdouble = Port__0(Tdouble)
+
+Offset__0 = Offset(0)
+
+Sampler__CONTINUOUS = Offset__0; Sampler(CONTINUOUS)
+
+
+
+B_Inport__CONTINUOUS(num, Tin)(priSig) = B_Inport(num, Tin)(priSig)(Sampler__CONTINUOUS)
+
+B_Inport__Tboolean(num, priSig)(sampler) = B_Inport(num, Tboolean)(priSig)(sampler)
+B_Inport__Tinteger(num, priSig)(sampler) = B_Inport(num, Tinteger)(priSig)(sampler)
+B_Inport__Tdouble(num, priSig)(sampler) = B_Inport(num, Tdouble)(priSig)(sampler)
+
+B_Inport__Tboolean_CONTINUOUS(num, priSig) = B_Inport__Tboolean(num, priSig)(Sampler__CONTINUOUS)
+B_Inport__Tinteger_CONTINUOUS(num, priSig) = B_Inport__Tinteger(num, priSig)(Sampler__CONTINUOUS)
+B_Inport__Tdouble_CONTINUOUS(num, priSig) = B_Inport__Tdouble(num, priSig)(Sampler__CONTINUOUS)
+
+
+
+B_Outport__CONTINUOUS(num, Tin)(proSig) = B_Outport(num, Tin)(proSig)(Sampler__CONTINUOUS)
+
+B_Outport__Tboolean(num, proSig)(sampler) = B_Outport(num, Tboolean)(proSig)(sampler)
+B_Outport__Tinteger(num, proSig)(sampler) = B_Outport(num, Tinteger)(proSig)(sampler)
+B_Outport__Tdouble(num, proSig)(sampler) = B_Outport(num, Tdouble)(proSig)(sampler)
+
+B_Outport__Tboolean_CONTINUOUS(num, proSig) = B_Outport__Tboolean(num, proSig)(Sampler__CONTINUOUS)
+B_Outport__Tinteger_CONTINUOUS(num, proSig) = B_Outport__Tinteger(num, proSig)(Sampler__CONTINUOUS)
+B_Outport__Tdouble_CONTINUOUS(num, proSig) = B_Outport__Tdouble(num, proSig)(Sampler__CONTINUOUS)
+
+
+
+B_Terminator__Tboolean = B_Terminator(Tboolean)
+
+B_Terminator__Tinteger = B_Terminator(Tinteger)
+
+B_Terminator__Tdouble = B_Terminator(Tdouble)
+
+
+
+B_Scope__Tboolean = B_Scope(Tboolean)
+B_Scope__Tinteger = B_Scope(Tinteger)
+
+
+
+B_Constant__I1 = B_Constant(I.1)
+
+B_Constant__FALSE = B_Constant(FALSE)
+B_Constant__TRUE = B_Constant(TRUE)
+
+
+
+B_Memory__Tboolean(B.x) = B_Memory(Tboolean)(B.x)
+
+B_Memory__Tboolean_FALSE = B_Memory(Tboolean)(FALSE)
+B_Memory__Tboolean_TRUE = B_Memory(Tboolean)(TRUE)
+
+B_Memory__Tinteger(I.x) = B_Memory(Tinteger)(I.x)
+
+B_Memory__Tdouble(D.x) = B_Memory(Tdouble)(D.x)
+
+B_Memory__Tinteger_0 = B_Memory__Tinteger(I.0)
+
+B_Memory__Tdouble_0 = B_Memory__Tdouble(D.0)
+
+
+
+B_ZeroOrderHold__Tboolean(sampler) = B_ZeroOrderHold(Tboolean)(sampler)
+
+B_ZeroOrderHold__Tinteger(sampler) = B_ZeroOrderHold(Tinteger)(sampler)
+
+B_ZeroOrderHold__Tsingle(sampler) = B_ZeroOrderHold(Tsingle)(sampler)
+
+B_ZeroOrderHold__Tdouble(sampler) = B_ZeroOrderHold(Tdouble)(sampler)
+
+B_ZeroOrderHold__Tboolean_CONTINUOUS = B_ZeroOrderHold__Tboolean(Sampler__CONTINUOUS)
+
+B_ZeroOrderHold__Tinteger_CONTINUOUS = B_ZeroOrderHold__Tinteger(Sampler__CONTINUOUS)
+
+B_ZeroOrderHold__Tsingle_CONTINUOUS = B_ZeroOrderHold__Tsingle(Sampler__CONTINUOUS)
+
+B_ZeroOrderHold__Tdouble_CONTINUOUS = B_ZeroOrderHold__Tdouble(Sampler__CONTINUOUS)
+
+
+
+B_UnitDelay__Tboolean(B.x)(sampler) = B_UnitDelay(Tboolean)(B.x)(sampler)
+
+B_UnitDelay__Tinteger(I.x)(sampler) = B_UnitDelay(Tinteger)(I.x)(sampler)
+
+B_UnitDelay__Tdouble(D.x)(sampler) = B_UnitDelay(Tdouble)(D.x)(sampler)
+
+B_UnitDelay__Tboolean_FALSE(sampler) = B_UnitDelay__Tboolean(FALSE)(sampler)
+B_UnitDelay__Tboolean_TRUE(sampler) = B_UnitDelay__Tboolean(TRUE)(sampler)
+
+B_UnitDelay__Tinteger_0(sampler) = B_UnitDelay__Tinteger(I.0)(sampler)
+
+B_UnitDelay__Tdouble_0(sampler) = B_UnitDelay__Tdouble(D.0)(sampler)
+
+B_UnitDelay__Tboolean_FALSE_CONTINUOUS = B_UnitDelay__Tboolean_FALSE(Sampler__CONTINUOUS)
+B_UnitDelay__Tboolean_TRUE_CONTINUOUS = B_UnitDelay__Tboolean_TRUE(Sampler__CONTINUOUS)
+
+B_UnitDelay__Tinteger_0_CONTINUOUS = B_UnitDelay__Tinteger_0(Sampler__CONTINUOUS)
+
+B_UnitDelay__Tdouble_0_CONTINUOUS = B_UnitDelay__Tdouble_0(Sampler__CONTINUOUS)
+
+B_UnitDelay__CONTINUOUS(Tin,x0) = B_UnitDelay(Tin)(x0)(Sampler__CONTINUOUS)
+
+
+
+B_Mux__Tboolean(numInputs)(sampler) = B_Mux(numInputs, Tboolean)(sampler)
+
+B_Mux__Tboolean_CONTINUOUS(numInputs) = B_Mux__Tboolean(numInputs)(Sampler__CONTINUOUS)
+
+
+
+B_Demux__Tboolean(numOutputs)(sampler) = B_Demux(Tboolean, numOutputs)(sampler)
+
+B_Demux__Tboolean_CONTINUOUS(numOutputs) = B_Demux__Tboolean(numOutputs)(Sampler__CONTINUOUS)
+
+
+
+B_boolean__Tinteger(sampler) = B_DataTypeConversion(Tboolean)(B2I)(sampler)
+B_boolean__Tsingle(sampler) = B_DataTypeConversion(Tboolean)(B2S)(sampler)
+B_boolean__Tdouble(sampler) = B_DataTypeConversion(Tboolean)(B2D)(sampler)
+
+B_integer__Tboolean(sampler) = B_DataTypeConversion(Tinteger)(I2B)(sampler)
+B_integer__Tsingle(sampler) = B_DataTypeConversion(Tinteger)(I2S)(sampler)
+B_integer__Tdouble(sampler) = B_DataTypeConversion(Tinteger)(I2D)(sampler)
+
+B_single__Tboolean(sampler) = B_DataTypeConversion(Tsingle)(S2B)(sampler)
+B_single__Tinteger(sampler) = B_DataTypeConversion(Tsingle)(S2I)(sampler)
+B_single__Tdouble(sampler) = B_DataTypeConversion(Tsingle)(S2D)(sampler)
+
+B_double__Tboolean(sampler) = B_DataTypeConversion(Tdouble)(D2B)(sampler)
+B_double__Tinteger(sampler) = B_DataTypeConversion(Tdouble)(D2I)(sampler)
+B_double__Tsingle(sampler) = B_DataTypeConversion(Tdouble)(D2S)(sampler)
+
+
+
+B_boolean__Tinteger_CONTINUOUS = B_boolean__Tinteger(Sampler__CONTINUOUS)
+B_boolean__Tsingle_CONTINUOUS = B_boolean__Tsingle(Sampler__CONTINUOUS)
+B_boolean__Tdouble_CONTINUOUS = B_boolean__Tdouble(Sampler__CONTINUOUS)
+
+B_integer__Tboolean_CONTINUOUS = B_integer__Tboolean(Sampler__CONTINUOUS)
+B_integer__Tsingle_CONTINUOUS = B_integer__Tsingle(Sampler__CONTINUOUS)
+B_integer__Tdouble_CONTINUOUS = B_integer__Tdouble(Sampler__CONTINUOUS)
+
+B_single__Tboolean_CONTINUOUS = B_single__Tboolean(Sampler__CONTINUOUS)
+B_single__Tinteger_CONTINUOUS = B_single__Tinteger(Sampler__CONTINUOUS)
+B_single__Tdouble_CONTINUOUS = B_single__Tdouble(Sampler__CONTINUOUS)
+
+B_double__Tboolean_CONTINUOUS = B_double__Tboolean(Sampler__CONTINUOUS)
+B_double__Tinteger_CONTINUOUS = B_double__Tinteger(Sampler__CONTINUOUS)
+B_double__Tsingle_CONTINUOUS = B_double__Tsingle(Sampler__CONTINUOUS)
+
+
+
+B_And(numInputs)(sampler)  = B_Logic(f_and)(numInputs)(sampler)
+B_Or(numInputs)(sampler)   = B_Logic(f_or)(numInputs)(sampler)
+B_Nand(numInputs)(sampler) = B_Logic(nand)(numInputs)(sampler)
+B_Nor(numInputs)(sampler)  = B_Logic(nor)(numInputs)(sampler)
+B_Xor(numInputs)(sampler)  = B_Logic(xor)(numInputs)(sampler)
+
+B_Not(sampler) = B_Logic(f_not)(1)(sampler)
+
+B_Not__CONTINUOUS  = B_Not(Sampler__CONTINUOUS)
+
+B_And__2(sampler)  = B_And(2)(sampler)
+B_Or__2(sampler)   = B_Or(2)(sampler)
+B_Nand__2(sampler) = B_Nand(2)(sampler)
+B_Nor__2(sampler)  = B_Nor(2)(sampler)
+B_Xor__2(sampler)  = B_Xor(2)(sampler)
+
+B_And__3(sampler)  = B_And(3)(sampler)
+B_Or__3(sampler)   = B_Or(3)(sampler)
+B_Nand__3(sampler) = B_Nand(3)(sampler)
+B_Nor__3(sampler)  = B_Nor(3)(sampler)
+B_Xor__3(sampler)  = B_Xor(3)(sampler)
+
+B_And__4(sampler)  = B_And(4)(sampler)
+B_Or__4(sampler)   = B_Or(4)(sampler)
+B_Nand__4(sampler) = B_Nand(4)(sampler)
+B_Nor__4(sampler)  = B_Nor(4)(sampler)
+B_Xor__4(sampler)  = B_Xor(4)(sampler)
+
+B_And__2_CONTINUOUS  = B_And__2(Sampler__CONTINUOUS)
+B_Or__2_CONTINUOUS   = B_Or__2(Sampler__CONTINUOUS)
+B_Nand__2_CONTINUOUS = B_Nand__2(Sampler__CONTINUOUS)
+B_Nor__2_CONTINUOUS  = B_Nor__2(Sampler__CONTINUOUS)
+B_Xor__2_CONTINUOUS  = B_Xor__2(Sampler__CONTINUOUS)
+
+B_And__3_CONTINUOUS  = B_And__3(Sampler__CONTINUOUS)
+B_Or__3_CONTINUOUS   = B_Or__3(Sampler__CONTINUOUS)
+B_Nand__3_CONTINUOUS = B_Nand__3(Sampler__CONTINUOUS)
+B_Nor__3_CONTINUOUS  = B_Nor__3(Sampler__CONTINUOUS)
+B_Xor__3_CONTINUOUS  = B_Xor__3(Sampler__CONTINUOUS)
+
+B_And__4_CONTINUOUS  = B_And__4(Sampler__CONTINUOUS)
+B_Or__4_CONTINUOUS   = B_Or__4(Sampler__CONTINUOUS)
+B_Nand__4_CONTINUOUS = B_Nand__4(Sampler__CONTINUOUS)
+B_Nor__4_CONTINUOUS  = B_Nor__4(Sampler__CONTINUOUS)
+B_Xor__4_CONTINUOUS  = B_Xor__4(Sampler__CONTINUOUS)
+
+
+
+B_EQ(sTin)(sampler)  = B_Relational(eq)(sTin)(sampler)
+B_NEQ(sTin)(sampler) = B_Relational(neq)(sTin)(sampler)
+
+B_GT(sTin)(sampler)  = B_Relational(gt)(sTin)(sampler)
+B_GTE(sTin)(sampler) = B_Relational(gte)(sTin)(sampler)
+B_LT(sTin)(sampler)  = B_Relational(lt)(sTin)(sampler)
+B_LTE(sTin)(sampler) = B_Relational(lte)(sTin)(sampler)
+
+B_EQ__Tboolean(sampler)  = B_EQ(Tboolean)(sampler)
+B_NEQ__Tboolean(sampler) = B_NEQ(Tboolean)(sampler)
+
+B_EQ__Tinteger(sampler)  = B_EQ(Tinteger)(sampler)
+B_NEQ__Tinteger(sampler) = B_NEQ(Tinteger)(sampler)
+B_GT__Tinteger(sampler)  = B_GT(Tinteger)(sampler)
+B_GTE__Tinteger(sampler) = B_GTE(Tinteger)(sampler)
+B_LT__Tinteger(sampler)  = B_LT(Tinteger)(sampler)
+B_LTE__Tinteger(sampler) = B_LTE(Tinteger)(sampler)
+
+B_EQ__Tboolean_CONTINUOUS  = B_EQ__Tboolean(Sampler__CONTINUOUS)
+B_NEQ__Tboolean_CONTINUOUS = B_NEQ__Tboolean(Sampler__CONTINUOUS)
+
+B_EQ__Tinteger_CONTINUOUS  = B_EQ__Tinteger(Sampler__CONTINUOUS)
+B_NEQ__Tinteger_CONTINUOUS = B_NEQ__Tinteger(Sampler__CONTINUOUS)
+
+B_GT__Tinteger_CONTINUOUS  = B_GT__Tinteger(Sampler__CONTINUOUS)
+B_GTE__Tinteger_CONTINUOUS = B_GTE__Tinteger(Sampler__CONTINUOUS)
+B_LT__Tinteger_CONTINUOUS  = B_LT__Tinteger(Sampler__CONTINUOUS)
+B_LTE__Tinteger_CONTINUOUS = B_LTE__Tinteger(Sampler__CONTINUOUS)
+
+
+
+B_Sum__CONTINUOUS(ops)(sTin) = B_Sum(ops)(sTin)(Sampler__CONTINUOUS)
+
+B_Add(Tin1,Tin2)(sampler) = B_Sum(<add, add>)(<Tin1,Tin2>)(sampler)
+B_Add__Tinteger(sampler) = B_Add(Tinteger,Tinteger)(sampler)
+B_Add__Tinteger_CONTINUOUS = B_Add__Tinteger(Sampler__CONTINUOUS)
+B_Add__CONTINUOUS(Tin1,Tin2) = B_Add(Tin1,Tin2)(Sampler__CONTINUOUS)
+
+B_Sub(Tin1,Tin2)(sampler) = B_Sum(<add, sub>)(<Tin1,Tin2>)(sampler)
+B_Sub__Tinteger(sampler) = B_Sub(Tinteger,Tinteger)(sampler)
+B_Sub__Tinteger_CONTINUOUS = B_Sub__Tinteger(Sampler__CONTINUOUS)
+B_Sub__CONTINUOUS(Tin1,Tin2) = B_Sub(Tin1,Tin2)(Sampler__CONTINUOUS)
+
+
+
+B_Product__CONTINUOUS(ops)(sTin) = B_Product(ops)(sTin)(Sampler__CONTINUOUS)
+
+B_Mul(Tin1,Tin2)(sampler) = B_Product(<mul, mul>)(<Tin1,Tin2>)(sampler)
+B_Mul__Tinteger(sampler) = B_Mul(Tinteger,Tinteger)(sampler)
+B_Mul__Tinteger_CONTINUOUS = B_Mul__Tinteger(Sampler__CONTINUOUS)
+
+B_Divide(Tin1,Tin2)(sampler) = B_Product(<mul, div>)(<Tin1,Tin2>)(sampler)
+B_Divide__Tinteger(sampler) = B_Divide(Tinteger,Tinteger)(sampler)
+B_Divide__Tinteger_CONTINUOUS = B_Divide__Tinteger(Sampler__CONTINUOUS)
+B_Divide__CONTINUOUS(Tin1,Tin2) = B_Divide(Tin1,Tin2)(Sampler__CONTINUOUS)
+
+
+
+B_Abs__Tinteger(sampler) = B_Abs(Tinteger)(sampler)
+
+B_Abs__Tinteger_CONTINUOUS = B_Abs__Tinteger(Sampler__CONTINUOUS)
+
+
+B_Min(sTin)(sampler) = B_MinMax(min)(sTin)(sampler)
+B_Max(sTin)(sampler) = B_MinMax(max)(sTin)(sampler)
+
+B_Min__Tinteger(sampler) = B_Min(<Tinteger,Tinteger>)(sampler)
+B_Max__Tinteger(sampler) = B_Max(<Tinteger,Tinteger>)(sampler)
+
+B_Min__Tinteger_CONTINUOUS = B_Min__Tinteger(Sampler__CONTINUOUS)
+B_Max__Tinteger_CONTINUOUS = B_Max__Tinteger(Sampler__CONTINUOUS)
+
+
+
+B_Gain__Tinteger(I.k)(sampler) = B_Gain(Tinteger)(I.k)(sampler)
+
+B_Gain__Tinteger_CONTINUOUS(I.k) = B_Gain__Tinteger(I.k)(Sampler__CONTINUOUS)
+
+
+B_Switch__GT(threshold)(sTin)(sampler) = B_Switch(\ u @ gt(u, threshold))(sTin)(sampler)
+B_Switch__GTE(threshold)(sTin)(sampler) = B_Switch(\ u @ gte(u, threshold))(sTin)(sampler)
+B_Switch__NZ(B)(sTin)(sampler) = B_Switch(\ u @ neq(u, B.false))(sTin)(sampler)
+B_Switch__NZ(tag)(sTin)(sampler) = B_Switch(\ u @ neq(u, tag.0))(sTin)(sampler)
+
+B_Switch__GT_Tinteger(I.threshold)(sampler) = B_Switch__GT(I.threshold)(<Tinteger,Tinteger>)(sampler)
+B_Switch__GTE_Tinteger(I.threshold)(sampler) = B_Switch__GTE(I.threshold)(<Tinteger,Tinteger>)(sampler)
+B_Switch__NZ_Tinteger(sampler) = B_Switch__NZ(I)(<Tinteger,Tinteger>)(sampler)
+
+B_Switch__GT_Tinteger_CONTINUOUS(I.threshold) = B_Switch__GT_Tinteger(I.threshold)(Sampler__CONTINUOUS)
+B_Switch__GTE_Tinteger_CONTINUOUS(I.threshold) = B_Switch__GTE_Tinteger(I.threshold)(Sampler__CONTINUOUS)
+B_Switch__NZ_Tinteger_CONTINUOUS = B_Switch__NZ_Tinteger(Sampler__CONTINUOUS)
+
+
+
+B_Saturation__Tinteger(I.lowerLimit, I.upperLimit)(sampler) =
+  B_Saturation(Tinteger)(I.lowerLimit, I.upperLimit)(sampler)
+
+B_Saturation__Tinteger_CONTINUOUS(I.lowerLimit, I.upperLimit) =
+  B_Saturation__Tinteger(I.lowerLimit, I.upperLimit)(Sampler__CONTINUOUS)
+
+B_Saturation__CONTINUOUS(Tin, I.lowerLimit, I.upperLimit) =
+  B_Saturation(Tin)(I.lowerLimit, I.upperLimit)(Sampler__CONTINUOUS)
+
+
+-- (Tin)(table)(sampler)
+B_Lookup__InterpolationUseEndValues(Tin)(table)(sampler) =
+  let interpolationUseEndValues(u, table) =
+        let (x1, y1) = head(table)
+        within if lte(u, x1) == TRUE then y1
+               else -- if gt(u, x1) == TRUE then
+                 let (x2, y2) = head(tail(table))
+                 within if gt(u, x2) == TRUE
+                        then interpolationUseEndValues(u, tail(table))
+                        else if eq(u, x2) == TRUE
+                             then y2
+                             else add(div(mul(sub(u, x1), sub(y2, y1)), sub(x2, x1)), y1)
+  within B_Lookup(interpolationUseEndValues)(Tin)(table)(sampler)
+
+B_Lookup__InterpolationUseEndValues_Tinteger_CONTINUOUS(table) =
+  B_Lookup__InterpolationUseEndValues(Tinteger)(table)(Sampler__CONTINUOUS)
+
+
+{- SIMULINK EXTRAS -}
+
+-- SRFlipFlop
+-- initialCondition is the state of Q
+-- if y1 == y2 behaves like STOP
+S_SRFlipFlop(initialCondition) =
+  let S = B_Inport__Tboolean_CONTINUOUS(1, signal.1)
+      R = B_Inport__Tboolean_CONTINUOUS(2, signal.2)
+      Memory = B_Memory__Tboolean(initialCondition) [[ in.1.xB <- signal.6.xB,
+                                                       out.1.xB <- signal.3.xB | xB<-Tboolean ]]
+      Tvectors3 = vectors(Tboolean,3)
+      Mux = B_Mux__Tboolean_CONTINUOUS(3) [[ in.1.xB <- signal.1.xB,
+                                             in.2.xB <- signal.2.xB,
+                                             in.3.xB <- signal.3.xB,
+                                             out.1.xV3 <- signal.4.xV3 | xV3<-Tvectors3, xB<-Tboolean ]]
+      Tvectors2 = vectors(Tboolean,2)
+      Logic = B_CombinatorialLogic(3, 2, < <FALSE,TRUE>,<TRUE,FALSE>,
+                                           <FALSE,TRUE>,<FALSE,TRUE>,
+                                           <TRUE,FALSE>,<TRUE,FALSE>,
+                                           <FALSE,FALSE>,<FALSE,FALSE> >,
+                                   Sampler__CONTINUOUS) [[ in.1.xV3 <- signal.4.xV3,
+                                                           out.1.xV2 <- signal.5.xV2 |
+                                                           xV3<-Tvectors3,
+                                                           xV2<-Tvectors2 ]]
+      Demux = B_Demux__Tboolean_CONTINUOUS(2) [[ in.1.xV2 <- signal.5.xV2,
+                                                 out.1.xB <- signal.6.xB,
+                                                 out.2.xB <- signal.7.xB |
+                                                 xB<-Tboolean, xV2<-Tvectors2 ]]
+      Q = B_Outport__Tboolean_CONTINUOUS(1, signal.6)
+      NQ = B_Outport__Tboolean_CONTINUOUS(2, signal.7)
+  within
+      (
+        (
+          R [| {| tick |} |] S
+        )
+        [| {| signal.1.xB, signal.2.xB, tick | xB<-Tboolean |} |]
+        (
+          Mux [| {| signal.3.xB, tick | xB<-Tboolean |} |] Memory
+        ) \ {| signal.3.xB | xB<-Tboolean |}
+      ) \ {| signal.1.xB, signal.2.xB | xB<-Tboolean |}
+      [| {| signal.4.xV3, signal.6.xB, tick | xV3<-Tvectors3, xB<-Tboolean |} |]
+      (
+        (
+          Logic [| {| signal.5.xV2, tick | xV2<-Tvectors2 |} |] Demux
+        ) \ {| signal.5.xV2 | xV2<-Tvectors2 |}
+        [| {| signal.6.xB, signal.7.xB, tick | xB<-Tboolean |} |]
+        (
+          NQ [| {| tick |} |] Q
+        ) \ {| signal.7.xB | xB<-Tboolean |}
+      ) \ {| signal.4.xV3, signal.6.xB | xV3<-Tvectors3, xB<-Tboolean |}
+
+
+S_SRFlipFlop__FALSE = S_SRFlipFlop(FALSE)
+S_SRFlipFlop__TRUE = S_SRFlipFlop(TRUE)
+

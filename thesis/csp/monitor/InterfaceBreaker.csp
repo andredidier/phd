@@ -1,0 +1,90 @@
+datatype FailureType = Hardware.BlockId.Int
+
+datatype ValueType = EXP | ACT
+
+channel failure_evaluation: FailureType
+channel failure: FailureType.ValueType.T
+
+--------------------------------------------------------------------------------
+-- ComponentBehaviour process: defines the behaviour in the signals interfaces -
+-- between components. ---------------------------------------------------------
+-- Parameters:------------------------------------------------------------------
+-- * Component: the observable component. --------------------------------------
+-- * HwInterfaces: the declared hardware interfaces (breakable). ---------------
+-- * fFailure: the function that receives the read value on the left component -
+--             output and the communication type and outputs the corresponding -
+--             behaviour value. ------------------------------------------------
+--------------------------------------------------------------------------------
+ComponentBehaviour(CS, 
+                   fFailure,
+                   fDoc) =
+    let
+        Component = B_Diagram(CS)
+        cs = Union({ evs | (_, evs) <- CS })
+        HwOutputs = {| cout.HW.x | cout.HW.x <- cs |}
+        HwInputs = {| sig.HW.x | sig.HW.x <- cs |}
+        SwSignals = {| cout.SW.x, sig.SW.y | cout.SW.x <- cs, sig.SW.y <- cs |}
+        ComponentInputs = {| in.p.x | in.p.x <- cs |}
+        ComponentOutputs = {| out.p.x | out.p.x <- cs |}
+        FEvaluations = {| failure_evaluation.Hardware.b.p 
+                          | sig.HW.b.p.x <- cs |}
+        SignalsSync = Union({ ComponentInputs, ComponentOutputs, 
+                              HwOutputs, HwInputs })
+        HiddenSignals = Union({ HwInputs, HwOutputs, SwSignals, 
+                                FEvaluations, {tick} })
+        SignalsBehaviour = 
+            (
+            [] cout.HW.b.p.vo : HwOutputs @
+                let
+                    vs = { v | cout.HW.bVs.pVs.v <- HwOutputs, 
+                               bVs == b, pVs == p }
+                    OKGO = (sig.HW.b.p!vo -> SignalsBehaviour)
+                within
+                    cout.HW.b.p!vo -> 
+                    (
+                    OKGO
+                    []
+                    if vo == OMISSION then OKGO
+                    else
+                        (failure_evaluation.Hardware.b.p -> 
+                            sig.HW.b.p?vi:fFailure(vo, vs) -> 
+                            failure.Hardware.b.p.EXP?ve:fDoc(vo, vs) ->
+                            failure.Hardware.b.p.ACT?va:fDoc(vi, vs) ->
+                            SignalsBehaviour)
+                        )
+            )
+            []
+            (
+            let 
+                CIWithoutOmission = {| in.p.x | in.p.x <- ComponentInputs, 
+                                                x != OMISSION |}
+            within [] in.p.x : CIWithoutOmission @ in.p.x -> SignalsBehaviour
+            )
+            []
+            (
+            [] out.p.x : ComponentOutputs @ out.p.x -> SignalsBehaviour
+            )
+    within (Component 
+           [|SignalsSync|] 
+           SignalsBehaviour) 
+             \ HiddenSignals
+
+             
+--------------------------------------------------------------------------------
+-- Breakable process: defines the fFailure function for the breakable behaviour 
+-- according to the definition of ComponentBehaviour. --------------------------
+--------------------------------------------------------------------------------
+Breakable(CS) =
+    ComponentBehaviour(CS, 
+                       \ v, vs @ diff(vs, {v}),
+                       \ vi, vs @ {vi})
+
+--------------------------------------------------------------------------------
+-- Breakable process: defines the fFailure function for the nominal behaviour --
+-- according to the definition of ComponentBehaviour. --------------------------
+--------------------------------------------------------------------------------
+Nominal(CS) =
+    ComponentBehaviour(CS, 
+                       \ v, vs @ {v},
+                       \ vi, vs @ vs)
+

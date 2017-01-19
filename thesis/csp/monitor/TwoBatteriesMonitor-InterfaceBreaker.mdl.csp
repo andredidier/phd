@@ -1,0 +1,123 @@
+include "TwoBatteriesMonitor.mdl.csp"
+include "InterfaceBreaker.csp"
+
+channel wco:Int.T
+
+Inputs = { (in.1, Tbattery1), (in.2, Tbattery2) }
+Outputs = { (out.1, Tmonitor) }
+
+B_L01_S_PowerSupply = 
+  let I_Battery1 = L02_S_Battery(timeBattery1, Vbattery1) [[ out.1.xD <- cout.HW.N02_Battery1.1.xD | xD<-Tbattery1 ]]
+      Sig_N02_Battery1_1 = HwSignal(cout.HW.N02_Battery1.1, sig.HW.N02_Battery1.1, Tbattery1)
+      I_Battery2 = L02_S_Battery(timeBattery2, Vbattery2) [[ out.1.xD <- cout.HW.N02_Battery2.1.xD | xD<-Tbattery2 ]]
+      Sig_N02_Battery2_1 = HwSignal(cout.HW.N02_Battery2.1, sig.HW.N02_Battery2.1, Tbattery2)
+      I_Monitor = L02_S_Monitor(I.3) [[ in.1.xB1 <- sig.HW.N02_Battery1.1.xB1,
+                                        in.2.xB2 <- sig.HW.N02_Battery2.1.xB2,
+                                        out.1.xM <- cout.HW.N02_Monitor.1.xM
+                                        | xB1<-Tbattery1, xB2<-Tbattery2, xM<-Tmonitor ]]
+      Sig_N02_Monitor_1 = HwSignal(cout.HW.N02_Monitor.1, sig.HW.N02_Monitor.1, Tmonitor)
+      PSOut = B_Outport(1, Tmonitor)(sig.HW.N02_Monitor.1)(Sampler__CONTINUOUS)
+      CS = { (I_Battery1, 	        {| tick, cout.HW.N02_Battery1.1.xD | xD<-Tbattery1 |}),
+             (Sig_N02_Battery1_1,   {| tick, cout.HW.N02_Battery1.1.xD, sig.HW.N02_Battery1.1.xD | xD<-Tbattery1 |}),
+             (I_Battery2, 	        {| tick, cout.HW.N02_Battery2.1.xD | xD<-Tbattery2 |}),
+             (Sig_N02_Battery2_1,   {| tick, cout.HW.N02_Battery2.1.xD, sig.HW.N02_Battery2.1.xD | xD<-Tbattery2 |}),
+             (I_Monitor, 	        {| tick, sig.HW.N02_Battery1.1.xB1, sig.HW.N02_Battery2.1.xB2,
+                                       cout.HW.N02_Monitor.1.xM | xB1<-Tbattery1, xB2<-Tbattery2, xM<-Tmonitor |}),
+             (Sig_N02_Monitor_1,    {| tick, cout.HW.N02_Monitor.1.xD, sig.HW.N02_Monitor.1.xD | xD<-Tmonitor |}),
+             (PSOut,		        {| tick, sig.HW.N02_Monitor.1.xI, out.1.xI | xI<-Tmonitor |}) }
+  within
+      B_Diagram(CS) [[ out.1.xI <- wco.1.xI | xI<-Tmonitor ]]
+      
+
+     
+B_L02_S_Monitor(threshold) =
+  let MonIn1 = B_Inport(1, Tbattery1)(cout.HW.N04_MonIn1.1)(Sampler__CONTINUOUS)
+      Sig_N04_MonIn1_1 = HwSignal(cout.HW.N04_MonIn1.1, sig.HW.N04_MonIn1.1, Tbattery1)
+      MonIn2 = B_Inport(2, Tbattery2)(cout.HW.N04_MonIn2.1)(Sampler__CONTINUOUS)
+      Sig_N04_MonIn2_1 = HwSignal(cout.HW.N04_MonIn2.1, sig.HW.N04_MonIn2.1, Tbattery2)
+      Threshold = B_Constant(threshold) [[ out.1.xI <- cout.SW.N04_Threshold.1.xI | xI<-Tthreshold ]]
+      Sig_N04_Threshold_1 = Signal(cout.SW.N04_Threshold.1, sig.SW.N04_Threshold.1, Tthreshold)
+      RelationalOperator = B_GTE(<Tbattery1,Tthreshold>)(Sampler__CONTINUOUS) [[ in.1.x1 <- sig.HW.N04_MonIn1.1.x1,
+                                                                                 in.2.x2 <- sig.SW.N04_Threshold.1.x2,
+                                                                                 out.1.xB <- cout.HW.N04_RelationalOperator.1.xB
+                                                                                 | x1<-Tbattery1, x2<-Tthreshold, xB<-Tboolean ]]
+      Sig_N04_RelationalOperator_1 = HwSignal(cout.HW.N04_RelationalOperator.1, sig.HW.N04_RelationalOperator.1, Tboolean)
+      Switch = B_Switch__NZ(B)(<Tbattery1,Tboolean,Tbattery2>)(Sampler__CONTINUOUS) [[ in.1.xB1 <- sig.HW.N04_MonIn1.1.xB1,
+                                                                                       in.2.xB <- sig.HW.N04_RelationalOperator.1.xB,
+                                                                                       in.3.xB2 <- sig.HW.N04_MonIn2.1.xB2,
+                                                                                       out.1.xI <- cout.SW.N04_Switch.1.xI
+                                                                                       | xB1<-Tbattery1, xB2<-Tbattery2, xB<-Tboolean, xI<-Tmonitor ]]
+      Sig_N04_Switch_1 = Signal(cout.SW.N04_Switch.1, sig.SW.N04_Switch.1, Tmonitor)
+      MonOut = B_Outport(1, Tmonitor)(sig.SW.N04_Switch.1)(Sampler__CONTINUOUS)
+      CS = { (MonIn1,				        {| tick, in.1.xI, cout.HW.N04_MonIn1.1.xI | xI<-Tbattery1 |}),
+             (Sig_N04_MonIn1_1,	            {| tick, cout.HW.N04_MonIn1.1.xI, sig.HW.N04_MonIn1.1.xI | xI<-Tbattery1 |}),
+             (MonIn2,				        {| tick, in.2.xI, cout.HW.N04_MonIn2.1.xI | xI<-Tbattery2 |}),
+             (Sig_N04_MonIn2_1,	            {| tick, cout.HW.N04_MonIn2.1.xI, sig.HW.N04_MonIn2.1.xI | xI<-Tbattery2 |}),
+             (Threshold,			        {| tick, cout.SW.N04_Threshold.1.xI | xI<-Tthreshold |}),
+             (Sig_N04_Threshold_1,	        {| tick, cout.SW.N04_Threshold.1.xI, sig.SW.N04_Threshold.1.xI | xI<-Tthreshold |}),
+             (RelationalOperator,	        {| tick, sig.HW.N04_MonIn1.1.x1, sig.SW.N04_Threshold.1.x2, cout.HW.N04_RelationalOperator.1.xB
+                                               | x1<-Tbattery1, x2<-Tthreshold, xB<-Tboolean |}),
+             (Sig_N04_RelationalOperator_1,	{| tick, cout.HW.N04_RelationalOperator.1.xB, sig.HW.N04_RelationalOperator.1.xB | xB<-Tboolean |}),
+             (Switch,				        {| tick, sig.HW.N04_MonIn1.1.xB1, sig.HW.N04_RelationalOperator.1.xB,
+                                               sig.HW.N04_MonIn2.1.xB2, cout.SW.N04_Switch.1.xI
+                                               | xB1<-Tbattery1, xB2<-Tbattery2, xB<-Tboolean, xI<-Tmonitor |}),
+             (Sig_N04_Switch_1,	            {| tick, cout.SW.N04_Switch.1.xI, sig.SW.N04_Switch.1.xI | xI<-Tmonitor |}),
+             (MonOut,				        {| tick, sig.SW.N04_Switch.1.xI, out.1.xI
+                                               | xI<-Tmonitor |}) }
+  within
+      CS
+
+WB_L02_S_Monitor = B_L02_S_Monitor(I.3)
+-- assert L02_S_Monitor(I.3) :[deadlock free [FD]]
+
+assert Nominal(WB_L02_S_Monitor) [T= Breakable(WB_L02_S_Monitor)
+
+{-
+PROC(BEHAVIOUR, COMPONENT_WITH_CS, ShownPatternF) =
+    let 
+        (COMPONENT, CS) = COMPONENT_WITH_CS 
+        cs = Union({ evs | (_, evs) <- CS })
+    within BEHAVIOUR(COMPONENT_WITH_CS) \ diff(cs, ShownPatternF(cs))
+
+assert PROC(Nominal, WB_L02_S_Monitor, \ cs @ {| in.1.x | in.1.x <- cs |}) 
+    [T= in.1.I.5 -> STOP
+assert PROC(Nominal, WB_L02_S_Monitor, \ cs @ {| in.1.x | in.1.x <- cs |}) 
+    [T= in.1.OMISSION -> STOP
+    
+assert PROC(Nominal, WB_L02_S_Monitor, \ cs @ {| out.1.xI | xI<-Tmonitor |}) 
+    [T= failure.Hardware.N04.N04_MonIn1.1 -> failure.Hardware.N04.N04_RelationalOperator.1 -> out.1.OMISSION -> STOP
+assert PROC(Breakable, WB_L02_S_Monitor, \ cs @ {| out.1.xI | xI<-Tmonitor |}) 
+    [T= failure.Hardware.N04.N04_MonIn1.1 -> failure.Hardware.N04.N04_RelationalOperator.1 -> out.1.OMISSION -> STOP
+
+assert PROC(Nominal, WB_L02_S_Monitor, \ cs @ {| out.1.xI | xI<-Tmonitor |}) 
+    [T= failure.Hardware.N04.N04_MonIn1.1 -> failure.Hardware.N04.N04_MonIn2.1 -> out.1.OMISSION -> STOP
+assert PROC(Breakable, WB_L02_S_Monitor, \ cs @ {| out.1.xI | xI<-Tmonitor |}) 
+    [T= failure.Hardware.N04.N04_MonIn1.1 -> failure.Hardware.N04.N04_MonIn2.1 -> out.1.OMISSION -> STOP
+-}
+{-
+datatype Deviations = NO_DEVIATION | LowPowerOut.Int | LowPowerIn.Int
+channel deviation : Deviations
+
+WB_L02_S_Monitor_Output_Deviations = { (out.1, {I.0}, LowPowerOut.1) }
+assert DeviationFinder(WB_L02_S_Monitor, {}, {}) [T= 
+       DeviationFinder(WB_L02_S_Monitor, {}, WB_L02_S_Monitor_Output_Deviations)
+
+WB_L02_S_Monitor_Input_Deviations = { (in.p, {I.0}, LowPowerIn.p) | p<-{1,2} }
+assert DeviationFinder(WB_L02_S_Monitor, WB_L02_S_Monitor_Input_Deviations, {}) [T= 
+       DeviationFinder(WB_L02_S_Monitor, WB_L02_S_Monitor_Input_Deviations, WB_L02_S_Monitor_Output_Deviations)
+
+assert NonNominalFinder(WB_L02_S_Monitor, {}, { out.1.I.5, out.1.I.0}) [T= 
+       NonNominalFinder(WB_L02_S_Monitor, {}, { out.1.I.5 })
+  -}
+{-
+Tabela verdade das falhas
+in.1    in.2    N04_RelationalOperator  Falha   Detectada pelo Breaker
+0       0       0                       true    !
+0       0       1                       true    !
+0       1       0                       false   X
+0       1       1                       true    Ok
+1       0       0                       true    Ok
+1       0       1                       false   X
+1       1       0                       false   X
+1       1       1                       false   X
+-}

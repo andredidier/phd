@@ -1,0 +1,63 @@
+
+id(x) = x
+
+map(f)(s) = < f(x) | x <- s >
+
+
+
+{- Set -}
+singleton(s) = let {x} = s within x
+
+
+{- Seq -}
+seqs(_, 0) = { <> }
+seqs(t, n) = { <x>^s | x<-t, s<-seqs(t, n-1) }
+
+elementAt(<e>^s,1) = e
+elementAt(<e>^s,i) = elementAt(s,i-1)
+
+seqCount(e,s) = #< x | x <- s, x == e >
+
+seqToRelation(<>) = {}
+seqToRelation(s) = { (i, elementAt(s,i)) | i<-<1..#s> }
+
+
+
+{- RELATION<X,Y> = Set((x,y)) -}
+dom(r) = { x | (x,_) <- r }
+
+ran(r) = { y | (_,y) <- r }
+
+relationalImage(r,s) = { y | (x,y) <- r, x2 <- s, x == x2 }
+
+image(r,x) = let {y} = relationalImage(r,{x}) within y
+
+--invert(r) = { (y,x) | (x,y)<-r }
+
+relationToSeq(r) =
+  let CARDINALITY = card(r)
+      relationToSeq'(i) = if i <= 0 or i > CARDINALITY then <>
+                       else < image(r, i) > ^ relationToSeq'(i+1)
+  within relationToSeq'(1)
+
+
+
+{- ARRAY<T> = RELATION<Int,T>
+--arraySize(a) = card(a)
+
+arrayAt(a, i) = image(a, i)
+
+--arrayRemove(a, i) = { (x,y) | (x,y)<-a, x != i } -- diff(a, { arrayElementAt(a, i) })
+
+--arrayRevert(a) = let max = 1 + card(a) within { (max - x,y) | (x,y)<-a }
+
+arrayLast(a) = arrayAt(a, arraySize(a))
+
+--arrayRemoveLast(a) = arrayRemove(a, arraySize(a))
+
+arrayToSeq(a) =
+  let arrayLenght = arraySize(a)
+      arrayToSeq'(i) = if i <= 0 or i > arrayLenght then <>
+                       else < arrayAt(a, i) > ^ arrayToSeq'(i+1)
+  within arrayToSeq'(1)
+ -}

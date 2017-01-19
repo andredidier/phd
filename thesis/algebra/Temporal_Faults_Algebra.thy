@@ -169,15 +169,7 @@ theorem xbefore_inf_absorb_2: "independent_events a b \<Longrightarrow>
   inf a (xbefore b a) = xbefore b a"
 by (simp add: local.inf.absorb2 local.sup.absorb_iff1 xbefore_sup_absorb_2b)
 
-(*
-lemma inf_xbefore_equiv_sups_xbefore_1:
-  "independent_events a b \<Longrightarrow> independent_events a c \<Longrightarrow> independente_events b c \<Longrightarrow> 
-  \<lbrakk>tempo1 a; tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo2 a; tempo2 b; tempo2 c\<rbrakk> \<Longrightarrow> 
-  \<lbrakk>tempo3 a; tempo3 b; tempo3 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo4 a; tempo4 b; tempo4 c\<rbrakk> \<Longrightarrow>
-  inf a (xbefore b c) = 
-  sup (sup (xbefore (xbefore a b) c) (xbefore (xbefore b a) c)) (xbefore (xbefore b c) a)"
-*)
-corollary inf_xbefore_equiv_sups_xbefore_expanded: 
+lemma inf_xbefore_equiv_sups_xbefore_expanded: 
   "independent_events a b \<Longrightarrow> independent_events a c \<Longrightarrow> 
   \<lbrakk>tempo1 a; tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo2 a; tempo2 b; tempo2 c\<rbrakk> \<Longrightarrow> 
   \<lbrakk>tempo3 a; tempo3 b; tempo3 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo4 a; tempo4 b; tempo4 c\<rbrakk> \<Longrightarrow> 
@@ -201,6 +193,15 @@ proof-
       xbefore_inf_2 xbefore_assoc)
   thus ?thesis by (simp add: sup.assoc)
 qed
+
+corollary inf_xbefore_equiv_sups_xbefore_1:
+  "independent_events a b \<Longrightarrow> independent_events a c  \<Longrightarrow> 
+  \<lbrakk>tempo1 a; tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo2 a; tempo2 b; tempo2 c\<rbrakk> \<Longrightarrow> 
+  \<lbrakk>tempo3 a; tempo3 b; tempo3 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo4 a; tempo4 b; tempo4 c\<rbrakk> \<Longrightarrow>
+  inf a (xbefore b c) = 
+  sup (sup (xbefore (xbefore a b) c) (xbefore (xbefore b a) c)) 
+    (xbefore (xbefore b c) a)"
+by (simp add: inf_xbefore_equiv_sups_xbefore_expanded)
 
 lemma xbefore_sup_compl_inf_absorb1: 
   "independent_events a b \<Longrightarrow> \<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> 

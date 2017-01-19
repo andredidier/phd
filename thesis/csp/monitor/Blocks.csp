@@ -1,0 +1,117 @@
+{-
+ - FormallLab
+ -
+ - Project: Simulink to CSP
+ -
+ - Author: Joabe Jesus <jbjj@cin.ufpe.br>
+ -}
+
+
+include "Types.csp"
+
+
+
+{- SAMPLING -}
+
+channel tick
+channel step, sampleStep
+
+channel enabled
+
+aTick = {| tick |}
+aSampling = {| step, sampleStep |}
+aSampler = {| tick, step, sampleStep |}
+
+
+-- FUNDAMENTAL_SAMPLE_TIME = ... defined in the CSP model file
+-- STEP_SIZE = FUNDAMENTAL_SAMPLE_TIME -- defined in the CSP model file
+
+CONTINUOUS = 0
+-- MAX_SAMPLE_STEP = ... defined in the CSP model file
+-- SampleStep = { CONTINUOUS..MAX_SAMPLE_STEP }
+
+-- chanset(c, type) = {| c.i.x | i <- {1..numInputs}, x<-type |}
+
+
+
+{- HELP PROCESSES -}
+
+Offset(0) = SKIP
+Offset(offset) =
+  let Offset'(t) = if (t != offset)
+                   then tick -> step -> Offset'(t+1)
+                   else SKIP
+  within explicate(Offset'(1))
+
+
+Sampler(st) =
+  let Sampler'(t) = tick -> if (t != st)
+                            then step -> Sampler'((t+1)%st)
+                            else sampleStep -> Sampler'(0)
+  within explicate(Sampler'(st))
+
+
+Sampled(Process1, Process2) =
+  tick -> (step -> Process1
+           [] sampleStep -> Process2)
+
+
+
+{- BLOCKS -}
+
+channel in, out, signal: Int.T
+channel workspace, scope: Int.T
+
+transparent explicate
+
+
+--III(cs, Process) =
+--  let III'({}, a) = Process(a); III'(cs, {})
+--      III'(s, a) = [] (c.i,Tin): s @ c.i?u:Tin -> III'(diff(s,{(c.i,Tin)}), union(a,{(i,u)}))
+--  within III'(cs, {})
+
+
+Block(n, sTin, Outputs)(sampler) =
+  let SkipInputs = ||| i: {1..n} @ in.i?u:elementAt(sTin,i) -> SKIP
+      Block' = Sampled(SkipInputs; Outputs(<>); Block', Block''({1..n}, {}))
+      Block''({}, r)  = Outputs(relationToSeq(r));
+                        Sampled(SkipInputs; Block''({}, r), Block''({1..n}, {}))
+      Block''(ids, r) = [] i: ids @ in.i?u:elementAt(sTin,i) -> Block''(diff(ids,{i}), union(r,{(i,u)}))
+  within ( explicate(Block')
+           [| aSampler |]
+           sampler
+         ) \ aSampling
+
+
+SISOBlock(outputs, Tin)(sampler) =
+  let SISOBlock'(y_1) =
+        Sampled(in.1?u:Tin -> out.1!y_1 -> SISOBlock'(y_1),
+                in.1?u:Tin -> let y = outputs(u)
+                              within out.1!y -> SISOBlock'(y))
+  within ( explicate(SISOBlock'(UNDEFINED))
+           [| aSampler |]
+           sampler
+         ) \ aSampling
+
+SISSSOBlock(outputs, update, Tin)(sampler) =
+  let SISSSOBlock'(s,y_1) =
+        Sampled(in.1?u:Tin -> out.1!y_1 -> SISSSOBlock'(s,y_1),
+                in.1?u:Tin -> let y = outputs(s,u)
+                                  s' = update(s,u,y)
+                              within out.1!y -> SISSSOBlock'(s',y))
+  within ( explicate(SISSSOBlock'(UNDEFINED))
+           [| aSampler |]
+           sampler
+         ) \ aSampling
+
+
+
+Port(num)(Tin) =
+  let Port'(y_1) = Sampled(in.num?u:Tin -> out.num!y_1 -> Port'(y_1),
+                           in.num?u:Tin -> out.num!u -> Port'(u))
+  within explicate(Port'(UNDEFINED))
+
+Port__0(Tin) = Port(0)(Tin)
+
+
+

@@ -360,11 +360,13 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 %\def\maxop{\ensuremath\operatorname{max}}
 %\newcommand{\max}[1]{\ensuremath\maxop #1}
 \def\algebraset{\ensuremath\mathbf{atf}}
-\def\tracetobool{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny B}}}}
+%TODO remove tracetoboolop
+\def\tracetoboolop{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny B}}}}
 \def\tracetofba{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny F}}}}
 %TODO remove tracetoalgebraop
 \def\tracetoalgebraop{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny XB}}}}
 \newcommand{\tracetoalgebra}[1]{\ensuremath\langle{#1}\rangle_{XB}}
+\newcommand{\tracetobool}[1]{\ensuremath\langle{#1}\rangle_{B}}
 \newcommand{\trace}[1]{\ensuremath\left[~#1~\right]}
 \newcommand{\setsin}[1]{\ensuremath\left\{ #1 \right\}}
 \newcommand{\listsin}[1]{\ensuremath\left[ #1 \right]}
@@ -2295,6 +2297,7 @@ When the \ac{CSPm} process of the model and the observer are loaded into the \ac
 In what follows, injected faults and the top-level failure have generic names based on the names of the \simulink model blocks.
 It is out of the scope of~\cite{DM2012} to define event names.
 
+%TODO run in FDR4
 For the \simulink model shown in~\cref{fg:blockDiagramMonitorInternals}, some representative fault traces are:
 
 \begin{snippetcspm}[1]
@@ -2357,11 +2360,35 @@ failure.Hardware.N04_MonIn1.1.EXP.I.5
 failure.Hardware.N04_MonIn1.1.ACT.OMISSION
 failure.Hardware.N04_RelationalOperator.1.EXP.B.false
 failure.Hardware.N04_RelationalOperator.1.ACT.B.true
+
+TRACE 9:
+failure.Hardware.N04_RelationalOperator.1.EXP.B.false
+failure.Hardware.N04_RelationalOperator.1.ACT.B.true
+failure.Hardware.N04_MonIn1.1.EXP.I.5
+failure.Hardware.N04_MonIn1.1.ACT.OMISSION
+failure.Hardware.N04_MonIn2.1.EXP.I.5
+failure.Hardware.N04_MonIn2.1.ACT.OMISSION
+
+TRACE 10:
+failure.Hardware.N04_RelationalOperator.1.EXP.B.false
+failure.Hardware.N04_RelationalOperator.1.ACT.B.true
+failure.Hardware.N04_MonIn2.1.EXP.I.5
+failure.Hardware.N04_MonIn2.1.ACT.OMISSION
+failure.Hardware.N04_MonIn1.1.EXP.I.5
+failure.Hardware.N04_MonIn1.1.ACT.OMISSION
+
+TRACE 11:
+failure.Hardware.N04_MonIn2.1.EXP.I.5
+failure.Hardware.N04_MonIn2.1.ACT.OMISSION
+failure.Hardware.N04_RelationalOperator.1.EXP.B.false
+failure.Hardware.N04_RelationalOperator.1.ACT.B.true
+failure.Hardware.N04_MonIn1.1.EXP.I.5
+failure.Hardware.N04_MonIn1.1.ACT.OMISSION
 \end{snippetcspm}
 %
 where \verb$N04$ is the subsystem name of the monitor in the \simulink diagram, \verb$MonIn1$ (first input of the monitor), \verb$MonIn2$ (second input of the monitor), and \verb$RelationalOperator$ (switcher controller) are the names of the hardware components in the \simulink diagram.
 
-We only show eight counter-examples, but \acs{FDR} generates a total of 64 counter-examples for this system.
+We only show eleven counter-examples, but \acs{FDR} generates a total of 64 counter-examples for this system.
 The other counter-examples are similar to the traces shown with different internal events.
 
 To reuse \ac{hiphops}, which is based on \acp{SFT}, we ``remove'' the ordering information of the traces to generate a failure expression.
@@ -2392,7 +2419,7 @@ A = failure.Hardware.N04_MonIn1.1
 B = failure.Hardware.N04_MonIn2.1
 S = failure.Hardware.N04_RelationalOperator
 \end{snippetcspm}
-%
+
 So, for each trace, we obtain an expression:
 \begin{align*}
 \mathtt{TRACE\,1} &= S \land B\\
@@ -2402,12 +2429,15 @@ So, for each trace, we obtain an expression:
 \mathtt{TRACE\,5} &= A \land S\\
 \mathtt{TRACE\,6} &= A \land S \land B\\
 \mathtt{TRACE\,7} &= A \land B \land S\\
-\mathtt{TRACE\,8} &= B \land A \land S
+\mathtt{TRACE\,8} &= B \land A \land S\\
+\mathtt{TRACE\,9} &= S \land A \land B\\
+\mathtt{TRACE\,10} &= S \land B \land A\\
+\mathtt{TRACE\,11} &= B \land S \land A\\
 \end{align*}
 
 And we combine them as a single Boolean\index{Boolean Algebra} expression:
 %
-$\mathtt{TRACE\,1} \lor \mathtt{TRACE\,2} \lor \mathtt{TRACE\,3} \lor \mathtt{TRACE\,4} \lor \mathtt{TRACE\,5} \lor \mathtt{TRACE\,6} \lor \mathtt{TRACE\,7} \lor \mathtt{TRACE\,8}$, %
+$\mathtt{TRACE\,1} \lor \mathtt{TRACE\,2} \lor \mathtt{TRACE\,3} \lor \mathtt{TRACE\,4} \lor \mathtt{TRACE\,5} \lor \mathtt{TRACE\,6} \lor \mathtt{TRACE\,7} \lor \mathtt{TRACE\,8} \lor \mathtt{TRACE\,9} \lor \mathtt{TRACE\,10} \lor \mathtt{TRACE\,11}$, %
 which by a traditional Boolean reduction strategy results in:
 %
 \[(A \land B) \lor (S \land (A \lor B))\]
@@ -2919,7 +2949,7 @@ The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer 
 \begin{align}
 \tempo{S} \land \tempo{T} \land \nonumber\\
   \tempo{U} \land \independentevents{S}{T} \land \independentevents{S}{U} & \implies \nonumber\\
-  S \lor \parsin{\xbefore{T}{U}} = &
+  S \land \parsin{\xbefore{T}{U}} = &
   \parsin{\xbefore{\xbefore{S}{T}}{U}} \lor \nonumber\\
   & \parsin{\xbefore{\xbefore{T}{S}}{U}} \lor \nonumber\\
   & \parsin{\xbefore{\xbefore{T}{U}}{S}} &
@@ -3003,6 +3033,8 @@ For example, the probability of $\denote{\xbefore{\var{f_1}}{\var{f_2}}}$ contai
 %where $ys / A$ removes the elements of $A$ in $ys$.
 
 Using \cref{eq:general-pand-probability,eq:generators} we define the denotational probability\index{denotational probability} $\denotationalprobop$ of a list as:
+%
+\begin{subequations}
 \begin{align}
 \denotationalprob{xs} = &
   \probability{xs} \times \prod_{f_j \in \generators_{xs}} \left(1-P_j\left(t\right)\right)\label{eq:denotational-probability}\\
@@ -3013,6 +3045,7 @@ Using \cref{eq:general-pand-probability,eq:generators} we define the denotationa
 %%%%%
 %R\left(S, xs\right) = & \listsof{S}{xs} - \left\{xs\right\}\nonumber
 \end{align}
+\end{subequations}
 %
 %For example, to calculate $\denotationalprob{\left[f_1, f_2\right]}$ for set of generators $\left\{f_1,f_2,f_3\right\}$, we have:
 %\begin{align*}
@@ -3153,28 +3186,30 @@ Both equations have Boolean\index{Boolean} return value, which can be verified b
 In our previous work~\cite{DM2012,Didier2012} we reported a strategy to inject faults in a \ac{CSPm} model generated from an architectural model of a system in \simulink.
 Using a model-checker we are able to obtain failure traces with the injected faults, which we produce failure expression in Boolean algebra.
 Thus, the order-related information was lost, as there are no means to represent them in Boolean algebra\index{Boolean algebra}.
+For example, a trace that represent $f_1$ before $f_2$, $\trace{f_1,f_2}$, would be written as the expression $\var{f_1} \land \var{f_2}$, which is the same as $\var{f_2} \land \var{f_1}$.
 
 Using the same strategy, but now mapping the traces to \ac{algebra} we are able to analyse order-related failures.
 In this section we show how to map the same failure traces reported in the strategy of~\cite{DM2012} to \ac{algebra}.
 
 The mapping function takes the set of traces as input and produces a structure expression in \ac{algebra}.
-Each event in the traces becomes a variable, and each list becomes \iac{XBefore} with the \acp{AND} of the variables of the remaining generators.
+Each event in the traces becomes a variable, and each list becomes \iac{XBefore} with the conjunction (\acp{AND}) of the variables of the remaining generators.
+The following recursive definitions describe the mapping function.
 %
 \begin{subequations}
 \begin{align}
-\tracetoalgebra{\trace{}} = & \top\\
+\tracetoalgebra{\trace{}} = & \top\label{eq:mapping-algebra-empty}\\
 %
-\tracetoalgebra{\trace{f}} = & \var{f}\\
+\tracetoalgebra{\trace{f}} = & \var{f}\label{eq:mapping-algebra-singleton}\\
 %
 \tracetoalgebra{\append{\trace{f_1}}{tr}} = & 
   \xbefore
     {\var{f_1}}
-    {\tracetoalgebra{tr}}\\
+    {\tracetoalgebra{tr}}\label{eq:mapping-algebra-two-more-trace}\\
 %
 \tracetoalgebra{\left\{ tr_1, tr_2, \ldots, tr_n  \right\}} =& 
-  \bigvee_{i ~\in~ \left\{1,\ldots,n\right\}} 
+  \bigvee_{i \in \left\{1,\ldots,n\right\}} 
   \left(\tracetoalgebra{tr_i} \land 
-  \lnot \bigvee_{j ~\in~ \generators_{tr_i}} \var{f_j}\right)
+  \lnot \bigvee_{j \in \generators_{tr_i}} \var{f_j}\right)\label{eq:mapping-algebra-set}
 \end{align}
 \end{subequations}
 %
@@ -3537,11 +3572,14 @@ We present the \simulink model for this monitor in \cref{fg:blockDiagramMonitorI
 
 %As we mentioned in~\cref{sec:faults-injection} we translated the monitor to \ac{CSPm} according to our strategy and modified the observer to make \acs{FDR} generate more counter-examples.
 
-Now we show two contributions:
+Now we show four contributions:
 \begin{alineasinline}
-  \item using only Boolean\index{Boolean Algebra} operators, thus ignoring ordering, we can obtain the same results obtained in~\cite{DM2012}, and
-  \item we represent each of the fault traces reported in~\cite{DM2012} as a term in our proposed algebra of temporal faults.
+  \item using \ac{algebra}, but only with Boolean\index{Boolean Algebra} operators, thus ignoring ordering, we can obtain the same results obtained in~\cite{DM2012}, 
+  \item representing each of the fault traces reported in~\cite{DM2012} as a term in our proposed \ac{algebra}, using the mapping function shown in \cref{sec:mapping-cspm-algebra},
+  \item modelling faults of the monitor using \ac{activation}, using expressions in Boolean Algebra\index{Boolean Algebra}, and
+  \item modelling faults of the monitor with \ac{activation}, but using \ac{algebra} as the inner algebra.
 \end{alineasinline}
+%
 Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cref{sec:faults-injection}, we associate the fault events as:
 %
 \begin{align*}
@@ -3550,91 +3588,121 @@ b &= \text{LowPower-In2}& B = \var b\\
 s &= \text{SwitchFailure}& S = \var s
 \end{align*}
 
-\section{Structure expressions with Boolean operators}
+\section{From traces to structure expressions with Boolean operators}
 \index{structure expression}
 \label{sec:structure-expressions-boolean-operators}
 
 In this \lcnamecref{sec:structure-expressions-boolean-operators} we show that the same result reported in~\cite{DM2012} in terms of static failure expression (or Boolean\index{Boolean Algebra} propositions) can be obtained with our Boolean\index{Boolean Algebra} operator without using \ac{XBefore}.
-For each trace shown in \cref{sec:faults-injection}, a mapping function\footnote{In this work we do not show the mapping function from traces to \ac{algebra} (and the mapping function with \ac{XBefore} in \cref{sec:case-study-xbefore}).
-The mapping rules follow the traces: \ac{XBefore} is obtained by the order of occurrence and the absence of an event is the complement ($-$).} ($\tracetobool$) generates the following sets of lists:
+Similarly to the mapping function shown in \cref{sec:mapping-cspm-algebra}, we define a mapping function from traces to \ac{algebra} with Boolean operators only as:
+%
+\begin{subequations}
+\begin{align}
+\tracetobool{\trace{}} = & \top\label{eq:mapping-bool-empty}\\
+%
+\tracetobool{\trace{f}} = & \var{f}\label{eq:mapping-bool-singleton}\\
+%
+\tracetobool{\append{\trace{f_1}}{tr}} = & 
+    \var{f_1} \land \tracetobool{tr}\label{eq:mapping-bool-two-more-trace}\\
+%
+\tracetobool{\left\{ tr_1, tr_2, \ldots, tr_n  \right\}} =& 
+  \bigvee_{i \in \left\{1,\ldots,n\right\}} 
+  \left(\tracetobool{tr_i} \land 
+  \lnot \bigvee_{j \in \generators_{tr_i}} \var{f_j}\right)\label{eq:mapping-bool-set}
+\end{align}
+\end{subequations}
+%
+The only difference of the mapping function, when considering Boolean operators only, is \cref{eq:mapping-bool-two-more-trace}.
+\Cref{eq:mapping-bool-set,eq:mapping-bool-singleton,eq:mapping-bool-empty} are similar to \cref{eq:mapping-algebra-set,eq:mapping-algebra-singleton,eq:mapping-algebra-empty}
+
+For each trace shown in \cref{sec:faults-injection}, the mapping function generates the following expressions
 %
 \begin{align*}
-\text{\texttt{TRACE 1: }}&[s,b] \tracetobool S \inter B \inter -A & \setsin{\listsin{s,b},\listsin{b,s}}\\
-\text{\texttt{TRACE 2: }}&[b,s] \tracetobool B \inter S \inter -A & \setsin{\listsin{s,b},\listsin{b,s}}\\
-\text{\texttt{TRACE 3: }}&[a,b] \tracetobool A \inter B \inter -S & \setsin{\listsin{a,b},\listsin{b,a}}\\
-\text{\texttt{TRACE 4: }}&[b,a] \tracetobool B \inter A \inter -S & \setsin{\listsin{a,b},\listsin{b,a}}\\
-\text{\texttt{TRACE 5: }}&[a,s] \tracetobool A \inter S \inter -B & \setsin{\listsin{a,s},\listsin{s,a}}\\
-\text{\texttt{TRACE 6: }}&[a,s,b] \tracetobool A \inter S \inter B & \setsin{\listsin{a,b,s},\listsin{a,s,b},\ldots,\listsin{s,b,a}}\\
-\text{\texttt{TRACE 7: }}&[a,b,s] \tracetobool A \inter B \inter S & \setsin{\listsin{a,b,s},\listsin{a,s,b},\ldots,\listsin{s,b,a}}\\
-\text{\texttt{TRACE 8: }}&[b,a,s] \tracetobool B \inter A \inter S & \setsin{\listsin{a,b,s},\listsin{a,s,b},\ldots,\listsin{s,b,a}}\\
+\text{\texttt{TRACE 1: }}&\tracetobool{\trace{s,b}} = S \land B \\
+\text{\texttt{TRACE 2: }}&\tracetobool{\trace{b,s}} = B \land S \\
+\text{\texttt{TRACE 3: }}&\tracetobool{\trace{a,b}} = A \land B \\
+\text{\texttt{TRACE 4: }}&\tracetobool{\trace{b,a}} = B \land A \\
+\text{\texttt{TRACE 5: }}&\tracetobool{\trace{a,s}} = A \land S \\
+\text{\texttt{TRACE 6: }}&\tracetobool{\trace{a,s,b}} = A \land S \land B \\
+\text{\texttt{TRACE 7: }}&\tracetobool{\trace{a,b,s}} = A \land B \land S \\
+\text{\texttt{TRACE 8: }}&\tracetobool{\trace{b,a,s}} = B \land A \land S \\
+\text{\texttt{TRACE 9: }}&\tracetobool{\trace{s,a,b}} = S \land A \land B \\
+\text{\texttt{TRACE 10: }}&\tracetobool{\trace{s,b,a}} = S \land B \land A \\
+\text{\texttt{TRACE 11: }}&\tracetobool{\trace{b,s,a}} = B \land S \land A 
 \end{align*}
 
 They represent the same faults shown in \cref{sec:faults-injection}.
 Note that the negation in the formula is very simple to represent in \ac{algebra} (and \ac{FBA}\index{Boolean Algebra!Free}) because it is just the absence of the generator.
 
-Combining the above sets with unions (ORs), we obtain the following formula set:
-%
+Applying mapping function \cref{eq:mapping-bool-set} for the previously shown set of traces, we obtain  following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
 \[
-\left\{ \listsin{s,b}, \listsin{b,s}, \listsin{a,b}, \listsin{b,a}, \listsin{a,s}, \listsin{s,a}, \listsin{a,b,s}, \listsin{a,s,b},\ldots,\listsin{s,b,a} \right\}
-\]
-
-If we use Boolean\index{Boolean Algebra} expression reduction instead, it results in the following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
-\[
-(A \inter B) \union (S \inter (A \union B))
+(A \land B) \lor (S \land (A \lor B))
 \]
 %
-which is equivalent to the set of sequences above and is equivalent to \EMBRAER failure expression shown in \cref{tbl:acsAnnotations} (with \ac{AND} gates as $\inter$ and \ac{OR} gates as $\union$).
+which is equivalent to \EMBRAER failure expression shown in \cref{tbl:acsAnnotations}.
 %
 This shows that \ac{algebra} can represent (static) failure expression as in our previous work~\cite{DM2012}.
 
-\section{Structure expressions with \acs*{XBefore}}
+\section{From traces to structure expressions with \acs*{XBefore}}
 \label{sec:case-study-xbefore}
 \index{structure expression}
 
-Now, by using \ac{algebra} with the \ac{XBefore} operator and a mapping function ($\tracetoalgebraop$), we can capture each possible individual sequences as generated by the work~\cite{DM2012}:
+Now, by using \ac{algebra} with the \ac{XBefore} operator and the mapping function shown in \cref{eq:mapping-algebra-empty,eq:mapping-algebra-singleton,eq:mapping-algebra-set,eq:mapping-algebra-two-more-trace}, we can capture each possible individual sequences as generated by the work~\cite{DM2012}:
 %
 \begin{align*}
-\text{\texttt{TRACE 1: }}&[s,b] \tracetoalgebraop \parsin{\xbefore{S}{B}} \inter -A & \left\{[s,b]\right\}\\
-\text{\texttt{TRACE 2: }}&[b,s] \tracetoalgebraop \parsin{\xbefore{B}{S}} \inter -A & \left\{[b,s]\right\}\\
-\text{\texttt{TRACE 3: }}&[a,b] \tracetoalgebraop \parsin{\xbefore{A}{B}} \inter -S & \left\{[a,b]\right\}\\
-\text{\texttt{TRACE 4: }}&[b,a] \tracetoalgebraop \parsin{\xbefore{B}{A}} \inter -S & \left\{[b,a]\right\}\\
-\text{\texttt{TRACE 5: }}&[a,s] \tracetoalgebraop \parsin{\xbefore{A}{S}} \inter -B & \left\{[a,s]\right\}\\
-\text{\texttt{TRACE 6: }}&[a,s,b] \tracetoalgebraop \xbefore{\xbefore{A}{S}}{B} & \left\{[a,s,b]\right\}\\
-\text{\texttt{TRACE 7: }}&[a,b,s] \tracetoalgebraop \xbefore{\xbefore{A}{B}}{S} & \left\{[a,b,s]\right\}\\
-\text{\texttt{TRACE 8: }}&[b,a,s] \tracetoalgebraop \xbefore{\xbefore{B}{A}}{S} & \left\{[b,a,s]\right\}
+\text{\texttt{TRACE 1: }}&\tracetoalgebra{\trace{s,b}} = \parsin{\xbefore{S}{B}}\\
+\text{\texttt{TRACE 2: }}&\tracetoalgebra{\trace{b,s}} = \parsin{\xbefore{B}{S}}\\
+\text{\texttt{TRACE 3: }}&\tracetoalgebra{\trace{a,b}} = \parsin{\xbefore{A}{B}}\\
+\text{\texttt{TRACE 4: }}&\tracetoalgebra{\trace{b,a}} = \parsin{\xbefore{B}{A}}\\
+\text{\texttt{TRACE 5: }}&\tracetoalgebra{\trace{a,s}} = \parsin{\xbefore{A}{S}}\\
+\text{\texttt{TRACE 6: }}&\tracetoalgebra{\trace{a,s,b}} = 
+  \xbefore{A}{\left(\xbefore{S}{B}\right)} \\
+\text{\texttt{TRACE 7: }}&\tracetoalgebra{\trace{a,b,s}} = 
+  \xbefore{A}{\left(\xbefore{B}{S}\right)} \\
+\text{\texttt{TRACE 8: }}&\tracetoalgebra{\trace{b,a,s}} = 
+  \xbefore{B}{\left(\xbefore{A}{S}\right)} \\
+\text{\texttt{TRACE 9: }}&\tracetoalgebra{\trace{s,a,b}} = 
+  \xbefore{S}{\left(\xbefore{A}{B}\right)} \\
+\text{\texttt{TRACE 10: }}&\tracetoalgebra{\trace{s,b,a}} = 
+  \xbefore{S}{\left(\xbefore{B}{A}\right)} \\
+\text{\texttt{TRACE 11: }}&\tracetoalgebra{\trace{b,s,a}} = 
+  \xbefore{B}{\left(\xbefore{S}{A}\right)} 
 \end{align*}
 
-Using \ac{algebra} and combining each trace with \acp{OR} (unions), we obtain the following set:
+Using the mapping function \cref{eq:mapping-algebra-set} for the previously shown set of traces, we obtain:
 %
-\[
-M_L =
-  \left\{
-    [a,b],[b,a],[b,s],[s,b],[a,s],
-    [a,b,s],[a,s,b],[s,a,b]
-  \right\}
-\]
-
-From the above traces, we also build \iac{algebra} expression by mapping each trace to an \ac{XBefore} expression, composing all resulting \ac{XBefore} expressions with ORs and reducing them using the \ac{XBefore} laws (\cref{sec:xbefore-laws}), resulting in an expression ($M_A$) that is equivalent to the above set of lists ($M_L \equiv M_A$).
-The failure expression of the monitor\footnote{In the final formula, $\parsin{B \inter S \inter -A} \union \parsin{A \inter B \inter -S}$ is equivalent to $\parsin{B \inter \parsin{S \oplus A}}$. There is a typo in our previous work \cite{DM2015}. The expression was written with an OR ($\lor$) but it should an XOR ($\oplus$).} is:
+\begin{align}
+M_A = & 
+  \left(\xbefore{S}{B} \land \lnot A\right) \lor
+  \left(\xbefore{B}{S} \land \lnot A\right) \lor
+  \left(\xbefore{A}{B} \land \lnot S\right) \lor \nonumber \\
+  & \left(\xbefore{B}{A} \land \lnot S\right) \lor
+  \left(\xbefore{A}{S} \land \lnot B\right) \lor
+  \left(\xbefore{A}{\left(\xbefore{S}{B}\right)}\right) \lor \nonumber \\
+  &\left(\xbefore{A}{\left(\xbefore{B}{S}\right)}\right) \lor
+  \left(\xbefore{B}{\left(\xbefore{A}{S}\right)}\right) \lor
+  \left(\xbefore{S}{\left(\xbefore{A}{B}\right)}\right) \lor \nonumber \\
+  &\left(\xbefore{S}{\left(\xbefore{B}{A}\right)}\right) \lor
+  \left(\xbefore{B}{\left(\xbefore{S}{A}\right)}\right) & \text{by \cref{eq:mapping-algebra-set}} \nonumber \\
 %
-\begin{align*}
-M_A = & \parsin{\parsin{\xbefore{S}{B}} \inter -A} \union \parsin{\parsin{\xbefore{B}{S}} \inter -A} \union\\
-  &\parsin{\parsin{\xbefore{A}{B}} \inter -S} \union \parsin{\parsin{\xbefore{B}{A}} \inter -S} \union\\
-  & \parsin{\parsin{\xbefore{A}{S}} \inter -B} \union \\
-  & \parsin{\xbefore{\xbefore{A}{S}}{B}} \union \parsin{\xbefore{\xbefore{A}{B}}{S}} \union \parsin{\xbefore{\xbefore{B}{A}}{S}} \\
-%%
-= &\parsin{B \inter S \inter -A} \union & \text{by \eqref{thm:xbefore-sup-equiv-inf}}\\
-  & \parsin{B \inter A \inter -S} \union & \text{by \eqref{thm:xbefore-sup-equiv-inf}}\\
-  & \parsin{\parsin{\xbefore{A}{S}} \inter -B} \union\\
-  & \parsin{\xbefore{\xbefore{A}{S}}{B}} \union \parsin{\xbefore{\xbefore{A}{B}}{S}} \union \parsin{\xbefore{\xbefore{B}{A}}{S}}\\
+  = & \left(S \land B \land \lnot A\right) \lor 
+  \left(A \land B \land \lnot S\right) \lor
+  \left(\xbefore{A}{S} \land \lnot B\right) \lor \nonumber \\
+  & \left(\xbefore{A}{\left(\xbefore{S}{B}\right)}\right) \lor 
+  \left(\xbefore{A}{\left(\xbefore{B}{S}\right)}\right) \lor
+  \left(\xbefore{B}{\left(\xbefore{A}{S}\right)}\right) \lor \nonumber \\
+  & \left(\xbefore{S}{\left(\xbefore{A}{B}\right)}\right) \lor 
+  \left(\xbefore{S}{\left(\xbefore{B}{A}\right)}\right) \lor
+  \left(\xbefore{B}{\left(\xbefore{S}{A}\right)}\right) 
+  & \text{by \cref{thm:xbefore-inf-1}} \nonumber \\
 %
-= &\parsin{B \inter S \inter -A} \union \\
-  & \parsin{B \inter A \inter -S} \union \\
-  & \parsin{\parsin{\xbefore{A}{S}} \inter -B} \union \\
-  & \parsin{\parsin{\xbefore{A}{S}} \inter B} & \text{by \eqref{thm:and_xbefore_equiv_or_xbefore_expanded}}\\
-%
-= &\parsin{B \inter S \inter -A} \union \parsin{B \inter A \inter -S} \union \parsin{\xbefore{A}{S}} & \text{by absorption}
-\end{align*}
+  = & \left(S \land B \land \lnot A\right) \lor 
+  \left(A \land B \land \lnot S\right) \lor
+  \left(\xbefore{A}{S} \land \lnot B\right) \lor \nonumber \\
+  & \left(\xbefore{A}{\left(\xbefore{S}{B}\right)}\right) \lor 
+  \left(B \lor \left(\xbefore{A}{S}\right)\right) \lor
+  \left(B \lor \left(\xbefore{S}{A}\right)\right)
+  & \text{by \cref{thm:and_xbefore_equiv_or_xbefore_expanded}} \nonumber \\
+\end{align}
 
 The semantics of the above expression is:
 \begin{alineasinline}

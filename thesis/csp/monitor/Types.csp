@@ -1,0 +1,187 @@
+{-
+ - FormallLab
+ -
+ - Project: Simulint to CSP
+ -
+ - Author: Joabe Jesus <jbjj@cin.ufpe.br>
+ -}
+
+
+include "Prelude.csp"
+
+
+{- TYPES -}
+
+datatype ComponentType = HW | SW
+
+datatype T = UNDEFINED
+           | OMISSION
+           | B.Bool
+           | I.Int
+           | S.Int.Int
+           | D.Int.Int
+           | V.Seq(T)
+		   
+SinglePrecision = { -3..3 }
+DoublePrecision = { -6..6 }
+
+nametype Boolean = Bool
+nametype Integer = { -5..5 }
+nametype Single = { -100..100 }.SinglePrecision
+nametype Double = { -100..100 }.DoublePrecision
+
+--subtype Tscalar = B.Boolean | I.Integer | S.Single | D.Double
+subtype Tboolean = B.Bool
+--subtype Tnumber = I.Integer | S.Single | D.Double
+subtype Tinteger = I.Integer
+subtype Tsingle = S.Single -- Float
+subtype Tdouble = D.Double
+
+
+
+{- BOOLEAN -}
+FALSE = B.false
+TRUE = B.true
+
+boolean(false) = FALSE
+boolean(true) = TRUE
+
+
+{- INTEGER -}
+integer(i) = I.i
+
+
+
+{- SINGLE -}
+single(i,e) = S.i.e
+
+
+
+{- DOUBLE -}
+double(i,e) = D.i.e
+
+
+
+{- VECTOR -}
+vector(s) = V.s
+
+vectors(t, dimension) = { V.s | s <- seqs(t, dimension) }
+
+vectorToRelation(V.s) = seqToRelation(s)
+
+vectorMap(f)(V.s) = V.(map(f)(s))
+
+--NULL_VECTOR_B(dimension) = V.singleton(seqs({FALSE}, dimension))
+--NULL_VECTOR_I(dimension) = V.singleton(seqs({I.0}, dimension))
+--NULL_VECTOR_S(dimension) = V.singleton(seqs({S.0}, dimension))
+--NULL_VECTOR_D(dimension) = V.singleton(seqs({D.0}, dimension))
+
+
+
+{- FUNCTIONS -}
+
+tagOf(B.x) = B
+tagOf(I.x) = I
+tagOf(S.x) = S
+tagOf(D.x) = D
+
+eq(a,b) = boolean(a == b)
+neq(a,b) = boolean(a != b)
+
+f_not(<b>) = boolean(b == FALSE)
+f_and(s) = boolean(not elem(FALSE,s))       -- seqCount(FALSE,s) == 0
+f_or(s) = boolean(elem(TRUE,s))             -- seqCount(TRUE,s) >= 1
+nand(s) = boolean(elem(FALSE,s))            -- seqCount(FALSE,s) >= 1
+nor(s) = boolean(not elem(TRUE,s))          -- seqCount(TRUE,s) == 0
+xor(s) = boolean(seqCount(TRUE,s) % 2 == 0)
+
+minus(OMISSION) = OMISSION
+minus(I.i) = I.-i
+
+add(OMISSION, _) = OMISSION
+add(_, OMISSION) = OMISSION
+add(I.a, I.b) = I.(a+b)
+
+sub(OMISSION, _) = OMISSION
+sub(_, OMISSION) = OMISSION
+sub(x, y) = add(x,minus(y))
+
+mul(OMISSION, _) = OMISSION
+mul(_, OMISSION) = OMISSION
+mul(I.a, I.b) = I.(a*b)
+
+div(OMISSION, _) = OMISSION
+div(_, OMISSION) = OMISSION
+div(I.a, I.b) = if b == 0 then UNDEFINED else I.(a/b)
+
+abs(OMISSION) = OMISSION
+abs(I.i) = if i < 0 then I.-i else I.i
+
+gt(OMISSION, OMISSION) = FALSE
+gt(I.x, OMISSION) = boolean(x > 0)
+gt(OMISSION, I.x) = boolean(x < 0)
+gt(I.i, I.0) = boolean(i > 0)
+gt(x, y) = let result = sub(x, y) within gt(result, I.0)
+
+lt(OMISSION, OMISSION) = FALSE
+lt(I.x, OMISSION) = boolean(x < 0)
+lt(OMISSION, I.x) = boolean(x > 0)
+lt(I.i, I.0) = boolean(i < 0)
+lt(x, y) = let result = sub(x, y) within lt(result, I.0)
+
+gte(a,b) = f_not( < lt(a,b) > )
+lte(a,b) = f_not( < gt(b,a) > )
+
+min(a,b) = if gt(a,b) == TRUE then b else a
+max(a,b) = if gt(a,b) == TRUE then a else b
+
+
+
+
+
+
+
+
+
+
+
+
+{- TYPE CONVERSION -}
+
+B2I(B.false) = I.0
+B2I(B.true) = I.1
+
+B2S(B.false) = S.0
+B2S(B.true) = S.1
+
+B2D(B.false) = D.0
+B2D(B.true) = D.1
+
+
+I2B(I.0) = FALSE
+I2B(I._) = TRUE
+
+I2S(I.x) = S.x
+
+I2D(I.x) = D.x
+
+
+S2B(S.0) = FALSE
+S2B(S._) = TRUE
+
+S2I(S.x) = I.x
+
+S2D(S.x) = D.x
+
+
+D2B(D.0) = FALSE
+D2B(D._) = TRUE
+
+D2I(D.x) = I.x
+
+D2S(D.x) = D.x
+
+
+
+
+
