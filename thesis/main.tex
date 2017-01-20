@@ -223,7 +223,18 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
   \includegraphics[width=#1\textwidth,height=#1\textheight,keepaspectratio]{#2}%
 }
 
-\newcommand{\EMBRAER}{EMBRAER\xspace}
+\def\Embraer{%
+  Our industrial partner%
+  \xspace%
+}
+\def\embraer{%
+  our industrial partner%
+  \xspace%
+}
+\def\possessiveembraer{%
+  our industrial partner's%
+  \xspace%
+}
 \newcommand{\matlab}{\textsf{Matlab}\xspace}
 \newcommand{\algebraurl}{\url{http://www.cin.ufpe.br/~alrd/phd/phd-alrd.zip} (password: 6Zvq\$5Vyj)\xspace}
 
@@ -366,7 +377,7 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 %TODO remove tracetoalgebraop
 \def\tracetoalgebraop{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny XB}}}}
 \newcommand{\tracetoalgebra}[1]{\ensuremath\langle{#1}\rangle_{XB}}
-\newcommand{\tracetobool}[1]{\ensuremath\langle{#1}\rangle_{B}}
+\newcommand{\tracetobool}[1]{\ensuremath\langle{#1}\rangle_{bool}}
 \newcommand{\trace}[1]{\ensuremath\left[~#1~\right]}
 \newcommand{\setsin}[1]{\ensuremath\left\{ #1 \right\}}
 \newcommand{\listsin}[1]{\ensuremath\left[ #1 \right]}
@@ -730,7 +741,7 @@ Our strategy throws away the ordering information of the fault event sequences t
 %
 We focused on hardware faults because we assume that software does not fail as a function of time (wear, corrosion, etc).
 %
-We inherited this view from our industrial partner (\EMBRAER), which assumes that functional behaviour is completely analysed by functional verification~\cite{SP2011}.
+We inherited this view from \embraer, which assumes that functional behaviour is completely analysed by functional verification~\cite{SP2011}.
 %
 We followed industry common practices using \simulink diagrams~\cite{Nise1992} as a starting point.
 %
@@ -740,7 +751,7 @@ Thus, our strategy required the translation from \simulink to \ac{CSPm}~\cite{JM
 %
 It then runs \acs{FDR} to obtain several counter-examples (which are fault traces) ending in failures.
 %
-For two case studies provided by our industrial partner, \EMBRAER, we showed that our automatically created failure expressions match with the engineer's provided ones or are better (a weaker proposition).
+For two case studies provided by \embraer we showed that our automatically created failure expressions match with the engineer's provided ones or are better (a weaker proposition).
 
 \section{Research questions}
 \label{sec:research-questions}
@@ -898,7 +909,7 @@ The main contributions of this work are:
   \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016})---see \cref{chap:algebra};
   \item From \simulink models, obtain fault event sequences and mapping to \ac{algebra} (\cref{chap:algebra});
   \item Reason about fault modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures, \cref{chap:activation});
-  \item Illustrate the application of the laws on a real case study, provided by our industrial partner, \EMBRAER (\cref{chap:case-study}).
+  \item Illustrate the application of the laws on a real case study, provided by \embraer (\cref{chap:case-study}).
   %\item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}---to do.
   %\item Formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance criteria (\cref{chap:acceptance});
 \end{contrenum}
@@ -2242,21 +2253,15 @@ The elapsed time of a simulation is an abstraction for the quantity of possible 
 Some components define different sample times, depending on their mode of operation.
 Usually, the value for this property is set to \textsim{auto}, allowing \simulink to choose a proper value automatically.
 
-% \begin{figure*}[!t] \centering
-%     \includegraphicsaspectratio[0.8]{acsBlockDiagrams}
-%     \caption{\textpt{Diagrama em blocos do ACS fornecido pela
-%     \EMBRAER.}\texten{Block diagram of the ACS provided by \EMBRAER}}
-%     \label{fg:acsBlockDiagrams}
-% \end{figure*}
 \begin{figure}[htb]
   \centering
   \includegraphicsaspectratio{acsBlockDiagrams}
-  \caption{Block diagram of the ACS provided by \EMBRAER (nominal model)}
+  \caption{Block diagram of the ACS provided by \embraer (nominal model)}
   \label{fg:acsBlockDiagrams}
 \end{figure}
 
 Nowadays, control systems are usually composed of an electromechanical part and a processor.
-\Cref{fg:acsBlockDiagrams} shows the components of a feedback system~\cite{AM2008} which was provided by \EMBRAER.
+\Cref{fg:acsBlockDiagrams} shows the components of a feedback system~\cite{AM2008} which was provided by \embraer.
 In this system, the feedback behaviour is given by the \textsim{Controller} (1), \textsim{Actuator} (2) and \textsim{Sensor} (3). A command is received by the \textsim{Controller}, which sends a signal to the \textsim{Actuator} to start its movement.
 The \textsim{Sensor} detects the actual position of the \textsim{Actuator} and sends it back to the \textsim{Controller}, which adjusts the given command to achieve the desired position. This loop (feedback) continues until the desired position given by the original command is reached.
 
@@ -2443,7 +2448,7 @@ which by a traditional Boolean reduction strategy results in:
 \[(A \land B) \lor (S \land (A \lor B))\]
 
 \begin{sloppypar}
-The above expression is exactly the same failure expression provided by \EMBRAER if we use the following association (\cref{tbl:acsAnnotations}):
+The above expression is exactly the same failure expression provided by \embraer if we use the following association (\cref{tbl:acsAnnotations}):
 \begin{align*}
 A &= \text{LowPower-In1}\\
 B &= \text{LowPower-In2}\\
@@ -2453,7 +2458,7 @@ S &= \text{SwitchFailure}
 
 \begin{table}[t]
 \renewcommand{\arraystretch}{1.3}
-\caption{Annotations table of the ACS provided by \EMBRAER}
+\caption{Annotations table of the ACS provided by \embraer}
 \label{tbl:acsAnnotations}
 \centering
 \begin{tabularx}{\linewidth}{|c|c|c|X|}
@@ -3180,7 +3185,7 @@ For the two properties shown in this \lcnamecref{sec:qualitative-quantitative-pr
 %
 Both equations have Boolean\index{Boolean} return value, which can be verified by a theorem prover.
 
-\section{Mapping \ac{CSPm} traces to \ac{algebra}}
+\section{Mapping \ac*{CSPm} traces to \ac*{algebra}}
 \label{sec:mapping-cspm-algebra}
 
 In our previous work~\cite{DM2012,Didier2012} we reported a strategy to inject faults in a \ac{CSPm} model generated from an architectural model of a system in \simulink.
@@ -3275,7 +3280,7 @@ These properties form the \emph{healthiness conditions}~\cite{HH1998} of an expr
 
 We show the general form of the \ac{activation} to model faults in \cref{sec:grammar}, the healthiness conditions to normalize expressions in \cref{sec:healthiness-conditions}, how to identify non-determinism in an expression in \cref{sec:non-determinism}, and the predicates notation to analyse systems and model fault propagation in \cref{sec:predicates-notation}.
 
-\section{The \acl{activation} Grammar}
+\section{The \acl*{activation} Grammar}
 \label{sec:grammar}
 
 Each term in an expression is a pair of a predicate and an operational mode.
@@ -3557,11 +3562,10 @@ In the next \lcnamecref{chap:case-study}, we show a practical case study using t
 
 \chapter{Case study}
 \label{chap:case-study}
-\asnote{Vocês confirmaram com a Embraer que isso pode ser divulgado mesmo? No caso de Gustavo, mesmo exemplos que eles descaracterizam, não permitem que apresentemos assim de forma explícita a modelagem. Nós temos apresentado apenas os resultados. }
 \asnote{Ficou esquisito não utilizar o not no estudo de caso, após tanta ênfase dada ao operador. Poderia tentar estender o estudo de caso de forma a usar o not.}
 
-\EMBRAER provided us with the \simulink model of an Actuator Control System (depicted in \cref{fg:acsBlockDiagrams}).
-The failure expression of this system (that is, for each of its constituent components) was also provided by \EMBRAER (we show some of them in \cref{tbl:acsAnnotations}).
+\Embraer provided us with the \simulink model of an Actuator Control System (depicted in \cref{fg:acsBlockDiagrams}).
+The failure expression of this system (that is, for each of its constituent components) was also provided by \embraer (we show some of them in \cref{tbl:acsAnnotations}).
 In what follows we illustrate our strategy using the Monitor component.
 
 A monitor component is a system commonly used for fault tolerance~\cite{ONB2002,KK2007}.
@@ -3583,9 +3587,9 @@ Now we show four contributions:
 Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cref{sec:faults-injection}, we associate the fault events as:
 %
 \begin{align*}
-a &= \text{LowPower-In1}& A = \var a\\
-b &= \text{LowPower-In2}& B = \var b\\
-s &= \text{SwitchFailure}& S = \var s
+b_1 &= \text{LowPower-In1}& B_1 = \var b_1\\
+b_2 &= \text{LowPower-In2}& B_2 = \var b_2\\
+f &= \text{SwitchFailure}& F = \var f
 \end{align*}
 
 \section{From traces to structure expressions with Boolean operators}
@@ -3617,28 +3621,30 @@ The only difference of the mapping function, when considering Boolean operators 
 For each trace shown in \cref{sec:faults-injection}, the mapping function generates the following expressions
 %
 \begin{align*}
-\text{\texttt{TRACE 1: }}&\tracetobool{\trace{s,b}} = S \land B \\
-\text{\texttt{TRACE 2: }}&\tracetobool{\trace{b,s}} = B \land S \\
-\text{\texttt{TRACE 3: }}&\tracetobool{\trace{a,b}} = A \land B \\
-\text{\texttt{TRACE 4: }}&\tracetobool{\trace{b,a}} = B \land A \\
-\text{\texttt{TRACE 5: }}&\tracetobool{\trace{a,s}} = A \land S \\
-\text{\texttt{TRACE 6: }}&\tracetobool{\trace{a,s,b}} = A \land S \land B \\
-\text{\texttt{TRACE 7: }}&\tracetobool{\trace{a,b,s}} = A \land B \land S \\
-\text{\texttt{TRACE 8: }}&\tracetobool{\trace{b,a,s}} = B \land A \land S \\
-\text{\texttt{TRACE 9: }}&\tracetobool{\trace{s,a,b}} = S \land A \land B \\
-\text{\texttt{TRACE 10: }}&\tracetobool{\trace{s,b,a}} = S \land B \land A \\
-\text{\texttt{TRACE 11: }}&\tracetobool{\trace{b,s,a}} = B \land S \land A 
+\text{\texttt{TRACE 1: }}&\tracetobool{\trace{f,b_2}} = F \land B_2 \\
+\text{\texttt{TRACE 2: }}&\tracetobool{\trace{b_2,f}} = B_2 \land F \\
+\text{\texttt{TRACE 3: }}&\tracetobool{\trace{b_1,b_2}} = B_1 \land B_2 \\
+\text{\texttt{TRACE 4: }}&\tracetobool{\trace{b_2,b_1}} = B_2 \land B_1 \\
+\text{\texttt{TRACE 5: }}&\tracetobool{\trace{b_1,f}} = B_1 \land F \\
+\text{\texttt{TRACE 6: }}&\tracetobool{\trace{b_1,f,b_2}} = B_1 \land F \land B_2 \\
+\text{\texttt{TRACE 7: }}&\tracetobool{\trace{b_1,b_2,f}} = B_1 \land B_2 \land F \\
+\text{\texttt{TRACE 8: }}&\tracetobool{\trace{b_2,b_1,f}} = B_2 \land B_1 \land F \\
+\text{\texttt{TRACE 9: }}&\tracetobool{\trace{f,b_1,b_2}} = F \land B_1 \land B_2 \\
+\text{\texttt{TRACE 10: }}&\tracetobool{\trace{f,b_2,b_1}} = F \land B_2 \land B_1 \\
+\text{\texttt{TRACE 11: }}&\tracetobool{\trace{b_2,f,b_1}} = B_2 \land F \land B_1 
 \end{align*}
 
 They represent the same faults shown in \cref{sec:faults-injection}.
-Note that the negation in the formula is very simple to represent in \ac{algebra} (and \ac{FBA}\index{Boolean Algebra!Free}) because it is just the absence of the generator.
-
-Applying mapping function \cref{eq:mapping-bool-set} for the previously shown set of traces, we obtain  following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
-\[
-(A \land B) \lor (S \land (A \lor B))
-\]
+%Note that the negation in the formula is very simple to represent in \ac{algebra} (and \ac{FBA}\index{Boolean Algebra!Free}) because it is just the absence of the generator.
 %
-which is equivalent to \EMBRAER failure expression shown in \cref{tbl:acsAnnotations}.
+Applying mapping function, \cref{eq:mapping-bool-set}, for the previously shown set of traces, we obtain  following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
+%
+\begin{equation}
+M_{bool} = (B_1 \land B_2) \lor (F \land (B_1 \lor B_2))\label{eq:m-bool}
+\end{equation}
+
+%
+which is equivalent to \possessiveembraer failure expression shown in \cref{tbl:acsAnnotations}.
 %
 This shows that \ac{algebra} can represent (static) failure expression as in our previous work~\cite{DM2012}.
 
@@ -3649,68 +3655,477 @@ This shows that \ac{algebra} can represent (static) failure expression as in our
 Now, by using \ac{algebra} with the \ac{XBefore} operator and the mapping function shown in \cref{eq:mapping-algebra-empty,eq:mapping-algebra-singleton,eq:mapping-algebra-set,eq:mapping-algebra-two-more-trace}, we can capture each possible individual sequences as generated by the work~\cite{DM2012}:
 %
 \begin{align*}
-\text{\texttt{TRACE 1: }}&\tracetoalgebra{\trace{s,b}} = \parsin{\xbefore{S}{B}}\\
-\text{\texttt{TRACE 2: }}&\tracetoalgebra{\trace{b,s}} = \parsin{\xbefore{B}{S}}\\
-\text{\texttt{TRACE 3: }}&\tracetoalgebra{\trace{a,b}} = \parsin{\xbefore{A}{B}}\\
-\text{\texttt{TRACE 4: }}&\tracetoalgebra{\trace{b,a}} = \parsin{\xbefore{B}{A}}\\
-\text{\texttt{TRACE 5: }}&\tracetoalgebra{\trace{a,s}} = \parsin{\xbefore{A}{S}}\\
-\text{\texttt{TRACE 6: }}&\tracetoalgebra{\trace{a,s,b}} = 
-  \xbefore{A}{\left(\xbefore{S}{B}\right)} \\
-\text{\texttt{TRACE 7: }}&\tracetoalgebra{\trace{a,b,s}} = 
-  \xbefore{A}{\left(\xbefore{B}{S}\right)} \\
-\text{\texttt{TRACE 8: }}&\tracetoalgebra{\trace{b,a,s}} = 
-  \xbefore{B}{\left(\xbefore{A}{S}\right)} \\
-\text{\texttt{TRACE 9: }}&\tracetoalgebra{\trace{s,a,b}} = 
-  \xbefore{S}{\left(\xbefore{A}{B}\right)} \\
-\text{\texttt{TRACE 10: }}&\tracetoalgebra{\trace{s,b,a}} = 
-  \xbefore{S}{\left(\xbefore{B}{A}\right)} \\
-\text{\texttt{TRACE 11: }}&\tracetoalgebra{\trace{b,s,a}} = 
-  \xbefore{B}{\left(\xbefore{S}{A}\right)} 
+\text{\texttt{TRACE 1: }}&\tracetoalgebra{\trace{f,b_2}} = \parsin{\xbefore{F}{B_2}}\\
+\text{\texttt{TRACE 2: }}&\tracetoalgebra{\trace{b_2,f}} = \parsin{\xbefore{B_2}{F}}\\
+\text{\texttt{TRACE 3: }}&\tracetoalgebra{\trace{b_1,b_2}} = \parsin{\xbefore{B_1}{B_2}}\\
+\text{\texttt{TRACE 4: }}&\tracetoalgebra{\trace{b_2,b_1}} = \parsin{\xbefore{B_2}{B_1}}\\
+\text{\texttt{TRACE 5: }}&\tracetoalgebra{\trace{b_1,f}} = \parsin{\xbefore{B_1}{F}}\\
+\text{\texttt{TRACE 6: }}&\tracetoalgebra{\trace{b_1,f,b_2}} = 
+  \xbefore{B_1}{\left(\xbefore{F}{B_2}\right)} \\
+\text{\texttt{TRACE 7: }}&\tracetoalgebra{\trace{b_1,b_2,f}} = 
+  \xbefore{B_1}{\left(\xbefore{B_2}{F}\right)} \\
+\text{\texttt{TRACE 8: }}&\tracetoalgebra{\trace{b_2,b_1,f}} = 
+  \xbefore{B_2}{\left(\xbefore{B_1}{F}\right)} \\
+\text{\texttt{TRACE 9: }}&\tracetoalgebra{\trace{f,b_1,b_2}} = 
+  \xbefore{F}{\left(\xbefore{B_1}{B_2}\right)} \\
+\text{\texttt{TRACE 10: }}&\tracetoalgebra{\trace{f,b_2,b_1}} = 
+  \xbefore{F}{\left(\xbefore{B_2}{B_1}\right)} \\
+\text{\texttt{TRACE 11: }}&\tracetoalgebra{\trace{b_2,f,b_1}} = 
+  \xbefore{B_2}{\left(\xbefore{F}{B_1}\right)} 
 \end{align*}
 
-Using the mapping function \cref{eq:mapping-algebra-set} for the previously shown set of traces, we obtain:
+Using the mapping function, \cref{eq:mapping-algebra-set}, for the previously shown set of traces, we obtain:
 %
 \begin{align}
 M_A = & 
-  \left(\xbefore{S}{B} \land \lnot A\right) \lor
-  \left(\xbefore{B}{S} \land \lnot A\right) \lor
-  \left(\xbefore{A}{B} \land \lnot S\right) \lor \nonumber \\
-  & \left(\xbefore{B}{A} \land \lnot S\right) \lor
-  \left(\xbefore{A}{S} \land \lnot B\right) \lor
-  \left(\xbefore{A}{\left(\xbefore{S}{B}\right)}\right) \lor \nonumber \\
-  &\left(\xbefore{A}{\left(\xbefore{B}{S}\right)}\right) \lor
-  \left(\xbefore{B}{\left(\xbefore{A}{S}\right)}\right) \lor
-  \left(\xbefore{S}{\left(\xbefore{A}{B}\right)}\right) \lor \nonumber \\
-  &\left(\xbefore{S}{\left(\xbefore{B}{A}\right)}\right) \lor
-  \left(\xbefore{B}{\left(\xbefore{S}{A}\right)}\right) & \text{by \cref{eq:mapping-algebra-set}} \nonumber \\
+  \left(\xbefore{F}{B_2} \land \lnot B_1\right) \lor
+  \left(\xbefore{B_2}{F} \land \lnot B_1\right) \lor
+  \left(\xbefore{B_1}{B_2} \land \lnot F\right) \lor \nonumber \\
+  & \left(\xbefore{B_2}{B_1} \land \lnot F\right) \lor
+  \left(\xbefore{B_1}{F} \land \lnot B_2\right) \lor
+  \left(\xbefore{B_1}{\left(\xbefore{F}{B_2}\right)}\right) \lor \nonumber \\
+  &\left(\xbefore{B_1}{\left(\xbefore{B_2}{F}\right)}\right) \lor
+  \left(\xbefore{B_2}{\left(\xbefore{B_1}{F}\right)}\right) \lor
+  \left(\xbefore{F}{\left(\xbefore{B_1}{B_2}\right)}\right) \lor \nonumber \\
+  &\left(\xbefore{F}{\left(\xbefore{B_2}{B_1}\right)}\right) \lor
+  \left(\xbefore{B_2}{\left(\xbefore{F}{B_1}\right)}\right) \nonumber \\
 %
-  = & \left(S \land B \land \lnot A\right) \lor 
-  \left(A \land B \land \lnot S\right) \lor
-  \left(\xbefore{A}{S} \land \lnot B\right) \lor \nonumber \\
-  & \left(\xbefore{A}{\left(\xbefore{S}{B}\right)}\right) \lor 
-  \left(\xbefore{A}{\left(\xbefore{B}{S}\right)}\right) \lor
-  \left(\xbefore{B}{\left(\xbefore{A}{S}\right)}\right) \lor \nonumber \\
-  & \left(\xbefore{S}{\left(\xbefore{A}{B}\right)}\right) \lor 
-  \left(\xbefore{S}{\left(\xbefore{B}{A}\right)}\right) \lor
-  \left(\xbefore{B}{\left(\xbefore{S}{A}\right)}\right) 
+  = & \left(F \land B_2 \land \lnot B_1\right) \lor 
+  \left(B_1 \land B_2 \land \lnot F\right) \lor
+  \left(\xbefore{B_1}{F} \land \lnot B_2\right) \lor \nonumber \\
+  & \left(\xbefore{B_1}{\left(\xbefore{F}{B_2}\right)}\right) \lor 
+  \left(\xbefore{B_1}{\left(\xbefore{B_2}{F}\right)}\right) \lor
+  \left(\xbefore{B_2}{\left(\xbefore{B_1}{F}\right)}\right) \lor \nonumber \\
+  & \left(\xbefore{F}{\left(\xbefore{B_1}{B_2}\right)}\right) \lor 
+  \left(\xbefore{F}{\left(\xbefore{B_2}{B_1}\right)}\right) \lor
+  \left(\xbefore{B_2}{\left(\xbefore{F}{B_1}\right)}\right) 
   & \text{by \cref{thm:xbefore-inf-1}} \nonumber \\
 %
-  = & \left(S \land B \land \lnot A\right) \lor 
-  \left(A \land B \land \lnot S\right) \lor
-  \left(\xbefore{A}{S} \land \lnot B\right) \lor \nonumber \\
-  & \left(B \land \left(\xbefore{A}{S}\right)\right) \lor
-  \left(B \land \left(\xbefore{S}{A}\right)\right)
+  = & \left(S \land B_2 \land \lnot B_1\right) \lor 
+  \left(B_1 \land B_2 \land \lnot F\right) \lor
+  \left(\xbefore{B_1}{F} \land \lnot B_2\right) \lor \nonumber \\
+  & \left(B_2 \land \left(\xbefore{B_1}{F}\right)\right) \lor
+  \left(B_2 \land \left(\xbefore{F}{B_1}\right)\right)
   & \text{by \cref{thm:and_xbefore_equiv_or_xbefore_expanded}} \nonumber \\
 %
-  = &\left(A \land B\right) \lor \left(B \land S\right) \lor
-    \left(\xbefore{A}{S} \land \lnot B\right) 
+  = &\left(B_1 \land B_2\right) \lor \left(F \land B_2\right) \lor
+    \left(\xbefore{B_1}{F} \land \lnot B_2\right) \label{eq:m-algebra}
 \end{align}
 
 The semantics of the above expression is:
 \begin{alineasinline}
-  \item fault $b$ ($\var{b}$) occurs and fault $a$ ($\var{a}$) or fault $s$ ($\var{s}$) occurs, or
-  \item fault $a$ occurs before fault $s$ and fault $b$ does not occur, which is more precise than the expression found without considering order of events.
+  \item fault $b_2$ ($\var{b_2}$) occurs and fault $b_1$ ($\var{b_1}$) or fault $f$ ($\var{f}$) occurs, or
+  \item fault $b_1$ occurs before fault $f$ and fault $b_2$ does not occur, which is more precise than the expression found without considering order of events.
 \end{alineasinline}
+
+Expanding \cref{eq:m-bool}, we have:
+\[
+(B_1\land B_2) \lor (F \land B_2) \lor (F \land B_1)
+\]
+%
+which differ from \cref{eq:m-algebra} only on terms: $F \land B_1$ (of $M_{bool}$) and $\xbefore{F}{B_1}\land \lnot B_2$ (of $M_A$).
+
+\section{From \ac*{activation} to structure expressions with Boolean operators}
+
+The power source has only two possible operational modes: (i) the power source works as expected, providing a nominal value of $12V$, and (ii) it has an internal failure $B_i$, and its operational mode is ``low power''.
+In \ac{activation} it is modelled as:
+\begin{equation}
+\label{eq:power-source}
+PowerSource_i = \left\{
+  \left(B_i, LP\right),
+  \left(\lnot B_i, \Nominal{12V}\right)
+  \right\}
+\end{equation}
+%
+where $LP$ is the LowPower failure.
+The expression $PowerSource_i$ is healthy.
+
+The monitor is a bit different because its behaviour depends not only on internal faults, but also on its inputs. 
+We will now use the predicates notation defined in \cref{sec:predicates-notation} to express fault propagation.
+As the monitor has two inputs and its behaviour is described in \cref{fg:blockDiagramMonitorInternals}, then it is a function of the expressions of both inputs:
+%
+\begin{equation}
+\label{eq:monitor-bool}
+\begin{split}
+Monitor_{bool} &\left(in_1, in_2\right) = \\
+  & \modes{in_1}{\predicate{in_1}{\Nominal{X}} \land \lnot F} \cup\\
+  & \modes{in_2}{\lnot \predicate{in_1}{\Nominal{X}} \land \lnot F} \cup\\
+  & \modes{in_2}{\predicate{in_1}{\Nominal{X}} \land F} \cup\\
+  & \modes{in_1}{\lnot \predicate{in_1}{\Nominal{X}} \land F}
+\end{split}
+\end{equation}
+where $X$ is an unbound variable and assumes any value.
+%
+The expression states the following:
+\begin{itemize}
+  \item The monitor output is the same as $in_1$ if the output of $in_1$ \emph{is} nominal and \emph{there is no} internal failure in the monitor:
+  \[
+  \modes{in_1}{\predicate{in_1}{\Nominal{X}} \land \lnot F}
+  \]
+  %%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item The monitor output is the same as $in_2$ if the output of $in_1$ \emph{is not} nominal and \emph{there is no} internal failure in the monitor:
+  \[
+  \modes{in_2}{\lnot \predicate{in_1}{\Nominal{X}} \land \lnot F}
+  \]
+  %%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item The monitor output is the converse of the previous two conditions if the internal failure $F$ is active:
+  \[
+  \begin{split}
+  \modes{in_2}{\predicate{in_1}{\Nominal{X}} \land F} &\cup\\
+  \modes{in_1}{\lnot \predicate{in_1}{\Nominal{X}} \land F} &
+  \end{split}
+  \]
+\end{itemize}
+
+The operational modes (observed behaviour) of the monitor depend on: (i) its internal fault, and (ii) propagated errors from its inputs.
+Composing the monitor with the two power sources, we obtain the \ac{activation} expression of a power supply subsystem $System_{\mathrm{bool}}$:
+%
+\begin{align*}
+= & Monitor_{bool} \left(PowerSource_1, PowerSource_2\right) \\
+  = & \modes{in_1}{\lnot B_1 \land \lnot F} \cup
+  \modes{in_2}{\lnot \lnot B_1 \land \lnot F} \cup\\
+  & \modes{in_2}{\lnot B_1 \land F} \cup
+  \modes{in_1}{\lnot \lnot B_1 \land F} & \text{by \cref{eq:predicate}}\\
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  = &\modes{in_1}{\lnot B_1 \land \lnot F} \cup
+  \modes{in_2}{ B_1 \land \lnot F} \cup\\
+  &\modes{in_2}{\lnot B_1 \land F} \cup
+  \modes{in_1}{B_1 \land F} & \text{by simplification}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  = & \left\{ \left(P_i \land \lnot B_1 \land \lnot F, O_i\right) | \left(P_i, O_i\right) \in in_1  \right\} \cup\\
+  & \left\{ \left(P_i \land B_1 \land \lnot F, O_i\right) | \left(P_i, O_i\right) \in in_2  \right\} \cup\\
+  & \left\{ \left(P_i \land \lnot B_1 \land F, O_i\right)| \left(P_i, O_i\right) \in in_2  \right\} \cup \\
+  & \left\{ \left(P_i \land B_1 \land F, O_i\right)| \left(P_i, O_i\right) \in in_1 \right\} & \text{by \cref{eq:modes}}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  = & \left\{ 
+      \left(B_1 \land \lnot B_1 \land \lnot F, LP\right), \right.\\
+  &   \left(\lnot B_1 \land \lnot B_1 \land \lnot F, \Nominal{12V}\right), \\
+  &   \left(B_2 \land B_1 \land \lnot F, LP\right),\\
+  &   \left(\lnot B_2 \land B_1 \land \lnot F, \Nominal{12V}\right), \\
+  &   \left(B_2 \land \lnot B_1 \land F, LP\right), \\
+  &   \left(\lnot B_2 \land \lnot B_1 \land F, \Nominal{12V}\right),\\
+  &   \left(B_1 \land B_1 \land F, LP\right), \\
+  &   \left.\left(\lnot B_1 \land B_1 \land F, \Nominal{12V}\right)\right\}
+    & \text{replacing vars}\\
+\end{align*}
+
+Simplifying and applying $\healthiness[1]$, we obtain:
+\[
+\begin{split}
+\healthinessfun[1]{System_{\mathrm{bool}}} = &\\
+  & \left\{ 
+      \left(\lnot B_1 \land \lnot F, \Nominal{12V}\right), 
+      \left(B_2 \land B_1 \land \lnot F, LP\right),\right.\\
+  &   \left(\lnot B_2 \land B_1 \land \lnot F, \Nominal{12V}\right), 
+      \left(B_2 \land \lnot B_1 \land F, LP\right), \\
+  &   \left.\left(\lnot B_2 \land \lnot B_1 \land F, \Nominal{12V}\right),
+      \left(B_1 \land F, LP\right)\right\}
+\end{split}
+\]
+
+Applying, $\healthiness[3]$, we simplify to:
+\[
+\begin{split}
+\healthiness[3] \circ \healthiness[1] &\left(System_{\mathrm{bool}}\right)\\
+=  & \left\{ 
+      \left(
+        \begin{split}
+          \left(\lnot B_1 \land \lnot F\right) \lor\\
+          \left(B_1 \land \lnot B_2 \land \lnot F \right)\lor \\
+          \left(\lnot B_1 \land \lnot B_2 \land F \right)
+        \end{split},
+        \Nominal{12V}
+      \right),
+    \right.\\
+  & \left.
+      \left(
+        \begin{split}
+        \left(B_1 \land B_2 \land \lnot F\right) \lor \\
+        \left(\lnot B_1 \land B_2 \land F\right) \lor \\
+        \left(B_1 \land F\right)
+        \end{split}, 
+        LP
+      \right)
+    \right\}\\
+= & \left\{
+    \left(\left(\lnot B_1 \land \lnot B_2\right) \lor 
+      \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right), 
+      \Nominal{12V}\right), \right.\\
+  & \left.  
+    \left(F \land \left(B_1 \lor B_2\right) \lor \left(B_1 \land B_2\right), 
+      LP\right)
+  \right\}
+\end{split}
+\]
+
+The monitor expression is $\healthy[2]$ (the predicates are complete), thus:
+\[
+\healthiness[2] \circ \healthiness[3] \circ \healthiness[1]\left(System_{\mathrm{bool}}\right) =
+\healthiness[3] \circ \healthiness[1]  \left(System_{\mathrm{bool}}\right)
+\]
+
+The resulting expression for the monitor after applying all healthiness conditions is:
+\begin{equation}
+\label{eq:h-system1}
+\begin{split}
+  \healthinesscmd\left(System_{\mathrm{bool}}\right) = & \left\{
+    \left(\left(\lnot B_1 \land \lnot B_2\right) \lor 
+      \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right), \Nominal{12V}\right),\right.\\
+%%%%%%%%%%%%%
+    &\left.\left(F \land \left(B_1 \lor B_2\right) \lor \left(B_1 \land B_2\right), LP\right)
+  \right\}
+\end{split}
+\end{equation}
+%
+The operational modes of $System_{\mathrm{bool}}$ is either $\Nominal{12V}$ or $LP$ (low power).
+
+Finally, we obtain the \emph{low power} structure expression (see \cref{tbl:acsAnnotations}) using the predicates notation:
+\[
+\predicate{System_{\mathrm{bool}}}{LP} \iff
+F \land \left(B_1 \lor B_2\right) \lor \left(B_1 \land B_2\right)
+\]
+
+The monitor expression also indicates that if the switch is operational ($\lnot F$) and at least one PowerSource is operational ($\lnot B_1 \lor \lnot B_2$), the monitor output is nominal.
+But if at least one PowerSource is faulty ($B_1 \lor B_2$) and the monitor has an internal failure ($F$) the system is not operational.
+These two sentences written in \ac{activation} using predicates notation are:
+\begin{subequations}
+\begin{align}
+\activationcmd& \left(System_{\mathrm{bool}}, \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right)\right) \nonumber\\
+  = & \left\{ O | \left(P, O\right) \in \healthinesscmd\left(System_{\mathrm{bool}}\right) \land \right.\nonumber\\
+    & \left.\tautology{\lnot F \land \left(\lnot B_1 \lor \lnot B_2\right) \implies P}
+  \right\} & \text{[by \cref{eq:activation}]}\nonumber\\
+  = & \left\{\Nominal{12V}\right\} & \text{[by simplification]}\\
+%%%%%%%%%%%%%%%%%%%
+\activationcmd& \left(System_{\mathrm{bool}}, F \land \left(B_1 \lor B_2\right) \right) \nonumber\\
+  = & \left\{ O | \left(P, O\right) \in \healthinesscmd\left(System_{\mathrm{bool}}\right) \land \right.\nonumber\\
+    & \left.\tautology{F \land \left(B_1 \lor B_2\right) \implies P}
+  \right\} & \text{[by \cref{eq:activation}]}\nonumber\\
+  = & \left\{LP\right\} & \text{[by simplification]}
+\end{align}
+\end{subequations}
+
+Now, let's consider the same system but with a subtle modification.
+As shown in~\cite{DM2016}, the order of the occurrence of faults may be relevant, and the qualitative and quantitative analyses results may be different than those results without considering the order of the occurrence of faults.
+Observing \cref{fg:blockDiagramMonitorInternals}, we see that if $F$ activates before a failure in the first input of the monitor, then it would display a nominal behaviour, because the internal failure $F$ anticipates switching to the second input.
+On the other hand, if the first input fails before $F$, then the monitor would switch to the second input, then switch back, due to the internal failure.
+We obtain the following expression for the monitor, now using the \algebra:
+
+%
+\begin{equation}
+\label{eq:monitor-algebra}
+\begin{split}
+Monitor_{\algebra} &\left(in_1, in_2\right) = \\
+  & \modes{in_1}{\predicate{in_1}{\Nominal{X}} \land \lnot F} \cup\\
+  & \modes{in_2}{\lnot \predicate{in_1}{\Nominal{X}} \land \lnot F} \cup\\
+  & \modes{in_2}{\predicate{in_1}{\Nominal{X}} \land F} \cup\\
+  & \modes{in_1}{\xbefore{\lnot \predicate{in_1}{\Nominal{X}}}{F}} \cup \\
+  & \modes{in_2}{\xbefore{F}{\lnot \predicate{in_1}{\Nominal{X}}}}
+\end{split}
+\end{equation}
+where $X$ is an unbound variable and assumes any value.
+
+\begin{sloppypar}
+The difference to $System_{\mathrm{bool}}$ (\cref{eq:monitor-bool}) is only the finer analysis of the cases of erroneous behaviour of the first input and an internal failure.
+Note that the finer analysis splits the predicate 
+%
+\begin{align*}
+  & \lnot \predicate{in_1}{\Nominal{12V}} \land F & \text{(activates } in_1\text{)}\\
+  \intertext{into:}
+  & \xbefore{\lnot\predicate{in_1}{\Nominal{12V}}}{F} & \text{(activates } in_1\text{)}\\
+  \intertext{and}
+  & \xbefore{F}{\lnot\predicate{in_1}{\Nominal{12V}}} & \text{(activates } in_2\text{)}
+\end{align*}
+%
+We can assure that such a split is complete because the predicate notation evaluates to $B_1$. 
+Thus the operands satisfy all temporal properties (\cref{def:tempo1,def:tempo2,def:tempo3,def:tempo4}) and events independence (\cref{eq:independent-events}), thus the law shown in \cref{thm:xbefore-sup-equiv-inf} is valid.
+For case~(i), the expected behaviour is the same as $in_1$ because the system switches to $in_2$, but then an internal failure occurs, and it switches back to $in_1$.
+For case~(ii), it switches to $in_2$ due to an internal failure, then the first input fails, so the behaviour is similar to the nominal behaviour (see the second \emph{modes} in \cref{eq:monitor-algebra}).
+\end{sloppypar}
+%
+Following the similar expansions of \cref{eq:monitor-bool}, we obtain:
+%
+\begin{align*}
+System_{\algebra} = & Monitor_{\algebra} \left(PowerSource_1, PowerSource_2\right) \\
+%  = & \modes{in_1}{\lnot B_1 \land \lnot F} \cup\\
+%  & \modes{in_2}{\lnot \lnot B_1 \land \lnot F} \cup\\
+%  & \modes{in_2}{\lnot B_1 \land F} \cup\\
+%  & \modes{in_1}{\xbefore{\lnot \lnot B_1}{F}} \cup\\
+%  & \modes{in_2}{\xbefore{F}{\lnot \lnot B_1}} & \text{by \cref{eq:predicate}}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  = & \modes{in_1}{\lnot B_1 \land \lnot F} \cup
+%   \modes{in_2}{B_1 \land \lnot F} \cup\\
+%  & \modes{in_2}{\lnot B_1 \land F} \cup
+%   \modes{in_1}{\xbefore{B_1}{F}} \cup\\
+%  & \modes{in_2}{\xbefore{F}{B_1}} & \text{by simpl.}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  = & \left\{ \left(P_i \land \lnot B_1 \land \lnot F, O_i\right) | \left(P_i, O_i\right) \in in_1  \right\} \cup\\
+%  & \left\{ \left(P_i \land B_1 \land \lnot F, O_i\right) | \left(P_i, O_i\right) \in in_2  \right\} \cup\\
+%  & \left\{ \left(P_i \land \lnot B_1 \land F, O_i\right)| \left(P_i, O_i\right) \in in_2  \right\} \cup \\
+%  & \left\{ \left(P_i \land \xbefore{B_1}{F}, O_i\right)| \left(P_i, O_i\right) \in in_1 \right\} \cup\\
+%  & \left\{ \left(P_i \land \xbefore{F}{B_1}, O_i\right)| \left(P_i, O_i\right) \in in_2 \right\} & \text{by \cref{eq:modes}}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  = & \left\{ 
+      \left(B_1 \land \lnot B_1 \land \lnot F, LP\right), \right.\\
+  &   \left(\lnot B_1 \land \lnot B_1 \land \lnot F, \Nominal{12V}\right), \\
+  &   \left(B_2 \land B_1 \land \lnot F, LP\right),\\
+  &   \left(\lnot B_2 \land B_1 \land \lnot F, \Nominal{12V}\right), \\
+  &   \left(B_2 \land \lnot B_1 \land F, LP\right), \\
+  &   \left(\lnot B_2 \land \lnot B_1 \land F, \Nominal{12V}\right),\\
+  &   \left(B_1 \land \xbefore{B_1}{F}, LP\right), \\
+  &   \left.\left(\lnot B_1 \land \xbefore{B_1}{F}, \Nominal{12V}\right)\right\}, \\
+  &   \left(B_2 \land \xbefore{F}{B_1}, LP\right), \\
+  &   \left.\left(\lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right)\right\}
+    %& \text{replacing vars}
+    \\
+\end{align*}
+
+Simplifying and applying $\healthiness[1]$ to remove contradictions, we obtain:
+\[
+\begin{split}
+\healthinessfun[1]{System_{\algebra}} = &\\
+  & \left\{ 
+      \left(\lnot B_1 \land \lnot F, \Nominal{12V}\right), 
+      \left(B_2 \land B_1 \land \lnot F, LP\right),\right.\\
+  &   \left(\lnot B_2 \land B_1 \land \lnot F, \Nominal{12V}\right), 
+      \left(B_2 \land \lnot B_1 \land F, LP\right), \\
+  &   \left(\lnot B_2 \land \lnot B_1 \land F, \Nominal{12V}\right),
+      \left(\xbefore{B_1}{F}, LP\right), \\
+  &   \left.\left(B_2 \land \xbefore{F}{B_1}, LP\right), 
+      \left(\lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right) \right\}
+\end{split}
+\]
+
+Applying $\healthiness[3]$ to remove redundant terms with identical operational modes and using the rules shown in \cref{sec:xbefore-laws}, we simplify to:
+\[
+\begin{split}
+\healthiness[3] \circ \healthiness[1] &\left(System_{\mathrm{\algebra}}\right)\\
+=  & \left\{ 
+      \left(
+        \begin{split}
+          \left(\lnot B_1 \land \lnot F\right) \lor\\
+          \left(B_1 \land \lnot B_2 \land \lnot F \right)\lor \\
+          \left(\lnot B_1 \land \lnot B_2 \land F \right)\lor \\
+          \left(\lnot B_2 \land \xbefore{F}{B_1}\right)
+        \end{split},
+        \Nominal{12V}
+      \right),
+    \right.\\
+  & \left.
+      \left(
+        \begin{split}
+        \left(B_1 \land B_2 \land \lnot F\right) \lor \\
+        \left(\lnot B_1 \land B_2 \land F\right) \lor \\
+        \left(\xbefore{B_1}{F}\right) \lor \\
+        \left(B_2 \land \xbefore{F}{B_1}\right)
+        \end{split}, 
+        LP
+      \right)
+    \right\}\\
+%=  & \left\{ 
+%      \left(
+%        \begin{split}
+%          \left(\lnot B_1 \land \lnot F\right) \lor\\
+%          \left(B_1 \land \lnot B_2 \land \lnot F \right)\lor \\
+%          \left(\lnot B_1 \land \lnot B_2 \land F \right)\lor \\
+%          \left(\lnot B_2 \land \xbefore{F}{B_1}\right)
+%        \end{split},
+%        \Nominal{12V}
+%      \right),
+%    \right.\\
+%  & \left.
+%      \left(
+%        \begin{split}
+%        \left(B_1 \land B_2 \land \lnot F\right) \lor \\
+%        \left(\lnot B_1 \land B_2 \land F\right) \lor \\
+%        \left(B_2 \land \xbefore{B_1}{F}\right) \lor \\
+%        \left(\lnot B_2 \land \xbefore{B_1}{F}\right) \lor \\
+%        \left(B_2 \land \xbefore{F}{B_1}\right)
+%        \end{split}, 
+%        LP
+%      \right)
+%    \right\}\\
+%=  & \left\{ 
+%      \left(
+%        \begin{split}
+%          \left(\lnot B_1 \land \lnot F\right) \lor\\
+%          \left(B_1 \land \lnot B_2 \land \lnot F \right)\lor \\
+%          \left(\lnot B_1 \land \lnot B_2 \land F \right)\lor \\
+%          \left(\lnot B_2 \land \xbefore{F}{B_1}\right)
+%        \end{split},
+%        \Nominal{12V}
+%      \right),
+%    \right.\\
+%  & \left.
+%      \left(
+%        \begin{split}
+%        \left(B_1 \land B_2 \land \lnot F\right) \lor \\
+%        \left(\lnot B_1 \land B_2 \land F\right) \lor \\
+%        \left(\lnot B_2 \land \xbefore{B_1}{F}\right) \lor \\
+%        \left(B_2 \land F \land B_1\right)
+%        \end{split}, 
+%        LP
+%      \right)
+%    \right\}\\
+= & \left\{
+    \left(\left(\lnot B_1 \land \lnot B_2\right) \lor 
+      \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right) \lor \right.\right.\\
+  & \left. \lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right), \\
+  & \left.  
+    \left(\left(B_1 \land B_2\right) \lor \left(\lnot B_1 \land B_2 \land F\right) \lor \left(\lnot B_2 \land \xbefore{B_1}{F}\right), 
+      LP\right)
+  \right\}
+\end{split}
+\]
+
+\begin{sloppypar}
+The monitor expression is $\healthy[2]$. 
+Simplifying \Boolean operators as usual, the XBefore expression:
+%
+\begin{align*}
+  \lnot B_2 \land \xbefore{F}{B_1} &\lor \lnot B_2 \land \xbefore{B_1}{F}\\
+  \intertext{simplifies to}
+  \lnot B_2\land & F \land B_1 & \text{by \cref{thm:xbefore-sup-equiv-inf}}
+\end{align*}
+%
+Thus:
+\[
+\healthiness[2] \circ \healthiness[3] \circ \healthiness[1]\left(System_{\mathrm{\algebra}}\right) =
+\healthiness[3] \circ \healthiness[1]  \left(System_{\mathrm{\algebra}}\right)
+\]
+  
+\end{sloppypar}
+
+The resulting expression for the monitor after applying all healthiness conditions is:
+\begin{equation}
+\label{eq:h-systemalgebra}
+\begin{split}
+  \healthinesscmd\left(System_{\algebra}\right) = & \left\{
+    \left(\left(\lnot B_1 \land \lnot B_2\right) \lor 
+      \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right) \lor \right.\right.\\
+  & \left. \lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right), \\
+  & \left(\left(B_1 \land B_2\right) \lor \left(\lnot B_1 \land B_2 \land F\right) \lor \right.\\
+  & \left.\left. \left(\lnot B_2 \land \xbefore{B_1}{F}\right), 
+      LP\right)
+  \right\}
+\end{split}
+\end{equation}
+
+Finally, we obtain the \emph{low power} structure expression of the monitor using the predicates notation:
+\[
+\predicate{System_{\mathrm{\algebra}}}{LP} \iff 
+  \left(B_1 \land B_2\right) \lor 
+  \left(\lnot B_1 \land B_2 \land F\right) \lor
+  \left(\lnot B_2 \land \xbefore{B_1}{F}\right)
+\]
+%
+Thus, $System_{\mathrm{\algebra}}$ fails with $LP$ if:
+\begin{itemize}
+  \item Both power sources fail;
+  \item The monitor fails to detect the nominal state of the first power source and the second power source is in a failure state;
+  \item The monitor fails to detect the failure state of the first power source (the monitor fails after the failure of the first power source).
+\end{itemize}
+%
+Note that if the monitor fails before the failure of the first power source, it fails to detect the operational mode of the first power source and switches to the second power source, which is in a nominal state (see expression $\lnot B_2 \land \xbefore{F}{B_1}$ in \cref{eq:h-systemalgebra}).
 
 \chapter{Conclusion}
 \label{sec:conclusion}
