@@ -2844,44 +2844,44 @@ The negation of all events ($\left\{\left[\right]\right\}$, a formula with the e
 %
 \begin{subequations}
 \begin{align}
-\xbefore{\bot}{S} =&
+\xbefore{\bot}{S} =&~
   \bot &
-  \text{left-false-absorb}
+  %\text{left-false-absorb}
   \label{thm:xbefore-of-false-1}\\
 %
-\xbefore{S}{\bot} =&
+\xbefore{S}{\bot} =&~
   \bot &
-  \text{right-false-absorb}
+  %\text{right-false-absorb}
   \label{thm:xbefore-of-false-2}\\
 %
-\tempo[1]{S} \implies \xbefore{\neutral}{S} =&
+\tempo[1]{S} \implies \xbefore{\neutral}{S} =&~
   S &
-  \text{left-neutral-absorb}
+  %\text{left-neutral-absorb}
   \label{thm:xbefore_neutral_1}\\
 %
-\tempo[1]{S} \implies \xbefore{S}{\neutral} =&
+\tempo[1]{S} \implies \xbefore{S}{\neutral} =&~
   S &
-  \text{right-neutral-absorb}
+  %\text{right-neutral-absorb}
   \label{thm:xbefore_neutral_2}\\
 %
-\left(\xbefore{S}{T}\right) \lor S =& S &
-  \text{left-union-absorb}
+\left(\xbefore{S}{T}\right) \lor S =&~ S &
+  %\text{left-union-absorb}
   \label{thm:xbefore-sup-absorb-1}\\
 %
-\left(\xbefore{T}{S}\right) \lor S =& S &
-  \text{right-union-absorb}
+\left(\xbefore{T}{S}\right) \lor S =&~ S &
+  %\text{right-union-absorb}
   \label{thm:xbefore-sup-absorb-2}\\
 %
 \tempo[1]{S} \implies
-  \xbefore{S}{S} =&
+  \xbefore{S}{S} =&~
   \bot &
-  \text{non-idempotent}
+  %\text{non-idempotent}
   \label{thm:xbefore-not-idempotent}\\
 %
 \tempo[1]{S}\land\tempo[1]{T}\land \tempo[1]{U}\implies&\nonumber\\
-  \xbefore{S}{(\xbefore{T}{U})} =&
+  \xbefore{S}{(\xbefore{T}{U})} =&~
   \xbefore{(\xbefore{S}{T})}{U} &
-  \text{associativity}
+  %\text{associativity}
   \label{thm:xbefore-associativity}
 %
 \end{align}
@@ -2896,16 +2896,16 @@ First we use the \ac{XBefore} as operands of union and intersection.
 %
 \begin{subequations}
 \begin{align}
-\tempo[1]{S} \land \tempo[1]{T}\implies&\nonumber\\
-  \parsin{\xbefore{S}{T}} \land \parsin{\xbefore{T}{S}} =&
+\tempo[1]{S} \land \tempo[1]{T}&\implies\nonumber\\
+  \parsin{\xbefore{S}{T}} \land \parsin{\xbefore{T}{S}} =&~
   \bot &
-  \text{inter-equiv-false}
+  %\text{inter-equiv-false}
   \label{thm:xbefore-inf-equiv-bot}\\
 %
-\tempo{S} \land \tempo{T} \land \independentevents{S}{T}\implies&\nonumber\\
-  \parsin{\xbefore{S}{T}} \lor \parsin{\xbefore{T}{S}} =&
+\tempo{S} \land \tempo{T} \land \independentevents{S}{T}&\implies\nonumber\\
+  \parsin{\xbefore{S}{T}} \lor \parsin{\xbefore{T}{S}} =&~
   S \land T &
-  \text{union-equiv-inter}
+  %\text{union-equiv-inter}
   \label{thm:xbefore-sup-equiv-inf}
 %
 \end{align}
@@ -2921,43 +2921,60 @@ Now, each law requires that the operands satisfy some of the temporal properties
 Boolean\index{Boolean Algebra} operators are used as operands of the \ac{XBefore} in the following laws.
 %
 \begin{subequations}
+\label{thms:xbefore-boolean}
 \begin{align}
-\xbefore{\left(S \lor T\right)}{U} =&
+\xbefore{\left(S \lor T\right)}{U} =&~
   \parsin{\xbefore{S}{U}} \lor \parsin{\xbefore{T}{U}} &
-  \text{left-union-dist}
+  %\text{left-union-dist}
   \label{thm:xbefore-sup-1}\\
-%
-\xbefore{S}{\left(T \lor U\right)} =&
+%%%%%
+\xbefore{S}{\left(T \lor U\right)} =&~
   \parsin{\xbefore{S}{T}} \lor \parsin{\xbefore{S}{U}} &
-  \text{right-union-dist}
+  %\text{right-union-dist}
   \label{thm:xbefore-sup-2}\\
-%
+%%%%%
 \tempo{S} \land \tempo{T} \land \independentevents{S}{T} & \implies\nonumber \\
-  \xbefore{\left(S \land T\right)}{U} =&
+  \xbefore{\left(S \land T\right)}{U} =&~
   \parsin{\xbefore{\xbefore{S}{T}}{U}} \lor \nonumber\\
   &\parsin{\xbefore{\xbefore{T}{S}}{U}} &
-  \text{left-inter-dist}
+  %\text{left-inter-dist}
   \label{thm:xbefore-inf-1}\\
-%
+%%%%%
 \tempo{T} \land \tempo{U} \land \independentevents{T}{U} & \implies \nonumber\\
-  \xbefore{S}{\left(T \land U\right)} =&
+  \xbefore{S}{\left(T \land U\right)} =&~
   \parsin{\xbefore{S}{\xbefore{T}{U}}} \lor \nonumber\\
   &\parsin{\xbefore{S}{\xbefore{U}{T}}} &
-  \text{right-inter-dist}
+  %\text{right-inter-dist}
   \label{thm:xbefore-inf-2}\\
-%
-\tempo[2]{S} \implies S \land \parsin{\xbefore{T}{U}} =&
+%%%%%
+\tempo[2]{S} \implies S \land \parsin{\xbefore{T}{U}} =&~
   \parsin{\xbefore{\parsin{S \land T}}{U}} \lor \nonumber\\
   &\parsin{\xbefore{T}{\parsin{S \land U}}} &
-  \text{unordered}
-  \label{thm:and_xbefore_equiv_or_xbefore}
+  %\text{unordered}
+  \label{thm:and_xbefore_equiv_or_xbefore}\\
+%%%%%
+\tempo[1]{T} \land \tempo[3]{T} &\implies\nonumber\\
+  \xbefore{S}{T} \land \xbefore{T}{U} =&~
+  \xbefore{\left(\xbefore{S}{T}\right)}{U}
+  & 
+  %\text{inter-transitivity}
+  \label{thm:inf_xbefore_trans}\\
+%%%%%
+\independentevents{S}{T} \land \tempo[1-4]{S} \land \tempo[1-4]{T} & \implies\nonumber\\
+  S \land \left(\xbefore{S}{T}\right) =&~ \xbefore{S}{T}
+  \label{thm:xbefore_inf_absorb_1}\\
+%%%%%
+\independentevents{S}{T} \land \tempo[1-4]{S} \land \tempo[1-4]{T} & \implies\nonumber\\
+  S \land \left(\xbefore{T}{S}\right) =&~ \xbefore{T}{S}
+  \label{thm:xbefore_inf_absorb_2}
 \end{align}
 \end{subequations}
 %
 \ac{XBefore} is distributive over union.
 On the other hand, the intersection is related to order.
 Thus it is not distributive with \ac{XBefore}.
-Finally, the intersection of an event with an \ac{XBefore} states that such an event can occur in any order within the events in the \ac{XBefore}.
+The intersection of an event with an \ac{XBefore} states that such an event can occur in any order within the events in the \ac{XBefore}.
+Lastly, the \ac{XBefore} is transitive with preconditions over the intermediary variable.
 
 The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer if we expand \eqref{thm:and_xbefore_equiv_or_xbefore} with \eqref{thm:xbefore-inf-1} and ~\eqref{thm:xbefore-inf-2}:
 %
@@ -2985,6 +3002,31 @@ The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer 
 %\end{subequations}
 %
 %From \eqref{thm:xbefore-not-idempotent} and~\eqref{thm:and_xbefore_equiv_or_xbefore}, intersection and \ac{XBefore} also have an absorption law.
+
+In what follows we show properties of \ac{XBefore} related to the \ac{NOT} operators.
+%
+\begin{subequations}
+\label{thms:xbefore-not}
+\begin{align}
+\independentevents{S}{T} \land
+\tempo[1-4]{S} \land \tempo[1-4]{T} & \implies \nonumber\\
+  \lnot \left(\xbefore{S}{T}\right) =&
+  \left(\lnot S \lor \lnot T\right) \lor \left(\xbefore{T}{S}\right)
+  \label{thm:not_xbefore}\\
+%%%%%
+\tempo[1]{S} \land \tempo[2]{T} & \implies \nonumber\\
+  \xbefore{\lnot S}{T} = &~ T\label{thm:not_1_xbefore_equiv}\\
+%%%%%
+\tempo[1]{T} \land \tempo[2]{S} & \implies \nonumber\\
+  \xbefore{S}{\lnot T} = &~ S\label{thm:not_2_xbefore_equiv}\\
+%%%%%
+\independentevents{S}{T} \land \tempo[1-4]{S} \land \tempo[1-4]{T} & \implies\nonumber\\
+  \left(S \land \lnot T\right) \lor \left(\xbefore{S}{T}\right) = &
+  S \land \lnot\left(\xbefore{T}{S} \right)
+  \label{thm:xbefore_sup_compl_inf_absorb1}
+%    sup (inf a (-b)) (xbefore a b) = inf a (- (xbefore b a))
+\end{align}
+\end{subequations}
 
 \section{Qualitative and quantitative properties}
 \label{sec:qualitative-quantitative-properties}
