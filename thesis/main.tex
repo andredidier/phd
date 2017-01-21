@@ -4173,89 +4173,6 @@ The work reported in~\cite{Walker2009,WP2009,WP2010} tackles simultaneity with `
 But we consider instantaneous events, like the work reported in~\cite{MRL2014}, because we assume that simultaneity is probabilistically impossible.
 \end{sloppypar}
 
-\section{Status}
-
-In \cref{fig:status-of-thesis} we show:
-\begin{alineasinline}
-  \item what was done in previous work and is used as input,
-  \item what was done in the current work,
-  \item what will be done in the next months (see \cref{tbl:tasks-schedule} for tasks schedule), and
-  \item what will be done in future work, after the thesis' defence.
-\end{alineasinline}
-Many of the tasks shown in \cref{tbl:tasks-schedule} already started.
-The \namecref{tbl:tasks-schedule} shows the estimated execution of the tasks by year's quarters.
-The second quarter of 2016 is from April to June/2016, the third quarter is from July to September/2016, the fourth quarter, from October to December/2016, and we expected to defend the thesis by February/2017.
-
-
-\begin{figure}[htb]
-  \centering
-  \includegraphicsaspectratio[0.9]{StrategyOverview-Status}
-  \caption{Status of this thesis using the strategy overview (see \cref{fig:strategy-overview})}
-  \label{fig:status-of-thesis}
-\end{figure}
-
-\begin{table}[htb]
-\IBGEtab{%
-  \caption{Tasks schedule}%
-  \label{tbl:tasks-schedule}%
-}{%
-  \begin{tabular}{p{10.2cm}cccc}
-    \toprule
-    Task & 2nd & 3rd & 4th & 1st\\
-    \midrule \midrule
-    Qualification & $~\bullet~$ &  &  & \\
-    \midrule
-    Elaborate a theory for the \ac{activation} & $\bullet$ &  &  & \\
-    \midrule
-    Elaborate a theory for the acceptance criteria & $\bullet$ &  &  & \\
-    \midrule
-    Prepare a paper about \ac{activation} and acceptance criteria & $\bullet$ & $\bullet$ &  & \\
-    \midrule
-    Submit paper about \ac{activation} and acceptance criteria &  & $\bullet$ &  & \\
-    \midrule
-    Prove soundness and completeness theorems for the \ac{DNF} of \ac{algebra} &  & $\bullet$ & $\bullet$ & \\
-    \midrule
-    Define the mapping rules from traces to \ac{algebra} &  &  & $\bullet$ & \\
-    \midrule
-    Demonstrate the relations of \ac{NOT} and \ac{XBefore} and other operators &  &  & $\bullet$ & \\
-    \midrule
-    Define the conditions that cause non-coherent analysis with \ac{NOT} &  &  & $\bullet$ & \\
-    \midrule
-    Write the results in the thesis &  & $\bullet$ & $\bullet$ & \\
-    \midrule
-    Prepare thesis' defence &  &  & $\bullet$ & $\bullet$\\
-    \midrule
-    Defence &  &  &  & $\bullet$\\
-    \bottomrule
-  \end{tabular}%
-}{%
-}
-\end{table}
-
-\section{Next steps in this thesis}
-
-The next steps in this thesis are the conclusion of the work-in-progress of the ``Fault Modelling'' and ``Automatic FTA'' blocks in \cref{fig:status-of-thesis}.
-An initial version of the theory of the \ac{activation} is done.
-The case study shown in this thesis is also modelled in \ac{activation}.
-But we need to adapt the failure predicates to \theac{algebra}.
-It may require a full refactoring of the theory of \ac{activation}.
-
-We developed a small set of rules for the acceptance criteria verification, but we need to add more sophisticated rules, as for example, to consider phase and latency.
-%In both cases, we will update the case studies.
-
-We showed the \ac{DNF} for \ac{algebra}, but we did not demonstrate that every formula can be converted into \ac{DNF}.
-The laws shown in this work should be sufficient for this demonstration.
-Also, we did not show the mapping rules from traces to \ac{algebra} (with Boolean\index{Boolean Algebra} operators only \ac{AND} with \ac{XBefore}).
-The mapping rules follow those for the traces: \ac{XBefore} is obtained by the order of occurrence and the absence of an event is the complement ($-$).
-
-Although we do not use negation (\ac{NOT} operator) with \ac{XBefore} in our case study, it is part of \ac{algebra}, so it could be used.
-As future work we will demonstrate the relations of \ac{NOT} and \ac{XBefore}, as we did for \ac{AND} and \ac{OR}.
-We will also define laws to avoid the conditions that cause non-coherent analysis~\cite{Oliv2006}.
-The issue with negated events comes up when both an event and its negation appear on the same tree.
-One very restrictive solution to this issue is applying the \emph{generators independence} laws (\ref{eqs:generators-independence-subseteq-neq-compl}, \ref{eqs:generators-independence-subseteq-compl-neq}) on basic events of a tree, by actually considering a new event $ne$ in place of the negation of another event $e$ (for instance, $\var e$ and $\var ne = -\var e$).
-We look forward to obtain a less restrictive law.
-
-
 \section{Future work, out of the scope of this thesis}
 
 %The \distinctlists representation in our algebra does not allow obtaining minimal cut sequences\index{Minimal Cut!Sequences} directly from the formula, similar to \acp{FBA}\index{Boolean Algebra!Free}.
@@ -4276,7 +4193,7 @@ We plan to use similar concepts in a future work.
 
 The work reported in~\cite{SAE1996b} states that \acp{DTMC} (\aca{DTMC}) is more appropriate to represent several states than \acp{SFT}.
 Considering that \acp{DFT} were conceived as a visual representation of \acap{DTMC}, then we may say that \acp{DFT} can be used to represent several states.
-Thus they are suitable to propose the architectural model modifications as shown in \cref{fig:strategy-overview,fig:status-of-thesis}.
+Thus they are suitable to propose the architectural model modifications as shown in \cref{fig:strategy-overview}.
 The definition and the theory of ``Fault Modelling and Fault Tolerance Patterns'' and the automatic proposal of ``Architectural Model Modifications'' blocks are left as future work.
 
 
