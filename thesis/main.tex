@@ -2576,7 +2576,7 @@ We give the definition of \ac{XBefore} ($\xbeforeop$) in terms of list concatena
   ~\right\}\label{def:xbefore-append}
 \end{align}
 %
-where the $\listset{}$ function returns the set of the elements of a list, $\append{}{}$ concatenates two lists, and $\denote{.}$ extracts the denotational semantics of the formula.
+where the $\listset{}$ function returns the set of the elements of a list, $\append{}{}$ concatenates two lists, and $\denote{.}$ obtains the denotational semantics of the formula.
 
 In some cases it is more intuitive to use the \ac{XBefore} definition in terms of lists slicing because it uses indexes explicitly.
 %\Cref{thm:xbefore} shows that the two definitions are equivalent.
@@ -2703,15 +2703,9 @@ We name these properties as \emph{temporal properties}.
 \label{sec:temporal-properties}
 
 Temporal properties give a more abstract and less restrictive shape on the \ac{XBefore} laws.
-They are abbreviations that some operators satisfy altogether\todo{Verificar significado de altogether} or individually.
+They are abbreviations that some operators satisfy altogether or individually.
 These properties avoid the requirement that every operand of \ac{XBefore} should be a variable \eqref{def:var}.
 %The properties are: $\tempo[1]{}$ (\cref{def:tempo1}), $\tempo[2]{}$ (\cref{def:tempo2}), $\tempo[3]{}$ (\cref{def:tempo3}), and $\tempo[4]{}$ (\cref{def:tempo4}). 
-
-
-The first temporal property is about disjoint split.
-If the first part of a list is in a given set, then every remainder part is not.
-So, if a generator is in the beginning of a list, it must not be at the end (and vice-versa).
-%
 %\todo{Explain temporal properties with respect to Figure 1 about relation of events? At least make it clearer.}
 %
 \begin{subequations}
@@ -2727,8 +2721,8 @@ So, if a generator is in the beginning of a list, it must not be at the end (and
   \sliceright{zs}{i} \in \denote{S} \lor \sliceleft{zs}{i} \in \denote{S}\label{def:tempo2}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tempo[3]{S} &= \forall i, j, zs ~\bullet~
-  j < i \implies
-  \left(
+  j < i \implies \nonumber\\
+  &\left(
     \slice{zs}{j}{i} \in \denote{S} \iff \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
   \right)\label{def:tempo3}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2738,8 +2732,18 @@ So, if a generator is in the beginning of a list, it must not be at the end (and
 \end{align}
 \end{subequations}
 
+The first temporal property is about disjoint split.
+If the first part of a list is in a given set, then every remainder part is not.
+So, if a generator is in the beginning of a list, it must not be at the end (and vice-versa).
+For example, let $zs = \listsin{z_0,z_1,z_2,z_3,z_4}$.
+If $\listsin{z_0,z_1} \in \denote{S}$, thus $\listsin{z_3,z_4} \notin \denote{S}$.
+Note that it is vague, but it is the first relation indication on the lists of $S$.
+
 The second temporal property is about belonging to one sublist in the beginning or in the end.
-If a generator is in a list, then it must be at the beginning or at the end.
+For example, if a generator is in a list, then it must be at the beginning or at the end.
+If $\listsin{z_0,z_1,z_2,z_3,z_4} \in \denote{S}$, thus either $\listsin{z_0}\in\denote{S}$, or $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
+If $\listsin{z_0} \notin \denote{S}$, thus $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
+Then, either $\listsin{z_1} \in \denote{S}$ or $\listsin{z_2,z_3,z_4} \in \denote{S}$, and so forth.
 %
 %\begin{definition}[\Tempotext 2, belongs to one sublist in the beginning or at the ending]
 %\label{def:tempo2}
@@ -2749,6 +2753,7 @@ If a generator is in a list, then it must be at the beginning or at the end.
 
 The third temporal property is about belonging to one sublist in the middle.
 If a generator belongs to a sublist between $j$ and $i$, then it belongs to the sublist that starts at first position and ends in $j$ and to the sublist that starts at $i$ and ends at the last position (both sublists contain the sublist in the middle).
+For example, if $\listsin{z_1,z-2,z_3} \in \denote{S}$, then both $\listsin{z_0,z_1,z_2}$
 %
 %\begin{definition}[\Tempotext 3, belongs to the middle of a sublist]
 %\label{def:tempo3}
