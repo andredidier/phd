@@ -451,7 +451,7 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \newcommand{\nondet}[1]{\nondetcmd\left(#1\right)}
 \def\activationcmd{\ensuremath\mathrm{activation}}
 \newcommand{\activation}[2]{\activationcmd\left(#1, #2\right)}
-
+\def\neutral{\ensuremath\mathrm{\mathbf{1}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \makeindex
@@ -2840,6 +2840,7 @@ For example, we need to avoid that the operands of \ac{XBefore} are $\var{a}$ an
 \end{equation}
 
 The absence of occurrences ($\False$, the empty set of $\algebraset$) is a ``0'' for the \ac{XBefore} operator.
+The negation of all events ($\left\{\left[\right]\right\}$, a formula with the empty list) is a ``1'' for the \ac{XBefore} operator.
 %
 \begin{subequations}
 \begin{align}
@@ -2852,6 +2853,16 @@ The absence of occurrences ($\False$, the empty set of $\algebraset$) is a ``0''
   \bot &
   \text{right-false-absorb}
   \label{thm:xbefore-of-false-2}\\
+%
+\tempo[1]{S} \implies \xbefore{\neutral}{S} =&
+  S &
+  \text{left-neutral-absorb}
+  \label{thm:xbefore_neutral_1}\\
+%
+\tempo[1]{S} \implies \xbefore{S}{\neutral} =&
+  S &
+  \text{right-neutral-absorb}
+  \label{thm:xbefore_neutral_2}\\
 %
 \left(\xbefore{S}{T}\right) \lor S =& S &
   \text{left-union-absorb}
@@ -4173,7 +4184,7 @@ The work reported in~\cite{Walker2009,WP2009,WP2010} tackles simultaneity with `
 But we consider instantaneous events, like the work reported in~\cite{MRL2014}, because we assume that simultaneity is probabilistically impossible.
 \end{sloppypar}
 
-\section{Future work, out of the scope of this thesis}
+\section{Future work}
 
 %The \distinctlists representation in our algebra does not allow obtaining minimal cut sequences\index{Minimal Cut!Sequences} directly from the formula, similar to \acp{FBA}\index{Boolean Algebra!Free}.
 %The sets in \iac{FBA}\index{Boolean Algebra!Free} formula are already the minimal cut sets\index{Minimal Cut!Sets}.

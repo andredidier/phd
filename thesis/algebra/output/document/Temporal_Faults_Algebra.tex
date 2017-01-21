@@ -27,14 +27,14 @@
 In the following we present the algebraic laws for the \ac{algebra}.%
 \end{isamarkuptext}\isamarkuptrue%
 %
-\isamarkupsubsection{Basic \ac{algebra} operators and tempo1%
+\isamarkupsubsection{Basic \ac{algebra} operators and $\tempo[1]{}$%
 }
 \isamarkuptrue%
 \isacommand{class}\isamarkupfalse%
 \ temporal{\isacharunderscore}faults{\isacharunderscore}algebra{\isacharunderscore}basic\ {\isacharequal}\ boolean{\isacharunderscore}algebra\ \ {\isacharplus}\isanewline
-\ \ \isakeyword{fixes}\ neutral\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{fixes}\ xbefore\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ {\isacharprime}a\ {\isasymRightarrow}\ {\isacharprime}a{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{fixes}\ tempo{\isadigit{1}}\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{fixes}\ neutral\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a{\isachardoublequoteclose}\ \isanewline
+\ \ \isakeyword{fixes}\ xbefore\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ {\isacharprime}a\ {\isasymRightarrow}\ {\isacharprime}a{\isachardoublequoteclose}\ \ \isanewline
+\ \ \isakeyword{fixes}\ tempo{\isadigit{1}}\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\ \ \isanewline
 \ \ \isakeyword{assumes}\ xbefore{\isacharunderscore}bot{\isacharunderscore}{\isadigit{1}}{\isacharcolon}\ {\isachardoublequoteopen}xbefore\ bot\ a\ {\isacharequal}\ bot{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ xbefore{\isacharunderscore}bot{\isacharunderscore}{\isadigit{2}}{\isacharcolon}\ {\isachardoublequoteopen}xbefore\ a\ bot\ {\isacharequal}\ bot{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ xbefore{\isacharunderscore}neutral{\isacharunderscore}{\isadigit{1}}{\isacharcolon}\ {\isachardoublequoteopen}tempo{\isadigit{1}}\ a\ {\isasymLongrightarrow}\ xbefore\ neutral\ a\ {\isacharequal}\ a{\isachardoublequoteclose}\isanewline
@@ -55,10 +55,10 @@ In the following we present the algebraic laws for the \ac{algebra}.%
 \isamarkuptrue%
 \isacommand{class}\isamarkupfalse%
 \ temporal{\isacharunderscore}faults{\isacharunderscore}algebra{\isacharunderscore}equivs\ {\isacharequal}\ temporal{\isacharunderscore}faults{\isacharunderscore}algebra{\isacharunderscore}assoc\ {\isacharplus}\isanewline
-\ \ \isakeyword{fixes}\ independent{\isacharunderscore}events\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ {\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{fixes}\ tempo{\isadigit{2}}\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{fixes}\ tempo{\isadigit{3}}\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\isanewline
-\ \ \isakeyword{fixes}\ tempo{\isadigit{4}}\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\isanewline
+\ \ \isakeyword{fixes}\ independent{\isacharunderscore}events\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ {\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\ \isanewline
+\ \ \isakeyword{fixes}\ tempo{\isadigit{2}}\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\ \isanewline
+\ \ \isakeyword{fixes}\ tempo{\isadigit{3}}\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\ \isanewline
+\ \ \isakeyword{fixes}\ tempo{\isadigit{4}}\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a\ {\isasymRightarrow}\ bool{\isachardoublequoteclose}\ \isanewline
 \ \ \isakeyword{assumes}\ xbefore{\isacharunderscore}inf{\isacharunderscore}equiv{\isacharunderscore}bot{\isacharcolon}\ \isanewline
 \ \ \ \ {\isachardoublequoteopen}{\isasymlbrakk}tempo{\isadigit{1}}\ a{\isacharsemicolon}\ tempo{\isadigit{1}}\ b{\isasymrbrakk}\ {\isasymLongrightarrow}\ inf\ {\isacharparenleft}xbefore\ a\ b{\isacharparenright}\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharequal}\ bot{\isachardoublequoteclose}\isanewline
 \ \ \isakeyword{assumes}\ xbefore{\isacharunderscore}sup{\isacharunderscore}equiv{\isacharunderscore}inf{\isacharcolon}\ \isanewline
@@ -339,8 +339,7 @@ They are valid for any instantiation of the \ac{algebra} class as, for example, 
 %
 \endisadelimproof
 \isanewline
-\isanewline
-\isacommand{corollary}\isamarkupfalse%
+\isacommand{lemma}\isamarkupfalse%
 \ inf{\isacharunderscore}xbefore{\isacharunderscore}equiv{\isacharunderscore}sups{\isacharunderscore}xbefore{\isacharunderscore}expanded{\isacharcolon}\ \isanewline
 \ \ {\isachardoublequoteopen}independent{\isacharunderscore}events\ a\ b\ {\isasymLongrightarrow}\ independent{\isacharunderscore}events\ a\ c\ {\isasymLongrightarrow}\ \isanewline
 \ \ {\isasymlbrakk}tempo{\isadigit{1}}\ a{\isacharsemicolon}\ tempo{\isadigit{1}}\ b{\isacharsemicolon}\ tempo{\isadigit{1}}\ c{\isasymrbrakk}\ {\isasymLongrightarrow}\ {\isasymlbrakk}tempo{\isadigit{2}}\ a{\isacharsemicolon}\ tempo{\isadigit{2}}\ b{\isacharsemicolon}\ tempo{\isadigit{2}}\ c{\isasymrbrakk}\ {\isasymLongrightarrow}\ \isanewline
@@ -386,6 +385,30 @@ They are valid for any instantiation of the \ac{algebra} class as, for example, 
 %
 \endisadelimproof
 \isanewline
+\isacommand{corollary}\isamarkupfalse%
+\ inf{\isacharunderscore}xbefore{\isacharunderscore}equiv{\isacharunderscore}sups{\isacharunderscore}xbefore{\isacharunderscore}{\isadigit{1}}{\isacharcolon}\isanewline
+\ \ {\isachardoublequoteopen}independent{\isacharunderscore}events\ a\ b\ {\isasymLongrightarrow}\ independent{\isacharunderscore}events\ a\ c\ \ {\isasymLongrightarrow}\ \isanewline
+\ \ {\isasymlbrakk}tempo{\isadigit{1}}\ a{\isacharsemicolon}\ tempo{\isadigit{1}}\ b{\isacharsemicolon}\ tempo{\isadigit{1}}\ c{\isasymrbrakk}\ {\isasymLongrightarrow}\ {\isasymlbrakk}tempo{\isadigit{2}}\ a{\isacharsemicolon}\ tempo{\isadigit{2}}\ b{\isacharsemicolon}\ tempo{\isadigit{2}}\ c{\isasymrbrakk}\ {\isasymLongrightarrow}\ \isanewline
+\ \ {\isasymlbrakk}tempo{\isadigit{3}}\ a{\isacharsemicolon}\ tempo{\isadigit{3}}\ b{\isacharsemicolon}\ tempo{\isadigit{3}}\ c{\isasymrbrakk}\ {\isasymLongrightarrow}\ {\isasymlbrakk}tempo{\isadigit{4}}\ a{\isacharsemicolon}\ tempo{\isadigit{4}}\ b{\isacharsemicolon}\ tempo{\isadigit{4}}\ c{\isasymrbrakk}\ {\isasymLongrightarrow}\isanewline
+\ \ inf\ a\ {\isacharparenleft}xbefore\ b\ c{\isacharparenright}\ {\isacharequal}\ \isanewline
+\ \ sup\ {\isacharparenleft}sup\ {\isacharparenleft}xbefore\ {\isacharparenleft}xbefore\ a\ b{\isacharparenright}\ c{\isacharparenright}\ {\isacharparenleft}xbefore\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ c{\isacharparenright}{\isacharparenright}\ \isanewline
+\ \ \ \ {\isacharparenleft}xbefore\ {\isacharparenleft}xbefore\ b\ c{\isacharparenright}\ a{\isacharparenright}{\isachardoublequoteclose}\isanewline
+%
+\isadelimproof
+%
+\endisadelimproof
+%
+\isatagproof
+\isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ inf{\isacharunderscore}xbefore{\isacharunderscore}equiv{\isacharunderscore}sups{\isacharunderscore}xbefore{\isacharunderscore}expanded{\isacharparenright}%
+\endisatagproof
+{\isafoldproof}%
+%
+\isadelimproof
+\isanewline
+%
+\endisadelimproof
+\isanewline
 \isacommand{lemma}\isamarkupfalse%
 \ xbefore{\isacharunderscore}sup{\isacharunderscore}compl{\isacharunderscore}inf{\isacharunderscore}absorb{\isadigit{1}}{\isacharcolon}\ \isanewline
 \ \ {\isachardoublequoteopen}independent{\isacharunderscore}events\ a\ b\ {\isasymLongrightarrow}\ {\isasymlbrakk}tempo{\isadigit{1}}\ a{\isacharsemicolon}\ tempo{\isadigit{1}}\ b{\isasymrbrakk}\ {\isasymLongrightarrow}\ \isanewline
@@ -419,84 +442,58 @@ They are valid for any instantiation of the \ac{algebra} class as, for example, 
 \ a{\isadigit{9}}{\isacharcolon}\ {\isachardoublequoteopen}tempo{\isadigit{4}}\ b{\isachardoublequoteclose}\isanewline
 \ \ \isacommand{then}\isamarkupfalse%
 \ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{0}}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharminus}\ sup\ {\isacharparenleft}inf\ a\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}xbefore\ a\ b{\isacharparenright}\ {\isacharequal}\ inf\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}sup\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ f{\isadigit{1}}{\isadigit{0}}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharminus}\ xbefore\ a\ b\ {\isacharequal}\ sup\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}{\isachardoublequoteclose}\isanewline
 \ \ \ \ \isacommand{using}\isamarkupfalse%
-\ a{\isadigit{8}}\ a{\isadigit{7}}\ a{\isadigit{6}}\ a{\isadigit{5}}\ a{\isadigit{4}}\ a{\isadigit{3}}\ a{\isadigit{2}}\ a{\isadigit{1}}\ local{\isachardot}compl{\isacharunderscore}inf\ local{\isachardot}compl{\isacharunderscore}sup\ local{\isachardot}not{\isacharunderscore}xbefore\ \isacommand{by}\isamarkupfalse%
-\ presburger\isanewline
+\ a{\isadigit{8}}\ a{\isadigit{7}}\ a{\isadigit{6}}\ a{\isadigit{5}}\ a{\isadigit{4}}\ a{\isadigit{3}}\ a{\isadigit{2}}\ a{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}meson\ local{\isachardot}not{\isacharunderscore}xbefore{\isacharparenright}\isanewline
 \ \ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{1}}{\isacharcolon}\ {\isachardoublequoteopen}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharequal}\ {\isacharminus}\ a{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{by}\isamarkupfalse%
-\ auto\isanewline
-\ \ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{2}}{\isacharcolon}\ {\isachardoublequoteopen}{\isasymforall}f\ a\ aa{\isachardot}\ {\isasymnot}\ abel{\isacharunderscore}semigroup\ f\ {\isasymor}\ f\ {\isacharparenleft}a{\isacharcolon}{\isacharcolon}{\isacharprime}a{\isacharparenright}\ aa\ {\isacharequal}\ f\ aa\ a{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}simp\ add{\isacharcolon}\ abel{\isacharunderscore}semigroup{\isachardot}commute{\isacharparenright}\isanewline
-\ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{3}}{\isacharcolon}\ {\isachardoublequoteopen}inf\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharequal}\ inf\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ f{\isadigit{1}}{\isadigit{1}}{\isacharcolon}\ {\isachardoublequoteopen}{\isasymforall}a\ aa\ ab{\isachardot}\ inf\ {\isacharparenleft}a{\isacharcolon}{\isacharcolon}{\isacharprime}a{\isacharparenright}\ {\isacharparenleft}sup\ aa\ ab{\isacharparenright}\ {\isacharequal}\ sup\ {\isacharparenleft}inf\ a\ aa{\isacharparenright}\ {\isacharparenleft}inf\ a\ ab{\isacharparenright}{\isachardoublequoteclose}\isanewline
 \ \ \ \ \isacommand{using}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{1}}\ local{\isachardot}inf{\isachardot}abel{\isacharunderscore}semigroup{\isacharunderscore}axioms\ \isacommand{by}\isamarkupfalse%
-\ presburger\isanewline
-\ \ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{4}}{\isacharcolon}\ {\isachardoublequoteopen}inf\ b\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharequal}\ inf\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ b{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{using}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{2}}\ local{\isachardot}inf{\isachardot}abel{\isacharunderscore}semigroup{\isacharunderscore}axioms\ \isacommand{by}\isamarkupfalse%
-\ blast\isanewline
-\ \ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{5}}{\isacharcolon}\ {\isachardoublequoteopen}inf\ a\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharequal}\ xbefore\ b\ a{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{using}\isamarkupfalse%
-\ a{\isadigit{9}}\ a{\isadigit{8}}\ a{\isadigit{7}}\ a{\isadigit{6}}\ a{\isadigit{5}}\ a{\isadigit{4}}\ a{\isadigit{3}}\ a{\isadigit{2}}\ a{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}meson\ xbefore{\isacharunderscore}inf{\isacharunderscore}absorb{\isacharunderscore}{\isadigit{2}}{\isacharparenright}\isanewline
-\ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{6}}{\isacharcolon}\ {\isachardoublequoteopen}inf\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ a\ {\isacharequal}\ xbefore\ b\ a{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{using}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{2}}\ local{\isachardot}inf{\isachardot}abel{\isacharunderscore}semigroup{\isacharunderscore}axioms\ \isacommand{by}\isamarkupfalse%
-\ presburger\isanewline
-\ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}inf\ b\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharequal}\ inf\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharparenleft}sup\ {\isacharparenleft}xbefore\ a\ b{\isacharparenright}\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{using}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{4}}\ a{\isadigit{9}}\ a{\isadigit{8}}\ a{\isadigit{7}}\ a{\isadigit{6}}\ a{\isadigit{5}}\ a{\isadigit{4}}\ a{\isadigit{3}}\ a{\isadigit{2}}\ a{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}metis\ {\isacharparenleft}full{\isacharunderscore}types{\isacharparenright}\ local{\isachardot}inf{\isachardot}assoc\ local{\isachardot}xbefore{\isacharunderscore}sup{\isacharunderscore}equiv{\isacharunderscore}inf{\isacharparenright}\isanewline
-\ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{7}}{\isacharcolon}\ {\isachardoublequoteopen}inf\ b\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharequal}\ inf\ {\isacharparenleft}sup\ {\isacharparenleft}xbefore\ a\ b{\isacharparenright}\ a{\isacharparenright}\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{using}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{5}}\ a{\isadigit{3}}\ a{\isadigit{2}}\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}simp\ add{\isacharcolon}\ local{\isachardot}inf{\isacharunderscore}sup{\isacharunderscore}distrib{\isadigit{1}}\ local{\isachardot}inf{\isacharunderscore}sup{\isacharunderscore}distrib{\isadigit{2}}\ local{\isachardot}xbefore{\isacharunderscore}inf{\isacharunderscore}equiv{\isacharunderscore}bot{\isacharparenright}\isanewline
-\ \ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{8}}{\isacharcolon}\ {\isachardoublequoteopen}sup\ {\isacharparenleft}xbefore\ a\ b{\isacharparenright}\ a\ {\isacharequal}\ a{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{using}\isamarkupfalse%
-\ a{\isadigit{9}}\ a{\isadigit{8}}\ a{\isadigit{7}}\ a{\isadigit{6}}\ a{\isadigit{5}}\ a{\isadigit{4}}\ a{\isadigit{3}}\ a{\isadigit{2}}\ a{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}metis\ {\isacharparenleft}no{\isacharunderscore}types{\isacharparenright}\ xbefore{\isacharunderscore}sup{\isacharunderscore}absorb{\isacharunderscore}{\isadigit{1}}{\isacharparenright}\isanewline
-\ \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}inf\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharequal}\ bot{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}metis\ f{\isadigit{1}}{\isadigit{1}}\ f{\isadigit{1}}{\isadigit{3}}\ f{\isadigit{1}}{\isadigit{6}}\ local{\isachardot}compl{\isacharunderscore}inf{\isacharunderscore}bot\ local{\isachardot}inf{\isachardot}left{\isacharunderscore}commute\ local{\isachardot}inf{\isacharunderscore}bot{\isacharunderscore}right{\isacharparenright}\isanewline
-\ \ \isacommand{then}\isamarkupfalse%
-\ \isacommand{have}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{9}}{\isacharcolon}\ {\isachardoublequoteopen}inf\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharequal}\ inf\ {\isacharparenleft}sup\ {\isacharparenleft}xbefore\ a\ b{\isacharparenright}\ a{\isacharparenright}\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{using}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{7}}\ f{\isadigit{1}}{\isadigit{3}}\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}simp\ add{\isacharcolon}\ local{\isachardot}inf{\isacharunderscore}sup{\isacharunderscore}distrib{\isadigit{2}}{\isacharparenright}\isanewline
-\ \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}inf\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ sup\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}inf\ b\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
-\ \ \ \ \isacommand{using}\isamarkupfalse%
-\ local{\isachardot}distrib{\isacharunderscore}imp{\isadigit{1}}\ local{\isachardot}inf{\isacharunderscore}sup{\isacharunderscore}distrib{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
+\ local{\isachardot}distrib{\isacharunderscore}imp{\isadigit{2}}\ local{\isachardot}sup{\isacharunderscore}inf{\isacharunderscore}distrib{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
 \ force\isanewline
 \ \ \isacommand{then}\isamarkupfalse%
 \ \isacommand{have}\isamarkupfalse%
-\ {\isachardoublequoteopen}{\isacharminus}\ sup\ {\isacharparenleft}inf\ a\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}xbefore\ a\ b{\isacharparenright}\ {\isacharequal}\ {\isacharminus}\ inf\ {\isacharparenleft}{\isacharminus}\ xbefore\ b\ a{\isacharparenright}\ a{\isachardoublequoteclose}\isanewline
+\ f{\isadigit{1}}{\isadigit{2}}{\isacharcolon}\ {\isachardoublequoteopen}sup\ bot\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharequal}\ inf\ b\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
 \ \ \ \ \isacommand{using}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{0}}\ f{\isadigit{1}}{\isadigit{5}}\ f{\isadigit{1}}{\isadigit{8}}\ f{\isadigit{1}}{\isadigit{9}}\ local{\isachardot}inf{\isacharunderscore}compl{\isacharunderscore}bot\ local{\isachardot}inf{\isacharunderscore}sup{\isacharunderscore}distrib{\isadigit{1}}\ local{\isachardot}sup{\isacharunderscore}commute\ \isacommand{by}\isamarkupfalse%
-\ auto\isanewline
+\ a{\isadigit{7}}\ a{\isadigit{3}}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ local{\isachardot}inf{\isacharunderscore}compl{\isacharunderscore}bot\ local{\isachardot}inf{\isacharunderscore}xbefore{\isacharunderscore}trans\ local{\isachardot}xbefore{\isacharunderscore}neutral{\isacharunderscore}{\isadigit{1}}{\isacharparenright}\isanewline
+\ \ \isacommand{have}\isamarkupfalse%
+\ f{\isadigit{1}}{\isadigit{3}}{\isacharcolon}\ {\isachardoublequoteopen}inf\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}inf\ b\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{using}\isamarkupfalse%
+\ local{\isachardot}double{\isacharunderscore}compl\ local{\isachardot}sup{\isacharunderscore}inf{\isacharunderscore}distrib{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
+\ presburger\isanewline
+\ \ \isacommand{have}\isamarkupfalse%
+\ f{\isadigit{1}}{\isadigit{4}}{\isacharcolon}\ {\isachardoublequoteopen}inf\ a\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharequal}\ xbefore\ b\ a{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{using}\isamarkupfalse%
+\ a{\isadigit{9}}\ a{\isadigit{8}}\ a{\isadigit{7}}\ a{\isadigit{6}}\ a{\isadigit{5}}\ a{\isadigit{4}}\ a{\isadigit{3}}\ a{\isadigit{2}}\ a{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}meson\ xbefore{\isacharunderscore}inf{\isacharunderscore}absorb{\isacharunderscore}{\isadigit{2}}{\isacharparenright}\isanewline
+\ \ \isacommand{have}\isamarkupfalse%
+\ f{\isadigit{1}}{\isadigit{5}}{\isacharcolon}\ {\isachardoublequoteopen}sup\ {\isacharparenleft}sup\ {\isacharparenleft}inf\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}inf\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}{\isacharparenright}{\isacharparenright}\ bot\ {\isacharequal}\ sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}inf\ b\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{using}\isamarkupfalse%
+\ f{\isadigit{1}}{\isadigit{0}}\ a{\isadigit{9}}\ a{\isadigit{8}}\ a{\isadigit{7}}\ a{\isadigit{6}}\ a{\isadigit{5}}\ a{\isadigit{4}}\ a{\isadigit{3}}\ a{\isadigit{2}}\ a{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ {\isacharparenleft}no{\isacharunderscore}types{\isacharparenright}\ local{\isachardot}compl{\isacharunderscore}sup\ local{\isachardot}inf{\isacharunderscore}compl{\isacharunderscore}bot\ local{\isachardot}inf{\isacharunderscore}sup{\isacharunderscore}distrib{\isadigit{2}}\ xbefore{\isacharunderscore}sup{\isacharunderscore}absorb{\isacharunderscore}{\isadigit{1}}{\isacharparenright}\isanewline
+\ \ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}inf\ a\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharequal}\ sup\ {\isacharparenleft}inf\ {\isacharparenleft}xbefore\ b\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}{\isacharparenright}\ bot{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{using}\isamarkupfalse%
+\ f{\isadigit{1}}{\isadigit{4}}\ f{\isadigit{1}}{\isadigit{1}}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ {\isacharparenleft}no{\isacharunderscore}types{\isacharparenright}\ local{\isachardot}compl{\isacharunderscore}inf\ local{\isachardot}inf{\isacharunderscore}compl{\isacharunderscore}bot{\isacharparenright}\isanewline
+\ \ \isacommand{then}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}sup\ {\isacharparenleft}{\isacharminus}\ sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ {\isacharminus}\ inf\ {\isacharparenleft}sup\ {\isacharparenleft}sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{using}\isamarkupfalse%
+\ f{\isadigit{1}}{\isadigit{5}}\ f{\isadigit{1}}{\isadigit{3}}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ {\isacharparenleft}full{\isacharunderscore}types{\isacharparenright}\ local{\isachardot}compl{\isacharunderscore}inf\ local{\isachardot}inf{\isacharunderscore}sup{\isacharunderscore}distrib{\isadigit{2}}\ local{\isachardot}sup{\isacharunderscore}assoc{\isacharparenright}\isanewline
+\ \ \isacommand{then}\isamarkupfalse%
+\ \isacommand{have}\isamarkupfalse%
+\ {\isachardoublequoteopen}sup\ {\isacharparenleft}{\isacharminus}\ sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ sup\ {\isacharparenleft}{\isacharminus}\ a{\isacharparenright}\ {\isacharparenleft}{\isacharminus}\ b{\isacharparenright}{\isacharparenright}\ {\isacharequal}\ a{\isachardoublequoteclose}\isanewline
+\ \ \ \ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}simp\ add{\isacharcolon}\ local{\isachardot}sup{\isacharunderscore}assoc{\isacharparenright}\isanewline
 \ \ \isacommand{then}\isamarkupfalse%
 \ \isacommand{show}\isamarkupfalse%
 \ {\isacharquery}thesis\isanewline
 \ \ \ \ \isacommand{using}\isamarkupfalse%
-\ f{\isadigit{1}}{\isadigit{2}}\ \isacommand{by}\isamarkupfalse%
-\ {\isacharparenleft}metis\ {\isacharparenleft}no{\isacharunderscore}types{\isacharparenright}\ local{\isachardot}compl{\isacharunderscore}eq{\isacharunderscore}compl{\isacharunderscore}iff\ local{\isachardot}inf{\isachardot}abel{\isacharunderscore}semigroup{\isacharunderscore}axioms{\isacharparenright}\isanewline
+\ f{\isadigit{1}}{\isadigit{3}}\ f{\isadigit{1}}{\isadigit{2}}\ f{\isadigit{1}}{\isadigit{0}}\ \isacommand{by}\isamarkupfalse%
+\ {\isacharparenleft}metis\ {\isacharparenleft}no{\isacharunderscore}types{\isacharparenright}\ local{\isachardot}compl{\isacharunderscore}inf\ local{\isachardot}compl{\isacharunderscore}sup\ local{\isachardot}double{\isacharunderscore}compl\ local{\isachardot}inf{\isacharunderscore}compl{\isacharunderscore}bot\ local{\isachardot}sup{\isacharunderscore}assoc\ local{\isachardot}sup{\isacharunderscore}inf{\isacharunderscore}distrib{\isadigit{1}}{\isacharparenright}\isanewline
 \isacommand{qed}\isamarkupfalse%
 %
 \endisatagproof
@@ -507,21 +504,22 @@ They are valid for any instantiation of the \ac{algebra} class as, for example, 
 %
 \endisadelimproof
 \isanewline
-\isanewline
-\isanewline
 \isacommand{end}\isamarkupfalse%
 \isanewline
 %
 \isadelimtheory
+\isanewline
 %
 \endisadelimtheory
 %
 \isatagtheory
+\isacommand{end}\isamarkupfalse%
 %
 \endisatagtheory
 {\isafoldtheory}%
 %
 \isadelimtheory
+\isanewline
 %
 \endisadelimtheory
 %

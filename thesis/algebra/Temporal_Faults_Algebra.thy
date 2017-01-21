@@ -10,13 +10,28 @@ begin
 text {* 
 In the following we present the algebraic laws for the \ac{algebra}. 
 *}
+(*
+notation 
+  inf (infixl "\<and>" 40) and
+  sup (infixl "\<or>" 35) and
+  bot ("\<bottom>") and
+  top ("\<top>") and
+  uminus ("\<not>") and
+  xbefore (infixr "\<rightarrow>" 5) and
+  tempo1 ("tempo\<^sub>1 _" 10) and
+  tempo2 ("tempo\<^sub>2 _" 10) and
+  tempo3 ("tempo\<^sub>3 _" 10) and
+  tempo4 ("tempo\<^sub>4 _" 10) and
+  neutral ("\<one>") and
+  independent_events (infixl "\<triangleleft>\<triangleright>" 9)
+*)
 
-subsection {* Basic \ac{algebra} operators and tempo1 *}
+subsection {* Basic \ac{algebra} operators and $\tempo[1]{}$ *}
 
 class temporal_faults_algebra_basic = boolean_algebra  +
-  fixes neutral :: "'a"
-  fixes xbefore :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"
-  fixes tempo1 :: "'a \<Rightarrow> bool"
+  fixes neutral :: "'a" 
+  fixes xbefore :: "'a \<Rightarrow> 'a \<Rightarrow> 'a"  
+  fixes tempo1 :: "'a \<Rightarrow> bool"  
   assumes xbefore_bot_1: "xbefore bot a = bot"
   assumes xbefore_bot_2: "xbefore a bot = bot"
   assumes xbefore_neutral_1: "tempo1 a \<Longrightarrow> xbefore neutral a = a"
@@ -35,10 +50,10 @@ class temporal_faults_algebra_assoc = temporal_faults_algebra_basic +
 subsection {* Equivalences in the \ac{algebra} and properties *}
     
 class temporal_faults_algebra_equivs = temporal_faults_algebra_assoc +
-  fixes independent_events :: "'a \<Rightarrow> 'a \<Rightarrow> bool"
-  fixes tempo2 :: "'a \<Rightarrow> bool"
-  fixes tempo3 :: "'a \<Rightarrow> bool"
-  fixes tempo4 :: "'a \<Rightarrow> bool"
+  fixes independent_events :: "'a \<Rightarrow> 'a \<Rightarrow> bool" 
+  fixes tempo2 :: "'a \<Rightarrow> bool" 
+  fixes tempo3 :: "'a \<Rightarrow> bool" 
+  fixes tempo4 :: "'a \<Rightarrow> bool" 
   assumes xbefore_inf_equiv_bot: 
     "\<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> inf (xbefore a b) (xbefore b a) = bot"
   assumes xbefore_sup_equiv_inf: 
@@ -217,42 +232,29 @@ proof -
   assume a7: "tempo3 b"
   assume a8: "tempo4 a"
   assume a9: "tempo4 b"
-  then have f10: "- sup (inf a (- b)) (xbefore a b) = inf (sup (- a) (- (- b))) (sup (sup (- a) (- b)) (xbefore b a))"
-    using a8 a7 a6 a5 a4 a3 a2 a1 local.compl_inf local.compl_sup local.not_xbefore by presburger
-  have f11: "sup (- a) (- a) = - a"
-    by auto
-  have f12: "\<forall>f a aa. \<not> abel_semigroup f \<or> f (a::'a) aa = f aa a"
-    by (simp add: abel_semigroup.commute)
-  then have f13: "inf (sup (- a) (- a)) (xbefore b a) = inf (xbefore b a) (- a)"
-    using f11 local.inf.abel_semigroup_axioms by presburger
-  have f14: "inf b (xbefore b a) = inf (xbefore b a) b"
-    using f12 local.inf.abel_semigroup_axioms by blast
-  have f15: "inf a (xbefore b a) = xbefore b a"
+  then have f10: "- xbefore a b = sup (sup (- a) (- b)) (xbefore b a)"
+    using a8 a7 a6 a5 a4 a3 a2 a1 by (meson local.not_xbefore)
+  have f11: "\<forall>a aa ab. inf (a::'a) (sup aa ab) = sup (inf a aa) (inf a ab)"
+    using local.distrib_imp2 local.sup_inf_distrib1 by force
+  then have f12: "sup bot (xbefore b a) = inf b (sup (- b) (xbefore b a))"
+    using a7 a3 by (metis local.inf_compl_bot local.inf_xbefore_trans local.xbefore_neutral_1)
+  have f13: "inf (sup (- a) (- (- b))) (sup (- a) (- b)) = sup (- a) (inf b (- b))"
+    using local.double_compl local.sup_inf_distrib1 by presburger
+  have f14: "inf a (xbefore b a) = xbefore b a"
     using a9 a8 a7 a6 a5 a4 a3 a2 a1 by (meson xbefore_inf_absorb_2)
-  then have f16: "inf (xbefore b a) a = xbefore b a"
-    using f12 local.inf.abel_semigroup_axioms by presburger
-  then have "inf b (xbefore b a) = inf (xbefore b a) (sup (xbefore a b) (xbefore b a))"
-    using f14 a9 a8 a7 a6 a5 a4 a3 a2 a1 by (metis (full_types) local.inf.assoc local.xbefore_sup_equiv_inf)
-  then have f17: "inf b (xbefore b a) = inf (sup (xbefore a b) a) (xbefore b a)"
-    using f15 a3 a2 by (simp add: local.inf_sup_distrib1 local.inf_sup_distrib2 local.xbefore_inf_equiv_bot)
-  have f18: "sup (xbefore a b) a = a"
-    using a9 a8 a7 a6 a5 a4 a3 a2 a1 by (metis (no_types) xbefore_sup_absorb_1)
-  have "inf (xbefore b a) (- a) = bot"
-    by (metis f11 f13 f16 local.compl_inf_bot local.inf.left_commute local.inf_bot_right)
-  then have f19: "inf (sup (- a) (- (- b))) (xbefore b a) = inf (sup (xbefore a b) a) (xbefore b a)"
-    using f17 f13 by (simp add: local.inf_sup_distrib2)
-  have "inf (sup (- a) (- (- b))) (sup (- a) (- b)) = sup (sup (- a) (- a)) (inf b (- b))"
-    using local.distrib_imp1 local.inf_sup_distrib1 by force
-  then have "- sup (inf a (- b)) (xbefore a b) = - inf (- xbefore b a) a"
-    using f10 f15 f18 f19 local.inf_compl_bot local.inf_sup_distrib1 local.sup_commute by auto
+  have f15: "sup (sup (inf (sup (- a) (- b)) (- a)) (inf (xbefore b a) (- a))) bot = sup (- a) (inf b (- b))"
+    using f10 a9 a8 a7 a6 a5 a4 a3 a2 a1 by (metis (no_types) local.compl_sup local.inf_compl_bot local.inf_sup_distrib2 xbefore_sup_absorb_1)
+  have "inf a (- a) = sup (inf (xbefore b a) (- a)) bot"
+    using f14 f11 by (metis (no_types) local.compl_inf local.inf_compl_bot)
+  then have "sup (- sup (- a) (- (- b))) (- sup (- a) (- b)) = - inf (sup (sup (- a) (- b)) a) (- a)"
+    using f15 f13 by (metis (full_types) local.compl_inf local.inf_sup_distrib2 local.sup_assoc)
+  then have "sup (- sup (- a) (- (- b))) (- sup (- a) (- b)) = a"
+    by (simp add: local.sup_assoc)
   then show ?thesis
-    using f12 by (metis (no_types) local.compl_eq_compl_iff local.inf.abel_semigroup_axioms)
+    using f13 f12 f10 by (metis (no_types) local.compl_inf local.compl_sup local.double_compl local.inf_compl_bot local.sup_assoc local.sup_inf_distrib1)
 qed
-
-
 
 end
 
-(*<*)
 end
 (*>*)

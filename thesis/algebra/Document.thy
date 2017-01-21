@@ -10,9 +10,10 @@ begin
 notation (output)
   dlist_xbefore ("_\<rightarrow>_(_)" [80,80,80] 80) and
   xbefore ("_\<rightarrow>_" [80,80] 80) and
-  tempo1 ("vremya\<^sub>1 _" 80) and
-  tempo2 ("vremya\<^sub>2 _" 80) and
-  tempo3 ("vremya\<^sub>3 _" 80) and
+  tempo1 ("tempo\<^sub>1 _" 80) and
+  tempo2 ("tempo\<^sub>2 _" 80) and
+  tempo3 ("tempo\<^sub>3 _" 80) and
+  tempo4 ("tempo\<^sub>4 _" 80) and
   slice ("(3_\<^bsub>[_.._]\<^esub>)"  [80,80,80] 80) and
   slice_left ("(2_\<^bsub>[_..]\<^esub>)" [80,80] 80) and
   slice_right ("(2_\<^bsub>[.._]\<^esub>)" [80,80] 80) and 
