@@ -2704,7 +2704,7 @@ We name these properties as \emph{temporal properties}.
 
 Temporal properties give a more abstract and less restrictive shape on the \ac{XBefore} laws.
 They are abbreviations that some operators satisfy altogether or individually.
-These properties avoid the requirement that every operand of \ac{XBefore} should be a variable \eqref{def:var}.
+These properties avoid the requirement that every operand of \ac{XBefore} should be a variable (\cref{def:var}).
 %The properties are: $\tempo[1]{}$ (\cref{def:tempo1}), $\tempo[2]{}$ (\cref{def:tempo2}), $\tempo[3]{}$ (\cref{def:tempo3}), and $\tempo[4]{}$ (\cref{def:tempo4}). 
 %\todo{Explain temporal properties with respect to Figure 1 about relation of events? At least make it clearer.}
 %
@@ -2738,12 +2738,79 @@ So, if a generator is in the beginning of a list, it must not be at the end (and
 For example, let $zs = \listsin{z_0,z_1,z_2,z_3,z_4}$.
 If $\listsin{z_0,z_1} \in \denote{S}$, thus $\listsin{z_3,z_4} \notin \denote{S}$.
 Note that it is vague, but it is the first relation indication on the lists of $S$.
+In this property, as $zs$ has no repeated elements, then there is no element that is in both sublists.
+
+In what follows we show how variables satisfy $\tempo[]{}$ properties.
+The denotational semantics of $\var{z_1}$ (for generators $z_1,z_2,z_3$) is:
+%
+\begin{align}
+\denote{\var{z_1}} = & 
+  \left\{
+  \listsin{z_1}, 
+  \listsin{z_1,z_2},\listsin{z_2,z_1},
+  \listsin{z_1,z_3},\listsin{z_3,z_1},
+  \listsin{z_1,z_2,z_3},\listsin{z_1,z_3,z_2},
+  \right.
+  \nonumber\\
+  &
+  \left.
+  \listsin{z_2,z_1,z_3},\listsin{z_2,z_3,z_1},
+  \listsin{z_3,z_1,z_2},\listsin{z_3,z_2,z_1}
+  \right\}
+\end{align}
+
+Given the denotational, semantics, we demonstrate that the property $\tempo[1]{}$ is satisfied:
+\begin{align}
+\listsin{z_1} \in \denote{S} \implies & 
+  \listsin{z_2} \notin \denote{S} \land
+  \listsin{z_3} \notin \denote{S} \land
+  \listsin{z_2,z_3}\notin \denote{S} \land
+  \listsin{z_3,z_2}\notin \denote{S}\nonumber\\
+%%%%%
+\listsin{z_1,z_2} \in \denote{S} \implies &
+  \listsin{z_3} \notin \denote{S}\nonumber\\
+%%%%%
+\listsin{z_2,z_1} \in \denote{S} \implies &
+  \listsin{z_3} \notin \denote{S}\nonumber\\
+%%%%%
+\listsin{z_1,z_3} \in \denote{S} \implies &
+  \listsin{z_2} \notin \denote{S}\nonumber\\
+%%%%%
+\listsin{z_3,z_1} \in \denote{S} \implies &
+  \listsin{z_2} \notin \denote{S}\nonumber\\
+%%%%%
+\listsin{z_1,z_2,z_3} \in \denote{S} \implies &
+  \listsin{} \notin \denote{S}\nonumber\\
+%%%%%
+&\ldots\nonumber
+\end{align}
 
 The second temporal property is about belonging to one sublist in the beginning or in the end.
 For example, if a generator is in a list, then it must be at the beginning or at the end.
 If $\listsin{z_0,z_1,z_2,z_3,z_4} \in \denote{S}$, thus either $\listsin{z_0}\in\denote{S}$, or $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 If $\listsin{z_0} \notin \denote{S}$, thus $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 Then, either $\listsin{z_1} \in \denote{S}$ or $\listsin{z_2,z_3,z_4} \in \denote{S}$, and so forth.
+For variable $\var{z_1}$:
+%
+\begin{align}
+\listsin{z_1} \in \denote{S} \iff &
+  \listsin{z_1} \in \denote{S} \lor \listsin{} \in \denote{S}\nonumber\\
+%%%%%
+\listsin{z_1,z_2} \in \denote{S} \iff &
+  \listsin{z_1} \in \denote{S} \lor \listsin{z_2} \in \denote{S}\nonumber\\
+%%%%%
+\listsin{z_1,z_2,z_3} \in \denote{S} \iff &
+  \left(\listsin{z_1} \in \denote{S} \lor \listsin{z_2,z_3} \in \denote{S}\right) \land\nonumber\\
+  &\left(\listsin{z_1,z_2} \in \denote{S} \lor \listsin{z_3} \in \denote{S}\right)
+  \nonumber\\
+%%%%%
+\listsin{z_2,z_1,z_3} \in \denote{S} \iff &
+  \left(\listsin{z_2} \in \denote{S} \lor \listsin{z_1,z_3} \in \denote{S}\right) \land\nonumber\\
+  &\left(\listsin{z_2,z_1} \in \denote{S} \lor \listsin{z_3} \in \denote{S}\right)
+  \nonumber\\
+& \ldots\nonumber
+\end{align}
+
 %
 %\begin{definition}[\Tempotext 2, belongs to one sublist in the beginning or at the ending]
 %\label{def:tempo2}
@@ -2753,30 +2820,60 @@ Then, either $\listsin{z_1} \in \denote{S}$ or $\listsin{z_2,z_3,z_4} \in \denot
 
 The third temporal property is about belonging to one sublist in the middle.
 If a generator belongs to a sublist between $j$ and $i$, then it belongs to the sublist that starts at first position and ends in $j$ and to the sublist that starts at $i$ and ends at the last position (both sublists contain the sublist in the middle).
-For example, if $\listsin{z_1,z-2,z_3} \in \denote{S}$, then both $\listsin{z_0,z_1,z_2}$
+For example, if $\listsin{z_1,z_2,z_3} \in \denote{S}$, then both $\listsin{z_0,z_1,z_2,z_3}$ and $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 %
 %\begin{definition}[\Tempotext 3, belongs to the middle of a sublist]
 %\label{def:tempo3}
 %Let $S$ be a set of \distinctlists:
 %\end{definition}
 %
+\begin{align}
+\listsin{z_1} \in \denote{S} \iff &
+  \listsin{z_1} \in \denote{S} \land \listsin{z_1} \in \denote{S}\land\nonumber\\
+  & \listsin{z_2,z_1} \in \denote{S} \land \listsin{z_1} \in \denote{S} \land\nonumber\\
+  & \listsin{z_3,z_1} \in \denote{S} \land \listsin{z_1} \in \denote{S} \land\nonumber\\
+  & \listsin{z_1} \in \denote{S} \land \listsin{z_1,z_2} \in \denote{S} \land\nonumber\\
+  & \listsin{z_1} \in \denote{S} \land \listsin{z_1,z_3} \in \denote{S} \land\nonumber\\
+  & \listsin{z_2,z_1} \in \denote{S} \land \listsin{z_1,z_3} \in \denote{S}\land\nonumber\\
+  & \listsin{z_3,z_1} \in \denote{S} \land \listsin{z_1,z_2} \in \denote{S}\nonumber\\
+%%%%%
+\listsin{z_1,z_2} \in \denote{S} \iff &
+  \listsin{z_3,z_1,z_2} \in \denote{S} \land \listsin{z_1,z_2} \in \denote{S}\nonumber\\
+  & \listsin{z_1,z_2} \in \denote{S} \land \listsin{z_1,z_2,z_3} \in \denote{S}\nonumber\\
+%%%%%
+  & \ldots\nonumber
+\end{align}
 
 Finally, if a generator belongs to a list, then there is a sublist of size one that contains the generator.
+If list $zs=\listsin{z_0,z_1,z_2,z_3,z_4} \in \denote{S}$, then one list $\listsin{z_i} \in \denote{S}$, where $i \in \left\{0,\ldots,4\right\}$.
+For a variable $\var{z_1}$
 %
 %\begin{definition}[\Tempotext 4, belongs to one sublist of size one]
 %\label{def:tempo4}
 %Let $S$ be a set of \distinctlists:
 %\end{definition}
 %
+\begin{align}
+\listsin{z_1} \in \denote{S} \iff 
+  & \listsin{z_1} \in \denote{S}\nonumber\\
+%%%%%
+\listsin{z_1,z_2} \in \denote{S} \iff
+  & \listsin{z_1} \in \denote{S} \lor \listsin{z_2} \in \denote{S}\nonumber\\
+%%%%%
+\listsin{z_1,z_2,z_3} \in \denote{S} \iff
+  & \listsin{z_1} \in \denote{S} \lor \listsin{z_2} \in \denote{S} \lor \listsin{z_3} \in \denote{S}\nonumber\\
+%%%%%
+  & \ldots\nonumber
+\end{align}
 
-Variables have all four temporal properties. For a generator $x$, the following is valid:
+In general, for any generator $z$, the following is valid:
 %
 \begin{equation}
 \label{law:var-tempo}
-\tempo[1]{\left(\var{x}\right)} \land
-\tempo[2]{\left(\var{x}\right)} \land
-\tempo[3]{\left(\var{x}\right)} \land
-\tempo[4]{\left(\var{x}\right)}
+\tempo[1]{\left(\var{z}\right)} \land
+\tempo[2]{\left(\var{z}\right)} \land
+\tempo[3]{\left(\var{z}\right)} \land
+\tempo[4]{\left(\var{z}\right)}
 \end{equation}
 
 \begin{sloppypar}
