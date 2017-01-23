@@ -2630,20 +2630,79 @@ A variable in \ac{algebra} is defined by one generator, and denotes its occurren
 %
 where $\mathop{set}zs$ is the set of the elements of $zs$, and $x \in zs$ is defined as $x \in \mathop{set} zs$.
 
+For example, for generators $a$ and $b$, we obtain the following denotational semantics:
+%
+\begin{subequations}
+\begin{align}
+\denote{\var{a}} = & \left\{\listsin{a}, \listsin{a,b}, \listsin{b,a}\right\}\label{eq:denotational-var-a}\\
+%
+\denote{\var{b}} = & \left\{\listsin{b}, \listsin{a,b}, \listsin{b,a}\right\}\label{eq:denotational-var-b}
+\end{align}
+\end{subequations}
+
+Given this definition, we show a small example on how the \ac{XBefore} operator works:
+%
+\begin{align}
+\text{For } zs = \listsin{} \text{, } &
+  \listsin{} \notin \denote{\var{a}} \land 
+  \listsin{} \notin \denote{\var{b}} 
+  \implies\nonumber\\
+  & \listsin{} \notin \denote{\xbefore{\var{a}}{\var{b}}} \nonumber\\
+%%%%%
+\text{For } zs = \listsin{a} \text{, } &
+  \listsin{a} \in \denote{\var{a}} \land 
+  \listsin{a} \notin \denote{\var{b}} \land 
+  \listsin{} \notin \denote{\var{b}} 
+  \implies\nonumber\\
+  & \listsin{a} \notin \denote{\xbefore{\var{a}}{\var{b}}} \nonumber\\
+%%%%%
+\text{For } zs = \listsin{b} \text{, } &
+  \listsin{b} \in \denote{\var{b}} \land
+  \listsin{b} \notin \denote{\var{a}} \land 
+  \listsin{} \notin \denote{\var{a}} 
+  \implies\nonumber\\
+  & \listsin{b} \notin \denote{\xbefore{\var{a}}{\var{b}}} \nonumber\\
+%%%%%
+\text{For } zs = \listsin{a,b} \text{, } &
+  \listsin{a} \in \denote{\var{a}} \land 
+  \listsin{b} \in \denote{\var{b}} 
+  \implies\nonumber\\
+  & \listsin{a,b} \in \denote{\xbefore{\var{a}}{\var{b}}} \nonumber\\
+%%%%%
+\text{For } zs = \listsin{b,a} \text{, } &
+  \listsin{b} \notin \denote{\var{a}} \land 
+  \listsin{} \notin \denote{\var{a}} \land 
+  \listsin{b,a} \in \denote{\var{a}} \land\nonumber\\
+  & \listsin{} \notin \denote{\var{b}} \land 
+  \listsin{a} \notin \denote{\var{b}} \land
+  \listsin{b,a} \in \denote{\var{b}}
+  \implies\nonumber\\
+  & \listsin{b,a} \notin \denote{\xbefore{\var{a}}{\var{b}}} \nonumber\\
+%%%%%
+\denote{\xbefore{\var{a}}{\var{b}}} = & \left\{\listsin{a,b}\right\}
+\end{align}
+
 Boolean\index{Boolean} operators are denoted as in \ac{FBA}:
 \begin{subequations}
 \begin{align}
-\denote{S \land T} & = \denote{S} \inter \denote{T}\\
+\denote{S \land T} & = \denote{S} \inter \denote{T}\label{eq:denotational-inf}\\
 %%%%%%%%%%%%%%%%%
-\denote{S \lor T} & = \denote{S} \union \denote{T}\\
+\denote{S \lor T} & = \denote{S} \union \denote{T}\label{eq:denotational-sup}\\
 %%%%%%%%%%%%%%%%%
-\denote{\lnot S} & = - \denote{S}\\
+\denote{\lnot S} & = - \denote{S} \label{eq:denotational-complement}\\
 %%%%%%%%%%%%%%%%%
-\denote{\bot} &= \False\\
+\denote{\bot} &= \False\label{eq:denotational-bot}\\
 %%%%%%%%%%%%%%%%%
-\denote{\top} &= \True
+\denote{\top} &= \True\label{eq:denotational-top}
 \end{align}
 \end{subequations}
+
+$\True$ is the universal set, that contain all permutations of the generators of size $0$ to the number of the generators.
+For example, if the generators are $a$ and $b$, then $\True$ is:
+%
+\[
+\left\{~ \listsin{}, \listsin{a}, \listsin{b}, \listsin{a,b}, \listsin{b,a} ~\right\}
+\]
 
 
 The following expressions are sufficient to define the \ac{algebra} in terms of an inductively defined set ($\algebraset$):
@@ -2666,6 +2725,18 @@ The following expressions are sufficient to define the \ac{algebra} in terms of 
 \end{align}
 \end{subequations}
 
+The \ac{NOT} operator is given in terms of $\True$.
+For example, for generators $a$ and $b$:
+\begin{align}
+\denote{\lnot \var{a}} = & - \denote{\var{a}} & \text{by \cref{eq:denotational-complement}}\nonumber\\
+%%%%%
+= & - \left\{\listsin{a}, \listsin{a,b}, \listsin{b,a}\right\} & \text{by \cref{eq:denotational-var-a}} \nonumber\\
+%%%%%
+= & \left\{ \listsin{}, \listsin{a}, \listsin{b}, \listsin{a,b}, \listsin{b,a} \right\} - \left\{\listsin{a}, \listsin{a,b}, \listsin{b,a}\right\} \nonumber\\
+%%%%%
+= & \left\{\listsin{}, \listsin{b}\right\}
+\end{align}
+
 The following expressions are valid for generators $a$ and $b$ and are sufficient to show that the generators are independent:
 %
 \begin{subequations}
@@ -2684,17 +2755,17 @@ The following expressions are valid for generators $a$ and $b$ and are sufficien
 \end{align}
 \end{subequations}
 
-Expressions \eqref{def:algebraset-var} to \eqref{def:algebraset-sup} and \eqref{eqs:generators-independence-eq-eq} to \eqref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \eqref{def:xbefore-append} forms a Boolean\index{Boolean Algebra} algebra based on sets of lists.
+Expressions \cref{def:algebraset-var} to \cref{def:algebraset-sup} and \cref{eqs:generators-independence-eq-eq} to \cref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \cref{def:xbefore-append} forms a Boolean\index{Boolean Algebra} algebra based on sets of lists.
 And this is also equivalent to \iac{FBA}\index{Boolean Algebra!Free} with the same generators.
 
 We denote the set of generators $\generators(S)$ of a formula $S$ as:
 \begin{equation}
-\generators(S) = \bigcup_{xs \in S} \listset{xs}\label{eq:generators}
+\generators(S) = \bigcup_{xs \in \denote{S}} \listset{xs}\label{eq:generators}
 \end{equation}
 %
 The generators of \ac{algebra} are $\generators(\True)$, or simply $\generators$.
 
-In our previous work~\cite{DM2015} we stated a relation of \ac{XBefore} and \emph{supremum}, provided the operands are variables \eqref{def:var}.
+In our previous work~\cite{DM2015} we stated a relation of \ac{XBefore} and \emph{supremum}, provided the operands are variables \cref{def:var}.
 Now we generalise this relation in terms of abstract properties of the operands of the \ac{XBefore}.
 We name these properties as \emph{temporal properties}.
 %and show them in \cref{sec:temporal-properties}.
@@ -2878,7 +2949,7 @@ In general, for any generator $z$, the following is valid:
 
 \begin{sloppypar}
 In our previous work~\cite{DM2015} we used set difference to specify the \ac{XBefore} operator.
-Provided $\tempo[1]{S}$ and $\tempo[1]{T}$, \ac{XBefore} in~\cite{DM2015} is equivalent to \eqref{def:xbefore-append}:
+Provided $\tempo[1]{S}$ and $\tempo[1]{T}$, \ac{XBefore} in~\cite{DM2015} is equivalent to \cref{def:xbefore-append}:
 %
 \begin{align}
 \denote{\xbefore{S}{T}} = &\left\{ zs ~\middle|~ \exists xs, ys ~\bullet~ xs \in \denote{S}-\denote{T} \land ys \in \denote{T}-\denote{S} \land \right.\nonumber\\
@@ -2926,20 +2997,24 @@ The following formulas are \emph{not} in \ac{DNF}:
 \end{align*}
 
 \begin{sloppypar}
-But to transform the last two formulas into \ac{DNF}, one can use Laws \eqref{thm:xbefore-sup-1},~\eqref{thm:xbefore-sup-2},~\eqref{thm:xbefore-inf-1} and~\eqref{thm:xbefore-inf-2}, for instance.
+But to transform the last two formulas into \ac{DNF}, one can use \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:xbefore-inf-1,thm:xbefore-inf-2}, for instance.
 \end{sloppypar}
 
 We define events independence ($\independenteventsop$) as the property that one operand does not imply the other.
-For example, we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \union \var{b}$ (it results in $\False$, see \eqref{thm:xbefore-not-idempotent}).
+For example, we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \lor \var{b}$ (it results in $\False$, see \cref{thm:xbefore-not-idempotent}).
 %
 \begin{equation}
 \label{law:independent-events}
-\denote{\independentevents{S}{T}} = \forall i, zs ~\bullet~
+\independentevents{S}{T} = \forall i, zs ~\bullet~
   \lnot \left(
     \slice{zs}{i}{\left(i+1\right)} \in \denote{S} \land
     \slice{zs}{i}{\left(i+1\right)} \in \denote{T}
   \right)
 \end{equation}
+
+For generators $a$ and $b$ and the denotational semantics of $\var{a}$ and $\var{b}$ (see \cref{eq:denotational-var-a,eq:denotational-var-b}), it is easy to check that $\independentevents{\var{a}}{\var{b}}$ is satisfied, and $\independentevents{\var{a}}{\left(\var{a} \lor \var{b}\right)}$ is not.
+Essentially if the formulas contain independent events one must not imply on the other on the occurrence of individual events ($\slice{zs}{i}{\left(i+1\right)}$).
+
 
 The absence of occurrences ($\False$, the empty set of $\algebraset$) is a ``0'' for the \ac{XBefore} operator.
 The negation of all events ($\left\{\left[\right]\right\}$, a formula with the empty list) is a ``1'' for the \ac{XBefore} operator.
@@ -3018,7 +3093,7 @@ The union of symmetrical \acp{XBefore} is a partition of the intersection of the
 
 In our previous work~\cite{DM2015}, we stated that $S$ and $T$ had to be variables, for example, of the form $\var{s}$ and $\var{t}$.
 Now, each law requires that the operands satisfy some of the temporal properties, avoiding using variables explicitly.
-%So, as variables satisfy all temporal properties and by \eqref{thm:xbefore-sup-equiv-inf}, our theorem ``Exclusive before \emph{supremum}'' is still valid.
+%So, as variables satisfy all temporal properties and by \cref{thm:xbefore-sup-equiv-inf}, our theorem ``Exclusive before \emph{supremum}'' is still valid.
 
 Boolean\index{Boolean Algebra} operators are used as operands of the \ac{XBefore} in the following laws.
 %
@@ -3078,7 +3153,7 @@ Thus it is not distributive with \ac{XBefore}.
 The intersection of an event with an \ac{XBefore} states that such an event can occur in any order within the events in the \ac{XBefore}.
 Lastly, the \ac{XBefore} is transitive with preconditions over the intermediary variable.
 
-The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer if we expand \eqref{thm:and_xbefore_equiv_or_xbefore} with \eqref{thm:xbefore-inf-1} and ~\eqref{thm:xbefore-inf-2}:
+The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer if we expand \cref{thm:and_xbefore_equiv_or_xbefore} with \cref{thm:xbefore-inf-1} and  \cref{thm:xbefore-inf-2}:
 %
 %\begin{subequations}
 \begin{align}
@@ -3103,7 +3178,7 @@ The law name, unordered, of \eqref{thm:and_xbefore_equiv_or_xbefore} is clearer 
 \end{align}
 %\end{subequations}
 %
-%From \eqref{thm:xbefore-not-idempotent} and~\eqref{thm:and_xbefore_equiv_or_xbefore}, intersection and \ac{XBefore} also have an absorption law.
+%From \cref{thm:xbefore-not-idempotent} and \cref{thm:and_xbefore_equiv_or_xbefore}, intersection and \ac{XBefore} also have an absorption law.
 
 In what follows we show properties of \ac{XBefore} related to the \ac{NOT} operators.
 %
