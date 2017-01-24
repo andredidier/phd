@@ -35,8 +35,8 @@
 \usepackage{textcomp}
 %Quantas vezes e em quais páginas a referência foi citada
 %\usepackage[english,hyperpageref]{backref}
-\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm]{todonotes} % NOTAS
-\usepackage[draft]{fixme}
+\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm,disable]{todonotes} % NOTAS
+\usepackage[final]{fixme}
 \usepackage{soul}
 
 \usepackage{indentfirst}
@@ -148,7 +148,7 @@
 %% Change the following pdf author attribute name to your name.
 \autor{André Luís Ribeiro Didier}
 \titulo{An Algebra of Temporal Faults}
-\data{2016}
+\data{2017}
 \instituicao{%
 Federal University of Pernambuco%
 \par
@@ -452,6 +452,7 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\activationcmd{\ensuremath\mathrm{activation}}
 \newcommand{\activation}[2]{\activationcmd\left(#1, #2\right)}
 \def\neutral{\ensuremath\mathrm{\mathbf{1}}}
+\newcommand{\logicInFormula}[1]{\ensuremath\mathtt{#1}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \makeindex
@@ -3549,16 +3550,16 @@ Thus the predicate evaluates to either \emph{true}~($\top$) or \emph{false}~($\b
 In what follows we show a sketch of the denotational semantics of \ac{activation}.
 %
 \begin{align*}
-  \ac{activation}InFormula{\left(P_1, O_1\right)} &\mapsto \{\left(P_1, O_1\right)\}\\
+  \logicInFormula{\left(P_1, O_1\right)} &\mapsto \{\left(P_1, O_1\right)\}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \ac{activation}InFormula{\left(P_1, O_1\right) | \left(P_2, O_2\right)} &\mapsto
+  \logicInFormula{\left(P_1, O_1\right) | \left(P_2, O_2\right)} &\mapsto
     \{\left(P_1, O_1\right), \left(P_2, O_2\right)\}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \ac{activation}InFormula{Nominal~100} &\mapsto \Nominal{100}\\
+  \logicInFormula{Nominal~100} &\mapsto \Nominal{100}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \ac{activation}InFormula{Nominal~undefined} &\mapsto \Nominal{\undefinednominal}\\
+  \logicInFormula{Nominal~undefined} &\mapsto \Nominal{\undefinednominal}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \ac{activation}InFormula{Failure~Omission} &\mapsto \Failure{Omission}
+  \logicInFormula{Failure~Omission} &\mapsto \Failure{Omission}
 \end{align*}
 %
 In an expression, if the $i$th predicate evaluates to $true$ ($\top$), we say that the $i$th operational mode is \emph{activated}.
@@ -3597,7 +3598,7 @@ All definitions in this \lcnamecref{sec:healthiness-conditions} refer to an alge
   \item[tautology:] the expression always evaluates to \emph{true}.
 \end{description}
 
-\subsection{$\healthiness[1]$: No predicate is a contradiction.}
+\subsection[H \#1: No predicate is a contradiction]{$\healthiness[1]$: No predicate is a contradiction.}
 \label{sec:h1}
 
 This property is very simple and it is used to eliminate any term that has a predicate that always evaluates to false.
@@ -3617,7 +3618,7 @@ Applying the first healthiness condition to our example results in:
 
 Thus, we conclude that $S$ \emph{is} $\healthy[1]$.
 
-\subsection{$\healthiness[2]$: All possibilities are covered.}
+\subsection[H \#2: All possibilities are covered]{$\healthiness[2]$: All possibilities are covered.}
 \label{sec:h2}
 
 This property is used to make explicit that there are uncovered operational modes.
@@ -3649,7 +3650,7 @@ Applying the second healthiness condition to our example results in the followin
 
 Thus, we conclude that $S$ \emph{is not} $\healthy[2]$.
 
-\subsection{$\healthiness[3]$: There are no two terms with exactly the same operational mode.}
+\subsection[H \#3: There are no two terms with exactly the same operational mode.]{$\healthiness[3]$: There are no two terms with exactly the same operational mode.}
 \label{sec:h3}
 This property merges terms that contain the same operational mode.
 It avoids unnecessary formulas and may reduce the expression.
