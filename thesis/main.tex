@@ -371,11 +371,7 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 %\def\maxop{\ensuremath\operatorname{max}}
 %\newcommand{\max}[1]{\ensuremath\maxop #1}
 \def\algebraset{\ensuremath\mathbf{atf}}
-%TODO remove tracetoboolop
-\def\tracetoboolop{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny B}}}}
 \def\tracetofba{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny F}}}}
-%TODO remove tracetoalgebraop
-\def\tracetoalgebraop{\ensuremath\operatorname{\stackrel{\leadsto}{\text{\tiny XB}}}}
 \newcommand{\tracetoalgebra}[1]{\ensuremath\langle{#1}\rangle_{XB}}
 \newcommand{\tracetobool}[1]{\ensuremath\langle{#1}\rangle_{bool}}
 \newcommand{\trace}[1]{\ensuremath\left[~#1~\right]}
@@ -922,8 +918,6 @@ The contributions cover the following scenarios, presented as a case study in \c
   \item From a model in \simulink, obtain the failure expression of a critical failure, analyse the ordering relation of fault events, and verify its acceptance criteria;
   \item Given a set of \ac{FT} structure expressions, verify which fault combinations analysis are missing.
 \end{enumerate}
-
-%We omit the proofs in the paper, but they are available in Online Resource 1.\todo{publish theory files online: ``Specialized format such as .pdb (chemical), .wrl (VRML), .nb (Mathematica notebook), and .tex can also be supplied.''}
 
 \section{Thesis organization}
 
@@ -1782,8 +1776,6 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
 \label{sec:structure-expression-analysis}
 
 In this \lcnamecref{sec:structure-expression-analysis} we explain the difference of stateful and stateless methods to analyse structure expressions and detail the stateless methods.
-%As \acp{DFT} originally employs \ac{DTMC} analysis, the methods to analyse are generally state-based
-%\todo{cite all dft works that are state-based}.
 Another common approach to analyse \iac{FT} is to perform structure expression analysis based on algebraic laws.
 Boolean\index{Boolean Algebra} laws are well-known and are used for \acp{SFT}, temporal laws~\cite{Walker2009,WP2010} for \acp{TFT}, and the works reported in~\cite{Merle2010,MRL2011} show laws for \acp{DFT}.
 An issue with algebraic laws is that, in some cases, the expression needs to be expanded before it gets reduced, so reduction automation is not trivial without a theorem prover.
@@ -3814,12 +3806,42 @@ We present the \simulink model for this monitor in \cref{fg:blockDiagramMonitorI
 
 %As we mentioned in~\cref{sec:faults-injection} we translated the monitor to \ac{CSPm} according to our strategy and modified the observer to make \acs{FDR} generate more counter-examples.
 
-Now we show four contributions:
+The work reported in~\cite{Andrews2001} shows an example of \iac{FT} with an explicit \ac{NOT} operator, the importance of such an operator, and how to calculate the probability of a critical failure.
+The system is a leak protection system that has valves and sensors, and is depicted in \cref{fig:leak-protection-system}.
+The valves closes a gas flow if the sensor detects a leak.
+If the valve is closed for a certain amount of time, the pressure on the system may increase, and then, a relief valve diverts the gas flow elsewhere.
+The possible failure are all internal failures: 
+%
+\begin{description}
+  \item[prv:] the pressure relief valve fails;
+  \item[i_1:] there is an ignition source in room 1;
+  \item[l:] there is a gas leak in room 1;
+  \item[val:] the isolation valve fails.
+\end{description}
+
+We associate these faults events as:
+\begin{align*}
+PRV = &\var{prv}\\
+I_1 = &\var{i_1}\\
+L = &\var{l}\\
+VAL = & \var{val}
+\end{align*}
+
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.5]{leak-protection-system}
+  \caption{Leak Protection System architectural view}
+  \label{fig:leak-protection-system}
+\end{figure}
+
+Now we show five contributions:
 \begin{alineasinline}
   \item using \ac{algebra}, but only with Boolean\index{Boolean Algebra} operators, thus ignoring ordering, we can obtain the same results obtained in~\cite{DM2012}, 
   \item representing each of the fault traces reported in~\cite{DM2012} as a term in our proposed \ac{algebra}, using the mapping function shown in \cref{sec:mapping-cspm-algebra},
-  \item modelling faults of the monitor using \ac{activation}, using expressions in Boolean Algebra\index{Boolean Algebra}, and
-  \item modelling faults of the monitor with \ac{activation}, but using \ac{algebra} as the inner algebra.
+  \item modelling faults of the monitor using \ac{activation}, using expressions in Boolean Algebra\index{Boolean Algebra}, 
+  \item modelling faults of the monitor with \ac{activation}, but using \ac{algebra} as the inner algebra, and
+  \item obtaining failure probability from a formula with explicit \ac{NOT} operators.
 \end{alineasinline}
 %
 Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cref{sec:faults-injection}, we associate the fault events as:
@@ -4394,6 +4416,12 @@ Thus, $System_{XB}$ fails with $LP$ if:
 \end{itemize}
 %
 Note that if the monitor fails before the failure of the first power source, it fails to detect the operational mode of the first power source and switches to the second power source, which is in a nominal state (see expression $\lnot B_2 \land \xbefore{F}{B_1}$ in \cref{eq:h-systemalgebra}).
+
+\section{Obtaining top-event probability with explicit \ac*{NOT} operators}
+\label{sec:top-event-probabihlity-explicit-not}
+
+The work reported in~\cite{Andrews2001} shows a case-study with an explicit \ac{NOT} operator.
+It is a leak protection system 
 
 \chapter{Conclusion}
 \label{sec:conclusion}
