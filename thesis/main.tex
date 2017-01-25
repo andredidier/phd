@@ -557,7 +557,6 @@ Ao contrário de descartar tal informação de ordenamento, poderíamos usá-la 
 No presente trabalho apresentamos: (i) uma álgebra temporal de falhas (com noção de propagação de falhas) para analisar defeitos em sistemas e provamos que ela é de fato uma álgebra Booleana, e (ii) uma lógia de ativação parametrizada para expressar comportamentos nominais e de falha, incluindo a modelagem de falhas a partir de uma álgebra e um conjunto de modos de operação.
 A álgebra permite herdar as propriedades de álgebras Booleanas, leis e técnicas de redução existentes, as quais são muito benéficas para a modelagem e análise de falhas.
 Com expressões na álgebra temporal de falhas nós permitimos a verificação de propriedades de segurança (\emph{safety}) baseadas em Árvores de Falhas Estáticas, Temporais ou Dinâmicas.
-%Mostramos como usar a lógica de ativação conjuntamente com a álgebra temporal de falhas para analisar a ocorrência e propagação de falhas relacionadas.
 A lógica criada neste trabalho pode ser usada com outras álgebras além das apresentadas.
 Sendo usada em conjunto com a álgebra temporal de falhas, tem a intenção de ajudar os analistas a considerar todas as possíveis situações em expressões complexas com operadores relacionados ao ordenamento das falhas, evitando esquecer combinações de falhas sutis (porém relevantes).
 Além disso, nossa álgebra temporal de falhas trata operadores NOT, que têm sido deixados de fora em outros trabalhos.
@@ -3375,7 +3374,7 @@ S = & \var{f_1} \land \var{f_2} \land \lnot \var{f_3}
 = & P_1(t) \times P_2(t) \times \left(1 - P_3(t)\right) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf}}
 \end{align}
 
-Finally, using \cref{eq:formula-probability}, and for generators $f_1$ and $f_2$, we demonstrate the equivalence to \cref{eq:or-probability} (the probability of \iac{OR} operator), calculated using the denotational semantics:
+Using \cref{eq:formula-probability}, and for generators $f_1$ and $f_2$, we demonstrate the equivalence to \cref{eq:or-probability} (the probability of \iac{OR} operator), calculated using the denotational semantics:
 %
 \begin{align}
 S = & \vari{1} \lor \vari{2}\nonumber\\
@@ -3395,6 +3394,50 @@ S = & \vari{1} \lor \vari{2}\nonumber\\
   & P_1(t) \times P_2(t)\nonumber\\
 = & P_1(t) + P_2(t) - P_1(t) \times P_2(t)
 \end{align}
+
+We show an equivalence using the formula probability $\formulaprobop$ for generators $f_1$ and $f_2$:
+\begin{align}
+\formulaprob{\var{f_1} \land \var{f_2}} = &~ \formulaprob{\var{f_1}} \times \formulaprob{\var{f_2}}\label{eq:formula-probability-of-inf}\\
+%%%%%
+\denotationalprob{\listsin{f_1,f_2}} + \denotationalprob{\listsin{f_2,f_1}} = &~
+  \left(\denotationalprob{\listsin{f_1}} + 
+     \denotationalprob{f_1,f_2} + 
+     \denotationalprob{f_2,f_1}\right) \times\nonumber\\
+  &~\left(\denotationalprob{\listsin{f_2}} + 
+    \denotationalprob{f_1,f_2} + 
+    \denotationalprob{f_2,f_1}\right)\nonumber\\
+%%%%%
+P_1(t) \times P_2(t) = &~ 
+  \left(P_1(t) \times (1 - P_2(t)) + P_1(t) \times P_2(t)\right) \times\nonumber\\
+  &~ \left(P_2(t) \times (1 - P_1(t)) + P_1(t) \times P_2(t)\right) \nonumber\\
+%%%%%
+= &~
+  \left(P_1(t) - P_1(t)\times P_2(t) + P_1(t) \times P_2(t)\right) \times\nonumber\\
+  &~ \left(P_2(t) - P_2(t) \times P_1(t)) + P_1(t) \times P_2(t)\right) \nonumber\\
+%%%%%
+= &~
+  P_1(t) \times P_2(t)\nonumber
+\end{align}
+
+Finally, we propose that the formula probability calculation of a greater set of generators is the same of a smaller one.
+For example, for $\var{f_1} \land \var{f_2}$ and generators $f_1$, $f_2$ ,and $f_3$:
+\begin{align}
+\formulaprob{\var{f_1} \land \var{f_2}} =&~
+  \denotationalprob{\listsin{f_1,f_2}} +
+  \denotationalprob{\listsin{f_2,f_1}} + \nonumber\\
+  &~\denotationalprob{\listsin{f_1,f_2,f_3}} +
+  \ldots +
+  \denotationalprob{\listsin{f_3,f_2,f_1}} \nonumber\\
+%%%%%
+= &~ P_1(t) \times P_2(t) \times (1 - P_3(t)) + P_1(t) \times P_2(t) \times P_3(t)\nonumber\\
+%%%%%
+= &~ P_1(t) \times P_2(t) - P_1(t) \times P_2(t) \times P_3(t) + \nonumber\\
+  &~ P_1(t) \times P_2(t) \times P_3(t)\nonumber\\
+%%%%%
+= &~ P_1(t) \times P_2(t)\label{eq:formula-probability-any-generators}
+\end{align}
+%
+which is the same calculation as shown in \cref{eq:formula-probability-of-inf}.
 
 \subsection{Formal acceptance criteria}
 \label{sec:formal-acceptance-criteria}
@@ -3808,16 +3851,23 @@ We present the \simulink model for this monitor in \cref{fg:blockDiagramMonitorI
 
 The work reported in~\cite{Andrews2001} shows an example of \iac{FT} with an explicit \ac{NOT} operator, the importance of such an operator, and how to calculate the probability of a critical failure.
 The system is a leak protection system that has valves and sensors, and is depicted in \cref{fig:leak-protection-system}.
-The valves closes a gas flow if the sensor detects a leak.
-If the valve is closed for a certain amount of time, the pressure on the system may increase, and then, a relief valve diverts the gas flow elsewhere.
+Valve $VAL$ closes a gas flow if a sensor detects a leak $L$.
+If the valve is closed for a certain amount of time, the pressure on the system may increase, and then, a relief valve $PRV$ diverts the gas flow elsewhere.
 The possible failure are all internal failures: 
 %
 \begin{description}
-  \item[prv:] the pressure relief valve fails;
-  \item[i_1:] there is an ignition source in room 1;
-  \item[l:] there is a gas leak in room 1;
-  \item[val:] the isolation valve fails.
+  \item[$prv$:] the pressure relief valve fails;
+  \item[$i_1$:] there is an ignition source in room 1;
+  \item[$l$:] there is a gas leak in room 1;
+  \item[$val$:] the isolation valve fails.
 \end{description}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.5]{leak-protection-system}
+  \caption{Leak Protection System architectural view}
+  \label{fig:leak-protection-system}
+\end{figure}
 
 We associate these faults events as:
 \begin{align*}
@@ -3827,13 +3877,26 @@ L = &\var{l}\\
 VAL = & \var{val}
 \end{align*}
 
-
-\begin{figure}[htb]
-  \centering
-  \includegraphicsaspectratio[0.5]{leak-protection-system}
-  \caption{Leak Protection System architectural view}
-  \label{fig:leak-protection-system}
-\end{figure}
+The undesired top-event is an ignition in room 1 ($TOP$).
+As shown in~\cite{Andrews2001}, the structure expression of $TOP$ is:
+%
+\begin{equation}
+TOP = L \land \left(\left(\lnot VAL \land PRV\right) \lor \left(VAL \land I_1\right)\right)\label{eq:leak-protection-system-structure-expression}
+\end{equation}
+%
+For a coherent analysis, they use the consensus law to add a ``missing'' term.
+In this case, the missing term is $L \land PRV \land I_1$.
+This gives the final expression:
+\begin{equation}
+TOP = L \land \left(\left(\lnot VAL \land PRV\right) \lor \left(VAL \land I_1\right) \lor \left(PRV \land I_1\right)\right)\label{eq:leak-protection-system-extended-structure-expression}
+\end{equation}
+Finally, the probability for \cref{eq:leak-protection-system-structure-expression} is:
+\begin{equation}
+\probability{TOP} = P_L \times \left( P_{PRV} + P_{VAL} \times P_{I_1} - 
+  P_{PRV}\times P_{VAL}  \right)\label{eq:leak-protection-system-probability}
+\end{equation}
+%
+where $P_x$ is the failure probability of $x$, $x \in \left\{L,PRV,VAL,I_1\right\}$.
 
 Now we show five contributions:
 \begin{alineasinline}
@@ -3841,7 +3904,7 @@ Now we show five contributions:
   \item representing each of the fault traces reported in~\cite{DM2012} as a term in our proposed \ac{algebra}, using the mapping function shown in \cref{sec:mapping-cspm-algebra},
   \item modelling faults of the monitor using \ac{activation}, using expressions in Boolean Algebra\index{Boolean Algebra}, 
   \item modelling faults of the monitor with \ac{activation}, but using \ac{algebra} as the inner algebra, and
-  \item obtaining failure probability from a formula with explicit \ac{NOT} operators.
+  \item obtaining failure probability from a formula with explicit \ac{NOT} operators without considering the consensus law nor the theory shown in~\cite{Andrews2001}.
 \end{alineasinline}
 %
 Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cref{sec:faults-injection}, we associate the fault events as:
@@ -4418,10 +4481,58 @@ Thus, $System_{XB}$ fails with $LP$ if:
 Note that if the monitor fails before the failure of the first power source, it fails to detect the operational mode of the first power source and switches to the second power source, which is in a nominal state (see expression $\lnot B_2 \land \xbefore{F}{B_1}$ in \cref{eq:h-systemalgebra}).
 
 \section{Obtaining top-event probability with explicit \ac*{NOT} operators}
-\label{sec:top-event-probabihlity-explicit-not}
+\label{sec:top-event-probability-explicit-not}
 
-The work reported in~\cite{Andrews2001} shows a case-study with an explicit \ac{NOT} operator.
-It is a leak protection system 
+In this \lcnamecref{sec:top-event-probability-explicit-not} we show how to use \ac{algebra} to obtain the same probability formula of \cref{eq:leak-protection-system-probability}.
+
+We use \cref{eq:formula-probability-of-inf} to split the calculations of the top-event structure expression shown in \cref{eq:leak-protection-system-structure-expression}:
+\begin{align}
+\formulaprob{L \land 
+  \left( \left(\lnot VAL \land PRV\right) \lor 
+  \left(VAL \land I_1\right) \right) } = \nonumber\\
+  \formulaprob{L} \times 
+  \formulaprob{\left(\lnot VAL \land PRV\right) \lor 
+    \left(VAL \land I_1\right)}\label{eq:leak-protection-system-split}
+\end{align}
+
+Then, we obtain the formula probability of the top-event probability of the structure expression shown in \cref{eq:leak-protection-system-structure-expression} in \ac{algebra}:
+%
+\begin{subequations}
+\begin{align}
+\formulaprob{L} = &~ \denotationalprob{\listsin{l}} & \text{by \cref{eq:formula-probability-any-generators}}\nonumber\\
+= &~ P_l(t)\label{eq:leak-protection-system-top1}\\
+%%%%%
+\formulaprobop\{\left(\lnot VAL \land PRV\right) \lor &\nonumber\\
+    \left(VAL \land I_1\right)\} = &~
+    \denotationalprob{\listsin{prv}} + 
+    \denotationalprob{\listsin{i_1,prv}} +  \nonumber\\
+    &~\denotationalprob{\listsin{prv,i_1}} + 
+    \denotationalprob{\listsin{val,i_1}} + \nonumber\\
+    &~\denotationalprob{\listsin{i_1,val}} + \nonumber\\
+    &~\denotationalprob{\listsin{val,i_1,prv}} + 
+    \ldots + \nonumber\\
+    &~\denotationalprob{\listsin{prv,i_1,val}} \nonumber
+%%%%%
+\intertext{Note that we use the expression without the consensus law, but the ``missing'' term $PRV \land I_1$ appears on the denotational semantics used in the probability calculation.}
+%%%%%
+\formulaprobop\{\left(\lnot VAL \land PRV\right) \lor &\nonumber\\
+    \left(VAL \land I_1\right)\} = &~
+    P_{prv}(t) \times (1 - P_{i_1}(t)) \times (1 - P_{val}(t)) \nonumber\\
+    &~ P_{i_1}(t) \times P_{prv}(t) \times (1 - P_{val}(t)) \nonumber\\
+    &~ P_{val}(t) \times P_{i_1}(t) \times (1 - P_{prv}(t)) \nonumber\\
+    &~ P_{val}(t) \times P_{i_1}(t) \times P_{prv}(t) \nonumber\\
+%%%%%
+= &~ P_{prv}(t) + P_{val}(t) \times P_{i_1}(t) - P_{prv}(t) \times P_{val}(t)\label{eq:leak-protection-system-top2}
+\end{align}
+\end{subequations}
+
+From \cref{eq:leak-protection-system-split,eq:leak-protection-system-top1,eq:leak-protection-system-top2}, we obtain:
+\begin{equation}
+\formulaprob{TOP} = P_l(t) \times \left(P_{prv}(t) + P_{val}(t) \times P_{i_1}(t) - P_{prv}(t) \times P_{val}(t)\right)
+\end{equation}
+%
+which is equivalent to ~\cref{eq:leak-protection-system-probability}.
+
 
 \chapter{Conclusion}
 \label{sec:conclusion}
