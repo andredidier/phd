@@ -4537,41 +4537,144 @@ which is equivalent to ~\cref{eq:leak-protection-system-probability}.
 \chapter{Conclusion}
 \label{sec:conclusion}
 
-In this work we presented a foundational theory to support a more precise representation of fault events as compared to our previous strategy for injecting faults~\cite{DM2012}.
+%In this work we presented a foundational theory to support a more precise representation of fault events as compared to our previous strategy for injecting faults~\cite{DM2012}.
 %
-The failure expression is essential for system safety assessment because it is used as basic input for building \aclp{FT}~\cite{PMS+2001,JMS+2011,GMS+2010}.
+%The failure expression is essential for system safety assessment because it is used as basic input for building \aclp{FT}~\cite{PMS+2001,JMS+2011,GMS+2010}.
 %
 %We use \simulink as starting point because it is a standard tool in the control systems industry.
 %
-Furthermore, we still connect the strategy presented in~\cite{MJG+2010} with the works reported in~\cite{JMS+2011} (functional analysis) and in~\cite{GMS+2010,PMS+2001} (safety assessment) because our new algebra is at least a Boolean\index{Boolean Algebra} algebra.
+%Furthermore, we still connect the strategy presented in~\cite{MJG+2010} with the works reported in~\cite{JMS+2011} (functional analysis) and in~\cite{GMS+2010,PMS+2001} (safety assessment) because our new algebra is at least a Boolean\index{Boolean Algebra} algebra.
+
+%\begin{sloppypar}
+%The work reported in~\cite{Walker2009,WP2009,WP2010} tackles simultaneity with ``nearly simultaneous'' events~\cite{EWG2013}.
+%But we consider instantaneous events, like the work reported in~\cite{MRL2014}, because we assume that simultaneity is probabilistically impossible.
+%\end{sloppypar}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ISF 
+
+
+In this work we presented a foundational theory to support a more precise representation of fault events as compared to our previous strategy for injecting faults~\cite{DM2012}.
+%
+The failure logic is essential for system safety assessment because it is used as basic input for building fault trees~\cite{PMS+2001,JMS+2011,GMS+2010}.
+%
+%We use \simulink as starting point because it is a standard tool in the control systems industry.
+%
+Furthermore, we still connect the strategy presented in~\cite{MJG+2010} with the works reported in~\cite{JMS+2011} (functional analysis) and in~\cite{GMS+2010,PMS+2001} (safety assessment) because our new algebra is at least a Boolean algebra.
+
+We also proposed a parametrized logic, the \ac{activation}, that enables the analysis of systems depending on the expressiveness of a given algebra and a given set of operational modes.
+If \ac{algebra} is used as a parameter, then the order of occurrence of faults can be considered.
+Other algebra, like ternary algebras (\cite{Jones2016}) can be used, since they have tautology and contradiction properties.
+Although the \ac{activation} is not as detailed as \ac{AADL}, the predicates notation in conjunction with the \ac{algebra} provides a richer assertion framework.
+Also, it is possible to verify non-determinism on the model, by: (i) verifying its existence with the $\nondetcmd$ function, (ii) providing an expression and obtaining the possible operational modes with the $\activationcmd$ function, or (iii) using the predicates notation to obtain a predicate that enables two or more operational modes.
+
+
+%A related approach to analyse a system behaviour is to employ passive testing. 
+%In such an approach, a formalised tester supervises a system during its execution.
+%Although testing is very important to the analysis of systems' behaviour, static fault analysis, even with dynamic fault trees, is different. 
+%The traces that we extract from the model are traces without faults repetition that causes an unwanted behaviour. 
+%For example, the work reported in \cite{BCN+2005} shows the analysis of invariants. 
+%Such invariants are the observation of inputs and outputs in a specific order. 
+%In our work, we consider that different order of fault events may or may not cause failures and that Boolean algebra is not sufficient to express such cases.
+
+%The work reported in~\cite{Huffm2010} was used as a basis for all proofs.
+%
+%It contains a complete theory of Free Boolean Algebras, including a homomorphism from an FBA to any Boolean algebra.
+%
+%Proving that there is also a homomorphism from \algebra to any Boolean algebra is left as future work.
 
 \begin{sloppypar}
-The work reported in~\cite{Walker2009,WP2009,WP2010} tackles simultaneity with ``nearly simultaneous'' events~\cite{EWG2013}.
-But we consider instantaneous events, like the work reported in~\cite{MRL2014}, because we assume that simultaneity is probabilistically impossible.
+	The work reported in~\cite{Walker2009,WP2009,WP2010} tackles simultaneity with ``nearly simultaneous'' events~\cite{EWG2013}.
+	But we consider instantaneous events, like the work reported in~\cite{MRL2014}, because we assume that simultaneity is probabilistically impossible.
 \end{sloppypar}
+%Another future To show the relation of the exclusive before operator to the operators shown in~\cite{MRL2014} and~\cite{WP2009}.
 
-\section{Future work}
+%As future work we will complete the analysis including verification of a formula acceptance criteria.
+%
+%The objective of finding failure logic is to create fault trees and then performing qualitative and quantitative analyses to check if the fault trees meet safety requirements (for static and dynamic fault trees).
+%
+%We plan to verify safety requirements directly from the failure logic expressed by our TFA.
+%
+%It means we need a reduction technique that includes the exclusive before operator to analyse large-scale systems (say with 1000 or more fault events) without using dependency trees~\cite{WP2010}.
+%
+%We believe that the direct analysis on failure logic expressed by our TFA can also accelerate temporal fault trees analysis as it is a subclass of dynamic fault trees.
+
+The distinct lists representation in our algebra does not allow obtaining minimal cut sequences directly from the formula, similar to \acp{FBA}.
+The sets in \iac{FBA} formula are already the minimal cut sets.
+In our work, \ac{algebra} allows us to find minimal cut sequences (with \ac{XBefore}) from the formulas in \ac{DNF} algebraically: each sub-expression is a minimal cut sequence.
+
+Boolean formulas reduction can be achieved by: (i) application of Boolean laws, (ii) \acp{BDD}, or (iii) \acp{FBA}.
+We used Boolean and \ac{XBefore} laws to reduce \ac{algebra} formulas.
+%
+The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs to reduce formulas with order-based operators.
+%
+We plan to use similar concepts in a future work.
+A ternary tree with special nodes seems to be a solution, but we have not verified yet.
+
+The works reported in~\cite{Merle2010,MRL+2010,MRL2011,Walker2009,WP2009} removed the \ac{NOT} operator.
+Thus the algebras defined there (to analyse \ac{TFT} and \ac{DFT}) resembles a Boolean algebra, but are not complete. 
+The \ac{algebra} allows such trees to have \ac{NOT} operators and the analysis could be performed similarly to \ac{SFT}, given the restrictions related to non-coherent trees.
+Compared to \acp{TFT}, \ac{algebra} does not allow simultaneous events.
+Compared to \acp{DFT}, \ac{algebra} is equivalent to the algebra shown in the works reported in~\cite{MRL2011b,Merle2010}, although their algebra has an operator to represent simultaneity, because simultaneity is probabilistically impossible.
+The inclusion of an operator to represent simultaneity and the proofs of relation of \ac{algebra} to the algebras of \ac{TFT} and \ac{DFT} are left as future work.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AISC
+The \ac{AADL} is extensible. 
+The work reported in~\cite{SAEAS55061A} shows an extension to perform dependability analysis through state machines and expressions on fault events and operational modes.
+Although such an extension captures system behaviour, operational mode activation conditions are expressed in state transitions in combination with an extension of Boolean expressions (not related to order).
+Our work relates operational modes and fault occurrences order explicitly.
+
+As presented in~\cite{DM2016}, \acp{TFT} and \acp{DFT} structure expressions can be written as formulas in \ac{algebra}.
+As the root events of \acp{TFT} and \acp{DFT} represent operational modes of a system, the \ac{algebra} can be used to associate root events with operational modes, thus allowing the combination of two or more fault trees.
+
+Although the properties of \ac{activation} require that the inner algebra provides tautology and contradiction, and we used \ac{algebra} in the case study, we did not show tautology and contradiction for \ac{algebra}. 
+Instead, we used a law to reduce the \ac{algebra} expression to a Boolean expression.
+The methodology to check tautology and contradiction in \ac{algebra} is related to expression reduction, which is a future work.
+
+The original expression shown in the case study (\cref{sec:activation-to-structure-expressions-algebra-operators}) was already $\healthy[2]$.
+The second healthiness condition about completeness uses the concept of undefined value to make any expression $\healthy[2]$.
+Algebraically it is fine, but in practice, the property should be met initially, thus the initial expression is already $\healthy[2]$.
+This property should only be used as an alert to the analyst if it not met initially.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\section{Future work}
 
 %The \distinctlists representation in our algebra does not allow obtaining minimal cut sequences\index{Minimal Cut!Sequences} directly from the formula, similar to \acp{FBA}\index{Boolean Algebra!Free}.
 %The sets in \iac{FBA}\index{Boolean Algebra!Free} formula are already the minimal cut sets\index{Minimal Cut!Sets}.
 %In our work, \ac{algebra} allows us to find minimal cut sequences\index{Minimal Cut!Sequences} (with XBefore) from the formulas in \ac{DNF} algebraically: each sub-expression is a minimal cut sequence\index{Minimal Cut!Sequences}.
 
-Boolean\index{Boolean Algebra} formulas reduction can be achieved by:
-\begin{alineasinline}
-  \item application of Boolean laws,
-  \item \ac{BDD}\index{Binary Decision Diagrams}, or
-  \item \acp{FBA}\index{Boolean Algebra!Free}.
-\end{alineasinline}
-We used Boolean\index{Boolean Algebra} and \ac{XBefore} laws to reduce \ac{algebra} formulas.
-%
-The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs\index{Binary Decision Diagrams!Sequential} to reduce formulas with order-based operators.
-%
-We plan to use similar concepts in a future work.
+%Boolean\index{Boolean Algebra} formulas reduction can be achieved by:
+%\begin{alineasinline}
+%  \item application of Boolean laws,
+%  \item \ac{BDD}\index{Binary Decision Diagrams}, or
+%  \item \acp{FBA}\index{Boolean Algebra!Free}.
+%\end{alineasinline}
+%We used Boolean\index{Boolean Algebra} and \ac{XBefore} laws to reduce \ac{algebra} formulas.
+%%
+%The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs\index{Binary Decision Diagrams!Sequential} to reduce formulas with order-based operators.
+%%
+%We plan to use similar concepts in a future work.
 
-The work reported in~\cite{SAE1996b} states that \acp{DTMC} (\aca{DTMC}) is more appropriate to represent several states than \acp{SFT}.
-Considering that \acp{DFT} were conceived as a visual representation of \acap{DTMC}, then we may say that \acp{DFT} can be used to represent several states.
-Thus they are suitable to propose the architectural model modifications as shown in \cref{fig:strategy-overview}.
-The definition and the theory of ``Fault Modelling and Fault Tolerance Patterns'' and the automatic proposal of ``Architectural Model Modifications'' blocks are left as future work.
+%The work reported in~\cite{SAE1996b} states that \acp{DTMC} (\aca{DTMC}) is more appropriate to represent several states than \acp{SFT}.
+%Considering that \acp{DFT} were conceived as a visual representation of \acap{DTMC}, then we may say that \acp{DFT} can be used to represent several states.
+%Thus they are suitable to propose the architectural model modifications as shown in \cref{fig:strategy-overview}.
+%The definition and the theory of ``Fault Modelling and Fault Tolerance Patterns'' and the automatic proposal of ``Architectural Model Modifications'' blocks are left as future work.
+
+\begin{sloppypar}
+  \textbf{Acknowledgements.}
+%  We would like to thank \textbf{Alexander Romanovsky}, \textbf{Zoe Andrews} and \textbf{Richard Payne} for all discussions about fault modelling and dependability.
+  %
+  %We also thank the anonymous referees of the Journal \textbf{Advances in Intelligent Systems and Computing} for comments in drafts of this work.
+  %
+  This work was funded by CNPq, grants 476821/2011-8, 442859/2014-7, and 246956/2012-7, and
+  %
+  by FACEPE grant IBPG-0408-1.03/11. 
+  %
+  This work was partially supported by the National Institute of Science and Technology for Software Engineering (INES\footnote{http://www.ines.org.br}), funded by CNPq and FACEPE, grants 573964/2008-4 and APQ-1037-1.03/08.
+  
+\end{sloppypar}
 
 
 % References
