@@ -104,6 +104,7 @@ They are valid for any instantiation of the \ac{algebra} class as, for example, 
 context temporal_faults_algebra
 begin
 
+text {* The following theorem proves \cref{thm:xbefore-inf-1}. *}
 theorem xbefore_inf_1: 
   "independent_events a b \<Longrightarrow> \<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> 
   \<lbrakk>tempo2 a; tempo2 b\<rbrakk> \<Longrightarrow> \<lbrakk>tempo3 a; tempo3 b\<rbrakk> \<Longrightarrow> \<lbrakk>tempo4 a; tempo4 b\<rbrakk> \<Longrightarrow> 
@@ -117,6 +118,7 @@ proof-
   thus ?thesis by (simp add: xbefore_sup_1)
 qed
 
+text {* The following theorem proves \cref{thm:xbefore-inf-2}. *}
 theorem xbefore_inf_2: 
   "independent_events b c \<Longrightarrow> \<lbrakk>tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> 
   \<lbrakk>tempo2 b; tempo2 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo3 b; tempo3 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo4 b; tempo4 c\<rbrakk> \<Longrightarrow> 
@@ -130,6 +132,7 @@ proof-
   thus ?thesis by (simp add: xbefore_sup_2)
 qed
 
+text {* The following lemma proves \cref{thm:xbefore-sup-absorb-2}. *}
 lemma xbefore_sup_absorb_1b: 
   "independent_events a b \<Longrightarrow> \<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> 
     \<lbrakk>tempo2 a; tempo2 b\<rbrakk> \<Longrightarrow> \<lbrakk>tempo3 a; tempo3 b\<rbrakk> \<Longrightarrow> \<lbrakk>tempo4 a; tempo4 b\<rbrakk> \<Longrightarrow>
@@ -144,6 +147,7 @@ lemma xbefore_sup_absorb_2:
 by (metis dual_order.trans inf.cobounded1 sup.absorb1 sup.cobounded1 
   xbefore_sup_equiv_inf)
 
+text {* The following corollary proves \cref{thm:xbefore-sup-absorb-1}. *}
 corollary xbefore_sup_absorb_1: 
   "independent_events a b \<Longrightarrow> \<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> 
     \<lbrakk>tempo2 a; tempo2 b\<rbrakk> \<Longrightarrow> \<lbrakk>tempo3 a; tempo3 b\<rbrakk> \<Longrightarrow> \<lbrakk>tempo4 a; tempo4 b\<rbrakk> \<Longrightarrow>
@@ -168,6 +172,7 @@ proof-
   thus ?thesis using 0 by (simp add: xbefore_sup_absorb_1b)
 qed
 
+text {* The following corollary proves \cref{thm:xbefore_inf_absorb_1}. *}
 theorem xbefore_inf_absorb_1: "independent_events a b \<Longrightarrow> 
   \<lbrakk> tempo1 a; tempo1 b \<rbrakk> \<Longrightarrow>
   \<lbrakk> tempo2 a; tempo2 b \<rbrakk> \<Longrightarrow>
@@ -176,6 +181,7 @@ theorem xbefore_inf_absorb_1: "independent_events a b \<Longrightarrow>
   inf a (xbefore a b) = xbefore a b"
 by (simp add: local.inf_absorb2 local.le_iff_sup xbefore_sup_absorb_1)
 
+text {* The following corollary proves \cref{thm:xbefore_inf_absorb_2}. *}
 theorem xbefore_inf_absorb_2: "independent_events a b \<Longrightarrow> 
   \<lbrakk> tempo1 a; tempo1 b \<rbrakk> \<Longrightarrow>
   \<lbrakk> tempo2 a; tempo2 b \<rbrakk> \<Longrightarrow>
@@ -184,6 +190,7 @@ theorem xbefore_inf_absorb_2: "independent_events a b \<Longrightarrow>
   inf a (xbefore b a) = xbefore b a"
 by (simp add: local.inf.absorb2 local.sup.absorb_iff1 xbefore_sup_absorb_2b)
 
+text {* The following lemma proves \cref{thm:and_xbefore_equiv_or_xbefore_expanded}. *}
 lemma inf_xbefore_equiv_sups_xbefore_expanded: 
   "independent_events a b \<Longrightarrow> independent_events a c \<Longrightarrow> 
   \<lbrakk>tempo1 a; tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo2 a; tempo2 b; tempo2 c\<rbrakk> \<Longrightarrow> 
@@ -218,6 +225,7 @@ corollary inf_xbefore_equiv_sups_xbefore_1:
     (xbefore (xbefore b c) a)"
 by (simp add: inf_xbefore_equiv_sups_xbefore_expanded)
 
+text {* The following lemma proves \cref{thm:xbefore_sup_compl_inf_absorb1}. *}
 lemma xbefore_sup_compl_inf_absorb1: 
   "independent_events a b \<Longrightarrow> \<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> 
     \<lbrakk>tempo2 a; tempo2 b\<rbrakk> \<Longrightarrow> \<lbrakk>tempo3 a; tempo3 b\<rbrakk> \<Longrightarrow> \<lbrakk>tempo4 a; tempo4 b\<rbrakk> \<Longrightarrow>

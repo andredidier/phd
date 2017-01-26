@@ -26,7 +26,6 @@ The definition of a formula in the \ac{algebra} is a set of sets of distinct lis
 typedef 'a formula = "UNIV::'a dlist set set" by simp
 
 subsubsection {* Formula as Boolean algebra*}
-
 (*<*)
 notation
   bot ("\<bottom>") and
@@ -114,6 +113,9 @@ lemmas Rep_formula_boolean_algebra_simps =
   
 instance proof
 qed (unfold Rep_formula_boolean_algebra_simps, auto)
+text {* 
+The instantiation and this proof shows that \ac{algebra} is a Boolean algebra as shown in \cref{def:algebraset-var,def:algebraset-compl,def:algebraset-inf,def:algebraset-xbefore,def:algebraset-true,def:algebraset-false,def:algebraset-sup}. 
+*}
 end
 
 (*<*)
@@ -705,7 +707,7 @@ using Collect_cong Collect_conj_eq by blast
 subsection {* Formulas as \ac{algebra} *}
 
 text {*
-In the following we prove that a formula is a valid type instantation for all \ac{algebra} classes.
+In the following we prove that a formula is a valid type instantiation for all \ac{algebra} classes.
 *}
 
 subsubsection {* Basic properties of \ac{algebra} *}
@@ -799,7 +801,7 @@ instance proof
   unfolding tempo1_formula_def 
   by (simp add: dlist_tempo1_inf Rep_formula_inf)
 qed
-
+text {* The above proof shows basic laws about \ac{algebra}, as shown in \cref{thm:xbefore-of-false-1,thm:xbefore-of-false-2,thm:xbefore_neutral_1,thm:xbefore_neutral_2,thm:xbefore-not-idempotent,law:tempo1-inter}. *}
 end
 
 subsubsection {* Associativity of \ac{algebra} *}
@@ -814,6 +816,7 @@ instance proof
   unfolding xbefore_formula_def tempo1_formula_def
   by (simp add: Abs_formula_inverse dlist_xbefore_assoc)
 qed
+text {* The above proof shows associativity law about \ac{algebra}, as shown in \cref{thm:xbefore-associativity}. *}
 
 end
 
@@ -871,7 +874,7 @@ instance proof
   unfolding tempo4_formula_def 
   by (simp add: dlist_tempo4_sup Rep_formula_sup)
 qed
-
+text {* The above proof shows equivalences in \ac{algebra}, as shown in \cref{thm:xbefore-inf-equiv-bot,thm:xbefore-sup-equiv-inf,law:tempo2-union,law:tempo3-inter,law:tempo4-union}. *}
 end
 
 subsubsection {* Transitivity in \ac{algebra} *}
@@ -893,6 +896,7 @@ instance proof
     tempo3_formula_def
   by (simp add: Abs_formula_inverse dlistset_inf_xbefore_trans)
 qed
+text {* The above proof shows transitivity in \ac{algebra}, as shown in \cref{thm:inf_xbefore_trans}. *} 
 end
 
 subsubsection {* Mixed operators in \ac{algebra} *}
@@ -944,6 +948,7 @@ instance proof
   by (auto simp add: Abs_formula_inverse not_2_dlistset_xbefore 
     Rep_formula_inverse)
 qed
+text {* The above proof shows laws with mixed Boolean and \ac{XBefore} operators, as shown in \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:not_xbefore,thm:and_xbefore_equiv_or_xbefore,thm:not_1_xbefore_equiv,thm:not_2_xbefore_equiv}. *} 
 end
 
 subsection {* Equivalence of the new definition of \acs*{XBefore} with the old one *}
