@@ -1,0 +1,207 @@
+\chapter{Basic concepts}
+\label{chap:basic-concepts}
+
+Means to dependability\index{Dependability}\amnote{Está muito filosófico isto. É assim mesmo ou seja, não há uma definição para dependebilidade?} \adnote{Eu explico dependabilidade a seguir.} are obtained by modelling and analysing a system.
+It is strongly related to fault modelling, which depends on the kinds of analyses we want to perform.
+%For instance, in \aclp{FT}, even if a fault can be repaired, it is considered as a non-repairable fault.
+\Acp{FT} are present in several stages of systems' modelling.
+We introduce dependability\index{Dependability} and fault modelling in \cref{sec:dependability}.
+
+\Iac{SFT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occur, then it will.} of a faults topology of a system, subsystem or component.
+%\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
+The time relation of fault events in \acp{TFT} and \acp{DFT} allows the analysis of different configurations (or snapshots) of a system, subsystem or component.
+We discuss these time relations in \cref{sec:time-relations}.
+
+\section{Systems, dependability\index{Dependability}, and fault modelling\index{fault modelling}}
+\label{sec:dependability}
+
+\begin{sloppypar}
+Computing systems are characterized by five properties: functionality, performance, cost, dependability\index{Dependability}, security.
+The work reported in~\cite[p. 289--302]{Sommerville2011} explain these properties---including dependability\index{Dependability}---with a focus on software.
+Hardware and software are connected, as software faults may cause a failure in a software-controlled hardware, and hardware faults may send incorrect data, causing a failure in the software.
+\end{sloppypar}
+
+The work reported in~\cite{ALR+2004} summarizes all concepts of and related to dependability\index{Dependability} for computing systems that contain software and hardware.
+In the following, we show these concepts and highlight those used in this work.
+
+\subsection{Systems}
+
+Before introducing systems' dependability\index{Dependability}, we first describe what a system is and its characteristics.
+A \emph{system} is an entity that interacts with other systems (software and hardware as well), users (humans), and the physical world.
+These other entities are the \emph{environment} of the given system, and its \emph{boundary} is the frontier between the system and its environment.
+
+The \emph{function} of a system is what the system is intended to do, and its \emph{behaviour} is what the system does to implement its function.\amnote{Você continua muito filosófico aqui. Quero ver para onde vamos (uso)...} \adnote{Isso faz parte do contexto para quando mencionar os termos eles terem sido introduzidos.}
+The \emph{total state} of a system are the means to implement its function and is defined as the set of the following states: computation, communication, stored information, interconnection, and physical condition.
+The \emph{service} delivered by a system is its behaviour as it is perceived by its boundary.
+A system can both provide and consume services.
+
+The \emph{structure} of a system is how it is composed: a system is composed of components, and each component is another system, etc.
+This concept of hierarchical compositionality in systems is what originated the concept of \ac{SoS} and is the object of analysis in \ac{hiphops}.
+Such a recursion (of a system containing other systems) stops when a component---or a constituent system---is considered to be atomic.
+A system is the total state of its atomic components.
+
+\subsection{Dependability}
+\index{Dependability}
+
+The concepts that create the basis for dependability\index{Dependability} are:
+\begin{alineasinline}
+  \item threats to,
+  \item attributes of, and
+  \item means to attain.
+\end{alineasinline}
+
+\emph{Threats to dependability}\index{Dependability!threats to} are the so-called \emph{fault-error-failure} chain.
+A failure is a service deviation perceived on systems' boundary.
+An error is the part of the total state of a system that leads to subsequent service failure.
+Depending on how a system tolerate internal errors, many errors may not reach system's boundary.
+Finally, a fault is what causes an error.
+In this case, we say that the fault \emph{occurred} (the fault is active).
+Otherwise, the fault is dormant, and has not occurred (yet).
+A \emph{degraded} mode of a system is when there are active faults, so some functions of the system are inoperative, but the system still delivers its service.
+
+There are two acceptable definitions of dependability\index{Dependability} reported in~\cite{ALR+2004}.
+One is more general, difficult to measure: ``the ability to deliver service that can justifiably be \emph{trusted}''.
+A more precise definition that uses the definition of service failure is: ``the ability to avoid service failures that are more frequent and more severe than is acceptable''.
+This definition has two implications about system's requirements: there should be defined how it can fail, and what are the acceptable severity and frequency of its failures.
+
+The following systems' dependability attributes\index{Dependability!attributes of} enlightens such requirements:
+\begin{description}
+  \item[Availability:] the readiness for correct service;
+  \item[Reliability:] continuity of correct service;
+  \item[Safety:] absence of catastrophic consequences on the environment (other systems, users, and the physical world).
+  Safety can be verified using \acp{FT}, which is part of the objective of this work;
+  \item[Integrity:] absence of improper systems alterations;
+  \item[Maintainability:] ability to be modified and repaired.
+\end{description}
+%
+A system description should mention all or most of these attributes, at least the first three of them.
+
+The implementation of these attributes requires a deep analysis of system's models.
+The \emph{means to attain dependability}\index{Dependability!means to attain} are summarized as follows:
+
+\begin{description}
+  \item[Prevention] is about avoiding incorporating faults during development.
+  \item[Tolerance] deals with usage of mechanisms to still deliver a---possibly degraded---service even in the presence of faults.
+  \item[Removal] is about detecting and removing (or reducing severity of) failures from a system, both in the development and production stages.
+  \item[Forecasting] is about predicting likely faults so they can removed, or tackling their effects.
+\end{description}
+
+\begin{sloppypar}
+The intersection of the current work with dependability\index{Dependability} is in fault removal during development and fault tolerance (analysis).
+Following the taxonomy presented in~\cite{ALR+2004}, there are some techniques for fault removal, summarized as follows:
+\begin{alineas}
+  \item Static verification:
+  \begin{subalineas}
+    \item Structural model:
+    \begin{description}
+      \item[Static analysis:] Range from inspection or walk-through, data flow analysis, complexity analysis, abstract interpretation, compiler checks, vulnerability search, etc.
+      \item[Theorem proving:] Check properties of infinite state models.
+    \end{description}
+    \item Behaviour model:
+    \begin{description}
+      \item[Model checking:] Usually the model is a finite state-transition model (\acp{PN}, finite state automata).
+      Model-checking verifies all possible states on a given system's model.
+    \end{description}
+  \end{subalineas}
+  \item Dynamic verification:
+  \begin{subalineas}
+    \item Symbolic inputs:
+    \begin{description}
+      \item[Symbolic Execution:] It is the execution with respect to variables (symbols) as inputs.
+    \end{description}
+    \item Actual inputs:
+    \begin{description}
+      \item[Testing:] Selected input values are set on system's inputs and their outputs are compared to expected values.
+      The verification outcomes are observed faults, in case of hardware testing or software mutation testing, and criteria-based, in case of software testing.
+    \end{description}
+  \end{subalineas}
+\end{alineas}
+\end{sloppypar}
+
+
+Verification methods are often used in combination.
+For example, symbolic execution may be used to obtain testing patterns, test inputs can be obtained by model-checking as in~\cite{CBC+2015}, faults can be used as symbolic inputs, and system behaviour can be observed using model-checking as in~\cite{DM2012,Didier2012} (This technique is called fault injection; see also~\cite{AAL+1996}).
+
+The techniques to attain fault tolerance are summarized as follows:
+\begin{description}
+  \item[Error detection:] is used to identify the presence of an error.
+  It can be a concurrent or a preemptive detection.
+  Concurrent detection takes place during normal service, while preemptive detection takes place while normal service is suspended.
+  \item[Recovery:] transforms a system state that contains errors into a state without them. The behaviour of the system upon recovery is equivalent to the normal behaviour.
+  Techniques range from rollback to a previously saved state without errors, error masking, isolation of faulty components, to reconfiguration using spare components.
+\end{description}
+
+In this work, we use a combination of:
+\begin{alineasinline}
+  \item fault-injection,
+  \item theorem proving, and
+  \item symbolic execution.
+\end{alineasinline}
+We use these methods to obtain an erroneous behaviour of the system which is compared to the system dependability attributes\index{Dependability!attributes of} (safety).
+We explain how these methods are combined in \cref{chap:algebra}.
+
+On the analyses of systems and its constituents, there is a distinction of operational modes and error events.
+Operational modes refer to the behaviour that is perceived on the boundaries of a system (\emph{failure}).
+Error events, on the other hand, represent the behaviour detected in a constituent of a system.
+Such error events may relate to an operational mode, but not necessarily.
+Further in \cref{chap:algebra} we abstract these differences and leave the distinction as a parameter.
+We refer to such a set as \emph{operational modes}.
+
+\subsection{Fault Modelling}
+
+Fault modelling plays an important role in reasoning about the fault-error-failure chain.
+They are the initial steps to perform the verification of a system, starting in the architectural model to reason about the critical failures, which are (in general) the top-events in \acp{FT}.
+
+\Ac{SysML} is a profile for \ac{UML} that provides features to model structure and behaviour of systems.
+The works reported in~\cite{APR+2013,ADP+2013} define several structural and behavioural views in \ac{SysML} to model the fault-error-failure chain and fault tolerance.
+Fault, error, failures, and fault propagation have structural views, which are related to behavioural views to describe fault activation and recovery.
+These works map \ac{SysML} to two formal languages---\ac{CML} and \ac{CSP}, respectively---to verify fault tolerance.
+
+In~\cite{SAE1996b} the safety assessment process for civil airborne systems and equipment describes development cycles and methods to ``clearly identify each failure condition''.
+The methods that involve failure identification are:
+\begin{alineasinline}
+  \item \ac{SFT},
+  \item \ac{DD},
+  \item \aca{DTMC}, and
+  \item \ac{FMEA}.
+\end{alineasinline}
+The first three are top-down methods, that start with undesired failure conditions and moves to lower levels to obtain more detailed conditions that causes the top-level event.
+\Acp{DD} are an alternative method of representing the data in \ac{SFT}.
+\Ac{FMEA} is a bottom-up method that identifies failure modes of a component and determines the effects on the upper level.
+We detail \ac{SFT} in \cref{sec:static-fault-trees}.
+
+\Acp{DFT} are an extension of \acp{SFT} and models dynamic behaviour of system faults.
+Similarly to the relation of \acp{SFT} and \acp{DD}, the work reported in~\cite{DP2009} demonstrates the relation of \acp{DFT} to \acp{DRBD}.
+As the models (\ac{DFT} and \ac{DRBD}) are equivalent, this work sticks to \ac{DFT} due to the amount of work already published.
+We detail \acp{DFT} in \cref{sec:dynamic-fault-trees}.
+
+\section{Time relation of fault events}
+\label{sec:time-relations}
+
+The most general case for time relations is to consider that each fault event has a continuous time duration.
+They are the basis on how fault events discretisation are defined.
+The point of view in this work is the analysis of the effects caused by a combination of faults in a snapshot of a system state.
+In \cref{fig:time-relations} we show all possibilities of events relations in a continuous time line (from A to B; the converse relation is similar):
+
+\begin{enumerate}\renewcommand{\theenumi}{\alph{enumi}}
+  \item A starts before and ends after B has started, but before B has ended;
+  \item A starts before B and ends after B has ended (A contains B);
+  \item B starts after A, but they end at the same time;
+  \item A and B start at the same time, but A ends before B;
+  \item A and B start and end at the same time;
+  \item A starts before B and ends when B starts.
+  \item A starts and ends before B starts;
+\end{enumerate}
+
+Considering that fault occurrence corresponds to the start of a fault event and its duration, from \cref{fig:time-relations} we clearly identify which event comes first: A comes before B, except in the cases (d) and (e), where they start exactly at the same time.
+If fault events are independent (they are not susceptible to have a common cause) then the probability of their occurrences starting at the same time is very low.
+The relations (f) and (g) shows the case that the system was repaired, thus A is not active when B starts.
+In \cref{sec:strategy} we abstract the relation of events in continuous time as an \emph{exclusive before} relation, based on fault \emph{occurrence} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.5]{time-relations}
+  \caption{Relation of two events with duration}
+  \label{fig:time-relations}
+\end{figure}
+
