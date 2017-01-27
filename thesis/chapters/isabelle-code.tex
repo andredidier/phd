@@ -1,0 +1,126 @@
+\chapter{Formal proofs in Isabelle/HOL}
+\label{app:formal-proofs-isabelle-hol}
+
+In the following we list all theorems and proofs concerning the laws presented in \cref{chap:algebra}.
+The complete set of verifiable theory files is available at \algebraurl.
+We list only those files created in our work.
+Each theorem, proof or corollary is followed by its own proof.
+
+The theory about lists of distinct elements (\distinctlists) is available in~\cite{HL2016} (we used the 2015 version that is available with \isabellehol).
+
+%\Cref{tbl:laws-theorems-slice} shows a mapping of the equations shown in~\cref{chap:algebra} and theorem names in the \isabellehol code presented in this \namecref{app:formal-proofs-isabelle-hol}.
+
+%\begin{table}[htb]
+%  \caption{Laws and theorems}%
+%  \label{tbl:laws-theorems-slice}%
+%  \begin{longtable}{p{8cm}ll}
+%    \hline
+%    Description & Def. or Law & Theorem name \\
+%    \hline \hline
+%    \endfirsthead
+%    \multicolumn{3}{c}%
+%    {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+%    \hline
+%    Description & Def. or Law & Theorem name \\
+%    \hline
+%    \endhead
+%    \hline \multicolumn{3}{r}{\textit{Continued on next page}} \\
+%    \endfoot
+%    \hline
+%    \endlastfoot
+%    & \Cref{def:xbefore-append} & \\
+%    \hline
+    %Definition of slice in \distinctlists & \Cref{def:slice} & instantiation dlist, $l\dagger i..f$\\
+%    \hline
+%    Definition of slice-right & \Cref{def:slice-right} & slice\_right\\
+%    \hline
+%    Definition of slice-left & \Cref{def:slice-left} & slice\_left\\
+%    \hline
+    %Relation of slice and concatenation (appending) & \Cref{law:slice-append} &  slice\_append\\
+%    \hline
+    %Definition of \ac{XBefore} using slice & \Cref{def:xbefore-slice} &  dlist\_xbefore\_append\\
+%    \hline
+%    Variable definition & \Cref{def:var} & \\
+%    \hline
+%    & \Cref{def:algebraset-var} & \\
+%    \hline
+%    & \Cref{def:algebraset-compl} & \\
+%    \hline
+%    & \Cref{def:algebraset-inf} & \\
+%    \hline
+%    & \Cref{def:algebraset-xbefore} & \\
+%    \hline
+%    & \Cref{def:algebraset-true} & \\
+%    \hline
+%    & \Cref{def:algebraset-false} & \\
+%    \hline
+%    & \Cref{def:algebraset-sup} & \\
+%    \hline
+%    & \Cref{eqs:generators-independence} & \\
+%    \hline
+%    & \Cref{def:tempo1} & \\
+%    \hline
+%    & \Cref{def:tempo2} & \\
+%    \hline
+%    & \Cref{def:tempo3} & \\
+%    \hline
+%    & \Cref{def:tempo4} & \\
+%    \hline
+%    & \Cref{law:var-tempo} & \\
+%    \hline
+%    & \Cref{law:old-xbefore} & \\
+%    \hline
+%    & \Cref{law:tempo1-inter} & \\
+%    \hline
+%    & \Cref{law:tempo3-inter} & \\
+%    \hline
+%    & \Cref{law:tempo2-union} & \\
+%    \hline
+%    & \Cref{law:tempo4-union} & \\
+%    \hline
+%    & \Cref{law:independent-events} & \\
+%    \hline
+%    & \Cref{thm:xbefore-of-false-1} & \\
+%    \hline
+%    & \Cref{thm:xbefore-of-false-2} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-absorb-1} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-absorb-2} & \\
+%    \hline
+%    & \Cref{thm:xbefore-not-idempotent} & \\
+%    \hline
+%    & \Cref{thm:xbefore-associativity} & \\
+%    \hline
+%    & \Cref{thm:xbefore-inf-equiv-bot} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-equiv-inf} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-1} & \\
+%    \hline
+%    & \Cref{thm:xbefore-sup-2} & \\
+%    \hline
+%    & \Cref{thm:xbefore-inf-1} & \\
+%    \hline
+%    & \Cref{thm:xbefore-inf-2} & \\
+%    \hline
+%    & \Cref{thm:and_xbefore_equiv_or_xbefore} & \\
+%    \hline
+%    & \Cref{thm:and_xbefore_equiv_or_xbefore_expanded} & \\
+%    \hline
+%  \end{longtable}%
+%\end{table}
+
+This \namecref{app:formal-proofs-isabelle-hol} is organized as follows:
+\begin{alineasinline}
+  \item \cref{sec:theory-sliceable} presents the base lemmas and theorems for sliceable types;
+  \item sublists (sliceable \distinctlists) are shown in \cref{sec:theory-sliceable-dlist};
+  \item algebraic definitions and laws of the \ac{algebra} are shown in \cref{sec:theory-algebra}, and
+  \item proofs using the denotational semantics of sets of \distinctlists are shown in \cref{sec:theory-algebra-dlist}.
+\end{alineasinline}
+
+\input{algebra/output/document/Sliceable}
+\input{algebra/output/document/Sliceable_dlist}
+\input{algebra/output/document/Temporal_Faults_Algebra}
+\input{algebra/output/document/Temporal_Faults_Algebra_dlist}
+
