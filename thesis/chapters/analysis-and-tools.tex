@@ -210,7 +210,7 @@ The resulting combinations for $TOP$ are $\left\{a,b\right\}$ and $\left\{a,b,c\
   \label{fig:ex-fault-tree1}
 \end{figure}
 
-After obtaining structure expressions\index{structure expression}, the next step is to reduce the expressions to a canonical form to obtain the \emph{\acp{MCS}}\index{Minimal Cut!Sets}, which are the sets that contain the minimum and sufficient events to activate the top-level failure.
+After obtaining structure expressions\index{structure expression}, the next step is to reduce the expressions to a normal form to obtain the \emph{\acp{MCS}}\index{Minimal Cut!Sets}, which are the sets that contain the minimum and sufficient events to activate the top-level failure.
 %That is, \acp{MCS}\index{Minimal Cut!Sets} are the smallest sets of fault event that, if all occur, cause the top-level failure to occur.
 Probabilistic analysis is then performed on these events to obtain the overall probability of occurrence of the top-level event.
 The \FThandbook shows an algorithm based on Shannon's method\index{Binary Decision Diagrams!Shannon's method} to reduce structure expressions\index{structure expression} to obtain minimal cut sets\index{Minimal Cut!Sets}.
@@ -537,7 +537,7 @@ The \ac{IBefore} is a composition of \ac{NIBefore} and \ac{SIMLT} operators.
 \Cref{tbl:date-of-occurrence-for-operators} summarizes the date-of-occurrence function for all operators.
 An infinite value means the event never occurs.
 
-\Acp{MCSeq} are extracted from canonical form of structure expressions written in \iac{DNF}.
+\Acp{MCSeq} are extracted from normal form of structure expressions written in \iac{DNF}.
 Minimal terms are products of variables and \ac{NIBefore} operators (the other operators can be written as combinations of \ac{NIBefore}).
 The reduction of \ac{DFT} structure expressions\index{structure expression} uses algebraic laws as, for example:
 \begin{subequations}

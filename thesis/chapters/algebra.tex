@@ -24,12 +24,21 @@ The choice for lists is because this structure inherently associates a generator
 These lists are composed of non-repeated elements (\distinctlists) because the events in \aclp{FT} are non-repairable.
 Thus, they do not occur more than once.
 
-The elements of the has an implicit order number, but it is different from the Sequence Number function used in~\cite{WP2009,Walker2009}, but is related to the concept that there should be no gaps of the indexes between consecutive events occurrence.
+The elements of a list have an implicit order number, but such an order number is different from the Sequence Number function used in~\cite{WP2009,Walker2009}
+Although different, the order number in lists is related to the concept that there should be no gaps of the indexes between consecutive events occurrence.
 The structure of the lists ensures this restriction.
 But it is different because order 0 (zero) in~\cite{WP2009,Walker2009} means non-occurrence.
 It may cause a discontinuity because 0 to 1 is different of 1 to 2.
 In \acp{FBA}\index{Boolean Algebra!Free} the non-occurrence of an event is just the absence of the event.
 Thus we use the same representation of non-occurrence as absence of the event in \ac{algebra} to avoid this discontinuity.
+For example, the following lists are all permutations of fault events $a$ and $b$ (the generators are $a$ and $b$):
+\begin{description}
+	\item[$\emptylist $: ] no fault occurs
+	\item[$\listsin{a}$: ] fault $a$ occurs and $b$ does not
+	\item[$\listsin{b}$: ] fault $b$ occurs and $a$ does not
+	\item[$\listsin{a,b}$: ] fault $a$ occurs before $b$. Note that, $a$ has index $0$ and $b$ has index $1$.
+	\item[$\listsin{b,a}$: ] fault $b$ occurs before $a$.
+\end{description}
 
 %The work reported in~\cite{MRL2011,Merle2010} uses continuous time and the relations of events is obtained from a ``date-of-occurrence'' function.
 %It is related to the detection of an event as discussed in~\cref{sec:time-relations,sec:structure-expressions} and the useful information is in fact the order of occurrence of the events, not the date-of-occurrence itself.
@@ -104,7 +113,7 @@ where $L = \max{0,i}$ and $U = \min{j,\length{xs}}$.
 List slicing and concatenation are complementary: concatenating two consecutive slices results in the original list:
 \begin{equation}
 \label{law:slice-append}
-\forall i ~\bullet~ \append{\sliceright{xs}{i}}{\sliceleft{xs}{i}} = xs
+\forall~ i ~\bullet~ \append{\sliceright{xs}{i}}{\sliceleft{xs}{i}} = xs
 \end{equation}
 
 There is an equivalent definition of \ac{XBefore} with concatenation using lists slicing:
@@ -113,7 +122,7 @@ There is an equivalent definition of \ac{XBefore} with concatenation using lists
 \label{def:xbefore-slice}
 \denote{\xbefore{S}{T}} =
   \left\{~
-    zs ~\middle|~ \exists i ~\bullet~ \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{i} \in \denote{T}
+    zs ~\middle|~ \exists~ i ~\bullet~ \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{i} \in \denote{T}
   ~\right\}
 \end{equation}
 
@@ -122,9 +131,9 @@ A variable in \ac{algebra} is defined by one generator, and denotes its occurren
 \begin{equation}
 \label{def:var}
 \denote{\var{x}} =
-  \left\{
+  \left\{~
     zs ~\middle|~ x \in zs
-  \right\}
+  ~\right\}
 \end{equation}
 %
 where $\mathop{set}zs$ is the set of the elements of $zs$, and $x \in zs$ is defined as $x \in \mathop{set} zs$.
@@ -201,7 +210,7 @@ It contains all permutations of the generators of size $0$ to the number of the 
 %
 We denote the set of generators $\generators(S)$ of a formula $S$ as:
 \begin{equation}
-\generators(S) = \bigcup_{xs \in \denote{S}} \listset{xs}\label{eq:generators}
+\generators(S) = \bigcup_{xs ~\in~ \denote{S}} \listset{xs}\label{eq:generators}
 \end{equation}
 %
 The generators of \ac{algebra} are $\generators(\UNIV)$, or simply $\generators$.
@@ -243,7 +252,10 @@ For example, for generators $a$ and $b$:
 = & \left\{\listsin{}, \listsin{b}\right\}
 \end{align}
 To avoid repetition, we abbreviate \cref{eq:denotational-complement} suppressing $\UNIV$. 
-For example, $\UNIV - A \equiv -A$.
+For example:
+\[
+\UNIV - A \equiv -A
+\]
 
 The following expressions are valid for generators $a$ and $b$ and are sufficient to show that the generators are independent:
 %
@@ -279,85 +291,77 @@ They are abbreviations that some operators satisfy altogether or individually.
 %These properties avoid the requirement that every operand of \ac{XBefore} should be a variable (\cref{def:var}).
 %The properties are: $\tempo[1]{}$ (\cref{def:tempo1}), $\tempo[2]{}$ (\cref{def:tempo2}), $\tempo[3]{}$ (\cref{def:tempo3}), and $\tempo[4]{}$ (\cref{def:tempo4}). 
 %\todo{Explain temporal properties with respect to Figure 1 about relation of events? At least make it clearer.}
-%
-\begin{subequations}
-\begin{align}
-\tempo[1]{S} &= \forall~ i, j, zs ~\bullet~
-  i \le j \implies
-  \lnot \left(
-    \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
-  \right)\label{def:tempo1}\\
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\tempo[2]{S} &= \forall~ i, zs ~\bullet~
-  zs \in \denote{S} \iff
-  \sliceright{zs}{i} \in \denote{S} \lor \sliceleft{zs}{i} \in \denote{S}\label{def:tempo2}\\
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\tempo[3]{S} &= \forall~ i, j, zs ~\bullet~
-  j < i \implies \nonumber\\
-  &\left(
-    \slice{zs}{j}{i} \in \denote{S} \iff \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
-  \right)\label{def:tempo3}\\
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\tempo[4]{S} &= \forall~ zs ~\bullet~ zs \in \denote{S} \iff (\exists~ i ~\bullet~ \slice{zs}{i}{\left(i+1\right)} \in \denote{S})\label{def:tempo4}
-%\intertext{Replace $\tempo[4]{S}$ by (less restrictive):}
-%&= \forall zs ~\bullet~ zs \in S \iff \exists i,j ~\bullet~ i < j \land \slice{zs}{i}{j} \in S
-\end{align}
-\end{subequations}
 
 The first temporal property is about disjoint split.
 If the first part of a list is in a given set, then every remainder part is not.
 So, if a generator is in the beginning of a list, it must not be at the end (and vice-versa).
+%
+\begin{equation}
+\tempo[1]{S} = \forall~ i, j, zs ~\bullet~
+i \le j \implies
+\lnot \left(
+\sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
+\right)\label{def:tempo1}
+\end{equation}
+%
 For example, let $zs = \listsin{z_0,z_1,z_2,z_3,z_4}$.
 If $\listsin{z_0,z_1} \in \denote{S}$, thus $\listsin{z_3,z_4} \notin \denote{S}$.
 Note that it is vague, but it is the first relation indication on the lists of $S$.
 In this property, as $zs$ has no repeated elements, then there is no element that is in both sublists.
 
 In what follows we show how variables satisfy $\tempo[]{}$ properties.
-The denotational semantics of $\var{z_1}$ (for generators $z_1,z_2,z_3$) is:
+To avoid repetition, the denotational semantics of $\var{z_1}$ is considered for generators $z_1,z_2,z_3$:
 %
 \begin{align}
 \denote{\var{z_1}} = & 
-  \left\{
-  \listsin{z_1}, 
-  \listsin{z_1,z_2},\listsin{z_2,z_1},
-  \listsin{z_1,z_3},\listsin{z_3,z_1},
-  \listsin{z_1,z_2,z_3},\listsin{z_1,z_3,z_2},
-  \right.
-  \nonumber\\
-  &
-  \left.
-  \listsin{z_2,z_1,z_3},\listsin{z_2,z_3,z_1},
-  \listsin{z_3,z_1,z_2},\listsin{z_3,z_2,z_1}
-  \right\}
+\left\{
+\listsin{z_1}, 
+\listsin{z_1,z_2},\listsin{z_2,z_1},
+\listsin{z_1,z_3},\listsin{z_3,z_1},
+\listsin{z_1,z_2,z_3},\listsin{z_1,z_3,z_2},
+\right.
+\nonumber\\
+&
+\left.
+\listsin{z_2,z_1,z_3},\listsin{z_2,z_3,z_1},
+\listsin{z_3,z_1,z_2},\listsin{z_3,z_2,z_1}
+\right\}
 \end{align}
 
-Given the denotational, semantics, we demonstrate that the property $\tempo[1]{}$ is satisfied:
+We demonstrate that the property $\tempo[1]{}$ is satisfied:
 \begin{align}
 \listsin{z_1} \in \denote{S} \implies & 
-  \listsin{z_2} \notin \denote{S} \land
-  \listsin{z_3} \notin \denote{S} \land
-  \listsin{z_2,z_3}\notin \denote{S} \land
-  \listsin{z_3,z_2}\notin \denote{S}\nonumber\\
+\listsin{z_2} \notin \denote{S} \land
+\listsin{z_3} \notin \denote{S} \land
+\listsin{z_2,z_3}\notin \denote{S} \land
+\listsin{z_3,z_2}\notin \denote{S}\nonumber\\
 %%%%%
 \listsin{z_1,z_2} \in \denote{S} \implies &
-  \listsin{z_3} \notin \denote{S}\nonumber\\
+\listsin{z_3} \notin \denote{S}\nonumber\\
 %%%%%
 \listsin{z_2,z_1} \in \denote{S} \implies &
-  \listsin{z_3} \notin \denote{S}\nonumber\\
+\listsin{z_3} \notin \denote{S}\nonumber\\
 %%%%%
 \listsin{z_1,z_3} \in \denote{S} \implies &
-  \listsin{z_2} \notin \denote{S}\nonumber\\
+\listsin{z_2} \notin \denote{S}\nonumber\\
 %%%%%
 \listsin{z_3,z_1} \in \denote{S} \implies &
-  \listsin{z_2} \notin \denote{S}\nonumber\\
+\listsin{z_2} \notin \denote{S}\nonumber\\
 %%%%%
 \listsin{z_1,z_2,z_3} \in \denote{S} \implies &
-  \listsin{} \notin \denote{S}\nonumber\\
+\listsin{} \notin \denote{S}\nonumber\\
 %%%%%
 &\ldots\nonumber
 \end{align}
 
-The second temporal property is about belonging to one sublist in the beginning or in the end.
+The second temporal property is about belonging to one sublist in the beginning or in the end:
+%
+\begin{equation}
+\tempo[2]{S} = \forall~ i, zs ~\bullet~
+zs \in \denote{S} \iff
+\sliceright{zs}{i} \in \denote{S} \lor \sliceleft{zs}{i} \in \denote{S}\label{def:tempo2}
+\end{equation}
+%
 For example, if a generator is in a list, then it must be at the beginning or at the end.
 If $\listsin{z_0,z_1,z_2,z_3,z_4} \in \denote{S}$, thus either $\listsin{z_0}\in\denote{S}$, or $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 If $\listsin{z_0} \notin \denote{S}$, thus $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
@@ -391,8 +395,18 @@ For variable $\var{z_1}$:
 %
 
 The third temporal property is about belonging to one sublist in the middle.
-If a generator belongs to a sublist between $j$ and $i$, then it belongs to the sublist that starts at first position and ends in $j$ and to the sublist that starts at $i$ and ends at the last position (both sublists contain the sublist in the middle).
+If a generator belongs to a sublist between $j$ and $i$, then it belongs to the sublist that starts at the first position and ends in the $j^{th}$ and to the sublist that starts at $i^{th}$ and ends at the last position (both sublists contain the sublist in the middle).
+%
+\begin{align}
+\tempo[3]{S} &= \forall~ i, j, zs ~\bullet~
+j < i \implies \nonumber\\
+&\left(
+\slice{zs}{j}{i} \in \denote{S} \iff \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
+\right)\label{def:tempo3}
+\end{align}
+%
 For example, if $\listsin{z_1,z_2,z_3} \in \denote{S}$, then both $\listsin{z_0,z_1,z_2,z_3}$ and $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
+For a variable $\var{z_1}$:
 %
 %\begin{definition}[\Tempotext 3, belongs to the middle of a sublist]
 %\label{def:tempo3}
@@ -417,8 +431,13 @@ For example, if $\listsin{z_1,z_2,z_3} \in \denote{S}$, then both $\listsin{z_0,
 \end{align}
 
 Finally, if a generator belongs to a list, then there is a sublist of size one that contains the generator.
+%
+\begin{equation}
+\tempo[4]{S} = \forall~ zs ~\bullet~ zs \in \denote{S} \iff (\exists~ i ~\bullet~ \slice{zs}{i}{\left(i+1\right)} \in \denote{S})\label{def:tempo4}
+\end{equation}
+%
 If list $zs=\listsin{z_0,z_1,z_2,z_3,z_4} \in \denote{S}$, then one list $\listsin{z_i} \in \denote{S}$, where $i \in \left\{0,\ldots,4\right\}$.
-For a variable $\var{z_1}$
+For a variable $\var{z_1}$:
 %
 %\begin{definition}[\Tempotext 4, belongs to one sublist of size one]
 %\label{def:tempo4}
@@ -446,6 +465,11 @@ In general, for any generator $z$, the following is valid:
 \tempo[2]{\left(\var{z}\right)} \land
 \tempo[3]{\left(\var{z}\right)} \land
 \tempo[4]{\left(\var{z}\right)}
+\end{equation}
+
+We abbreviate \cref{law:var-tempo} as:
+\begin{equation}
+\tempo{S} = \tempo[1]{S} \land \tempo[2]{S} \land \tempo[3]{S} \land \tempo[4]{S}
 \end{equation}
 
 \begin{sloppypar}
@@ -713,20 +737,22 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 \end{align}
 \end{subequations}
 
-\section{Qualitative and quantitative properties}
-\label{sec:qualitative-quantitative-properties}
+\section{Qualitative and quantitative analyses}
+\label{sec:qualitative-quantitative-analyses}
 
 In \cref{sec:fault-trees} we showed the kind of results that are obtained in \ac{FTA}.
-In this \lcnamecref{sec:qualitative-quantitative-properties} we show how to formalize two kinds of properties of \acp{FT}: (i) \ac{MCSeq}, the number of fault elements in the minimal sequences that cause a root failure, and (ii) root probability, given the availability of basic fault occurrences probabilities.
+In this \lcnamecref{sec:qualitative-quantitative-analyses} we show how to formalize two kinds of properties\todo{MCSeq e a Probabilidade não seriam propriedades mas sim definições suas, não?! (FROM ACM)} of \acp{FT}: (i) \ac{MCSeq}, the number of fault elements in the minimal sequences that cause a root failure, and (ii) the root probability, given the availability of basic fault occurrences probabilities.
 These properties are the most representative, but other criteria can be modelled similarly.
+
+\subsection{\Acl{MCSeq}}
 
 Recall from the beginning of this \lcnamecref{chap:algebra} that the denotational semantics of \ac{algebra} is a set of \distinctlists.
 Thus each list has no repeated elements and represent a possible combination of faults that causes the root failure.
 \Acp{MCSeq} are those \distinctlists with the least length, defined in what follows.
 
 \begin{definition}[Minimal cut sequences]
-Let $S$ be a formula in \ac{algebra} and its denotational semantics ($\denote{S}$). 
-The \aclp{MCSeq} $\mcseqop$ of $S$ are:
+Let $S$ be a formula in \ac{algebra}.
+Its \aclp{MCSeq} ($\mcseqop$ of $S$) are:
 %
 \begin{equation}
 \mcseq{S} = \left\{~ xs ~\middle|~ xs \in \denote{S} ~\bullet~ \length{xs} = min_S ~\right\}
@@ -737,8 +763,12 @@ where
 min_S = \Min{\left\{~ \length{xs} ~\middle|~ xs \in \denote{S} ~\right\}}
 \]
 %
-and $\Minop$ returns the smallest number in the given set.
+and $\Minop$ returns the least sequence length in the given set.
 \end{definition}
+
+\todo{ACM: colocar exemplo aqui}
+
+\subsection{Root probability}
 
 The work reported in~\cite{Merle2010} shows how to calculate the probability of \iac{PAND} gate as:
 %
@@ -836,7 +866,7 @@ The empty list is the special and has value $1$.
 It works as the universal complement probability of any other list.
 When the empty list appears in a denotational semantics it means that the top-event occurs if no fault occurs.
 %Thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
-%This is the only assumption in the calculations shown in this \lcnamecref{sec:qualitative-quantitative-properties}.
+%This is the only assumption in the calculations shown in this \lcnamecref{sec:qualitative-quantitative-analyses}.
 
 We use the traditional probability calculations~\cite{Merle2010} as reference to calculate the probabilities of formulas in \ac{algebra}.
 \begin{subequations}
@@ -955,7 +985,7 @@ To enable the formal verification of structure expressions we use the concept of
 Safety requirements are written in terms of the properties of \iac{FT}, for example: (i) no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or (ii) the probability of all critical failure should be less than $P_x$.
 To check these requirements we translate these requirements into a value and verify in the theorem prover.
 
-For the two properties shown in this \lcnamecref{sec:qualitative-quantitative-properties}, we define the two acceptance criteria:
+For the two properties shown in this \lcnamecref{sec:qualitative-quantitative-analyses}, we define the two acceptance criteria:
 %
 \begin{subequations}
 \begin{align}
