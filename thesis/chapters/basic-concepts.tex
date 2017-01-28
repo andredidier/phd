@@ -195,15 +195,24 @@ In \cref{fig:time-relations} we show all possibilities of events relations in a 
 \end{alineas}
 %\end{enumerate}
 
-Considering that fault occurrence corresponds to the start of a fault event and its duration, from \cref{fig:time-relations} we clearly identify which event comes first: A comes before B, except in the cases of \cref{item:same-start-a-ends-before-b} and \cref{item:same}, where they start exactly at the same time.
-If fault events are independent (they are not susceptible to have a common cause), then the probability of their occurrences starting at the same time is very low.
-The relations of \cref{item:a-totally-before-b} and \cref{item:a-ends-when-b-starts} shows the case that the system was repaired, thus A is not active when B starts.
-In \cref{chap:algebra} we abstract the relation of events in continuous time as an \emph{exclusive before} relation, based on fault \emph{occurrence} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
+Considering that fault occurrence corresponds to the start of a fault event and its duration, from \cref{fig:time-relations} we clearly identify which event comes first: A comes before B, except in the cases of \cref{item:same-start-a-ends-before-b,item:same}, where they start exactly at the same time.
+Even in the case of failures that have a common cause, there may be a slight fraction of time between failures.
+%If fault events are independent (one does not cause the other), then the probability of their occurrences starting at the same time is very low.
+%It is slightly different of fault events that have a common cause. 
+For example, \iac{EMP} may cause a failure in all electronics, or a power shortage may cause a failure in all cooling systems in a power plant (see Fukushima accident~\cite{tepco2012}).
+There is a (temporal) causation relation of \iac{EMP} occurrence and the failures in all electronics, and also of a power shortage and the cooling systems's shutdown in Fukushima.
+On the other hand, there is no direct relation of the failure in each electronic, nor the failure in each cooling system.
+So, even if failure events have a common cause, and are not the same, they are \emph{statistically independent}.
+The relations of \cref{item:a-totally-before-b,item:a-ends-when-b-starts} shows the case that the system was repaired, thus A is not active when B starts.
 
 \begin{figure}[htb]
-  \centering
-  \includegraphicsaspectratio[0.5]{time-relations}
-  \caption{Relation of two events with duration}
-  \label{fig:time-relations}
+	\centering
+	\includegraphicsaspectratio[0.5]{time-relations}
+	\caption{Relation of two events with duration}
+	\label{fig:time-relations}
 \end{figure}
+
+
+
+In \cref{chap:algebra} we abstract the relation of events in continuous time as an \emph{exclusive before} relation, based on fault \emph{occurrence} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
 
