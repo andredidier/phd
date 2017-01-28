@@ -269,13 +269,13 @@ The predicates notation offers two additional ways to check non-determinism.
 \section{Predicates Notation}
 \label{sec:predicates-notation}
 
-The \ac{activation} needs a special notation to enable the analysis of: (i) a particular faults expression, or (ii) a propagation in components.
-Such a special notation extracts predicates in the inner algebra given an output of interest.
+The \acl{activation} needs a special notation to enable the analysis of: (i) a particular faults expression, or (ii) a propagation in components.
+Such a special notation extracts predicates in the algebra given an observable failure of the system (an undesired operational mode).
 
 \begin{definition}[Predicate]
 \label{def:predicate}
 Let $exp$ be an expression in \ac{activation}, and $O_x$ an operational mode.
-A predicate over $exp$ that matches $O_x$ is then:
+A predicate over $exp$ that matches $O_x$ is described as:
 \begin{equation}
 \label{eq:predicate}
 \predicate{exp}{O_x} \iff \left.\exists \left(P, O\right) \in \healthinessfun{exp}\ \middle|\ O = O_x \bullet P\right.
@@ -283,13 +283,14 @@ A predicate over $exp$ that matches $O_x$ is then:
 \end{definition}
 
 
-The predicate notation function returns a predicate in the inner algebra.
+The predicates notation function returns a predicate in the algebra.
 For the example in the beginning of this \lcnamecref{sec:predicates-notation}, the predicate for $O_2$ is obtained as follows:
 \[
 \predicate{S}{O_2} = B
 \]
 
-To allow fault propagation of components we need another special notation that expands the modes of an expression with a predicate in the inner algebra.
+To allow fault propagation of components we need another special notation. 
+It expands the modes of an expression with a predicate in the inner algebra.
 
 \begin{definition}[Modes]
 Let $exp$ be an expression in \ac{activation}, and $P$ a predicate in the inner algebra, then:
@@ -315,7 +316,7 @@ Let $exp$ be an expression in \ac{activation}, and $P_x$ a predicate in the inne
 
 \end{definition}
 
-The non-determinism can also be checked using the predicates notation and the activation property:
+Non-determinism can also be checked using the predicates notation and the activation property:
 \begin{subequations}
 \begin{align}
 \activation{S}{A \land \lnot B} = &
@@ -327,5 +328,6 @@ The non-determinism can also be checked using the predicates notation and the ac
 %
 \Cref{eq:s-nondet-activation} shows that both $O_1$ and $O_3$ can be observed if $A \land \lnot B$ is \emph{true}. 
 \Cref{eq:s-nondet-pred} states that if the possible operational modes of healthy $S$ are $O_1$ and $O_3$, then the predicate is $A \land \lnot B$.
+Non-determinism is the possibility of observing two different failures ($O_1$ and $O_3$) for the same failure expression ($A \land \lnot B$) in the algebra.
 In the next \lcnamecref{chap:case-study}, we show a practical case study using these properties and notations.
 
