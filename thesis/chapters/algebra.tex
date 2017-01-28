@@ -781,22 +781,25 @@ The work reported in~\cite{Merle2010} shows how to calculate the probability of 
 %
 \begin{align}
 P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
-& = \int_0^t P'_2(x) P_1(x) dx\label{eq:pand-probability}
+& = \int_0^t P'_2(t_2) \int_0^{t_2} P'_1(t_1) dt_1 dt_2 \nonumber\\
+& = \int_0^t P'_2(t_2) P_1(t_2) dt_2\label{eq:pand-probability}
 \end{align}
 %
-where $P_1$ and $P_2$ are the probability of the occurrence of the the first and the second faults (cumulative distribution function), respectively, and $T_1$ and $T_2$ are the times the first and the second faults occur.
+where $P_1$ and $P_2$ are the probabilities of the occurrences of the first and the second faults (cumulative distribution function), respectively, and $T_1$ and $T_2$ are the times the first and the second faults occur.
 The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs is the probability of the sequence of faults $f_i$, $i \in \left\{~1, \ldots, n~\right\}$:
 %
 \begin{align}
-\probability{\left[f_1,f_2\ldots,f_{n-1},f_n\right]} = &\int_0^t\fiti{n}\int_0^{t_n}\fiti{n-1}\ldots\int_0^{t_3}\fiti{2}\nonumber\\
-& \int_0^{t_2}\fiti{1} dt_1 dt_2\ldots dt_{n-1} dt_n\label{eq:general-pand-probability}
+\probability{\left[f_1,f_2\ldots,f_{n-1},f_n\right]} = \nonumber\\ \int_0^t\fiti{n}\int_0^{t_n}\fiti{n-1}\ldots\int_0^{t_3}\fiti{2}
+ \int_0^{t_2}\fiti{1} dt_1 dt_2\ldots dt_{n-1}  dt_n\label{eq:general-pand-probability}
 \end{align}
 %
 where $P_i$ is the cumulative probability function of fault $f_i$.
+\todo{ACM: deixar mais claro o que o cumulative probability function}
 
-The probability of occurrence in each list in the denotational semantics of \ac{algebra} uses the probability in the \ac{PAND} gate.
-The difference from the \ac{PAND} calculation is that repeated situations must be removed.
-For example, the probability of $\denote{\xbefore{\var{f_1}}{\var{f_2}}}$ contains the situations that $f_1$ occurs before $f_2$ \emph{and} $f_3$ does not occur, or $f_3$ occurs in some time: $\probability{\left[f_1,f_2,f_3\right]}$, $\probability{\left[f_1,f_3,f_2\right]}$, and $\probability{\left[f_3,f_1,f_2\right]}$.
+For \ac{algebra}, our proposal for probability calculation is defined in terms of the probability of \ac{PAND} gates.
+The reason is that our semantics is defined in terms of a set of lists (or sequences) of fault occurrences.
+The main difference from the \ac{PAND} calculation as reported in~\cite{FAR1976} is that repeated situations must be removed.
+For example, the probability of $\denote{\xbefore{\var{f_1}}{\var{f_2}}}$ contains the situations in which $f_1$ occurs before $f_2$ \emph{and} $f_3$ does not occur, or $f_3$ occurs in some time: $\probability{\left[f_1,f_2,f_3\right]}$, $\probability{\left[f_1,f_3,f_2\right]}$, and $\probability{\left[f_3,f_1,f_2\right]}$.
 %
 %To isolate these cases, we use the following definitions:
 %
@@ -812,20 +815,12 @@ For example, the probability of $\denote{\xbefore{\var{f_1}}{\var{f_2}}}$ contai
 %
 %where $ys / A$ removes the elements of $A$ in $ys$.
 
-Using \cref{eq:general-pand-probability,eq:generators} we define the denotational probability\index{denotational probability} $\denotationalprobop$ of a list as:
+Using \cref{eq:general-pand-probability,eq:generators} we define the probability for a fault sequence as:
 %
-\begin{subequations}
-\begin{align}
-\denotationalprob{xs} = &
-  \probability{xs} \times \prod_{f_j \in \generators_{xs}} \left(1-P_j\left(t\right)\right)\label{eq:denotational-probability}\\
-  % - 
-  %\sum_{ys \in R\left(S, xs\right)}\probability{ys}\label{eq:denotational-probability}\\
-%%%%%%%%%%%%%
-\generators_{xs} = & \generators\left(\UNIV\right) - \listset{xs}\label{eq:generators-minus-list}
-%%%%%
-%R\left(S, xs\right) = & \listsof{S}{xs} - \left\{xs\right\}\nonumber
-\end{align}
-\end{subequations}
+\begin{equation}
+\denotationalprob{xs} = 
+  \probability{xs} \times \prod_{f_j ~\in~ \generators - \listset{xs}} \left(1-P_j\left(t\right)\right)\label{eq:denotational-probability}
+\end{equation}
 %
 %For example, to calculate $\denotationalprob{\left[f_1, f_2\right]}$ for set of generators $\left\{f_1,f_2,f_3\right\}$, we have:
 %\begin{align*}
@@ -840,12 +835,11 @@ Using \cref{eq:general-pand-probability,eq:generators} we define the denotationa
 %%%%
 For example, for generators $f_1$, $f_2$, and $f_3$, $\denotationalprob{\left[f_1,f_2\right]} = \probability{\left[f_1,f_2\right]}\times\left(1-P_3(t)\right)$, which is the probability of $f_1$ occurring before $f_2$ and $f_3$ not occurring.
 
-The set of lists of the denotational semantics of a formula is an exclusive or, so two possibilities (lists) are not active simultaneously.
-For example, if $f_1$ occurs before $f_2$, then $f_2$ cannot occur before $f_1$.
-Thus the formula is the sum of the denotational probabilities of the lists.
+As the probability of each fault sequence is independent of each other, the probability of an \ac{algebra} formula is the sum of the denotational probabilities of its constituent lists.
 
 \begin{definition}[Probability of a formula in \ac{algebra}]
-Let $S$ be a formula in \ac{algebra}, then the probability of $S$, $\formulaprob{S}$, is:
+Let $S$ be a formula in \ac{algebra}.
+Then the probability of $S$, $\formulaprob{S}$, is given by:
 %
 \begin{equation}
 \label{eq:formula-probability}
@@ -854,7 +848,7 @@ Let $S$ be a formula in \ac{algebra}, then the probability of $S$, $\formulaprob
 \end{definition}
 
 The interesting part behind the probabilistic calculus over the denotational semantics is that it is only about ordering of events.
-It means that even if a formula contains \iac{NOT} operator, we still safely obtain a probability value, without concerning about complement probabilities as tackled in~\cite{Andrews2001}.
+It means that even if a formula contains \iac{NOT} operator, we still safely obtain a probability value, without worrying about complement probabilities as tackled in~\cite{Andrews2001}.
 For example, the probability of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2$) is:
 %
 \begin{align}
@@ -878,8 +872,8 @@ When the empty list appears in a denotational semantics it means that the top-ev
 We use the traditional probability calculations~\cite{Merle2010} as reference to calculate the probabilities of formulas in \ac{algebra}.
 \begin{subequations}
 \begin{align}
-\probability{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
-\probability{\vari{1} \lor \vari{2}} = & \Fit{1} + \Fit{2} - \Fit{1} \times \Fit{2}\label{eq:or-probability}
+\formulaprob{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
+\formulaprob{\vari{1} \lor \vari{2}} = & \Fit{1} + \Fit{2} - \Fit{1} \times \Fit{2}\label{eq:or-probability}
 \end{align}
 \end{subequations}
 
@@ -988,32 +982,39 @@ which is the same calculation as shown in \cref{eq:formula-probability-of-inf}.
 \subsection{Formal acceptance criteria}
 \label{sec:formal-acceptance-criteria}
 
-To enable the formal verification of structure expressions we use the concept of \emph{acceptance criteria}.
+To enable the formal verification of structure expressions we use the concept of \emph{acceptance criteria}.\todo{ACM: colocar a sentença anterior em termos mais gerais de uma análise de FTA...}
 Safety requirements are written in terms of the properties of \iac{FT}, for example: (i) no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or (ii) the probability of all critical failure should be less than $P_x$.
 To check these requirements we translate these requirements into a value and verify in the theorem prover.
 
-For the two properties shown in this \lcnamecref{sec:qualitative-quantitative-analyses}, we define the two acceptance criteria:
+For the two analysis shown in this \lcnamecref{sec:qualitative-quantitative-analyses}, we define the two acceptance criteria:
 %
 \begin{subequations}
 \begin{align}
-\lengthacceptance{F}{n} = & \Min{\left\{~ \length{xs} ~\middle|~ xs \in L ~\right\}} \le n & \text{length of \acp{MCSeq}}\\
+\lengthacceptance{F}{n} = &~ \Min{\left\{~ \length{xs} ~\middle|~ xs \in \denote{F} ~\right\}} > n & \text{length of \acp{MCSeq}}\\
 %
-\probacceptance{F}{P_x} = & \probability{F} < P_x & \text{root-event probability}
+\probacceptance{F}{P_x} = &~ \formulaprob{F} < P_x & \text{root-event probability}
 \end{align}
 \end{subequations}
 %
 Both equations have Boolean\index{Boolean} return value, which can be verified by a theorem prover.
 
+Using the formal acceptance criteria, safety requirements as stated in the beginning of this section are:
+%
+\begin{description}
+	\item[$\lengthacceptance{F}{1}$:] the minimum length of the \acp{MCSeq} of $F$ are higher than 1;
+	\item[$\probacceptance{F}{10^{-9}}$: ] the probability of the top event of $F$ shall be less than $10^{-9}$.
+\end{description}
+
 \section{Mapping \ac*{CSPm} traces to \ac*{algebra}}
 \label{sec:mapping-cspm-algebra}
 
 In our previous work~\cite{DM2012,Didier2012} we reported a strategy to inject faults in a \ac{CSPm} model generated from an architectural model of a system in \simulink.
-Using a model-checker we are able to obtain failure traces with the injected faults, which we produce failure expression in Boolean algebra.
+Using a model-checker we were able to obtain failure traces with the injected faults, which we produced failure expressions in Boolean algebra.
 Thus, the order-related information was lost, as there are no means to represent them in Boolean algebra\index{Boolean algebra}.
-For example, a trace that represent $f_1$ before $f_2$, $\trace{f_1,f_2}$, would be written as the expression $\var{f_1} \land \var{f_2}$, which is the same as $\var{f_2} \land \var{f_1}$.
+For example, a trace that represents the occurrence of $f_1$ before $f_2$ was written as the expression $\var{f_1} \land \var{f_2}$, which is the same as $\var{f_2} \land \var{f_1}$.
 
 Using the same strategy, but now mapping the traces to \ac{algebra} we are able to analyse order-related failures.
-In this section we show how to map the same failure traces reported in the strategy of~\cite{DM2012} to \ac{algebra}.
+In this section we show how to map the same failure traces obtained by the strategy reported in the work~\cite{DM2012} to \ac{algebra}.
 
 The mapping function takes the set of traces as input and produces a structure expression in \ac{algebra}.
 Each event in the traces becomes a variable, and each list becomes \iac{XBefore} with the conjunction (\acp{AND}) of the variables of the remaining generators.
@@ -1021,24 +1022,24 @@ The following recursive definitions describe the mapping function.
 %
 \begin{subequations}
 \begin{align}
-\tracetoalgebra{\trace{}} = & \top\label{eq:mapping-algebra-empty}\\
+\tracetoalgebra{\trace{}} = &~ \top\label{eq:mapping-algebra-empty}\\
 %
-\tracetoalgebra{\trace{f}} = & \var{f}\label{eq:mapping-algebra-singleton}\\
+\tracetoalgebra{\trace{f}} = &~ \var{f}\label{eq:mapping-algebra-singleton}\\
 %
-\tracetoalgebra{\append{\trace{f_1}}{tr}} = & 
+\tracetoalgebra{\append{\trace{f_1}}{tr}} = &~
   \xbefore
     {\var{f_1}}
     {\tracetoalgebra{tr}}\label{eq:mapping-algebra-two-more-trace}\\
 %
-\tracetoalgebra{\left\{ tr_1, tr_2, \ldots, tr_n  \right\}} =& 
+\tracetoalgebra{\left\{ tr_1, tr_2, \ldots, tr_n  \right\}} =&~ 
   \bigvee_{i \in \left\{1,\ldots,n\right\}} 
   \left(\tracetoalgebra{tr_i} \land 
-  \lnot \bigvee_{j \in \generators_{tr_i}} \var{f_j}\right)\label{eq:mapping-algebra-set}
+  \lnot \bigvee_{j ~\in~ \generators - \listset{tr_i}} \var{f_j}\right)\label{eq:mapping-algebra-set}
 \end{align}
 \end{subequations}
 %
-where $\append{}{}$ concatenates two traces, and $\generators_{tr_i}$ is the same as in \cref{eq:generators-minus-list} for traces.
-The following examples shows how it works for generators $f_1$, $f_2$, $f_3$:
+where $\append{}{}$ concatenates two traces.
+The following examples show how it works for generators $f_1$, $f_2$, $f_3$:
 %
 \begin{subequations}
 \begin{align}
