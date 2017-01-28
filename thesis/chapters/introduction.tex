@@ -204,9 +204,19 @@ The \ac{activation} requires that the inner algebras provide a set of properties
 The use of the \ac{NOT} is essential: besides its use in expressions, we use the complement to normalise the expressions to provide \emph{healthy} expressions.
 
 To obtain critical event expressions used in \acp{FT} and to denote faults propagation, the \ac{activation} provides a predicates notation and verification of non-determinism. 
-We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: (i) verify its existence, (ii) indicate which set of operational modes are active for a combination of faults, or (iii) what is the combination of faults that activates a set of operational modes.
+We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: 
+\begin{alineasinline}
+  \item verify its existence, 
+  \item indicate which set of operational modes are active for a combination of faults, or 
+  \item what is the combination of faults that activates a set of operational modes.
+\end{alineasinline}
 
-In our proposed solution, depending on how much clear are the faults, the analyst may follow one of the paths: (i) model the system in \simulink to allow fault injection and discovery, or (ii) model faults using the \acl{activation}.
+In our proposed solution, depending on how much clear are the faults, the analyst may follow one of the paths: 
+\begin{alineasinline}
+  \item model the system in \simulink to allow fault injection and discovery, or 
+  \item model faults using the \acl{activation}.
+\end{alineasinline}
+%
 Both paths ends with structure expressions and the \ac{FTA} is performed using \ac{algebra}.
 
 \Cref{fig:strategy-overview-csp} shows how to perform \ac{FTA} using faults injection.

@@ -29,7 +29,12 @@ We also proposed a parametrized logic, the \ac{activation}, that enables the ana
 If \ac{algebra} is used as a parameter, then the order of occurrence of faults can be considered.
 Other algebra, like ternary algebras (\cite{Jones2016}) can be used, since they have tautology and contradiction properties.
 Although the \ac{activation} is not as detailed as \ac{AADL}, the predicates notation in conjunction with the \ac{algebra} provides a richer assertion framework.
-Also, it is possible to verify non-determinism on the model, by: (i) verifying its existence with the $\nondetcmd$ function, (ii) providing an expression and obtaining the possible operational modes with the $\activationcmd$ function, or (iii) using the predicates notation to obtain a predicate that enables two or more operational modes.
+Also, it is possible to verify non-determinism on the model, by: 
+\begin{alineasinline}
+  \item verifying its existence with the $\nondetcmd$ function, 
+  \item providing an expression and obtaining the possible operational modes with the $\activationcmd$ function, or 
+  \item using the predicates notation to obtain a predicate that enables two or more operational modes.
+\end{alineasinline}
 
 
 %A related approach to analyse a system behaviour is to employ passive testing. 
@@ -66,7 +71,13 @@ The distinct lists representation in our algebra does not allow obtaining minima
 The sets in \iac{FBA} formula are already the minimal cut sets.
 In our work, \ac{algebra} allows us to find minimal cut sequences (with \ac{XBefore}) from the formulas in \ac{DNF} algebraically: each sub-expression is a minimal cut sequence.
 
-Boolean formulas reduction can be achieved by: (i) application of Boolean laws, (ii) \acp{BDD}, or (iii) \acp{FBA}.
+Boolean formulas reduction can be achieved by: 
+\begin{alineasinline}
+  \item application of Boolean laws, 
+  \item \acp{BDD}, or 
+  \item \acp{FBA}.
+\end{alineasinline}
+%
 We used Boolean and \ac{XBefore} laws to reduce \ac{algebra} formulas.
 %
 The work reported in~\cite{TXD2011,XTD2012} uses Sequential BDDs to reduce formulas with order-based operators.

@@ -741,7 +741,12 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 \label{sec:qualitative-quantitative-analyses}
 
 In \cref{sec:fault-trees} we showed the kind of results that are obtained in \ac{FTA}.
-In this \lcnamecref{sec:qualitative-quantitative-analyses} we show how to formalize two kinds of properties\todo{MCSeq e a Probabilidade não seriam propriedades mas sim definições suas, não?! (FROM ACM)} of \acp{FT}: (i) \ac{MCSeq}, the number of fault elements in the minimal sequences that cause a root failure, and (ii) the root probability, given the availability of basic fault occurrences probabilities.
+In this \lcnamecref{sec:qualitative-quantitative-analyses} we show how to formalize two kinds of properties\todo{MCSeq e a Probabilidade não seriam propriedades mas sim definições suas, não?! (FROM ACM)} of \acp{FT}: 
+\begin{alineasinline}
+  \item \ac{MCSeq}, the number of fault elements in the minimal sequences that cause a root failure, and 
+  \item the root probability, given the availability of basic fault occurrences probabilities.
+\end{alineasinline}
+%
 These properties are the most representative, but other criteria can be modelled similarly.
 
 \subsection{\Acl{MCSeq}}
@@ -983,7 +988,11 @@ which is the same calculation as shown in \cref{eq:formula-probability-of-inf}.
 \label{sec:formal-acceptance-criteria}
 
 To enable the formal verification of structure expressions we use the concept of \emph{acceptance criteria}.\todo{ACM: colocar a sentença anterior em termos mais gerais de uma análise de FTA...}
-Safety requirements are written in terms of the properties of \iac{FT}, for example: (i) no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or (ii) the probability of all critical failure should be less than $P_x$.
+Safety requirements are written in terms of the properties of \iac{FT}, for example: 
+\begin{alineasinline}
+  \item no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or 
+  \item the probability of all critical failure should be less than $P_x$.
+\end{alineasinline}
 To check these requirements we translate these requirements into a value and verify in the theorem prover.
 
 For the two analysis shown in this \lcnamecref{sec:qualitative-quantitative-analyses}, we define the two acceptance criteria:

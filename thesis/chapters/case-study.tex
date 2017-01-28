@@ -215,7 +215,12 @@ which differs from \cref{eq:m-algebra} only on terms: $F \land B_1$ (of $M_{bool
 \section{From \ac*{activation} to structure expressions with Boolean operators}
 \label{sec:activation-to-structure-expressions-boolean-operators}
 
-The power source has only two possible operational modes: (i) the power source works as expected, providing a nominal value of $12V$, and (ii) it has an internal failure $B_i$, and its operational mode is ``low power''.
+The power source has only two possible operational modes: 
+\begin{alineasinline}
+  \item the power source works as expected, providing a nominal value of $12V$, and 
+  \item it has an internal failure $B_i$, and its operational mode is ``low power''.
+\end{alineasinline}
+%
 In \ac{activation} it is modelled as:
 \begin{equation}
 \label{eq:power-source}
@@ -271,7 +276,12 @@ The expression states the following:
   \]
 \end{itemize}
 
-The operational modes (observed behaviour) of the monitor depend on: (i) its internal fault, and (ii) propagated errors from its inputs.
+The operational modes (observed behaviour) of the monitor depend on: 
+\begin{alineasinline}
+  \item its internal fault, and 
+  \item propagated errors from its inputs.
+\end{alineasinline}
+%
 Composing the monitor with the two power sources, we obtain the \ac{activation} expression of a power supply subsystem $System_{bool}$:
 %
 \begin{align*}
@@ -439,8 +449,8 @@ Note that the finer analysis splits the predicate
 %
 We can assure that such a split is complete because the predicates notation evaluates to $B_1$. 
 As the operands satisfy all temporal properties (\cref{def:tempo1,def:tempo2,def:tempo3,def:tempo4}) and events independence (\cref{law:independent-events}), thus the law shown in \cref{thm:xbefore-sup-equiv-inf} is valid.
-For case~(i), the expected behaviour is the same as $in_1$ because the system switches to $in_2$, but then an internal failure occurs, and it switches back to $in_1$.
-For case~(ii), it switches to $in_2$ due to an internal failure, then the first input fails, so the behaviour is similar to the nominal behaviour (see the second \emph{modes} in \cref{eq:monitor-algebra}).
+For the first split item, the expected behaviour is the same as $in_1$ because the system switches to $in_2$, but then an internal failure occurs, and it switches back to $in_1$.
+For the second split item, it switches to $in_2$ due to an internal failure, then the first input fails, so the behaviour is similar to the nominal behaviour (see the second \emph{modes} in \cref{eq:monitor-algebra}).
 \end{sloppypar}
 %
 Following the similar expansions of \cref{eq:monitor-bool}, we obtain:

@@ -1132,10 +1132,6 @@ The \textsim{Sensor} detects the actual position of the \textsim{Actuator} and s
 strategy.
 The outputs of the hardware elements are annotated with \textsim{HW}, which are the two power sources and an internal component of the monitor (switch command).
 
-%\adnote{Verificar se as frases tiradas da introdução se adequam melhor aqui.}
-%As hardware components are susceptible to fault injection, this strategy consists of: (i) a process that represents the nominal behaviour (without fault injection), (ii) a process that represents the erroneous behaviour with all possibilities of faults, due to fault injection, and (iii) an observer process to compare the nominal behaviour with the erroneous behaviour.
-%To create failure expression, we abstract the fault traces by not considering events ordering.
-
 To perform a formal verification in a \simulink system model we use a model-checking tool, \theac{FDR}.
 It is a refinement checker for formal models written in \ac{CSPm}.
 To verify a refinement, it takes two specifications:

@@ -3,15 +3,27 @@
 
 The \acl{activation} proposed in this work emerges from the need to analyse the behaviour of a system when a subset of the faults have been triggered in some order, and to provide completeness analysis of system behaviour.\todo{ACM: definir completeness analysis}
 %
-There are at least two strategies to use \ac{activation} to obtain structure expressions of \ac{SFT}, \ac{TFT}, or \ac{DFT}: (i) model systems directly in \ac{activation}, and (ii) obtaining operational mode expressions extracted from failure traces, as shown in the work reported in~\cite{DM2016}.
+There are at least two strategies to use \ac{activation} to obtain structure expressions of \ac{SFT}, \ac{TFT}, or \ac{DFT}: 
+\begin{alineasinline}
+  \item model systems directly in \ac{activation}, and 
+  \item obtaining operational mode expressions extracted from failure traces, as shown in the work reported in~\cite{DM2016}.
+\end{alineasinline}
 %
 In approaches as those reported in~\cite{WP2009,Merle2010}, behavioural completeness is left for the analyst.
 Using tautology and the indication of undefined nominal values, we ensure that no situation is left forgotten.
 
-The \acl{activation} associates: (i) an operational mode, and (ii) the expression of fault events that \emph{activates} the operational mode or error event.
+The \acl{activation} associates: 
+\begin{alineasinline}
+  \item an operational mode, and 
+  \item the expression of fault events that \emph{activates} the operational mode or error event.
+\end{alineasinline}
 The expressions of fault events can be written in any algebra that provides tautology and contradiction properties.
 Boolean algebra and the \ac{algebra} provide both.
-Thus, \ac{activation} is parametrized by: (i) an algebra that provides at least tautology and contradiction, and (ii) operational modes.
+Thus, \ac{activation} is parametrized by: 
+\begin{alineasinline}
+  \item an algebra that provides at least tautology and contradiction, and 
+  \item operational modes.
+\end{alineasinline}
 \Cref{fig:logic-overview} depicts an overview of \ac{activation}.
 %
 \begin{figure}[ht]
@@ -51,7 +63,11 @@ Each term in \ac{activation} is a pair of a predicate and an operational mode.
 The predicate is written in either Boolean algebra, \ac{algebra}, or any algebra that provides these properties: tautology and contradiction.
 We assume that the set of possible faults on a system is finite and that each variable declared in a predicate represents a fault event.
 
-The operational mode has two generic values: (i) Nominal, and (ii) Failure.
+The operational mode has two generic values: 
+\begin{alineasinline}
+  \item Nominal, and 
+  \item Failure.
+\end{alineasinline}
 Nominal values either determine a value, or an undefined value (in this case, the constant value ``$\undefinednominal$'' is assumed).
 Failure values denote an erroneous behaviour, which can be a total failure (for example, signal omission) or a failure that causes degradation (for example, a signal below or above its nominal range).
 The choice of the operational modes depends on the system being analysed and its definition is generic and is left for the analyst.
@@ -269,7 +285,11 @@ The predicates notation offers two additional ways to check non-determinism.
 \section{Predicates Notation}
 \label{sec:predicates-notation}
 
-The \acl{activation} needs a special notation to enable the analysis of: (i) a particular faults expression, or (ii) a propagation in components.
+The \acl{activation} needs a special notation to enable the analysis of: 
+\begin{alineasinline}
+  \item a particular faults expression, or 
+  \item a propagation in components.
+\end{alineasinline}
 Such a special notation extracts predicates in the algebra given an observable failure of the system (an undesired operational mode).
 
 \begin{definition}[Predicate]

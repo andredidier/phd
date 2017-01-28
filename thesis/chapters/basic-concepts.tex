@@ -181,22 +181,24 @@ We detail \acp{DFT} in \cref{sec:dynamic-fault-trees}.
 The most general case for time relations is to consider that each fault event has a continuous time duration.
 They are the basis on how fault events discretisation are defined.
 The point of view in this work is the analysis of the effects caused by a combination of faults in a snapshot of a system state.
-In \cref{fig:time-relations} we show all possibilities of events relations in a continuous time line (from A to B; the converse relation is similar):
+In \cref{fig:time-relations} we show all possibilities of events relations in a continuous time line from A to B (the converse relation is similar):
 
-\begin{enumerate}\renewcommand{\theenumi}{\alph{enumi}}
-  \item A starts before and ends after B has started, but before B has ended;
-  \item A starts before B and ends after B has ended (A contains B);
-  \item B starts after A, but they end at the same time;
-  \item A and B start at the same time, but A ends before B;
-  \item A and B start and end at the same time;
-  \item A starts before B and ends when B starts.
-  \item A starts and ends before B starts;
-\end{enumerate}
+%\begin{enumerate}[label=\alph*.,ref=\alph*]%\renewcommand{\theenumi}{\alph{enumi}}
+\begin{alineas}
+  \item\label{item:a-totally-before-b} A starts and ends before B starts;
+  \item\label{item:intersect-end-a-start-b} A starts before and ends after B has started, but before B has ended;
+  \item\label{item:a-contains-b} A starts before B and ends after B has ended (A contains B);
+  \item\label{item:same-start-a-ends-before-b} A and B start at the same time, but A ends before B;
+  \item\label{item:intersect-end-a-b} B starts after A, but they end at the same time;
+  \item\label{item:same} A and B start and end at the same time;
+  \item\label{item:a-ends-when-b-starts} A starts before B and ends when B starts.
+\end{alineas}
+%\end{enumerate}
 
-Considering that fault occurrence corresponds to the start of a fault event and its duration, from \cref{fig:time-relations} we clearly identify which event comes first: A comes before B, except in the cases (d) and (e), where they start exactly at the same time.
-If fault events are independent (they are not susceptible to have a common cause) then the probability of their occurrences starting at the same time is very low.
-The relations (f) and (g) shows the case that the system was repaired, thus A is not active when B starts.
-In \cref{sec:strategy} we abstract the relation of events in continuous time as an \emph{exclusive before} relation, based on fault \emph{occurrence} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
+Considering that fault occurrence corresponds to the start of a fault event and its duration, from \cref{fig:time-relations} we clearly identify which event comes first: A comes before B, except in the cases of \cref{item:same-start-a-ends-before-b} and \cref{item:same}, where they start exactly at the same time.
+If fault events are independent (they are not susceptible to have a common cause), then the probability of their occurrences starting at the same time is very low.
+The relations of \cref{item:a-totally-before-b} and \cref{item:a-ends-when-b-starts} shows the case that the system was repaired, thus A is not active when B starts.
+In \cref{chap:algebra} we abstract the relation of events in continuous time as an \emph{exclusive before} relation, based on fault \emph{occurrence} (it is similar---at least implicitly---to what is reported in~\cite{WP2009,MRL2011}).
 
 \begin{figure}[htb]
   \centering
