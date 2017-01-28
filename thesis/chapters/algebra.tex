@@ -766,7 +766,14 @@ min_S = \Min{\left\{~ \length{xs} ~\middle|~ xs \in \denote{S} ~\right\}}
 and $\Minop$ returns the least sequence length in the given set.
 \end{definition}
 
-\todo{ACM: colocar exemplo aqui}
+For example, the \acp{MCSeq} of $\xbefore{\var{a}}{\left(\var{b} \lor \var{c}\right)}$ (for generators $a$, $b$, and $c$) are:
+%
+\begin{equation}
+\mcseq{\xbefore{\var{a}}{\left(\var{b} \lor \var{c}\right)}} = \left\{ \listsin{a,b}, \listsin{a,c} \right\}\label{eq:mcseq-a-and-b}
+\end{equation}
+
+\Cref{eq:mcseq-a-and-b} states that it is sufficient that $a$ occurs before $b$, or $a$ occurs before $c$, to cause the top event.
+Other lists in the denotational semantics of the formula are $\listsin{a,b,c}$ and $\listsin{a,c,b}$, but these are not minimal.
 
 \subsection{Root probability}
 
