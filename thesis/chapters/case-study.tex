@@ -125,12 +125,11 @@ For each trace shown in \cref{sec:faults-injection}, the mapping function genera
 They represent the same faults shown in \cref{sec:faults-injection}.
 %Note that the negation in the formula is very simple to represent in \ac{algebra} (and \ac{FBA}\index{Boolean Algebra!Free}) because it is just the absence of the generator.
 %
-Applying mapping function, \cref{eq:mapping-bool-set}, for the previously shown set of traces, we obtain  following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
+Applying the mapping function, \cref{eq:mapping-bool-set}, for the previously shown set of traces, we obtain the following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
 %
 \begin{equation}
 M_{bool} = (B_1 \land B_2) \lor (F \land (B_1 \lor B_2))\label{eq:m-bool}
 \end{equation}
-
 %
 which is equivalent to \possessiveembraer failure expression shown in \cref{tbl:acsAnnotations}.
 %
@@ -211,7 +210,7 @@ Expanding \cref{eq:m-bool}, we have:
 (B_1\land B_2) \lor (F \land B_2) \lor (F \land B_1)
 \]
 %
-which differ from \cref{eq:m-algebra} only on terms: $F \land B_1$ (of $M_{bool}$) and $\xbefore{F}{B_1}\land \lnot B_2$ (of $M_A$).
+which differs from \cref{eq:m-algebra} only on terms: $F \land B_1$ (of $M_{bool}$) and $\xbefore{F}{B_1}\land \lnot B_2$ (of $M_A$).
 
 \section{From \ac*{activation} to structure expressions with Boolean operators}
 \label{sec:activation-to-structure-expressions-boolean-operators}
@@ -227,7 +226,13 @@ PowerSource_i = \left\{
 \end{equation}
 %
 where $LP$ is the LowPower failure.
-It is easy to see that the expression $PowerSource_i$ is healthy.
+$PowerSource_i$ is healthy:
+\begin{itemize}
+	\item $\healthy[1]$: there is no contradiction in the expressions;
+	\item$\healthy[2]$: combining the expressions of the pairs in a disjunction, we obtain a tautology;
+	\item$\healthy[3]$: the operational modes of the pairs are distinct.
+\end{itemize}
+
 
 The monitor is a bit different because its behaviour depends not only on internal faults, but also on its inputs. 
 We will now use the predicates notation defined in \cref{sec:predicates-notation} to express fault propagation.
@@ -379,7 +384,7 @@ F \land \left(B_1 \lor B_2\right) \lor \left(B_1 \land B_2\right)
 
 The monitor expression also indicates that if the switch is operational ($\lnot F$) and at least one PowerSource is operational ($\lnot B_1 \lor \lnot B_2$), the monitor output is nominal.
 But if at least one PowerSource is faulty ($B_1 \lor B_2$) and the monitor has an internal failure ($F$) the system is not operational.
-These two sentences written in \ac{activation} using predicates notation are:
+These two sentences---written in \ac{activation} using the predicates notation---are:
 \begin{subequations}
 \begin{align}
 \activationcmd& \left(System_{\mathrm{bool}}, \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right)\right) \nonumber\\
@@ -401,8 +406,9 @@ These two sentences written in \ac{activation} using predicates notation are:
 
 Now, let's consider the same system but with a subtle modification.
 As shown in~\cite{DM2016}, the order of the occurrence of faults may be relevant, and the qualitative and quantitative analyses results may be different than those results without considering the order of the occurrence of faults.
-Observing \cref{fg:blockDiagramMonitorInternals}, we see that if $F$ activates before a failure in the first input of the monitor, then it would display a nominal behaviour, because the internal failure $F$ anticipates switching to the second input.
-On the other hand, if the first input fails before $F$, then the monitor would switch to the second input, then switch back, due to the internal failure.
+Observing \cref{fg:blockDiagramMonitorInternals}, we see that if $F$ activates before a failure in the first input of the monitor, then it would display a nominal behaviour.
+This is because the internal failure $F$ anticipates switching to the second input.
+On the other hand, if the first input fails before $F$, then the monitor would switch to the second input, and then switch back due to the internal failure.
 We obtain the following expression for the monitor, now using the \ac{algebra}:
 
 %
@@ -420,7 +426,7 @@ Monitor_{XB} &\left(in_1, in_2\right) = \\
 where $X$ is an unbound variable and assumes any value.
 
 \begin{sloppypar}
-The difference to $System_{\mathrm{bool}}$ (\cref{eq:monitor-bool}) is only the finer analysis of the cases of erroneous behaviour of the first input and an internal failure.
+The difference to $System_{\mathrm{bool}}$ (\cref{eq:monitor-bool}) is only the finer analysis of the cases of erroneous behaviours of the first input and an internal failure.
 Note that the finer analysis splits the predicate 
 %
 \begin{align*}
@@ -431,8 +437,8 @@ Note that the finer analysis splits the predicate
   & \xbefore{F}{\lnot\predicate{in_1}{\Nominal{12V}}} & \text{(activates } in_2\text{)}
 \end{align*}
 %
-We can assure that such a split is complete because the predicate notation evaluates to $B_1$. 
-Thus the operands satisfy all temporal properties (\cref{def:tempo1,def:tempo2,def:tempo3,def:tempo4}) and events independence (\cref{law:independent-events}), thus the law shown in \cref{thm:xbefore-sup-equiv-inf} is valid.
+We can assure that such a split is complete because the predicates notation evaluates to $B_1$. 
+As the operands satisfy all temporal properties (\cref{def:tempo1,def:tempo2,def:tempo3,def:tempo4}) and events independence (\cref{law:independent-events}), thus the law shown in \cref{thm:xbefore-sup-equiv-inf} is valid.
 For case~(i), the expected behaviour is the same as $in_1$ because the system switches to $in_2$, but then an internal failure occurs, and it switches back to $in_1$.
 For case~(ii), it switches to $in_2$ due to an internal failure, then the first input fails, so the behaviour is similar to the nominal behaviour (see the second \emph{modes} in \cref{eq:monitor-algebra}).
 \end{sloppypar}
@@ -602,7 +608,7 @@ Simplifying Boolean\index{Boolean algebra} operators as usual, the XBefore expre
 \begin{align*}
   \left(\lnot B_2 \land \xbefore{F}{B_1}\right) &\lor \left(\lnot B_2 \land \xbefore{B_1}{F}\right)\\
   \intertext{which simplifies to}
-  \lnot B_2\land ~&~ F \land B_1 & \text{by \cref{thm:xbefore-sup-equiv-inf}}
+  \lnot B_2 ~\land ~&~ F \land B_1 & \text{by \cref{thm:xbefore-sup-equiv-inf}}
 \end{align*}
 %
 Thus:
