@@ -1092,6 +1092,45 @@ Reducing the expressions of the non-coherent \ac{FT} (\cref{fig:outcome-4-non-co
 %We can construct two independent fault trees, $TP_1$ and $TP_2$, for the unavailability of $P_1$ and $P_2$ as: $TP_1 = P_1 \lor CP_1 \lor \parsin{D_1 \land \parsin{I \lor D_2}}$ and $TP_2 = P_2 \lor CP_2 \lor \parsin{D_2 \land \parsin{I \lor D_1}}$.
 %$TOP_1$ and $TOP_2$ generate coherent fault trees, using $TP_1$ and $TP_2$.
 
+\section{Probabilistic analysis of a non-coherent tree}
+\label{sec:probabilistic-analysis-non-coherent-tree}
+
+The work reported in~\cite{Andrews2001} shows an example of \iac{FT} with an explicit \ac{NOT} operator, the importance of such an operator, and how to calculate the probability of a critical failure.
+The system is a leak protection system that has valves and sensors, and is depicted in \cref{fig:leak-protection-system}.
+Valve $VAL$ closes a gas flow if a sensor detects a leak $L$.
+If the valve is closed for a certain amount of time, the pressure on the system may increase, and then, a relief valve $PRV$ diverts the gas flow elsewhere.
+%The possible failure are all internal failures: 
+%
+
+\begin{figure}[htb]
+	\centering
+	\includegraphicsaspectratio[0.5]{leak-protection-system}
+	\caption{Leak Protection System architectural view}
+	\label{fig:leak-protection-system}
+\end{figure}
+
+The undesired top-event is an ignition in room 1 ($TOP$).
+As shown in~\cite{Andrews2001}, the structure expression of $TOP$ is:
+%
+\begin{equation}
+TOP = L \land \left(\left(\lnot VAL \land PRV\right) \lor \left(VAL \land I_1\right)\right)\label{eq:leak-protection-system-structure-expression}
+\end{equation}
+%
+For a coherent analysis, they use the consensus law to add a ``missing'' term.
+In this case, the missing term is $L \land PRV \land I_1$.
+This gives the final expression:
+\begin{equation}
+TOP = L \land \left(\left(\lnot VAL \land PRV\right) \lor \left(VAL \land I_1\right) \lor \left(PRV \land I_1\right)\right)\label{eq:leak-protection-system-extended-structure-expression}
+\end{equation}
+Finally, the probability for \cref{eq:leak-protection-system-structure-expression} is:
+\begin{equation}
+\probability{TOP} = P_L \times \left( P_{PRV} + P_{VAL} \times P_{I_1} - 
+P_{PRV}\times P_{VAL}  \right)\label{eq:leak-protection-system-probability}
+\end{equation}
+%
+where $P_x$ is the failure probability of $x$, $x \in \left\{L,PRV,VAL,I_1\right\}$.
+
+
 \section{Systems nominal model and fault injection}
 \label{sec:faults-injection}
 

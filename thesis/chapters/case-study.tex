@@ -13,47 +13,10 @@ We present the \simulink model for this monitor in \cref{fg:blockDiagramMonitorI
 
 %As we mentioned in~\cref{sec:faults-injection} we translated the monitor to \ac{CSPm} according to our strategy and modified the observer to make \acs{FDR} generate more counter-examples.
 
-The work reported in~\cite{Andrews2001} shows an example of \iac{FT} with an explicit \ac{NOT} operator, the importance of such an operator, and how to calculate the probability of a critical failure.
-The system is a leak protection system that has valves and sensors, and is depicted in \cref{fig:leak-protection-system}.
-Valve $VAL$ closes a gas flow if a sensor detects a leak $L$.
-If the valve is closed for a certain amount of time, the pressure on the system may increase, and then, a relief valve $PRV$ diverts the gas flow elsewhere.
-The possible failure are all internal failures: 
-%
-\begin{description}
-  \item[$prv$:] the pressure relief valve fails;
-  \item[$i_1$:] there is an ignition source in room 1;
-  \item[$l$:] there is a gas leak in room 1;
-  \item[$val$:] the isolation valve fails.
-\end{description}
-
-We associate these faults events as:
-\begin{align*}
-PRV = &\var{prv}\\
-I_1 = &\var{i_1}\\
-L = &\var{l}\\
-VAL = & \var{val}
-\end{align*}
-
-The undesired top-event is an ignition in room 1 ($TOP$).
-As shown in~\cite{Andrews2001}, the structure expression of $TOP$ is:
-%
-\begin{equation}
-TOP = L \land \left(\left(\lnot VAL \land PRV\right) \lor \left(VAL \land I_1\right)\right)\label{eq:leak-protection-system-structure-expression}
-\end{equation}
-%
-For a coherent analysis, they use the consensus law to add a ``missing'' term.
-In this case, the missing term is $L \land PRV \land I_1$.
-This gives the final expression:
-\begin{equation}
-TOP = L \land \left(\left(\lnot VAL \land PRV\right) \lor \left(VAL \land I_1\right) \lor \left(PRV \land I_1\right)\right)\label{eq:leak-protection-system-extended-structure-expression}
-\end{equation}
-Finally, the probability for \cref{eq:leak-protection-system-structure-expression} is:
-\begin{equation}
-\probability{TOP} = P_L \times \left( P_{PRV} + P_{VAL} \times P_{I_1} - 
-  P_{PRV}\times P_{VAL}  \right)\label{eq:leak-protection-system-probability}
-\end{equation}
-%
-where $P_x$ is the failure probability of $x$, $x \in \left\{L,PRV,VAL,I_1\right\}$.
+Sensors and actuators are used to improve safety by taking measures to decrease potential failures, as the leak protection system shown in \cref{sec:probabilistic-analysis-non-coherent-tree}.
+A sensor is installed in a room that may have gas leakage.
+If the sensor detects a gas leak, then an actuator---a controlled valve---closes the gas flow.
+A second valve diverts the gas flow if a high pressure is detected due the first valve closing.
 
 Now we show five contributions:
 \begin{alineasinline}
@@ -70,6 +33,15 @@ Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cr
 b_1 &= \text{LowPower-In1}& B_1 = \var b_1\\
 b_2 &= \text{LowPower-In2}& B_2 = \var b_2\\
 f &= \text{SwitchFailure}& F = \var f
+\end{align*}
+%
+and for the leak detection system, we associate fault events as:
+%
+\begin{align*}
+prv & = \text{the pressure relief valve fails} & PRV = \var{prv}\\
+i_1 & = \text{there is an ignition source in room 1} &I_1 = \var{i_1}\\
+l & = \text{there is a gas leak in room 1} & L = \var{l}\\
+val & = \text{the isolation valve fails} & VAL = \var{val}
 \end{align*}
 
 \section{From traces to structure expressions with Boolean operators}
