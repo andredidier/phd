@@ -5,7 +5,7 @@ The development process of critical control systems is based essentially on the 
 Specialized agencies (like FAA, EASA and ANAC in the aviation field) use these guides and regulations to certify such systems.
 
 Safety is a system's attribute that plays a crucial concern on critical systems and it is the responsibility of the safety assessment process.
-To employ such a process, dependable systems taxonomy and safety assessment techniques must be well defined and understood.
+To employ such a process, dependable systems' taxonomy and safety assessment techniques must be well defined and understood.
 Clarification of concepts of dependable systems can be surprisingly difficult when systems are complex, because the determination of possible causes or consequences of failure can be a very subtle process~\cite{ALR+2004}.
 
 ARP-4761~\cite{SAE1996b} defines several techniques to perform safety assessment.
@@ -17,7 +17,7 @@ Intermediary events use gates to combine basic events and each kind of gate has 
 They combine the events as \emph{at least one shall occur} and \emph{all shall occur}, respectively.
 To analyse \acp{FT}, their structures are abstracted as Boolean\index{Boolean Algebra} expressions called \emph{structure expressions}\index{structure expression}.
 The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method} to obtain \acp{MCS} from the structure expressions\index{structure expression}, and a general formula to calculate the probability of top events.
-The \acp{MCS} are obtained by reducing structure expressions to a normal form, in which each term is a combination of variables (basic events) with conjuctive (\ac{AND}) gates, and the terms are combined as disjunctive (\ac{OR}) gates.
+The \acp{MCS} are obtained by reducing structure expressions to a normal form, in which each term is a combination of variables (basic events) with conjunctive (\ac{AND}) gates, and the terms are combined as disjunctive (\ac{OR}) gates.
 These minimal terms are also called \emph{prime implicants} or \emph{minterms}.
 The Shannon's method\index{Binary Decision Diagrams!Shannon's method} originated a formalism to reduce structure expressions called \ac{BDD}\index{Binary Decision Diagrams}.
 Another approach to reduce structure expressions is to use a mathematical model---called \acf{FBA}---that uses sets of sets to represent Boolean expressions.
@@ -55,7 +55,7 @@ Reducing expressions is also desirable to check for tautologies, for example.
 
 \Acp{DFT} introduce very different gates to capture dynamic configurations of systems: \ac{CSp}, \ac{FDEP}, and \ac{SEQ}.
 The semantics of the first is to add ``backup'' events, so the gate is active if the primary event and all spares are active.
-The second adds basic events dependency from a trigger event.
+The second adds basic events' dependency from a trigger event.
 The third forces the occurrence of events in a particular order.
 There is also \iac{WSp} gate that is slightly different from the \ac{CSp} gate.
 They differ on the nature of sparing, whether fast (warm, always-on) or slow (cold, stand-by).
@@ -154,7 +154,7 @@ It defines, instead, several algebraic laws to reduce expressions and an algorit
 
 \begin{sloppypar}
 \Ac{hiphops} proposes a hierarchical approach to model systems and perform \ac{FTA} (and \ac{FMEA}).
-Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{FT} construction is based on an algorithm, without proofs for soundness or completeness.
+Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{FT} construction is based on an algorithm.%, without proofs for soundness or completeness.
 \end{sloppypar}
 
 %The work reported in~\cite{AH2015} shows the formalisation of probabilistic analysis of \ac{SFT} and uses the same concept of date-of-occurrence shown in \adnote{cite Merle work}.
@@ -197,7 +197,7 @@ Architectural modelling is the first step of the strategy and can be executed ei
 For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling in \ac{SysML} to verify fault tolerance of \acp{SoS}.
 
 Writing and analysing expressions with order-related operators is more complex than analysing expressions with Boolean\index{Boolean} operators only.
-The \ac{activation} works together with an inner algebra to perform analysis of system structure and component interaction with a focus on fault modelling and fault propagation, tackling the complexity introduced by order-related operators.
+We propose a logic, called \ac{activation}, which works together with an inner algebra to perform analysis of system structure and component interaction with a focus on fault modelling and fault propagation, tackling the complexity introduced by order-related operators.
 \ac{activation} receives an algebra and the set of operational modes of a system as parameters.
 The choice of algebra defines which structure expressions can be obtained: if Boolean algebra is passed as a parameter, the \ac{activation} can generate structure expressions with Boolean operators (\ac{SFT}); if the \ac{algebra} is passed as a parameter, the \ac{activation} can generate structure expressions with order-related operators (\ac{TFT} and \ac{DFT}).
 The \ac{activation} requires that the inner algebras provide a set of properties (tautology and contradiction) and semantic values.
@@ -231,8 +231,8 @@ Positive requirements as, for example, ``the communications system should be ope
 The acceptance criteria analysis aims at answering the \ref{question:analyses}.
 
 From the model in \ac{algebra} (\cref{fig:strategy-overview-csp}), the acceptance criteria are then verified.
-If the criteria are accepted the process finishes.
-Otherwise the system is modified, and the process continues, modifying system's architecture, using fault tolerance patterns, improving system's dependability.
+If the criteria are accepted, the process finishes.
+Otherwise, the system is modified, and the process continues, modifying system's architecture, using fault tolerance patterns, improving system's dependability.
 %
 \begin{figure}[htb]
   \centering
@@ -256,7 +256,7 @@ With the system modelled in \ac{activation}, the fault tolerance patterns can be
   \label{fig:strategy-overview-activation}
 \end{figure}
 
-Joining the paths described in \cref{fig:strategy-overview-csp} and \cref{fig:strategy-overview-activation}, the complete proposed solution is summarized in \cref{fig:strategy-overview} (A and B, respectively).
+The complete proposed solution is summarized in \cref{fig:strategy-overview}, joining the paths described in \cref{fig:strategy-overview-csp} and \cref{fig:strategy-overview-activation} (paths A and B, respectively).
 %
 \begin{figure}[htb]
   \centering
@@ -274,24 +274,25 @@ The main contributions of this work are:
   \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016})---see \cref{chap:algebra};
   \item From \simulink models, obtain fault event sequences and mapping to \ac{algebra} (\cref{chap:algebra});
   \item Reason about fault modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures, \cref{chap:activation});
-  \item Illustrate the application of the laws on a real case study, provided by \embraer (\cref{chap:case-study}).
+  \item Illustrate the application of the laws on a real case study, provided by \embraer (\cref{chap:case-study}), and on a literature case study.
   %\item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}---to do.
   %\item Formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance criteria (\cref{chap:acceptance});
 \end{contrenum}
 
 We use \isabellehol, theories in \isabellehol{'s} library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
 
-The contributions cover the following scenarios, presented as a case study in \cref{chap:case-study}:
+The case studies cover the following scenarios, presented in \cref{chap:case-study}:
 \begin{enumerate}
   \item From a model in \simulink, obtain the failure expression of a critical failure, analyse the ordering relation of fault events, and verify its acceptance criteria;
-  \item Given a set of \ac{FT} structure expressions, verify which fault combinations analysis are missing.
+  \item Given a set of \ac{FT} structure expressions, verify which fault combinations analysis are missing;
+  \item Perform a probabilistic analysis in a tree with explicit \ac{NOT} operator.
 \end{enumerate}
 
 \section{Thesis organization}
 
 This thesis is organized as follows: in \cref{chap:basic-concepts,chap:analysis} we show the concepts and tools used as basis for this work.
 \Cref{chap:algebra} presents \theac{algebra}, \cref{chap:activation} presents \theac{activation}, \cref{chap:case-study} the case study and the application of the proposed strategy, and we present our conclusions and future work in \cref{sec:conclusion}.
-The contributions presented in this work are summarized in terms of proved results.
+The contributions presented in \cref{chap:algebra} are summarized in terms of proved results.
 To facilitate the understanding of the presented strategy, the effort to build laws and theirs (mechanized) proofs are shown in \cref{app:formal-proofs-isabelle-hol}.
 
 \isabellehol{'s} theory files with all proofs are available at \algebraurl.
