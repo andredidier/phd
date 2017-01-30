@@ -1,6 +1,5 @@
 \chapter{Case study}
 \label{chap:case-study}
-\asnote{Ficou esquisito não utilizar o not no estudo de caso, após tanta ênfase dada ao operador. Poderia tentar estender o estudo de caso de forma a usar o not.}
 
 \Embraer provided us with the \simulink model of an Actuator Control System (depicted in \cref{fg:acsBlockDiagrams}).
 The failure expression of this system (that is, for each of its constituent components) was also provided by \embraer (we show some of them in \cref{tbl:acsAnnotations}).
@@ -26,13 +25,6 @@ The possible failure are all internal failures:
   \item[$l$:] there is a gas leak in room 1;
   \item[$val$:] the isolation valve fails.
 \end{description}
-
-\begin{figure}[htb]
-  \centering
-  \includegraphicsaspectratio[0.5]{leak-protection-system}
-  \caption{Leak Protection System architectural view}
-  \label{fig:leak-protection-system}
-\end{figure}
 
 We associate these faults events as:
 \begin{align*}
