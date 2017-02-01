@@ -33,6 +33,7 @@ System requirements are identified and are checked with \ac{FTA} results.
 If the requirements are satisfied (accepted), the process ends and the modelled system may be implemented.
 Otherwise, fault tolerance patterns are used, adding or modifying the original architecture to improve dependability.
 The analyses are executed until system requirements are met.
+We call system requirements \acg{FT} \emph{acceptance criteria}.
 
 \begin{figure}[htb]
   \centering
@@ -109,24 +110,21 @@ It then runs \acs{FDR} to obtain several counter-examples (which are fault trace
 %
 For two case studies provided by \embraer we showed that our automatically created failure expressions match with the engineer's provided ones or are better because consider additional fault occurrence combinations.
 
-\section{Research questions}
-\label{sec:research-questions}
+\section{Mathematical models}
+\label{sec:mathematical-models}
 
 Both \ac{TFT} and \ac{DFT} lack a first-order logic mathematical model like the one defined for \ac{SFT}.
 For \acp{SFT}, mathematical models to reduce structure expressions are either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}\index{Binary Decision Diagrams}.
-One important concern on employing \ac{FTA} is whether \iac{FT} indeed represents a system behaviour.
+One important concern on employing \ac{FTA} is whether \iac{FT} indeed represents a system's operational mode.
 The work reported in~\cite{MCS+1999} exposes this concern for \acp{DFT}, and the \ac{hiphops} framework---related to \acp{SFT} and \acp{TFT}---aims at getting this issue sorted out.
 Our contribution to this issue for \ac{SFT} is shown in~\cite{DM2012,Didier2012}.
 
-The mathematical model for \ac{TFT} has a discontinuity between two activation states:
-\begin{alineasinline}
-  \item non-occurrence, and
-  \item occurrence some time later.
-\end{alineasinline}
+The mathematical model for \ac{TFT} has a discontinuity between states.
+The transition from the non-occurrence to an occurrence some time later is different from the occurrence of one event before another one.
 Such a discontinuity has some drawbacks as, for example, the impossibility to use \ac{NOT} gates, and handling the specific case of non-occurrence with zeros in \acp{TTT}.
 The reduction of structure expressions in \ac{TFT} is based on a combination of:
 \begin{alineasinline}
-  \item algebraic reduction---which can unfortunately result in an infinite application of rules---,
+  \item algebraic rewriting---which can unfortunately result in an infinite application of rules,
   \item modularisation of independent subtrees (subtrees not always are independent), and
   \item \ac{DT}---which are limited to seven basic events, due to exponential growth.
 \end{alineasinline}
@@ -135,15 +133,16 @@ The reduction of structure expressions in \ac{TFT} is based on a combination of:
 \begin{sloppypar}
 Most mathematical models~\cite{LHT2013,CSD2000,BRM+2005} for \ac{DFT} are based on the formalisation of \ac{DTMC} or \ac{CTMC} because \acp{DFT} were initially conceived to be a visual representation of such models.
 As both \ac{DTMC} and \ac{CTMC} are state-based, they experience the state-space explosion problem.
-The works reported in~\cite{BKK+2003,BHH+2003,SAE1996b} show techniques to overcome this problem, but the reduction can be infeasible because it depends on systems' models particularly, whether they are independent or not.
+The works reported in~\cite{BKK+2003,BHH+2003,SAE1996b} show techniques to overcome the state-explosion problem.
+%, but the reduction can be infeasible because it depends on systems' models particularly, whether they are independent or not.
 \end{sloppypar}
 
-There are other approaches, however.
-For instance, a modified version of \ac{BDD}\index{Binary Decision Diagrams} to tackle events ordering, called \acf{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}, to reduce structure expressions, and the work reported in \cite{BRM+2005}, which proposes a conversion of \ac{DFT} into \ac{DBN} to perform probabilistic analysis.
+There are other approaches, as well.
+For instance, a modified version of \ac{BDD}\index{Binary Decision Diagrams} to tackle events ordering, called \acf{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}, that can reduce structure expressions, and the work reported in \cite{BRM+2005}, which proposes a conversion of \ac{DFT} into \ac{DBN} to perform probabilistic analysis.
 
 The approach to tackle events ordering with \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}~\cite{XTD2012} has two kinds of nodes: terminals and non-terminals (terminals are nodes with basic events, and non-terminals are nodes with two events and an operator).
 Although demonstrated in~\cite{Bryant1986} that these unconventional nodes (non-terminals) generate correct and efficient Boolean analysis, the analysis is still dependent on the order-related operators because the relation of terminals and non-terminals is not established directly (non-terminals are seen as an independent node in~\cite{XTD2012}).
-For example, the occurrence of $A \rightarrow B$ is related to the occurrence of $A$ and $B$, but this relation is obtained in a further step, not in the \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}.
+For example, the occurrence of $A \rightarrow B$ is related to the occurrence of $A$ and then $B$, but this relation is obtained in a further step, not in the \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}.
 
 The approach using the construction of \acp{DBN}~\cite{BRM+2005} is automatic and handles time slices as $t + \Delta t$, which implies a notion of events ordering as well.
 As it is focused in probabilistic analysis, qualitative analysis is not directly supported.
@@ -160,11 +159,13 @@ Although there is a tool to model and analyse systems using \ac{hiphops}, \acp{F
 %The work reported in~\cite{AH2015} shows the formalisation of probabilistic analysis of \ac{SFT} and uses the same concept of date-of-occurrence shown in \adnote{cite Merle work}.
 
 \begin{sloppypar}
-Another concern, left untreated in the literature, is the undesirable possibility of non-determinism in structure expressions.
-For example, if a commission is observed when fault A is active and an omission is observed when faults A and B are active, then the system may behave non-deterministically with a commission or omission when both A and B are active (A and B implies A).
+Another concern, left untreated in the literature, is the undesirable possibility of non-determinism in system analyses.
+For example, \iac{FT} to analyse a signal omission has the structure expression $A \land B$.
+Another \ac{FT} to analyse a commission has the structure expression $\left(A \land B\right) \lor C$.
+In this example, if faults $A$ and $B$ are active, then either an omission or a commission is observed for the system.
 \end{sloppypar}
 
-From the exposed in this \lcnamecref{sec:research-questions}, our research questions are:
+From the exposed in this \lcnamecref{sec:mathematical-models}, our research questions are:
 \begin{rqenum}[series=researchquestion]
   \item Is there a consistent mathematical model to analyse \acp{TFT} and \acp{DFT} that is set-based and similar to \ac{FBA}?\label{question:mathematical-model}
   \item What guarantees can we provide to detect non-determinism in erroneous behaviour?\label{question:non-determinism}
@@ -173,7 +174,7 @@ From the exposed in this \lcnamecref{sec:research-questions}, our research quest
 Also, does such a model:
 %
 \begin{rqenum}[resume*=researchquestion]
-  \item have the capacity of representing events ordering similar to \ac{TFT} and \ac{DFT}\label{question:ordering-representation}?
+  %\item have the capacity of representing events ordering similar to \ac{TFT} and \ac{DFT}\label{question:ordering-representation}?
   \item represent systems behaviour by construction\label{question:gap}?
   \item allow both qualitative and quantitative analyses as supported by \ac{TFT} and \ac{DFT}\label{question:analyses}?
   %\item perform reduction of structure expressions to a normal form at least as efficiently as current approaches\label{question:efficiency}?
@@ -186,48 +187,48 @@ Also, does such a model:
 \section{Proposed solution}
 
 %In this work we present an algebra, called \acf{algebra}, defined  denota
-In this work we present an algebra, called \acf{algebra}, to express ordering of fault events (\ac{TFT} and \ac{DFT}), enabling analysis of acceptance criteria of \acp{FT}.
-The laws of \ac{algebra} are given in a denotational semantics based on sets of lists of distinct elements.
+In this work we present an algebra, called \acf{algebra}, to express ordering of fault events (\ac{TFT} and \ac{DFT}), enabling analysis of	 acceptance criteria of \acp{FT}.
+The laws of \ac{algebra} are proven in a denotational semantics based on sets of lists of distinct elements.
 \Theac{algebra} aims at answering the \cref{question:mathematical-model,question:ordering-representation}.
 The analysis of acceptance criteria is a decision problem and we use first-order logic and \isabellehol as verification tool.
-Indeed, \ac{algebra} is part of a bigger strategy that relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
+%Indeed, \ac{algebra} is part of a bigger strategy that relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
 
 System and fault modelling is an essential step towards safety analysis.
 Architectural modelling is the first step of the strategy and can be executed either in a graphical tool, or as requirements in natural language.
 For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling in \ac{SysML} to verify fault tolerance of \acp{SoS}.
 
 Writing and analysing expressions with order-related operators is more complex than analysing expressions with Boolean\index{Boolean} operators only.
-We propose a logic, called \ac{activation}, which works together with an inner algebra to perform analysis of system structure and component interaction with a focus on fault modelling and fault propagation, tackling the complexity introduced by order-related operators.
+We propose a logic, called \ac{activation}, which works together with an accompanied (attached) algebra to perform analysis of system structure and component interaction with a focus on fault modelling and fault propagation, tackling the complexity introduced by order-related operators.
 \ac{activation} receives an algebra and the set of operational modes of a system as parameters.
 The choice of algebra defines which structure expressions can be obtained: if Boolean algebra is passed as a parameter, the \ac{activation} can generate structure expressions with Boolean operators (\ac{SFT}); if the \ac{algebra} is passed as a parameter, the \ac{activation} can generate structure expressions with order-related operators (\ac{TFT} and \ac{DFT}).
-The \ac{activation} requires that the inner algebras provide a set of properties (tautology and contradiction) and semantic values.
-The use of the \ac{NOT} is essential: besides its use in expressions, we use the complement to normalise the expressions to provide \emph{healthy} expressions.
+The \ac{activation} requires that the accompanied algebras provide a set of properties (tautology and contradiction) and semantic values.
+The use of the \ac{NOT} is essential: besides its use in expressions, we use the complement of structure expressions, normalizing them and making them \emph{healthy}.
 
 To obtain critical event expressions used in \acp{FT} and to denote faults propagation, the \ac{activation} provides a predicates notation and verification of non-determinism. 
 We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: 
 \begin{alineasinline}
   \item verify its existence, 
   \item indicate which set of operational modes are active for a combination of faults, or 
-  \item what is the combination of faults that activates a set of operational modes.
+  \item which combination of faults activates a set of operational modes.
 \end{alineasinline}
 
-In our proposed solution, depending on how much clear are the faults, the analyst may follow one of the paths: 
+In our proposed solution, depending on the easiness to identify the faults, the analyst may follow one of the paths: 
 \begin{alineasinline}
   \item model the system in \simulink to allow fault injection and discovery, or 
   \item model faults using the \acl{activation}.
 \end{alineasinline}
 %
-Both paths ends with structure expressions and the \ac{FTA} is performed using \ac{algebra}.
+Both paths end with structure expressions and the \ac{FTA} is performed using \ac{algebra}.
 
 \Cref{fig:strategy-overview-csp} shows how to perform \ac{FTA} using faults injection.
 The ``Faults injection'' block is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
-It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault event sequences.
-The fault event sequences are then mapped to \theac{algebra}, which have a denotational semantics based on sets of lists.
+It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault event sequences (also called fault traces).
+The fault event sequences are then mapped to \theac{algebra}, which has a denotational semantics based on sets of lists.
 This strategy aims at answering the \cref{question:gap}.
 
-Safety requirements are stated in terms of critical failures as, for example, ``the probability of a complete failure of an airplane engine should be less than $10^{-9}$'' (quantitative), or ``a complete failure of the propulsion system shouldn't be caused by a single failure'' (qualitative).
-In this work we call \emph{acceptance criteria} the verification of a safety requirement on \iac{FT}, where \acg{FT} top event is the undesired failure.
-Positive requirements as, for example, ``the communications system should be operational $99.99\%$ of the cruise phase'' are treated as a complement (the complete failure should have a probability in less than $0.01\%$ of the cruise phase).
+Safety requirements are stated in terms of critical failures such as, for example, ``the probability of a complete failure of an airplane engine should be less than $10^{-9}$'' (quantitative), or ``a complete failure of the propulsion system shouldn't be caused by a single failure'' (qualitative).
+%In this work we call \emph{acceptance criteria} the verification of a safety requirement on \iac{FT}, where \acg{FT} top event is the undesired failure.
+Positive requirements such as, for example, ``the communications system should be operational $99.99\%$ of the cruise phase'' are treated as a complement (the complete failure should have a probability in less than $0.01\%$ of the cruise phase).
 The acceptance criteria analysis aims at answering the \ref{question:analyses}.
 
 From the model in \ac{algebra} (\cref{fig:strategy-overview-csp}), the acceptance criteria are then verified.
@@ -242,11 +243,11 @@ Otherwise, the system is modified, and the process continues, modifying system's
 \end{figure}
 
 \Cref{fig:strategy-overview-activation} shows a faults modelling strategy directly in the \ac{activation}.
-The logic associates each operational mode with a faults expression.
+The \ac{activation} associates each operational mode with a faults expression.
 After modelling all faults, the top events are extracted in a predicates notation. 
-For example, ``does the behaviour of the system is the operational mode $X$?'', where $X$ can omission, commission, etc.
-Given the flexibility of the \ac{activation} notation it is used to reason about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
-Each predicate in \ac{activation} generates an expression in \theac{algebra}, which are reduced to obtain a normal form to obtain \acp{MCSeq} and to calculate top-events probability.
+For example, ``is the behaviour of the system in the operational mode $X$?'', where $X$ can be an omission, commission, etc.
+Given the flexibility of the \ac{activation} notation, it can be used to reason about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
+Each predicate in \ac{activation} generates an expression in \theac{algebra}, which is reduced to obtain a normal form to obtain \acp{MCSeq} and to calculate top-events probability.
 With the system modelled in \ac{activation}, the fault tolerance patterns can be applied directly on the model.
 %
 \begin{figure}[htb]
@@ -271,10 +272,14 @@ The main contributions of this work are:
 
 \begin{contrenum}[series=contributions]
   \item Define a denotational and algebraic model to express fault events order with \theac{algebra} (\cref{chap:algebra});
+  %%%%%
   \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016})---see \cref{chap:algebra};
-  \item From \simulink models, obtain fault event sequences and mapping to \ac{algebra} (\cref{chap:algebra});
-  \item Reason about fault modelling in \ac{activation}, to obtain formal expressions of critical failures (top-event failures, \cref{chap:activation});
-  \item Illustrate the application of the laws on a real case study, provided by \embraer (\cref{chap:case-study}), and on a literature case study.
+    %%%%%
+  \item From \simulink models, obtain fault event sequences and map them into \ac{algebra} (\cref{chap:algebra});
+    %%%%%
+  \item Reason about fault modelling in \ac{activation} to obtain formal expressions of critical failures (top-event failures, \cref{chap:activation});
+    %%%%%
+  \item Illustrate the application of the laws of \ac{algebra}, the use of \ac{activation}, and the acceptance criteria verification on a real case study, provided by \embraer (\cref{chap:case-study}), and on a literature case study.
   %\item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}---to do.
   %\item Formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance criteria (\cref{chap:acceptance});
 \end{contrenum}
