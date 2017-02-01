@@ -189,7 +189,7 @@ Also, does such a model:
 %In this work we present an algebra, called \acf{algebra}, defined  denota
 In this work we present an algebra, called \acf{algebra}, to express ordering of fault events (\ac{TFT} and \ac{DFT}), enabling analysis of	 acceptance criteria of \acp{FT}.
 The laws of \ac{algebra} are proven in a denotational semantics based on sets of lists of distinct elements.
-\Theac{algebra} aims at answering the \cref{question:mathematical-model,question:ordering-representation}.
+\Theac{algebra} aims at answering the \cref{question:mathematical-model}.
 The analysis of acceptance criteria is a decision problem and we use first-order logic and \isabellehol as verification tool.
 %Indeed, \ac{algebra} is part of a bigger strategy that relates fault injection on nominal models, fault modelling, \ac{FTA}, and fault tolerance patterns.
 
@@ -246,7 +246,7 @@ Otherwise, the system is modified, and the process continues, modifying system's
 The \ac{activation} associates each operational mode with a faults expression.
 After modelling all faults, the top events are extracted in a predicates notation. 
 For example, ``is the behaviour of the system in the operational mode $X$?'', where $X$ can be an omission, commission, etc.
-Given the flexibility of the \ac{activation} notation, it can be used to reason about basic fault events and top-event failures, which are related to~\ref{question:ordering-representation}.
+Given the flexibility of the \ac{activation} notation, it can be used to reason about basic fault events and top-event failures, which are related to~\ref{question:mathematical-model}
 Each predicate in \ac{activation} generates an expression in \theac{algebra}, which is reduced to obtain a normal form to obtain \acp{MCSeq} and to calculate top-events probability.
 With the system modelled in \ac{activation}, the fault tolerance patterns can be applied directly on the model.
 %
@@ -279,18 +279,18 @@ The main contributions of this work are:
     %%%%%
   \item Reason about fault modelling in \ac{activation} to obtain formal expressions of critical failures (top-event failures, \cref{chap:activation});
     %%%%%
-  \item Illustrate the application of the laws of \ac{algebra}, the use of \ac{activation}, and the acceptance criteria verification on a real case study, provided by \embraer (\cref{chap:case-study}), and on a literature case study.
+  \item Illustrate both \ac{algebra} and \ac{activation} on a real case study, provided by \embraer (\cref{chap:case-study}), and on a literature case study.
   %\item Generalise laws in~\ac{algebra} in terms of abstract properties, similar to healthiness conditions in \theac{UTP}---to do.
   %\item Formally verify \acg{FT} (\ac{TFT} and \ac{DFT}) acceptance criteria (\cref{chap:acceptance});
 \end{contrenum}
 
-We use \isabellehol, theories in \isabellehol{'s} library, and a theory in the AFP library \cite{JM2005} to prove all theorems presented in this work.
+We use \isabellehol, theories in \isabellehol{'s} library, and a theory in the AFP library \cite{JM2005} to prove the theorems of \cref{chap:algebra}.
 
 The case studies cover the following scenarios, presented in \cref{chap:case-study}:
 \begin{enumerate}
   \item From a model in \simulink, obtain the failure expression of a critical failure, analyse the ordering relation of fault events, and verify its acceptance criteria;
   \item Given a set of \ac{FT} structure expressions, verify which fault combinations analysis are missing;
-  \item Perform a probabilistic analysis in a tree with explicit \ac{NOT} operator.
+  \item Perform a probabilistic analysis in \iac{FT} with an explicit \ac{NOT} operator.
 \end{enumerate}
 
 \section{Thesis organization}
