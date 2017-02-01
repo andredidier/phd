@@ -1,12 +1,13 @@
 \chapter{Introduction}
 \label{chap:intro}
 
-The development process of critical control systems is based essentially on the rigorous execution of guides and regulations~\cite{ANAC2011,FAA1993,FAA2007,SAE1996b}.
+The development process of critical control systems requires the rigorous execution of guides and regulations~\cite{ANAC2011,FAA1993,FAA2007,SAE1996b}.
 Specialized agencies (like FAA, EASA and ANAC in the aviation field) use these guides and regulations to certify such systems.
+Only upon certification such systems can be used in the real-world.
 
-Safety is a system's attribute that plays a crucial concern on critical systems and it is the responsibility of the safety assessment process.
+Safety is a property (measured both qualitative and quantitatively) of crucial concern on critical systems and it is the responsibility of the safety assessment process.
 To employ such a process, dependable systems' taxonomy and safety assessment techniques must be well defined and understood.
-Clarification of concepts of dependable systems can be surprisingly difficult when systems are complex, because the determination of possible causes or consequences of failure can be a very subtle process~\cite{ALR+2004}.
+Clarification of concepts of dependable systems can be surprisingly difficult when systems are complex, because the determination of possible causes or consequences of failures can be a very subtle process~\cite{ALR+2004}.
 
 ARP-4761~\cite{SAE1996b} defines several techniques to perform safety assessment.
 One of them is \ac{FTA}\index{Fault Tree Analysis}.
@@ -14,16 +15,16 @@ It is a deductive method that uses trees to model faults and their dependencies 
 In such trees, the premises are the leaves (basic events) and the conclusions are the roots (top events).
 Intermediary events use gates to combine basic events and each kind of gate has its own combination semantics definition.
 \Acp{FT} that use only \ac{OR} and \ac{AND} gates are called \emph{coherent \aclp{FT}}~\cite{Andrews2001,AB2003,Oliv2006,CCR2008,Vaurio2016}\index{Fault Tree!coherent}.
-They combine the events as \emph{at least one shall occur} and \emph{all shall occur}, respectively.
+They combine events as \emph{at least one shall occur} and \emph{all shall occur}, respectively.
 To analyse \acp{FT}, their structures are abstracted as Boolean\index{Boolean Algebra} expressions called \emph{structure expressions}\index{structure expression}.
 The analysis of coherent \acp{FT} uses a well-defined algorithm based on the Shannon's method\index{Binary Decision Diagrams!Shannon's method} to obtain \acp{MCS} from the structure expressions\index{structure expression}, and a general formula to calculate the probability of top events.
-The \acp{MCS} are obtained by reducing structure expressions to a normal form, in which each term is a combination of variables (basic events) with conjunctive (\ac{AND}) gates, and the terms are combined as disjunctive (\ac{OR}) gates.
+The \acp{MCS} are obtained by reducing structure expressions to a normal form, in which each term is a combination of variables (basic events) with conjunctive (\ac{AND}) gates, and the terms are combined by disjunctive (\ac{OR}) gates.
 These minimal terms are also called \emph{prime implicants} or \emph{minterms}.
 The Shannon's method\index{Binary Decision Diagrams!Shannon's method} originated a formalism to reduce structure expressions called \ac{BDD}\index{Binary Decision Diagrams}.
 Another approach to reduce structure expressions is to use a mathematical model---called \acf{FBA}---that uses sets of sets to represent Boolean expressions.
 
 Although structure expressions are formulas with logical operators, they are formalisms to enable automatic \ac{FTA}.
-As shown in~\cite{Ericson2005}, \acp{FT} are a much richer model enabling a visual indication of fault paths, and includes description of subsystems as intermediate events.
+As shown in~\cite{Ericson2005}, \acp{FT} are a much richer model enabling a visual indication of fault paths, and include description of subsystems as intermediate events.
 %% Este parágrafo foi incluído após discussão de Paulo sobre avaliação de confiabilidade/disponibilidade.
 
 \Cref{fig:strategy-overview-traditional} shows how \ac{FTA} is traditionally performed.
@@ -42,55 +43,55 @@ The analyses are executed until system requirements are met.
 
 Besides the traditional \ac{OR} and \ac{AND} gates, the \FThandbook defines other gates.
 For example the \ac{PAND} gate, which considers the order of occurrence of events.
-Although the \FThandbook defines these new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
-This and the need of analysis of dynamic aspects of increasingly complex systems motivated the introduction of two new kinds of \aclp{FT}: \acp{DFT} and \acp{TFT}.
+Although the \FThandbook defines new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
+This absence together with the need to analyse dynamic aspects of increasingly complex systems motivated the introduction of two new kinds of \aclp{FT}: \acp{DFT} and \acp{TFT}.
 These variant trees can capture sequential dependencies of fault events in a system.
 The difference from \ac{TFT} to \ac{DFT} is that \acp{TFT} use temporal gates directly, while \ac{DFT} does not---\acp{DFT} gates are an abstraction of temporal gates.
-To differentiate the \aclp{FT} as defined in the \FThandbook from the other two, we will call them \acp{SFT}.
+To differentiate the \aclp{FT} as defined in the \FThandbook from the other two, we will call the former as \acp{SFT}.
 
 The work reported in~\cite{WP2009} aims at performing the full implementation of the \FThandbook, adding temporal gates to its \pandora methodology.
 It was this implementation that introduced the new concept of \acp{TFT}, cited previously.
 In such trees, events ordering is well-defined and an algebraic framework was proposed to reduce structure expressions\index{structure expression} to obtain \acp{MCSeq} and perform probabilistic analysis.
 Reducing expressions is also desirable to check for tautologies, for example.
 
-\Acp{DFT} introduce very different gates to capture dynamic configurations of systems: \ac{CSp}, \ac{FDEP}, and \ac{SEQ}.
+\Acp{DFT} introduce very different gates to capture dynamic configurations of systems.
+The main gates are: \ac{CSp}, \ac{FDEP}, and \ac{SEQ}.
 The semantics of the first is to add ``backup'' events, so the gate is active if the primary event and all spares are active.
 The second adds basic events' dependency from a trigger event.
 The third forces the occurrence of events in a particular order.
 There is also \iac{WSp} gate that is slightly different from the \ac{CSp} gate.
 They differ on the nature of sparing, whether fast (warm, always-on) or slow (cold, stand-by).
 The readiness of the backup system in \iac{WSp} gate is higher than in \iac{CSp} gate.
-The work reported in~\cite{MRL2011} shows an algebraic framework to compositionally reduce \ac{DFT} gates to order-based gates and perform probabilistic analysis of structure expressions\index{structure expression}. Thus, despite some limitations for spare gates~\cite{MRL2014}, the structure expressions\index{structure expression} used in \acp{TFT} and \acp{DFT} can be formulated in terms of a generic order-based operator.
+The work reported in~\cite{MRL2011} shows an algebraic framework to compositionally reduce \ac{DFT} gates to order-based gates and perform probabilistic analysis of structure expressions\index{structure expression}. Thus, despite some limitations related to spare gates~\cite{MRL2014}, the structure expressions\index{structure expression} used in \acp{TFT} and \acp{DFT} can be formulated in terms of a generic order-based operator.
 
 \begin{sloppypar}
-The \ac{NOT} operator is absent in the algebras reported in~\cite{WP2009,Walker2009,Merle2010,MRL2011b}.
-There is no consensus about the relevance of its use:
-\begin{alineasinline}
-  \item it can be misleading, generating non-coherent analysis~\cite{Oliv2006}, or
-  \item it can be essential in practical use~\cite{Andrews2001}.
-\end{alineasinline}
-Our concern is that the decision of the relevance of its use should not be due to the choice of events-occurrence representation.
+The \ac{NOT} operator is absent in the algebras reported in~\cite{WP2009,Walker2009,Merle2010,MRL2011b} because,
+if it is used without restrictions, it can be misleading, generating non-coherent analysis~\cite{Oliv2006}.
+Although such an issue may arise, it can be essential in practical use as demonstrated in~\cite{Andrews2001} with algebraic laws to handle the operator in structure expressions.
+%
+Our concern is that the decision of the relevance of its use should be neither due to the choice of events-occurrence representation, as it is in~\cite{WP2009,Walker2009,Merle2010,MRL2011b}, nor with algebraic laws to include missing terms as it is in~\cite{Andrews2001}.
 The algebra created in this work defines the \ac{NOT} operator and allows its use, as we show in \cref{chap:algebra}.
 \end{sloppypar}
 
 \begin{sloppypar}
 \Ac{hiphops} is a set of methods and tools to analyse \acp{FT}.
 The semi-automatic generation of \acp{FT} has architectural models and failure expressions as inputs.
-The failure expressions are in fact structure expressions of components or subsystems.
+\emph{The failure expressions are in fact structure expressions of components or subsystems.}
 These expressions are annotated in components and subsystems and describe how they fail.
-The tool combines these expressions with regard to the architecture to generate \acp{FT}.
+The tool combines these expressions with regard to the architecture of the system to generate \acp{FT}.
 The work reported in~\cite{WP2008} shows a strategy to use the semi-automatic \ac{FT} generation of \ac{hiphops} with \pandora to generate structure expressions of \acp{TFT}.
 \end{sloppypar}
 
 \Ac{AADL} is a standard language to model (among other features) system structure and component interaction. 
 \Ac{AADL} has several tools to perform different analyses to obtain \ac{SFT} to perform \ac{FTA}.
-But \acp{AADL} assertions framework does not express order explicitly as needed for \ac{TFT} and \ac{DFT} analyses.
+But \acpg{AADL} assertions framework does not express order explicitly as needed for \ac{TFT} and \ac{DFT} analyses.
 
 In previous work~\cite{Didier2012,DM2012}, we proposed a systematic hardware-based faults identification strategy to obtain failure expressions as defined in \acifused{hiphops}{\acs{hiphops}}{\acscite{hiphops}} for \acp{SFT}.
 %
-We considered faults in components or subsystems, but if we obtain failure expressions of a whole system, they are in fact structure expressions\index{structure expression} of \iac{FT}.
+We considered faults in components or subsystems to obtain structure expressions and use them as input for \ac{hiphops}.
+If, instead, we obtain failure expressions of a whole system, they are in fact structure expressions\index{structure expression} of \iac{FT}.
 %
-Our strategy throws away the ordering information of the fault event sequences to generate failure expressions for components or subsystems for \acp{SFT}.
+Our previous strategy throws away the ordering information of the fault event sequences to generate failure expressions for components or subsystems for \acp{SFT}.
 %
 %Using our strategy as input for \ac{hiphops} we obtain a failure expression of a fault tree.
 %
@@ -106,14 +107,13 @@ Thus, our strategy required the translation from \simulink to \ac{CSPm}~\cite{JM
 %
 It then runs \acs{FDR} to obtain several counter-examples (which are fault traces) ending in failures.
 %
-For two case studies provided by \embraer we showed that our automatically created failure expressions match with the engineer's provided ones or are better (a weaker proposition).
+For two case studies provided by \embraer we showed that our automatically created failure expressions match with the engineer's provided ones or are better because consider additional fault occurrence combinations.
 
 \section{Research questions}
 \label{sec:research-questions}
 
 Both \ac{TFT} and \ac{DFT} lack a first-order logic mathematical model like the one defined for \ac{SFT}.
 For \acp{SFT}, mathematical models to reduce structure expressions are either based on set inclusion, with \ac{FBA}, or through tree search, with \ac{BDD}\index{Binary Decision Diagrams}.
-Both are efficient.
 One important concern on employing \ac{FTA} is whether \iac{FT} indeed represents a system behaviour.
 The work reported in~\cite{MCS+1999} exposes this concern for \acp{DFT}, and the \ac{hiphops} framework---related to \acp{SFT} and \acp{TFT}---aims at getting this issue sorted out.
 Our contribution to this issue for \ac{SFT} is shown in~\cite{DM2012,Didier2012}.
