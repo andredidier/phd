@@ -36,6 +36,25 @@ fun formula_exp_to_NF :: "'a formula_exp \<Rightarrow> 'a formula_exp" where
   "formula_exp_to_NF f = f"
 *)
 
+lemma top_formula_not_less_eq_bot_formula: "\<not> ((top::'a formula) \<le> bot)"
+by (metis Rep_formula_bot Rep_formula_top empty_not_UNIV top.extremum_unique)
+
+lemma neutral_formula_not_less_eq_bot_formula: "\<not> ((neutral::'a formula) \<le> bot)"
+unfolding neutral_formula_def
+by (metis Abs_formula_inverse Rep_formula_bot UNIV_I bot.extremum_unique insert_not_empty)
+
+lemma formula_exp_to_formula_eq: 
+  "formula_exp_to_formula x \<le> formula_exp_to_formula y \<Longrightarrow> formula_exp_to_formula y \<le> formula_exp_to_formula x \<Longrightarrow> x = y"
+apply (induct x)
+apply (induct y)
+apply simp
+apply (simp add: top_formula_not_less_eq_bot_formula)
+apply (simp add: neutral_formula_def[symmetric] neutral_formula_not_less_eq_bot_formula)
+
+apply (auto simp add: neutral_formula_def[symmetric] )
+
+
+
 abbreviation eval where "eval \<equiv> formula_exp_to_formula"
 
 abbreviation empty_list_formula_exp :: "'a set \<Rightarrow> 'a formula_exp" where
@@ -53,6 +72,8 @@ abbreviation dlist_set_to_formula_exp where
 
 abbreviation formula_to_formula_exp where
   "formula_to_formula_exp f \<equiv> dlist_set_to_formula_exp (Rep_formula f)"
+
+
 
 typedef 'a formula_syn = "UNIV::'a formula_exp set" by simp
 
@@ -119,14 +140,41 @@ lemma Rep_formula_syn_diff:
 unfolding minus_formula_syn_def
 by (simp add: Abs_formula_syn_inverse)
 
+lemma Rep_formula_syn_eq:
+  "x = y \<longleftrightarrow> (Rep_formula_syn x) = (Rep_formula_syn y)"
+by (metis Rep_formula_syn_inverse)
+
+
 lemmas eq_formula_syn_iff = Rep_formula_syn_inject [symmetric]
 
 lemmas Rep_formula_syn_boolean_algebra_simps =
   less_eq_formula_syn_def less_formula_syn_def eq_formula_syn_iff
   Rep_formula_syn_sup Rep_formula_syn_inf Rep_formula_syn_top 
   Rep_formula_syn_bot Rep_formula_syn_compl Rep_formula_syn_diff 
+  Rep_formula_syn_eq
   
 instance proof
+fix x y::"'a formula_syn"
+show "(x < y) = (x \<le> y \<and> \<not> (y \<le> x))"
+using less_eq_formula_syn_def less_formula_syn_def by auto
+next
+fix x::"'a formula_syn"
+show "x \<le> x"
+by (simp add: less_eq_formula_syn_def)
+next
+fix x y z:: "'a formula_syn"
+assume "x \<le> y" "y \<le> z"
+thus "x \<le> z"
+using less_eq_formula_syn_def by auto
+next
+fix x::"'a formula_syn" and y::"'a formula_syn"
+assume "x \<le> y" "y \<le> x"
+thus "x = y"
+using Rep_formula_syn_eq less_eq_formula_syn_def 
+
+
+
+
 qed (unfold Rep_formula_syn_boolean_algebra_simps, auto)
 end
 

@@ -716,7 +716,7 @@ instantiation formula :: (type) temporal_faults_algebra_basic
 begin
 
 definition
-  "neutral = Abs_formula { dlist_of_list [] }"
+  "neutral = Abs_formula { Dlist [] }"
 
 definition
   "xbefore a b = Abs_formula { zs . 
@@ -724,7 +724,11 @@ definition
 
 definition 
   "tempo1 a = dlist_tempo1 (\<lambda>xs. xs \<in> Rep_formula a)"
-    
+
+lemma Rep_formula_neutral[simp]: "Rep_formula neutral = { Dlist [] }"
+unfolding neutral_formula_def 
+by (simp add: Abs_formula_inverse)
+
 lemma Rep_formula_xbefore_to_dlist_xbefore: 
   "Rep_formula (xbefore a b) = 
   Collect (dlist_xbefore (\<lambda>x. x \<in> Rep_formula a) (\<lambda>y. y \<in> Rep_formula b))"
@@ -976,7 +980,6 @@ by blast
 theorem temporal_faults_algebra_mapping_completeness: 
     "\<forall> (S::'a dlist set). \<exists> f::'a formula. Rep_formula f = S"
 using Abs_formula_inverse by auto
-
 
 (*<*)
 end
