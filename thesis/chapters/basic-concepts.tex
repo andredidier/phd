@@ -7,7 +7,7 @@ It is strongly related to fault modelling, which depends on the kinds of analyse
 \Acp{FT} are present in several stages of systems' modelling.
 We introduce dependability\index{Dependability} and fault modelling in \cref{sec:dependability}.
 
-\Iac{SFT} is a snapshot\footnote{Whether a top event indeed causes a catastrophic or major failure is out of the scope of this thesis; we consider that, if it is possible that such failure occur, then it will.} of a faults topology of a system, subsystem or component.
+\Iac{SFT} is a snapshot of a faults' topology of a system, subsystem or component.
 %\acp{TFT} and \acp{DFT} uses sequences of fault events because they consider a time relation on fault events.
 The time relation of fault events in \acp{TFT} and \acp{DFT} allows the analysis of different configurations (or snapshots) of a system, subsystem or component.
 We discuss these time relations in \cref{sec:time-relations}.
@@ -16,12 +16,12 @@ We discuss these time relations in \cref{sec:time-relations}.
 \label{sec:dependability}
 
 \begin{sloppypar}
-Computing systems are characterized by five properties: functionality, performance, cost, dependability\index{Dependability}, security.
-The work reported in~\cite[p. 289--302]{Sommerville2011} explain these properties---including dependability\index{Dependability}---with a focus on software.
+Computing systems are characterized by five properties: functionality, performance, cost, dependability\index{Dependability}, and security~\cite{ALR+2004}.
+The work reported in~\cite[p. 289--302]{Sommerville2011} explains these properties---including dependability\index{Dependability}---with a focus on software.
 Hardware and software are connected, as software faults may cause a failure in a software-controlled hardware, and hardware faults may send incorrect data, causing a failure in the software.
 \end{sloppypar}
 
-The work reported in~\cite{ALR+2004} summarizes all concepts of and related to dependability\index{Dependability} for computing systems that contain software and hardware.
+The work reported in~\cite{ALR+2004} summarizes all concepts of (and related to) dependability\index{Dependability} for computing systems that contain software and hardware.
 In the following, we show these concepts and highlight those used in this work.
 
 \subsection{Systems}
@@ -30,7 +30,7 @@ Before introducing systems' dependability\index{Dependability}, we first describ
 A \emph{system} is an entity that interacts with other systems (software and hardware as well), users (humans), and the physical world.
 These other entities are the \emph{environment} of the given system, and its \emph{boundary} is the frontier between the system and its environment.
 
-The \emph{function} of a system is what the system is intended to do, and its \emph{behaviour} is what the system does to implement its function.\amnote{Você continua muito filosófico aqui. Quero ver para onde vamos (uso)...} \adnote{Isso faz parte do contexto para quando mencionar os termos eles terem sido introduzidos.}
+The \emph{function} of a system is what the system is intended to do, and its \emph{behaviour} is what the system does to implement its function.
 The \emph{total state} of a system are the means to implement its function and is defined as the set of the following states: computation, communication, stored information, interconnection, and physical condition.
 The \emph{service} delivered by a system is its behaviour as it is perceived by its boundary.
 A system can both provide and consume services.
@@ -165,7 +165,7 @@ The methods that involve failure identification are:
   \item \aca{DTMC}, and
   \item \ac{FMEA}.
 \end{alineasinline}
-The first three are top-down methods, that start with undesired failure conditions and moves to lower levels to obtain more detailed conditions that causes the top-level event.
+The first three are top-down methods, that start with undesired failure conditions and move to lower levels to obtain more detailed conditions that causes the top-level event.
 \Acp{DD} are an alternative method of representing the data in \ac{SFT}.
 \Ac{FMEA} is a bottom-up method that identifies failure modes of a component and determines the effects on the upper level.
 We detail \ac{SFT} in \cref{sec:static-fault-trees}.
