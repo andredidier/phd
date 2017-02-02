@@ -55,7 +55,7 @@ We summarise the properties of the \ac{activation} as follows:
 These properties form the \emph{healthiness conditions}~\cite{HH1998} of an expression in the \ac{activation}.
 \end{sloppypar}
 
-We show the general form of the \ac{activation} to model faults in \cref{sec:grammar}, the healthiness conditions to normalize expressions in \cref{sec:healthiness-conditions}, how to identify non-determinism in an expression in \cref{sec:non-determinism}, and the predicates notation to analyse systems and model fault propagation in \cref{sec:predicates-notation}.
+We show the general form of the \ac{activation} to model faults in \cref{sec:grammar}, the healthiness conditions to normalize expressions in \cref{sec:healthiness-conditions}, how to identify non-determinism in an expression in \cref{sec:non-determinism}, and the predicate notation to analyse systems and model fault propagation in \cref{sec:predicates-notation}.
 
 \section{The \acl*{activation} Grammar}
 \label{sec:grammar}
@@ -280,10 +280,10 @@ Let $exp$ be an expression in \ac{activation}.
 If there is at least one combination that evaluates $P_1 \land P_2$ to true (it is not a contradiction), then $exp$ is non-deterministic.
 Our example is clearly non-deterministic as at least $A \land \left(A \lor B\right)$ is not a contradiction.
 
-To analyse components and systems, and to model faults propagation, a predicates notation is shown in the next \lcnamecref{sec:predicates-notation}.
-The predicates notation offers two additional ways to check non-determinism.
+To analyse components and systems, and to model faults propagation, a predicate notation is shown in the next \lcnamecref{sec:predicates-notation}.
+The predicate notation offers two additional ways to check non-determinism.
 
-\section{Predicates Notation}
+\section{Predicate Notation}
 \label{sec:predicates-notation}
 
 The \acl{activation} needs a special notation to enable the analysis of: 
@@ -304,7 +304,7 @@ A predicate over $exp$ that matches $O_x$ is described as:
 \end{definition}
 
 
-The predicates notation function returns a predicate in the algebra.
+The predicate notation function returns a predicate in the algebra.
 For the example in the beginning of this \lcnamecref{sec:predicates-notation}, the predicate for $O_2$ is obtained as follows:
 \[
 \predicate{S}{O_2} = B
@@ -337,7 +337,7 @@ Let $exp$ be an expression in \ac{activation}, and $P_x$ a predicate in the inne
 
 \end{definition}
 
-Non-determinism can also be checked using the predicates notation and the activation property:
+Non-determinism can also be checked using the predicate notation and the activation property:
 \begin{subequations}
 \begin{align}
 \activation{S}{A \land \lnot B} = &

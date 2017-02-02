@@ -204,7 +204,7 @@ $PowerSource_i$ is healthy:
 
 
 The monitor is a bit different because its behaviour depends not only on internal faults, but also on its inputs. 
-We will now use the predicates notation defined in \cref{sec:predicates-notation} to express fault propagation.
+We will now use the predicate notation defined in \cref{sec:predicates-notation} to express fault propagation.
 As the monitor has two inputs and its behaviour is described in \cref{fg:blockDiagramMonitorInternals}, then it is a function of the expressions of both inputs:
 %
 \begin{equation}
@@ -350,7 +350,7 @@ The resulting expression for the monitor after applying all healthiness conditio
 %
 The operational modes of $System_{\mathrm{bool}}$ is either $\Nominal{12V}$ or $LP$ (low power).
 
-Finally, we obtain the \emph{low power} structure expression (see \cref{tbl:acsAnnotations}) using the predicates notation:
+Finally, we obtain the \emph{low power} structure expression (see \cref{tbl:acsAnnotations}) using the predicate notation:
 \[
 \predicate{System_{\mathrm{bool}}}{LP} \iff
 F \land \left(B_1 \lor B_2\right) \lor \left(B_1 \land B_2\right)
@@ -358,7 +358,7 @@ F \land \left(B_1 \lor B_2\right) \lor \left(B_1 \land B_2\right)
 
 The monitor expression also indicates that if the switch is operational ($\lnot F$) and at least one PowerSource is operational ($\lnot B_1 \lor \lnot B_2$), the monitor output is nominal.
 But if at least one PowerSource is faulty ($B_1 \lor B_2$) and the monitor has an internal failure ($F$) the system is not operational.
-These two sentences---written in \ac{activation} using the predicates notation---are:
+These two sentences---written in \ac{activation} using the predicate notation---are:
 \begin{subequations}
 \begin{align}
 \activationcmd& \left(System_{\mathrm{bool}}, \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right)\right) \nonumber\\
@@ -411,7 +411,7 @@ Note that the finer analysis splits the predicate
   & \xbefore{F}{\lnot\predicate{in_1}{\Nominal{12V}}} & \text{(activates } in_2\text{)}
 \end{align*}
 %
-We can assure that such a split is complete because the predicates notation evaluates to $B_1$. 
+We can assure that such a split is complete because the predicate notation evaluates to $B_1$. 
 As the operands satisfy all temporal properties (\cref{def:tempo1,def:tempo2,def:tempo3,def:tempo4}) and events independence (\cref{law:independent-events}), thus the law shown in \cref{thm:xbefore-sup-equiv-inf} is valid.
 For the first split item, the expected behaviour is the same as $in_1$ because the system switches to $in_2$, but then an internal failure occurs, and it switches back to $in_1$.
 For the second split item, it switches to $in_2$ due to an internal failure, then the first input fails, so the behaviour is similar to the nominal behaviour (see the second \emph{modes} in \cref{eq:monitor-algebra}).
@@ -608,7 +608,7 @@ The resulting expression for the monitor after applying all healthiness conditio
 \end{split}
 \end{equation}
 
-Finally, we obtain the \emph{low power} structure expression of the monitor using the predicates notation:
+Finally, we obtain the \emph{low power} structure expression of the monitor using the predicate notation:
 \[
 \predicate{System_{XB}}{LP} \iff 
   \left(B_1 \land B_2\right) \lor 
