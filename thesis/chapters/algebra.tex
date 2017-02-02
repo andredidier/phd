@@ -505,16 +505,16 @@ Each sub-expression is a set of minimal cut sequences\index{Minimal Cut!Sequence
 The following formulas are in \ac{DNF}:
 %
 \begin{align*}
-&\parsin{A \land -B} \lor \parsin{\parsin{\xbefore{A}{B}} \land C}\\
-&A \lor B\\
+&\parsin{A \land \lnot B \land \lnot C} \lor \parsin{\xbefore{\parsin{\xbefore{A}{B}}}{C}}\\
 &\xbefore{A}{B}\\
-&A \land B\\
 &\xbefore{\xbefore{A}{B}}{C}
 \end{align*}
 %
 The following formulas are \emph{not} in \ac{DNF}:
 %
 \begin{align*}
+&A \lor B\\
+&A \land B\\
 &-\parsin{A \lor B}\\
 &A \land \parsin{B \lor C}\\
 &\xbefore{A}{\parsin{B \lor C}}\\
@@ -523,6 +523,7 @@ The following formulas are \emph{not} in \ac{DNF}:
 
 \begin{sloppypar}
 But to transform the last two formulas into \ac{DNF}, one can use \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:xbefore-inf-1,thm:xbefore-inf-2}, for instance.
+The \ac{DNF} is clearer with the mapping function from denotational semantics to a formula $\formulaof{.}$ presented in \cref{sec:algebras-soundness-and-completeness}.
 \end{sloppypar}
 
 We define events independence ($\independenteventsop$) as the property that one operand does not imply the other.
@@ -740,8 +741,64 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 \section{Soundness and completeness}
 \label{sec:algebras-soundness-and-completeness}
 
-The soundness and completeness in \ac{algebra} are obtained from traditional logic.
-Thus, soundness is proved if all formulas for a set of generators 
+The soundness and completeness in \ac{algebra} are obtained as in traditional logic: from the set of all formulas (syntax), and from the set of all formulas' representation (denotational semantics).
+
+To show equivalence of a formula and its denotational we need two mapping functions: one that takes a formula e returns its set of distinct lists, and another that takes a set of distinct lists and returns a formula.
+The function that maps a formula to its denotational semantics is the function $\denote{.}$, shown in the beginning of this \lcnamecref{chap:algebra}:
+%
+\begin{align}
+\denote{\bot} = &~ \left\{\right\}\nonumber\\
+%%%%%
+\denote{\top} = &~ \UNIV\nonumber\\
+%%%%%
+\denote{\neutral} = &~ \left\{\listsin{~} \right\}\nonumber\\
+%%%%%
+\denote{\var x} = &~ 
+	\left\{~ 
+		dl \bullet x \in \listset{dl}  
+	~\right\}\nonumber\\
+%%%%%
+\denote{X \lor Y} = &~ \denote{X} \union \denote{Y}\nonumber\\
+%%%%%
+\denote{X \land Y} = &~ \denote{X} \inter \denote{Y}\nonumber\\
+%%%%%
+\denote{\lnot X} = &~ - \denote{X}\nonumber\\
+%%%%%
+\denote{\xbefore{X}{Y}} = &~
+	\left\{~
+		dl ~\middle|~ \exists~ i ~\bullet~ \sliceright{dl}{i} \in \denote{X} \land \sliceleft{dl}{i} \in \denote{Y}
+	~\right\}
+\end{align}
+
+\begin{proposition}[Soundness]
+Let $L$ be the set of all formulas in \ac{algebra}, and $M$ the set of all sets of \distinctlists, then:
+
+\begin{align}
+\forall~ f ~\in~ L ~\bullet~ \denote{f} ~\in~ M
+\end{align}
+\end{proposition}
+
+The mapping function from a set of lists to a formula is given in terms of the \iac{DNF}\index{DNF} of \ac{algebra} and a set of generators $S$:
+%%%%%
+\begin{align}
+\listformulaof{\listsin{~}} = &~ \neutral\nonumber\\
+%%%%%
+\listformulaof{\listsin{x}} = &~ \var{x} \land \bigwedge_{y ~\in~ \generators\left(S\right)-\left\{x\right\}} \lnot \var{y} \nonumber\\
+%%%%%
+\listformulaof{\cons{x}{dl}} = &~ \xbefore{\var{x}}{\listformulaof{dl}}\nonumber\\
+%%%%%
+\formulaof{\left\{~\right\}} = &~ \bot\nonumber\\
+%%%%%
+\formulaof{X} = &~ \bigvee_{dl ~\in~ X} \listformulaof{dl}
+\end{align}
+
+\begin{proposition}[Completeness]
+Let $L$ be the set of all formulas in \ac{algebra}, and $M$ the set of all sets of \distinctlists, then:
+
+\begin{align}
+\forall~ X ~\in~ M ~\bullet~ \formulaof{X} ~\in~ L
+\end{align}
+\end{proposition}
 
 \section{Qualitative and quantitative analyses}
 \label{sec:qualitative-quantitative-analyses}
