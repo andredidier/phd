@@ -13,7 +13,7 @@ We present the \simulink model for this monitor in \cref{fg:blockDiagramMonitorI
 
 %As we mentioned in~\cref{sec:faults-injection} we translated the monitor to \ac{CSPm} according to our strategy and modified the observer to make \acs{FDR} generate more counter-examples.
 
-Sensors and actuators are used to improve safety by taking measures to decrease potential failures, as the leak protection system shown in \cref{sec:probabilistic-analysis-non-coherent-tree}.
+Sensors and actuators are used to improve safety by taking measures to decrease potential failures, as the leak protection system reported in~\cite{Andrews2001}, and shown in \cref{sec:probabilistic-analysis-non-coherent-tree}.
 A sensor is installed in a room that may have gas leakage.
 If the sensor detects a gas leak, then an actuator---a controlled valve---closes the gas flow.
 A second valve diverts the gas flow if a high pressure is detected due the first valve closing.
@@ -658,7 +658,7 @@ Then, we obtain the formula probability of the top-event probability of the stru
     \ldots + \nonumber\\
     &~\denotationalprob{\listsin{prv,i_1,val}} \nonumber
 %%%%%
-\intertext{Note that we use the expression without the consensus law, but the ``missing'' term $PRV \land I_1$ appears on the denotational semantics used in the probability calculation.}
+\intertext{Note that we use the expression without the consensus law, but the ``missing'' term $PRV \land I_1$ appears naturally on the denotational semantics used in our proposed probability calculation.}
 %%%%%
 \formulaprobop\{\left(\lnot VAL \land PRV\right) \lor &\nonumber\\
     \left(VAL \land I_1\right)\} = &~
