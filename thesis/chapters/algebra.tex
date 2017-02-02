@@ -14,7 +14,7 @@ In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are i
 
 We showed in \cref{sec:fault-trees} that there is a consistent presence of order-based operators to analyse \acp{TFT} and \acp{DFT}, and that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a normal form.
 
-From the need to tackle events ordering and from the ordering information we had from fault injection that we developed in~\cite{DM2012}, we defined a list-based algebra, called \acf{algebra}, to express and analyse systems considering events ordering.
+From the need to tackle events ordering, related to the fault injection strategy we developed in~\cite{DM2012}, we defined a list-based algebra, called \acf{algebra}, to express and analyse systems considering events ordering.
 We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra, shown in \cref{sec:mapping-cspm-algebra}.
 The order-specific operations are expressed with a new operator ($\xbeforeop$) that we call \ac{XBefore}.
 
@@ -24,7 +24,7 @@ The choice for lists is because this structure inherently associates a generator
 These lists are composed of non-repeated elements (\distinctlists) because the events in \aclp{FT} are non-repairable.
 Thus, they do not occur more than once.
 
-The elements of a list have an implicit order number, but such an order number is different from the Sequence Number function used in~\cite{WP2009,Walker2009}
+The elements of a list have an implicit order number, but such an order number is different from the Sequence Number function used in~\cite{WP2009,Walker2009}.
 Although different, the order number in lists is related to the concept that there should be no gaps of the indexes between consecutive events occurrence.
 The structure of the lists ensures this restriction.
 But it is different because order 0 (zero) in~\cite{WP2009,Walker2009} means non-occurrence.
@@ -278,7 +278,7 @@ The following expressions are valid for generators $a$ and $b$ and are sufficien
 Expressions \cref{def:algebraset-var} to \cref{def:algebraset-sup} and \cref{eqs:generators-independence-eq-eq} to \cref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \cref{def:xbefore-append} forms a Boolean\index{Boolean Algebra} algebra based on sets of lists.
 And this is also equivalent to \iac{FBA}\index{Boolean Algebra!Free} with the same generators.
 
-In our previous work~\cite{DM2015} we stated a relation of \ac{XBefore} and \emph{supremum}, provided the operands are variables \cref{def:var}.
+In our previous work~\cite{DM2015} we stated a relation between \ac{XBefore} and \emph{supremum}, provided the operands are variables \cref{def:var}.
 Now we generalise this relation in terms of abstract properties of the operands of the \ac{XBefore}.
 We name these properties as \emph{temporal properties}.
 %and show them in \cref{sec:temporal-properties}.
@@ -741,18 +741,18 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 \label{sec:qualitative-quantitative-analyses}
 
 In \cref{sec:fault-trees} we showed the kind of results that are obtained in \ac{FTA}.
-In this \lcnamecref{sec:qualitative-quantitative-analyses} we show how to formalize two kinds of properties\todo{MCSeq e a Probabilidade não seriam propriedades mas sim definições suas, não?! (FROM ACM)} of \acp{FT}: 
+In this \lcnamecref{sec:qualitative-quantitative-analyses} we show how to formalize these \ac{FTA} results as: 
 \begin{alineasinline}
   \item \ac{MCSeq}, the number of fault elements in the minimal sequences that cause a root failure, and 
   \item the root probability, given the availability of basic fault occurrences probabilities.
 \end{alineasinline}
 %
-These properties are the most representative, but other criteria can be modelled similarly.
+These attributes are the most representative, but other ones can be modelled similarly.
 
 \subsection{\Acl{MCSeq}}
 
 Recall from the beginning of this \lcnamecref{chap:algebra} that the denotational semantics of \ac{algebra} is a set of \distinctlists.
-Thus each list has no repeated elements and represent a possible combination of faults that causes the root failure.
+Thus, each list has no repeated elements and represent a possible combination of faults that causes the root failure.
 \Acp{MCSeq} are those \distinctlists with the least length, defined in what follows.
 
 \begin{definition}[Minimal cut sequences]
@@ -854,34 +854,62 @@ Then the probability of $S$, $\formulaprob{S}$, is given by:
 
 The interesting part behind the probabilistic calculus over the denotational semantics is that it is only about ordering of events.
 It means that even if a formula contains \iac{NOT} operator, we still safely obtain a probability value, without worrying about complement probabilities as tackled in~\cite{Andrews2001}.
-For example, the probability of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2$) is:
+For example, the denotational semantics of $\lnot \var{f_1}$ (for generators $f_1$ and $f_2$) is:
 %
 \begin{align}
-\probability{\lnot \var{f_1}} = & \denotationalprob{\left[\right]} + \denotationalprob{\left[f_2\right]} & \text{by \cref{eq:formula-probability}} \nonumber\\
+\denote{\lnot \var{f_1}} = &~ \UNIV - \denote{\var{f_1}} \nonumber\\
+%%%%%
+= &~ \UNIV - 
+	\left\{
+		\listsin{f_1},
+		\listsin{f_1,f_2},
+		\listsin{f_2,f_1}
+	\right\}\nonumber\\
+%%%%%
+= &~ \left\{ 
+		\emptylist,
+		\listsin{f_1},
+		\listsin{f_2},
+		\listsin{f_1,f_2},
+		\listsin{f_2,f_1}
+	\right\} - 
+	\left\{
+	\listsin{f_1},
+	\listsin{f_1,f_2},
+	\listsin{f_2,f_1}
+	\right\}
+	\nonumber\\
+= &~ \left\{\emptylist, \listsin{f_2} \right\}
+\end{align}
+%
+and the probability of $\lnot \var{f_1}$ is:
+%
+\begin{align}
+\formulaprob{\lnot \var{f_1}} = &~ \denotationalprob{\left[\right]} + \denotationalprob{\left[f_2\right]} & \text{by \cref{eq:formula-probability}} \nonumber\\
 %%%%%%%%%%%%%
-= &\probability{\left[\right]}\times\left(1 - P_1(t)\right)\times\left(1 - P_2(t)\right)\nonumber\\
+= &~ \probability{\left[\right]}\times\left(1 - P_1(t)\right)\times\left(1 - P_2(t)\right)\nonumber\\
 & + \probability{\left[f_2\right]}\times\left(1 - P_1(t)\right) & \text{by \cref{eq:denotational-probability}} \nonumber\\
 %%%%%%%%%%%%%
-= & 1 \times \left(1- P_1(t)\right) \times \left(1 - P_2(t)\right)\nonumber\\
+= &~ 1 \times \left(1- P_1(t)\right) \times \left(1 - P_2(t)\right)\nonumber\\
 & + P_2(t) \times \left(1 - P_1(t)\right) & \text{by \cref{eq:general-pand-probability}}\nonumber\\
 %%%%%%%%%%%%%
-= & 1 - P_1(t)
+= &~ 1 - P_1(t)
 \end{align}
 
-The empty list is the special and has value $1$.
+The empty list is a special case and has value $1$.
 It works as the universal complement probability of any other list.
 When the empty list appears in a denotational semantics it means that the top-event occurs if no fault occurs.
 %Thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
 %This is the only assumption in the calculations shown in this \lcnamecref{sec:qualitative-quantitative-analyses}.
 
 We use the traditional probability calculations~\cite{Merle2010} as reference to calculate the probabilities of formulas in \ac{algebra}.
-\begin{subequations}
-\begin{align}
-\formulaprob{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
-\formulaprob{\vari{1} \lor \vari{2}} = & \Fit{1} + \Fit{2} - \Fit{1} \times \Fit{2}\label{eq:or-probability}
-\end{align}
-\end{subequations}
-
+%\begin{subequations}
+%\begin{align}
+%\probability{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
+%\formulaprob{\vari{1} \lor \vari{2}} = & \Fit{1} + \Fit{2} - \Fit{1} \times \Fit{2}\label{eq:or-probability}
+%\end{align}
+%\end{subequations}
+%
 For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$, considering only the two generators ($f_1$ and $f_2$), has denotational semantics $\left\{\left[f_1, f_2\right], \left[f_2, f_1\right]\right\}$ and the probability of the formula is the probability of $\left[f_1, f_2\right]$ \emph{or} $\left[f_2, f_1\right]$ (but not both):
 %
 \begin{align}
@@ -889,7 +917,7 @@ For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left
 %%%%
 =&\denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} & \text{by \cref{eq:formula-probability}} \nonumber\\
 %%%%
-= &\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]} & \text{\cref{eq:denotational-probability}, both $\sum$ is $0$}\nonumber\\
+= &\probability{\left[f_1,f_2\right]} + \probability{\left[f_2,f_1\right]} & \text{by \cref{eq:denotational-probability}}\nonumber\\
 %%%%
 =&\int_0^t P'_2(x) P_1(x) dx + \int_0^t P'_1(x) P_2(x) dx & \text{by \cref{eq:pand-probability}} \nonumber\\
 %%%%
@@ -900,26 +928,26 @@ For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left
 = & P_1(t) \times P_2(t)\label{eq:prob-xbefore-sup-equiv-inf}
 \end{align}
 
-In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$), shown in \cref{eq:and-probability}.
+In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$).
 This is expected as these two formulas are equivalent, as shown in \cref{thm:xbefore-sup-equiv-inf}.
 
 Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$:
 %
 \begin{align}
-S = & \var{f_1} \land \var{f_2} \land \lnot \var{f_3}
-  & \text{by \cref{eq:formula-probability}}\nonumber\\
+S = & \var{f_1} \land \var{f_2} \land \lnot \var{f_3}\nonumber\\
 %%%%%
 \probability{S} = &
 \denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} 
-  & \text{by \cref{eq:denotational-probability}}\nonumber\\
+  & \text{by \cref{eq:formula-probability}}\nonumber\\
 %%%%%
 = & \probability{\left[f_1,f_2\right]}\times \left(1 - P_3(t)\right)
-+ \probability{\left[f_2,f_1\right]}\times \left(1 - P_3(t)\right)\nonumber\\
++ \probability{\left[f_2,f_1\right]}\times \left(1 - P_3(t)\right)
+	& \text{by \cref{eq:denotational-probability}}\nonumber\\
 %%%%%
 = & P_1(t) \times P_2(t) \times \left(1 - P_3(t)\right) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf}}
 \end{align}
 
-Using \cref{eq:formula-probability}, and for generators $f_1$ and $f_2$, we demonstrate the equivalence to \cref{eq:or-probability} (the probability of \iac{OR} operator), calculated using the denotational semantics:
+Using \cref{eq:formula-probability}, and for generators $f_1$ and $f_2$, we demonstrate the equivalence to the probability of a traditional \ac{OR} operator, calculated using the denotational semantics:
 %
 \begin{align}
 S = & \vari{1} \lor \vari{2}\nonumber\\
@@ -983,11 +1011,12 @@ For example, for $\var{f_1} \land \var{f_2}$ and generators $f_1$, $f_2$ ,and $f
 \end{align}
 %
 which is the same calculation as shown in \cref{eq:formula-probability-of-inf}.
+Thus, the probability calculation is not sensitive to a particular set of generators.
 
 \subsection{Formal acceptance criteria}
 \label{sec:formal-acceptance-criteria}
 
-To enable the formal verification of structure expressions we use the concept of \emph{acceptance criteria}.\todo{ACM: colocar a sentença anterior em termos mais gerais de uma análise de FTA...}
+To enable the formal verification of structure expressions we use the concept of \emph{acceptance criteria}.
 Safety requirements are written in terms of the properties of \iac{FT}, for example: 
 \begin{alineasinline}
   \item no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or 
@@ -1013,6 +1042,8 @@ Using the formal acceptance criteria, safety requirements as stated in the begin
 	\item[$\lengthacceptance{F}{1}$:] the minimum length of the \acp{MCSeq} of $F$ are higher than 1;
 	\item[$\probacceptance{F}{10^{-9}}$: ] the probability of the top event of $F$ shall be less than $10^{-9}$.
 \end{description}
+
+The verification of the acceptance criteria is illustrated with the probability calculation of a formula in \cref{sec:top-event-probability-explicit-not}.
 
 \section{Mapping \ac*{CSPm} traces to \ac*{algebra}}
 \label{sec:mapping-cspm-algebra}
