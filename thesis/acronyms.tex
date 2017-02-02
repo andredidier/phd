@@ -3,6 +3,12 @@
 % this now only works because I've use the same already in the preamble so
 % it does nothing here:
 \ProvideAcroEnding {possessive} {'s} {'s}
+\ProvideAcroCommand \iacg
+{
+	\acro_indefinite:
+	\acro_possessive:
+	\acro_use:n {#1}
+}
 \ProvideAcroCommand \acg
 {
 	\acro_possessive:

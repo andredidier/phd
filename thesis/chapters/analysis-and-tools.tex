@@ -12,8 +12,8 @@ We explain \acp{BDD}\index{Binary Decision Diagrams} and derived techniques in \
 
 The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}:
 \begin{alineasinline}
-  \item can be misleading, generating non-coherent \aclp{FT}, or
-  \item can be essential in practical use.
+  \item can be misleading, generating non-coherent \aclp{FT}~\cite{Oliv2006}, or
+  \item can be essential in practical use~\cite{Andrews2001}.
 \end{alineasinline}
 We discuss such cases in \cref{sec:not-operator}.
 
@@ -47,7 +47,7 @@ We explain \acp{TFT} and the sequence values in \cref{sec:temporal-fault-trees}.
 
 \begin{sloppypar}
 With component and system design evolution, \acp{DFT} were created to tackle dynamic behaviour: fault-tolerance-related components (\ac{CSp}), functional dependency (\ac{FDEP}), and analysis of particular order of occurrence of faults (\ac{SEQ}).
-\Acg{SFT} gates are still present as \acg{DFT} gates.
+\Acg{SFT} gates (as \ac{AND} and \ac{OR}) are part of \acp{DFT} as well.
 We explain them and \acg{DFT} analysis in \cref{sec:dynamic-fault-trees}.
 \end{sloppypar}
 
@@ -65,7 +65,7 @@ We summarize them as:
   \item Qualitative
   \begin{description}
     \item[\Acp{MCS}\index{Fault Tree Analysis!minimal cut set}:]
-    Smallest combinations of component failures causing system failure.
+    Minimal combinations of component failures causing system failure.
     They are obtained from the reduction of structure expressions to a normal form.
     For example, in \acp{SFT}, structure expressions\index{structure expression} are reduced to \ac{DNF}.
     Each term in a reduced \ac{DNF} is \iac{MCS}.
@@ -80,10 +80,11 @@ We summarize them as:
     Probabilities of system and \ac{MCS} failures.
     A system failure probability is obtained by assigning probabilities to basic events and then calculating it according to the gate semantics.
     \Ac{MCS} failure probability is the calculation of the probability of the occurrence of \emph{all} basic events of a specific \ac{MCS}.
+    %%%%%
     \item[Importance\index{Fault Tree Analysis!quantitative importance}:]
     Quantitative rankings on contributions to system failure.
     Ranking \acp{MCS} is the same as ordering them in descending order of some unreliability formula (higher first).
-    These formulas used to calculate importance vary.
+    These formulas used to quantify importance vary.
     The most common are:
     \begin{alineasinline}
       \item system unavailability, and
@@ -103,7 +104,7 @@ This removes components without impacting the overall failure probability, which
 
 \begin{sloppypar}
 In important stages of critical systems, \ac{FTA} plays an essential role.
-At least three dependability means\index{Dependability!means to attain} can be achieved using \acp{FT}:
+At least three dependability means\index{Dependability!means to attain} can be achieved by using \acp{FT}:
 %
 \begin{description}
   \item[Removal.]
@@ -122,11 +123,11 @@ We detail its structure expression extraction because they are a common means to
 \subsection{\Aclp*{SFT}}
 \label{sec:static-fault-trees}
 
-\Ac{SFT} gates and structure expressions were used as basis for other kinds of tree, as in \acp{TFT} and \acp{DFT}.
+\Ac{SFT} gates and structure expressions were used as basis for other kinds of trees, as in \acp{TFT} and \acp{DFT}.
 We explain their symbology and semantics in this \lcnamecref{sec:static-fault-trees}.
 
 The \FThandbook shows traditional symbols for gates and events.
-Basic events are usually drawn as rectangle (for the text) and a circle below it, as shown in \cref{fig:sft-example-ald-software}, or as a circle with the text of the basic event, as shown in \cref{fig:sft-example-traditional-gates}.
+Basic events are usually drawn as a rectangle (for the text) and a circle below it, as shown in \cref{fig:sft-example-ald-software}, or as a circle with the text of the basic event, as shown in \cref{fig:sft-example-traditional-gates}.
 Top-level and intermediary events are drawn as a rectangle (for the text) and a gate below it, as shown in \cref{fig:sft-example-traditional-gates,fig:sft-example-ald-software}.
 When \iac{FT} becomes too large, transfer in and out symbols can be used.
 They are usually drawn as triangles with a letter or a number.
@@ -194,7 +195,7 @@ The occurrence of the fault event $a$ is denoted by a set of sets $A$, which con
   \item\label{item:fta-all-occur} $\left\{a,b,c\right\}$: all three events occur in any order.
 \end{alineas}
 All sets of $A$ contain the fault event $a$.
-Similarly, the sets of sets $B$---that represents the occurrence of $b$---contains all sets that contain the fault event $b$ (it includes the set $\setsin{a,b,c}$, for example).
+Similarly, the set of sets $B$---which represents the occurrence of $b$---contains all sets that contain the fault event $b$ (it includes the set $\setsin{a,b,c}$, for example).
 %
 %Fault event \emph{a} occurs in all possibilities.
 %As these are sets, they represent combinations and not permutations.
@@ -225,7 +226,7 @@ A technique called \ac{BDD}\index{Binary Decision Diagrams}---which derives from
 
 There are at least two versions of \acp{TFT}.
 One is described in~\cite{Palshikar2002} and uses a more traditional style of temporal logic (a variation of \ac{LTL}).
-The other version is called \pandora and is the one we refer to in the following.
+The other version is called \pandora and is the one we refer to in what follows.
 
 \Acp{TFT} express ordering of events by directly focusing on ordering relationships rather than different states of a system. Basically they extend \acg{SFT} \ac{PAND} gates, allowing analysis of \ac{FT} with such gates.
 It is simpler to express than \ac{DFT}, but lacks the fault-tolerance-related gate of \acp{DFT} (which we show in \cref{sec:dynamic-fault-trees}).
@@ -242,7 +243,8 @@ For example, if event A occurs before event B, then the sequence value of A is l
 An invariant on sequence values is that there are no gaps for assigned values.
 For example, if faults A and B occur at the same time and there are only these two events, then they should both be assigned value $1$.
 On the other hand, if A occurs before B, then the assigned values are 1 and 2, respectively.
-The possible values increases with the number of variables to express the cases that all events occur in different times, for example, A occurs before B, and B occurs before C. 
+The possible values increase with the number of variables to express the cases that all events occur in different times.
+For example, A occurs before B, and B occurs before C. 
 In this case, the assigned values are 1, 2, and 3, respectively.
 Value zero means that the event is not active on the combination.
 Similar to Boolean's\index{Boolean Algebra} truth tables, the \pandora methodology defines \acp{TTT}.
@@ -383,7 +385,7 @@ For the best of our knowledge they are introduced in the work~\cite{TD2004} simi
 
 For \acp{TFT}, in the work~\cite{Walker2009} \acp{MCSeq} are represented as \iac{DNF} using \ac{AND} and the temporal operators (\ac{PAND}, \ac{POR}, and \ac{SAND}) as doublets (a single temporal relation)---which are the minimal terms---or prime implicants---in the \ac{DNF}.
 In a doublet, the expression is a product (\ac{AND}) of temporal operators, and each temporal operator contains \emph{exactly} two events.
-The conversion to doublets uses the temporal laws as shown in~\cite{Walker2009}.
+The conversion to doublets uses the temporal laws as shown in the work reported in~\cite{Walker2009}.
 For example, the expression $\parsin{X \sand Y} \por Z$ is a temporal relation (\ac{POR}) of a temporal relation (\ac{SAND}).
 To extract \acp{MCSeq} it needs to be converted to $\squaresin{X \sand Y} \land \squaresin{X \por Z} \land \squaresin{Y \por Z} $ (the square brackets is the doublets notation and the conversion is the definition of the \emph{Temporal Distributive Law}~\cite[p. 120]{Walker2009}).
 
@@ -392,8 +394,9 @@ The reduction of \ac{TFT} structure expressions is achieved using \ac{DT}\adnote
 In \iac{DT}, if all children of a tree node are true, then the node is also true.
 Conversely, if a node is true, then all its children are also true.
 An issue with \acp{DT} is that they grow exponentially.
-According to the work reported in~\cite{WP2010}, it is already infeasible to deal with seven fault events in TFTs.
+According to the work reported in~\cite{WP2010}, it is already infeasible to deal with seven fault events in \acp{TFT}.
 Although there is a solution, it is based on a mixed application of \acp{DT}, modularisation of independent subtrees, and algebraic laws~\cite{WP2009}.
+Such a solution is not able to solve \acp{FT} with \ac{NOT} gates, and requires some manual work to modularise independent trees.
 We show \acp{DT} in~\cref{sec:dependency-trees}.
 Some of these algebraic laws are:
 %
@@ -412,7 +415,7 @@ Some of these algebraic laws are:
 \begin{sloppypar}
 \Aclp{DFT} were designed with the goal of analysing complex systems with dynamic redundancy management and complex fault and recovery mechanisms~\cite{DBB1992}.
 The idea was to create easy-to-use and less error-prone modelling tools than using \acp{DTMC}---or simply \emph{\acap{DTMC}}---directly.
-So, since the very beginning, \acp{DFT} were intended to be evaluated using \acap{DTMC}.
+So, since the very beginning, \acp{DFT} were intended to be a visual representation of \acap{DTMC}.
 \Cref{fig:dft-original-symbols} depicts the original gate symbols as shown in~\cite{DBB1992,Boyd1992}.
 In this work, we use gate symbols as depicted in \cref{fig:dft-symbols}.
 The informal semantics of them are:
@@ -420,7 +423,7 @@ The informal semantics of them are:
 \begin{description}
   \item[\Ac{FDEP}:]
   When the trigger event occurs, the dependent events are forced to occur.
-  Timing in this gate between trigger event and dependent events occurrences can be instantaneous (like in \acg{TFT} \ac{SAND} gate), or a small amount of time, thus implying an order of occurrence, depending on the kind of dependency.
+  Timing in this gate between the trigger event and dependent events occurrences can be instantaneous (like in \acg{TFT} \ac{SAND} gate), or a small amount of time, thus implying an order of occurrence, depending on the kind of dependency.
   \item[\Ac{CSp}:]
   It is a specific gate to handle spare components.
   It is important to note that connected inputs are not components---they are fault events of connected components.
@@ -487,11 +490,12 @@ The informal semantics of them are:
 
 There are several means to analyse \acp{DFT} qualitative and quantitatively.
 The works reported in~\cite{Merle2010,MRL+2010,MRL2011,MRL2014} use structure expressions to perform both qualitative and quantitative analysis, and the work reported in~\cite{MRL2014} summarizes other approaches.
-We increment their summary (\cref{tbl:dft-conversion-te-probability}) and categorize them as:
+\Cref{tbl:dft-conversion-te-probability} shows more details about such approaches.
+We categorize them as:
 %
 \begin{alineas}
   \item
-  Finding \acp{MCSeq} (qualitative analysis) is obtained by replacing \ac{DFT} gates with \ac{SFT} gates, using the text as its logical constraints.
+  Finding \acp{MCSeq} (qualitative analysis) is obtained by replacing \ac{DFT} gates with \ac{SFT} gates, using the text as their logical constraints.
   \Acp{MCS} in the \ac{SFT} are expanded using timing constraints from the texts into \ac{MCSeq}.
   In this case, the behaviour of spare events cannot be correctly taken into account;
   \item
@@ -526,7 +530,7 @@ We increment their summary (\cref{tbl:dft-conversion-te-probability}) and catego
 %Structure expressions\index{structure expression} are also used in \acp{DFT}.
 In~\cite{Merle2010,MRL+2010,MRL2011} fault events occur in a specific time and are instantaneous (similar to detected faults), stated through a ``date-of-occurrence'' function.
 As the ``date-of-occurrence'' function is stated in continuous time, the probability of two events occurring at the same time is negligible.
-In fact, useful information is obtained from the possibilities of relation in time of the occurrence of the events.
+Thus, the relation in time of the occurrence of the events is, in fact, the useful information.
 \Ac{DFT} gates' algebraic model is summarized in \cref{tbl:merle-dft-algebraic-model}.
 Structure expressions\index{structure expression} are written with an algebra that has operators \ac{OR} and \ac{AND}, and three new operators to express events ordering:
 \begin{alineasinline}
@@ -539,7 +543,7 @@ The \ac{IBefore} is a composition of \ac{NIBefore} and \ac{SIMLT} operators.
 \Cref{tbl:date-of-occurrence-for-operators} summarizes the date-of-occurrence function for all operators.
 An infinite value means the event never occurs.
 
-\Acp{MCSeq} are extracted from normal form of structure expressions written in \iac{DNF}.
+\Acp{MCSeq} are extracted from a normal form of structure expressions written in \iac{DNF}.
 Minimal terms are products of variables and \ac{NIBefore} operators (the other operators can be written as combinations of \ac{NIBefore}).
 The reduction of \ac{DFT} structure expressions\index{structure expression} uses algebraic laws as, for example:
 \begin{subequations}
@@ -614,13 +618,13 @@ The reduction of \ac{DFT} structure expressions\index{structure expression} uses
 %Such a simplified version, which is based on a modified \ac{BDD}\index{Binary Decision Diagrams} that includes an order-based operator, creates Sequential BDDs\index{Binary Decision Diagrams!Sequential} that are used to perform the probabilistic analysis.
 
 \begin{sloppypar}
-\Cref{fig:dft-example} shows an example of \ac{DFT} extracted from~\cite{MRL2014}.
+\Cref{fig:dft-example} shows an example of \iac{DFT} extracted from~\cite{MRL2014}.
 It is \iac{HCAS}, which is divided in four modules: trigger, CPU unit, motor section, and pumps.
 The trigger is divided in two components, CS and SS.
 The failure of any CS or SS, triggers a CPU unit failure.
 The primary CPU (P) has a warm\footnote{Warm spare gates only differ from \ac{CSp} on the activation time.} spare (B).
 The motor module fails if both M and MC fail.
-In order for the pumps unit to fail, all three pumps need to fail, and the left-hand side spare gate needs to fail before (or at the same time as) the right-hand side spare gate (\ac{PAND} gate\footnote{Although the original example uses a \ac{PAND} gate, accordingly to the informal description, \iac{SEQ} gate would fit better.}).
+In order for the pumps unit to fail, all three pumps need to fail, and the left-hand side spare gate needs to fail before (or at the same time as) the right-hand side spare gate (\ac{PAND} gate\footnote{Although the original example uses \iac{PAND} gate, accordingly to the informal description, \iac{SEQ} gate would fit better.}).
 The top-level event structure expression is:
 \begin{align}
 SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
@@ -641,10 +645,11 @@ SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
 \label{sec:structure-expression-analysis}
 
 In this \lcnamecref{sec:structure-expression-analysis} we explain the difference of stateful and stateless methods to analyse structure expressions and detail the stateless methods.
-Another common approach to analyse \iac{FT} is to perform structure expression analysis based on algebraic laws.
+A common approach to analyse \iac{FT} is to perform structure expression analysis based on algebraic laws.
 Boolean\index{Boolean Algebra} laws are well-known and are used for \acp{SFT}, temporal laws~\cite{Walker2009,WP2010} for \acp{TFT}, and the works reported in~\cite{Merle2010,MRL2011} show laws for \acp{DFT}.
-An issue with algebraic laws is that, in some cases, the expression needs to be expanded before it gets reduced, so reduction automation is not trivial without a theorem prover.
-For example, the following \acg{TFT} structure expression needs to be expanded \cite{WP2010} before it gets reduced:
+An issue with algebraic laws is that, in some cases, the expression needs to be expanded before it gets rewritten.
+So, automation with rewriting is not trivial.
+For example, the following \acg{TFT} structure expression needs to be expanded \cite{WP2010} before it gets reduced via rewriting:
 \begin{align*}
   & \parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z} &\\
   = & \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} \lor \parsin{\parsin{X \pand Y} \land Z} & \text{by \cref{law:tft-conjunctive-completion-law}}\\
@@ -687,7 +692,7 @@ Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bd
 \label{sec:bdd}
 
 \Acp{BDD}\index{Binary Decision Diagrams} are directed acyclic graphs that represent a Boolean\index{Boolean Algebra} expression.
-They are still referred to as \ac{BDD}\index{Binary Decision Diagrams}, but the more spread version is the \ac{ROBDD}, which is an optimisation.
+They are still referred to as \ac{BDD}\index{Binary Decision Diagrams}, but the widespread version is the \ac{ROBDD}, which is an optimisation.
 There are two ways to generate \iac{BDD}\index{Binary Decision Diagrams} for an expression:
 \begin{alineasinline}
   \item derive a diagram from the truth-table, or
@@ -752,8 +757,8 @@ To be considered \iac{ROBDD}, the \ac{BDD}\index{Binary Decision Diagrams} must 
   \item each node represents a distinct logic function.
 \end{alineas}
 %
-The size of \iac{ROBDD}, for a given expression, depends on the chosen variables ordering.
-The work reported in~\cite{Rudell1993} shows initial findings on variable ordering, and the work reported in~\cite{KH2014} shows heuristics to improve the performance for optimal order search.
+For a given expression, the size of \acp{BDD} and \acp{ROBDD} depends on the chosen variables ordering.
+The work reported in~\cite{Rudell1993} shows initial findings on best variable ordering, and the work reported in~\cite{KH2014} shows heuristics to improve the performance for optimal order search.
 
 For \acp{SFT} the evaluation of \iac{BDD} is the calculation of the probability of the paths ending in \emph{true}.
 For example, the probability of the expression in \cref{fig:bdd-diagram-for-example-expression} is obtained from the formula: $\probability{A \lor \parsin{\lnot A \land \lnot B \land C}}$. Note that the formula in the probability calculation is different from the formula that originated the diagram.
@@ -794,13 +799,13 @@ The final expression is obtained by the active higher level node, which is $X \l
 \subsection{\Aclp*{ZBDD}\index{Zero-suppressed Binary Decision Diagrams}}
 \label{sec:zbdd}
 
-The work reported in~\cite{TD2004} proposes \acl{ZBDD}, which is a variant of \ac{BDD}\index{Binary Decision Diagrams}, and uses set manipulations (union, intersection, difference, and product) to obtain \acp{MCSeq} of \acp{DFT}.
+The work reported in~\cite{TD2004} proposes \aclp{ZBDD}, which is a variant of \ac{BDD}\index{Binary Decision Diagrams}, and uses set manipulations (union, intersection, difference, and product) to obtain \acp{MCSeq} of \acp{DFT}.
 
 To reduce \iac{BDD} to \iac{ZBDD}, the nodes that have the ``true'' (`1') path pointing to the ``false'' (`0') sink node are removed, and the parent node is connected directly to the ``false'' subgraph of the removed node.
 \Cref{fig:zbdd-example} shows an example of \ac{ZBDD} for the combination set $\setsin{a,b}$, as shown in~\cite{TD2004}.
 The idea of the reduction is to remove irrelevant variables and nodes.
 The irrelevant variables are set to ``false''.
-The method obtains the \acp{MCSeq} by navigating the paths to sink node ``true''.
+The method described in~\cite{TD2004} obtains the \acp{MCSeq} by navigating the paths to sink node ``true''.
 
 \begin{figure}[htb]
   \centering
@@ -809,9 +814,9 @@ The method obtains the \acp{MCSeq} by navigating the paths to sink node ``true''
   \label{fig:zbdd-example}
 \end{figure}
 
-Although the work reported in~\cite{TD2004} shows \theac{ZBDD}, the final solution does not use them directly. Instead, it defines a hierarchical manipulation of \ac{DFT} to obtain the \acp{MCSeq} when traversing the \iac{DFT}.
-The order-related operators in \iac{DFT} are replaced by a new event, which takes ordering into account.
+Although the work reported in~\cite{TD2004} shows \theac{ZBDD}, the final solution does not use them directly. 
 The idea is to transform the \ac{DFT} into \iac{SFT}, in a very similar way as the one shown in~\cite{TXD2011}.
+The order-related operators in \iac{DFT} are replaced by a new event, which takes ordering into account.
 Finally, the \acp{MCSeq} are obtained using set manipulation with elements that are basic events alone or order-related operators.
 These order-related operators are event-to-event only, so they cannot be combined with other sets.
 
@@ -826,7 +831,7 @@ Our order-related operator has a set-based semantics that can be combined with o
 \Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} is an extension of \ac{BDD}\index{Binary Decision Diagrams} to tackle ordering of events in \acp{DFT} for \ac{CSp} and \ac{WSp} gates.
 Ordering of events in \ac{CSp} gates~\cite{XTD2012} is slightly different from \ac{WSp}~\cite{TXD2011}.
 A backup system in \ac{CSp} gets activated slower than in \ac{WSp}, which implies that there are less failure possibilities in \ac{CSp}, but its the readiness is lower than in \ac{WSp}.
-\Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} adds a new node kind that contains a binary operation of fault events, which allows to express the ordering of events.
+\Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} adds a new kind of node that contains a binary operation of fault events, which allows to express the ordering of events.
 One kind of operation expresses the slowness of the relation of the fault events of \ac{CSp}, and another one expresses the readiness of the \ac{WSp}.
 The latter semantics is similar to the semantics of \ac{PAND} and \ac{IBefore} (combined with \ac{AND}) gates.
 
@@ -838,7 +843,7 @@ The latter semantics is similar to the semantics of \ac{PAND} and \ac{IBefore} (
 In \ref{item:sbdd-creation-spare}, it is a \ac{DFT}-to-\ac{DFT} conversion.
 \Ac{CSp} and \ac{WSp} gates are converted to a new, but equivalent \ac{DFT} without \ac{CSp} and \ac{WSp} gates, where the operations appear as basic events and are combined using other gates.
 In \ref{item:sbdd-model-generation}, the \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} model is created.
-The model may contain nodes that are contradictory as, for example, nodes that assumes that an event $A$ is false and a binary operation that contains $A$ is true.
+The model may contain nodes that are contradictory as, for example, nodes that assumes that an event $A$ is false and a binary operation with \ac{AND} semantics that contains $A$ is true.
 This step ends when all contradictions are removed.
 The evaluation is similar to \acg{BDD}: each path ending in true is a minimal term in the \ac{DNF} that may contain one of the binary operations and individual events.
 
@@ -851,7 +856,7 @@ Another means to analyse \acp{SFT} is to use \iac{FBA} to perform set-theoretica
 In this \lcnamecref{sec:fba} we briefly present the \ac{FBA} theory and its elements.
 
 Instead of using an axiomatic definition of a Boolean\index{Boolean Algebra} algebra directly, we follow its set-theoretical definition, as shown in~\cite[pp. 254--258]{Stoll1979} and~\cite[pp. 8--11]{GH2009}.
-This definition represents a Boolean\index{Boolean Algebra} algebra as an algebra of sets and does not rely on Boolean axioms (which can be misleading, case there is an unfounded axiom).
+This definition represents a Boolean\index{Boolean Algebra} algebra as an algebra of sets and does not rely on Boolean axioms (which can be misleading, if an unfounded axiom is present).
 
 \begin{definition}[Boolean Algebra]
 \label{def:boolean-algebra}
@@ -869,7 +874,7 @@ A Boolean algebra is defined as a triple $\anglesin{B, \inter, -}$, where $B$ is
 \Iacl{FBA} is defined from a set $E$ of generators.
 A generator can be represented as a proposition in statement calculus~\cite[p. 274]{Stoll1979}.
 For example, ``valve A is stuck closed'' and ``motor M is malfunctioning'' are valid statements.
-A \acl{FBA} is constructed from $\powerset{E}$, where $\powersetop$ is the power set\index{Power Set}.
+A \acl{FBA} is constructed from $\powerset{E}$, where $\powersetop$ is the power set\index{Power Set} operator.
 Note that if $E$ has $n$ symbols, $\powerset{E}$ has $2^{n}$ elements, called \emph{atoms}\index{Boolean Algebra!atoms} of a finite Boolean algebra.
 For the two statements above, the atoms\index{Boolean Algebra!atoms} are:
 \begin{alineas}
@@ -879,7 +884,8 @@ For the two statements above, the atoms\index{Boolean Algebra!atoms} are:
   \item ``Valve A is \emph{not} stuck closed'' and ``motor X is \emph{not} malfunctioning''
 \end{alineas}
 Such a Boolean\index{Boolean Algebra} algebra has $2^{2^{n}}$ formulas~\cite[p. 261]{GH2009}.
-For example, if $E = \setsin{a,b}$, then $\powerset{E} = \setsin{ \setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b} }$, hence the Boolean\index{Boolean Algebra} algebra generated by $E$ contains sixteen ($2^{2^{2}}$) formulas:
+For example, if $E = \setsin{a,b}$, then $\powerset{E} = \setsin{ \setsin{}, \setsin{a}, \setsin{b}, \setsin{a,b} }$.
+And the Boolean\index{Boolean Algebra} algebra generated by $E$ contains sixteen ($2^{2^{2}}$) formulas:
 $\setsin{}$,
 $\setsin{\setsin{}}$,
 $\setsin{\setsin{}, \setsin{a}}$,
@@ -905,7 +911,7 @@ X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
 %
 \end{definition}
 
-The characterisation of a ``free'' Boolean\index{Boolean Algebra} algebra comes from that, for some valuation function $a$, some of the formulas evaluates to ``1''.
+The characterisation of a ``free'' Boolean\index{Boolean Algebra} algebra comes from that, for some valuation function $a$, some formulas evaluate to ``1''.
 Given a function $p:B \cartesian \setsin{0,1} \rightarrow B$, such that:
 %
 \begin{equation}
@@ -918,7 +924,7 @@ p\parsin{i,j} =
 
 \begin{lemma}[Free generators (valuation)]
 \label{lem:boolean-algebra-free-generators-valuation}
-Let $F$ be a finite set, such that $F \subseteq E$, and $a: F \rightarrow \setsin{0,1}$, a necessary and sufficient condition for a set $E$ of generators of a Boolean\index{Boolean Algebra} algebra B to be free is then:
+Let $F$ be a finite set, and $E$ be a set of generators of a Boolean\index{Boolean Algebra} algebra, such that $F \subseteq E$, and $a: F \rightarrow \setsin{0,1}$, a necessary and sufficient condition for the set $E$ to be free is then:
 %
 \begin{equation}
 \bigwedge_{i \in F} p\parsin{i, a \parsin{i}} \neq 0
@@ -953,7 +959,7 @@ Let $i$ and $j$ be statements, such that $i,j \in E$, hence from \cref{def:induc
 
 Although the \FThandbook introduces several gates, the vast majority of \ac{SFT} analyses would fit in \acp{FT} with only \ac{AND} and \ac{OR} gates (coherent \acp{FT})\index{Fault Tree!coherent}.
 Qualitative analysis requires the reduction of the structure expression of \acp{FT} and, when \ac{NOT} gates are present (non-coherent \acp{FT}\index{Fault Tree!non-coherent}), such a reduction can cause the interpretation of failure expression to be misled~\cite{Andrews2001,Oliv2006,AB2003,CCR2008,Vaurio2016}.
-The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,Oliv2006,CCR2008} show how to solve it using \acp{BDD}.
+The work reported in~\cite{Oliv2006} shows three funny examples of this kind of problem, and the works reported in~\cite{Andrews2001,CCR2008} show how to solve it using \acp{BDD}.
 In the following we show:
 \begin{alineasinline}
   \item the second example presented in~\cite{Oliv2006}, which highlights the problem when using \ac{NOT} gates (\cref{sec:non-coherent-misleads-example}), and
@@ -984,7 +990,7 @@ $x\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, \ldots, x_n}$
 \subsection{Non-coherent \acl*{FT} misleads}
 \label{sec:non-coherent-misleads-example}
 
-In this \lcnamecref{sec:non-coherent-misleads-example} we illustrate---with the second example detailed in~\cite{Oliv2006}---how non-coherent \ac{FT} misleads.
+In this \lcnamecref{sec:non-coherent-misleads-example} we illustrate---with the second example detailed in~\cite{Oliv2006}---how a non-coherent \ac{FT} misleads.
 
 A college student who wants to visit her mother in another city has two options: wake up early ($x_3$) and take a ride with a friend ($x_1$), or wake up late ($\lnot x_3$) and take the metro ($x_2$).
 The top-event failure is ``visit mother'' with expression $S = \parsin{x_1 \land x_3} \lor \parsin{x_2 \land \lnot x_3}$.
@@ -1064,7 +1070,8 @@ The non-coherent \ac{FT} with the working part is shown in \cref{fig:outcome-4-n
   \label{fig:outcome-4-non-coherent-ft}
 \end{figure}
 
-If the operator \emph{can} be informed, then cut sets $\setsin{D_1, D_2}$ and $\setsin{LU}$ could not have occurred (see \cref{fig:ft-generic-failure-gas-detection-system}), thus the correct qualitative analysis should consider only cut set $\setsin{R_1,R_2}$.
+If the operator \emph{can} be informed, then cut sets $\setsin{D_1, D_2}$ and $\setsin{LU}$ could not have occurred (see \cref{fig:ft-generic-failure-gas-detection-system}).
+Thus, the correct qualitative analysis should consider only cut set $\setsin{R_1,R_2}$.
 Reducing the expressions of the non-coherent \ac{FT} (\cref{fig:outcome-4-non-coherent-ft}), we obtain the structure expression: $\lnot L \land \lnot LU \land R_1 \land R_2 \land \parsin{\lnot D_1 \lor \lnot D_2}$.
 {The approximation for this expression, removing the negated events, gives the cut set $\setsin{R_1,R_2}$, which gives a correct quantitative analysis.}\amnote{Isto poderia ser argumentado pro exemplo anterior? Seria legal ter o mesmo exemplo e pontos de vista distintos (não coerente e coerente).} \adnote{Eu apenas reportei o exemplo. Essa análise foi o autor do exemplo quem fez. Se der vou acrescentar para a outra, não deve ser muito complicado... preciso de mais tempo apenas para analisar com calma.}
 
@@ -1094,7 +1101,7 @@ Reducing the expressions of the non-coherent \ac{FT} (\cref{fig:outcome-4-non-co
 %We can construct two independent fault trees, $TP_1$ and $TP_2$, for the unavailability of $P_1$ and $P_2$ as: $TP_1 = P_1 \lor CP_1 \lor \parsin{D_1 \land \parsin{I \lor D_2}}$ and $TP_2 = P_2 \lor CP_2 \lor \parsin{D_2 \land \parsin{I \lor D_1}}$.
 %$TOP_1$ and $TOP_2$ generate coherent fault trees, using $TP_1$ and $TP_2$.
 
-\section{Probabilistic analysis of a non-coherent tree}
+\subsection{Probabilistic analysis of a non-coherent tree}
 \label{sec:probabilistic-analysis-non-coherent-tree}
 
 The work reported in~\cite{Andrews2001} shows an example of \iac{FT} with an explicit \ac{NOT} operator, the importance of such an operator, and how to calculate the probability of a critical failure.
@@ -1133,8 +1140,13 @@ P_{PRV}\times P_{VAL}  \right)\label{eq:leak-protection-system-probability}
 where $P_x$ is the failure probability of $x$, $x \in \left\{L,PRV,VAL,I_1\right\}$.
 
 
-\section{Systems nominal model and fault injection}
+\section{Systems nominal model and fault injection to obtain structure expressions}
 \label{sec:faults-injection}
+
+In this \lcnamecref{sec:faults-injection} we show how to obtain structure expressions\index{structure expression} from nominal models.
+Nominal models are architectural models to represent the nominal behaviour (without failures) of a system.
+Faults can be injected into a nominal model to simulate erroneous behaviour and observe which combinations of faults cause an unwanted operational mode.
+The group of such combinations in a single expression is, in fact, the structure expression of the unwanted operational mode (\iacg{FT} structure expression of the system).
 
 Control system modelling using \simulink block diagrams~\cite{MathWorks2010} is recommended in~\cite{Nise1992} and have been used by our industrial partner.
 %We follow this recommendation in this work.
@@ -1173,9 +1185,9 @@ The \textsim{Sensor} detects the actual position of the \textsim{Actuator} and s
 strategy.
 The outputs of the hardware elements are annotated with \textsim{HW}, which are the two power sources and an internal component of the monitor (switch command).
 
-To perform a formal verification in a \simulink system model we use a model-checking tool, \theac{FDR}.
-It is a refinement checker for formal models written in \ac{CSPm}.
-To verify a refinement, it takes two specifications:
+To perform a formal verification in a \simulink system model we use the model-checking tool \theac{FDR}.
+It is a refinement checker for formal models written in the formal language \ac{CSPm}.
+To verify a refinement\footnote{A refinement is an improvement in a specification. Such an improvement can be the reduction on the number of communications, bounding values or by a different representation of data.}, it takes two specifications:
 \begin{alineasinline}
   \item a specification with more abstract properties, and
   \item an implementation with more concrete properties.
@@ -1378,9 +1390,8 @@ On the other hand, if $S$ fails before $A$, the switcher fails because it inadve
 When $A$ fails, nothing changes and the output of the system is obtained from $B$.
 
 We also employed the strategy proposed in the work~\cite{DM2012} in another case study and obtained a weaker failure expression (that is, our expression considers more cases).
-The failure expression provided by the engineers of our industrial partner was stronger because they considered that one component has a very low probability of failure and removed it from the failure analysis.
-Although acceptable, it may cause incorrect analysis.
-Our strategy avoids this kind of issue by being completely systematic.
+The failure expression provided by the engineers of \embraer was stronger because they considered that one component has a very low probability of failure and removed it from the analysis.
+The strategy shown in this section generates the weaker failure expression because it does not perform the quantitative analysis that was performed by the engineers of \embraer.
 
 \section{Isabelle/HOL}
 \label{sec:isabelle}
