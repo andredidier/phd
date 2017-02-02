@@ -58,7 +58,7 @@ abbreviation empty_list_formula_exp :: "'a set \<Rightarrow> 'a formula_exp" whe
   "empty_list_formula_exp V \<equiv> tNOT (Finite_Set.fold (\<lambda> x f\<^sub>2 . tOR (tVar x) f\<^sub>2) tFalse V)"
 
 primrec list_to_formula_exp :: "'a list \<Rightarrow> 'a formula_exp" where
- "list_to_formula_exp [] = (empty_list_formula_exp UNIV)" |
+ "list_to_formula_exp [] = empty_list_formula_exp UNIV" |
  "list_to_formula_exp (x # xs) = tXB (tVar x) (list_to_formula_exp xs)"
 
 abbreviation dlist_to_formula_exp  where
@@ -70,9 +70,17 @@ abbreviation dlist_set_to_formula_exp where
 abbreviation formula_to_formula_exp where
   "formula_to_formula_exp f \<equiv> dlist_set_to_formula_exp (Rep_formula f)"
 
-
-
 typedef 'a formula_syn = "UNIV::'a formula_exp set" by simp
+
+theorem soundness: 
+  "\<forall> fexp \<in> UNIV . formula_exp_to_formula (Rep_formula_syn fexp) \<in> UNIV"
+by simp
+
+theorem completeness:
+  "\<forall> dlset \<in> UNIV . (formula_to_formula_exp dlset) \<in> UNIV"
+by simp
+
+
 
 (*<*)
 notation
@@ -188,6 +196,7 @@ no_notation
 
 (* TODO From a set of formulas to a formula syntactic 'a formula \<Rightarrow> 'a formula_exp \<Longrightarrow> 
   resolver com inductive? *) 
+(*
 inductive_set
   formula_syn :: "'a set \<Rightarrow> 'a formula_exp set"
   for "V"
@@ -201,7 +210,7 @@ where
   "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tAND f\<^sub>1 f\<^sub>2 \<in> formula_syn V" |
   "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tDIFF f\<^sub>1 f\<^sub>2 \<in> formula_syn V" |
   "\<lbrakk> f\<^sub>1 \<in> formula_syn V; f\<^sub>2 \<in> formula_syn V \<rbrakk> \<Longrightarrow> tXB f\<^sub>1 f\<^sub>2 \<in> formula_syn V" 
-
+*)
 subsection {* Tautology check *}
 
 definition tautology :: "'a formula_exp \<Rightarrow> bool" where
