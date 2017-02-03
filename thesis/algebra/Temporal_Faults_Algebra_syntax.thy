@@ -103,9 +103,16 @@ oops(*sorry*)
 
 abbreviation formula_to_formula_exp where
   "formula_to_formula_exp f \<equiv> dlist_set_to_formula_exp (Rep_formula f)"
-
+(*
 abbreviation reduce where
   "reduce \<equiv> formula_to_formula_exp \<circ> eval"
+*)
+
+fun reduce :: "'a formula_exp \<Rightarrow> 'a formula_exp" where
+  "reduce (tOR (tXB (tVar x) (tVar y)) (tXB (tVar y) (tVar x))) = 
+    tAND (tVar x) (tVar y)" |
+  "reduce x = x"
+
 
 
 lemma eval_reduce: "eval (reduce f) = eval f"
