@@ -32,6 +32,18 @@ datatype 'a formula_exp =
   tNOT "'a formula_exp" | 
   tXB "'a formula_exp" "'a formula_exp"
 
+inductive_set formulas_exp :: "'a set \<Rightarrow> 'a formula_exp set" 
+  for G :: "'a set"
+where
+  "tFalse \<in> formulas_exp G" |
+  "tTrue \<in> formulas_exp G" |
+  "tNeutral \<in> formulas_exp G" |
+  "g \<in> G \<Longrightarrow> (tVar g) \<in> formulas_exp G" |
+  "X \<in> formulas_exp G \<Longrightarrow> Y \<in> formulas_exp G \<Longrightarrow> tOR X Y \<in> formulas_exp G" |
+  "X \<in> formulas_exp G \<Longrightarrow> Y \<in> formulas_exp G \<Longrightarrow> tAND X Y \<in> formulas_exp G" |
+  "X \<in> formulas_exp G \<Longrightarrow> Y \<in> formulas_exp G \<Longrightarrow> tXB X Y \<in> formulas_exp G" |
+  "X \<in> formulas_exp G \<Longrightarrow> tNOT X \<in> formulas_exp G"
+
 primrec 
     formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula"
     where
