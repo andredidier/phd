@@ -5,6 +5,23 @@ imports Temporal_Faults_Algebra_dlist
 begin
 subsection {* Syntax for the Algebra of Temporal Faults *}
 
+inductive_set 
+  formulas :: "'a set \<Rightarrow> 'a formula set"
+  for G :: "'a set"
+where
+  step[intro!]: "\<forall> dl \<in> Rep_formula f. Dlist.set dl \<subseteq> G \<Longrightarrow> f \<in> formulas G"
+
+lemma dlist_empty_in_formulas: "Abs_formula { Dlist.empty } \<in> formulas G"
+apply (rule formulas.intros)
+by (simp add: Abs_formula_inverse set.rep_eq)
+
+lemma basic_cases_in_formulas: 
+  "{ Abs_formula {}, Abs_formula  { Dlist.empty } } \<subseteq> formulas G"
+by (simp add: Abs_formula_inverse dlist_empty_in_formulas formulas.intros)
+
+lemma formula_formulas_UNIV: "f \<in> formulas UNIV"
+by blast
+
 datatype 'a formula_exp =
   tFalse | 
   tTrue |
@@ -51,33 +68,57 @@ apply (simp add: neutral_formula_def[symmetric] neutral_formula_not_less_eq_bot_
 apply (auto simp add: neutral_formula_def[symmetric] )
 *)
 
-
+                                          
 abbreviation eval where "eval \<equiv> formula_exp_to_formula"
 
 abbreviation empty_list_formula_exp :: "'a set \<Rightarrow> 'a formula_exp" where
   "empty_list_formula_exp V \<equiv> tNOT (Finite_Set.fold (\<lambda> x f\<^sub>2 . tOR (tVar x) f\<^sub>2) tFalse V)"
 
-primrec list_to_formula_exp :: "'a list \<Rightarrow> 'a formula_exp" where
+fun list_to_formula_exp :: "'a list \<Rightarrow> 'a formula_exp" where
  "list_to_formula_exp [] = empty_list_formula_exp UNIV" |
+ "list_to_formula_exp [x] = tVar x" |
  "list_to_formula_exp (x # xs) = tXB (tVar x) (list_to_formula_exp xs)"
 
 abbreviation dlist_to_formula_exp  where
   "dlist_to_formula_exp dl \<equiv> list_to_formula_exp (list_of_dlist dl)"
 
-abbreviation dlist_set_to_formula_exp where
+abbreviation dlist_set_to_formula_exp :: "'a dlist set \<Rightarrow> 'a formula_exp" where
   "dlist_set_to_formula_exp Dls \<equiv> Finite_Set.fold (\<lambda> dl f\<^sub>2 . tOR (dlist_to_formula_exp dl) f\<^sub>2  ) tFalse Dls"
+
+corollary dlist_set_to_formula_exp_neutral: 
+  "dlist_set_to_formula_exp { Dlist [] } = tOR (empty_list_formula_exp UNIV) tFalse"
+oops(*sorry*) 
 
 abbreviation formula_to_formula_exp where
   "formula_to_formula_exp f \<equiv> dlist_set_to_formula_exp (Rep_formula f)"
 
-typedef 'a formula_syn = "UNIV::'a formula_exp set" by simp
+abbreviation reduce where
+  "reduce \<equiv> formula_to_formula_exp \<circ> eval"
+
+
+lemma eval_reduce: "eval (reduce f) = eval f"
+
+
+corollary reduce_reduce: "reduce (reduce f) = reduce f"
+
+
+lemma formula_to_formula_exp_bot: 
+  "eval (formula_to_formula_exp bot) = bot"
+by simp
+lemma formula_to_formula_exp_neutral: 
+  "eval (formula_to_formula_exp neutral) = neutral"
+
+
+
 
 theorem soundness: 
-  "\<forall> fexp \<in> UNIV . formula_exp_to_formula (Rep_formula_syn fexp) \<in> UNIV"
-by simp
+  "reduce f\<^sub>1 = reduce f\<^sub>2 \<Longrightarrow> eval f\<^sub>1 = eval f\<^sub>2"
+apply (induct f\<^sub>1, auto)
+apply (induct f\<^sub>2, auto)
+
 
 theorem completeness:
-  "\<forall> dlset \<in> UNIV . (formula_to_formula_exp dlset) \<in> UNIV"
+  "eval f\<^sub>1 = eval f\<^sub>2 \<Longrightarrow> reduce f\<^sub>1 = reduce f\<^sub>2"
 by simp
 
 

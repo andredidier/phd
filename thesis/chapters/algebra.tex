@@ -14,7 +14,7 @@ In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are i
 
 We showed in \cref{sec:fault-trees} that there is a consistent presence of order-based operators to analyse \acp{TFT} and \acp{DFT}, and that each approach describes a new algebra based on different representations of events ordering with similar theorems to reduce expressions to a normal form.
 
-From the need to tackle events ordering, related to the fault injection strategy we developed in~\cite{DM2012}, we defined a list-based algebra, called \acf{algebra}, to express and analyse systems considering events ordering.
+From the need to tackle events ordering, related to the failure traces we can obtain by applying the fault injection strategy we developed in~\cite{DM2012}, we defined a list-based algebra, called \acf{algebra}, to express and analyse systems considering events ordering.
 We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra, shown in \cref{sec:mapping-cspm-algebra}.
 The order-specific operations are expressed with a new operator ($\xbeforeop$) that we call \ac{XBefore}.
 
@@ -71,7 +71,7 @@ Furthermore, as we follow \iac{FBA}\index{Boolean Algebra!Free} characterisation
 
 The \ac{algebra} form a free algebra similar to \acp{FBA}\index{Boolean Algebra!Free}.
 \emph{Infimum} and \emph{Supremum} are denoted as set intersection ($\inter$) and union ($\union$) respectively.
-The order within the algebra is denoted with set inclusion ($\subseteq$).
+The order within the algebra is defined as set inclusion ($\subseteq$).
 
 To distinguish the permutations that are not defined in \ac{FBA}\index{Boolean Algebra!Free}, we need a new operator.
 We give the definition of \ac{XBefore} ($\xbeforeop$) in terms of list concatenation, similar to the work reported in~\cite{DM2015}:
@@ -743,7 +743,7 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 
 The soundness and completeness in \ac{algebra} are obtained as in traditional logic: from the set of all formulas (syntax), and from the set of all formulas' representation (denotational semantics).
 
-To show equivalence of a formula and its denotational we need two mapping functions: one that takes a formula e returns its set of distinct lists, and another that takes a set of distinct lists and returns a formula.
+To show equivalence of a formula and its denotational we need two mapping functions: one that takes a formula, and returns its set of distinct lists, and another that takes a set of distinct lists and returns a formula.
 The function that maps a formula to its denotational semantics is the function $\denote{.}$, shown in the beginning of this \lcnamecref{chap:algebra}:
 %
 \begin{align}

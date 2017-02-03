@@ -33,7 +33,7 @@ System requirements are identified and are checked with \ac{FTA} results.
 If the requirements are satisfied (accepted), the process ends and the modelled system may be implemented.
 Otherwise, fault tolerance patterns are used, adding or modifying the original architecture to improve dependability.
 The analyses are executed until system requirements are met.
-We call system requirements \acg{FT} \emph{acceptance criteria}.
+We call such system requirements of \acg{FT} \emph{acceptance criteria}.
 
 \begin{figure}[htb]
   \centering
@@ -42,7 +42,7 @@ We call system requirements \acg{FT} \emph{acceptance criteria}.
   \label{fig:strategy-overview-traditional}
 \end{figure}
 
-Besides the traditional \ac{OR} and \ac{AND} gates, the \FThandbook defines other gates.
+Besides the traditional \ac{OR} and \ac{AND} gates, the \FThandbook defines other gates as well.
 For example the \ac{PAND} gate, which considers the order of occurrence of events.
 Although the \FThandbook defines new gates, there is no algorithm to perform the analysis of trees that contain such new gates.
 This absence together with the need to analyse dynamic aspects of increasingly complex systems motivated the introduction of two new kinds of \aclp{FT}: \acp{DFT} and \acp{TFT}.
@@ -71,7 +71,7 @@ if it is used without restrictions, it can be misleading, generating non-coheren
 Although such an issue may arise, it can be essential in practical use as demonstrated in~\cite{Andrews2001} with algebraic laws to handle the operator in structure expressions.
 %
 Our concern is that the decision of the relevance of its use should be neither due to the choice of events-occurrence representation, as it is in~\cite{WP2009,Walker2009,Merle2010,MRL2011b}, nor with algebraic laws to include missing terms as it is in~\cite{Andrews2001}.
-The algebra created in this work defines the \ac{NOT} operator and allows its use, as we show in \cref{chap:algebra}.
+The algebra created in this work defines the \ac{NOT} operator such that it can be used without any restriction (freely), as we show in \cref{chap:algebra}.
 \end{sloppypar}
 
 \begin{sloppypar}
@@ -164,6 +164,9 @@ For example, \iac{FT} to analyse a signal omission has the structure expression 
 Another \ac{FT} to analyse a commission has the structure expression $\left(A \land B\right) \lor C$.
 In this example, if faults $A$ and $B$ are active, then either an omission or a commission is observed for the system.
 \end{sloppypar}
+
+\section{Research questions}
+\label{sec:research-questions}
 
 From the exposed in this \lcnamecref{sec:mathematical-models}, our research questions are:
 \begin{rqenum}[series=researchquestion]
