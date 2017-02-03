@@ -744,7 +744,8 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 The soundness and completeness in \ac{algebra} are obtained as in traditional logic: from the set of all formulas (syntax), and from the set of all formulas' representation (denotational semantics).
 
 To show equivalence of a formula and its denotational we need two mapping functions: one that takes a formula, and returns its set of distinct lists, and another that takes a set of distinct lists and returns a formula.
-The function that maps a formula to its denotational semantics is the function $\denote{.}$, shown in the beginning of this \lcnamecref{chap:algebra}:
+Part of the function that maps a formula to its denotational semantics is the function $\denote{.}$, shown in the beginning of this \lcnamecref{chap:algebra}.
+The complete mapping of $\denote{.}$ is:
 %
 \begin{align}
 \denote{\bot} = &~ \left\{\right\}\nonumber\\
@@ -810,7 +811,7 @@ In this \lcnamecref{sec:qualitative-quantitative-analyses} we show how to formal
   \item the root probability, given the availability of basic fault occurrences probabilities.
 \end{alineasinline}
 %
-These attributes are the most representative, but other ones can be modelled similarly.
+These attributes of \iac{FT} are the most representative ones, but other can be modelled similarly.
 
 \subsection{\Acl{MCSeq}}
 
