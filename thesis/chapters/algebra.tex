@@ -741,10 +741,24 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 \section{Soundness and completeness}
 \label{sec:algebras-soundness-and-completeness}
 
-The soundness and completeness in \ac{algebra} are obtained as in traditional logic: from the set of all formulas (syntax), and from the set of all formulas' representation (denotational semantics).
+A valuation of a formula is the instantiation of variable values using the syntax of the formula\todo{needs ref}.
+In Boolean expressions, a valuation is a mapping function that associates values $true$ or $false$ to each variable.
+The syntax of a formula is converted into \iac{BDD} to obtain the value of the formula.
+Such a value is obtained when the \ac{BDD} is traversed from the top variable.
+The leaf node contains the value of the formula for a given valuation.
+A function $\eval{f}{v}$ returns the value of the formula $f$ for the valuation $v$.
 
-To show equivalence of a formula and its denotational we need two mapping functions: one that takes a formula, and returns its set of distinct lists, and another that takes a set of distinct lists and returns a formula.
-Part of the function that maps a formula to its denotational semantics is the function $\denote{.}$, shown in the beginning of this \lcnamecref{chap:algebra}.
+For \ac{algebra}, a valuation is a set of \distinctlists.
+Every formula is converted into a tree similar to \iac{BDD}. 
+Each leaf node assumes values $\emptyset$ ($false$) or a set of \distinctlists.
+If the set of \distinctlists in the leaf nodes is a subset of the valuation set, then the value of the formula is $true$ (it is $false$, otherwise).
+
+For example, the value for the formula $\var{a} \lor \left(\xbefore{\var{b}}{\var{c}}\right))$ and valuation $\left\{ \listsin{a} \right\}$ is $true$.
+It is also $true$ for valuation $\left\{\listsin{b,c}\right\}$, but it is $false$ for valuation $\left\{\listsin{b}, \listsin{c} \right\}$
+
+The soundness and completeness in \ac{algebra} are obtained as in traditional logic: using the valuations of a formula (syntax), and from the set of all formulas' representation (denotational semantics).
+
+Part of the function that maps a formula (syntax) to its denotational semantics is the function $\denote{.}$, shown in the beginning of this \lcnamecref{chap:algebra}.
 The complete mapping of $\denote{.}$ is:
 %
 \begin{align}
@@ -771,35 +785,30 @@ The complete mapping of $\denote{.}$ is:
 	~\right\}
 \end{align}
 
-\begin{proposition}[Soundness]
-Let $L$ be the set of all formulas in \ac{algebra}, and $M$ the set of all sets of \distinctlists, then:
+\Ac{algebra} is sound if the semantics of two formulas is the same, provided they evaluate to the same value \emph{for every} valuation.
 
+\begin{proposition}[Soundness]
+Let $f_1$ and $f_2$ be formulas in \ac{algebra}, then:
+%
 \begin{align}
-\forall~ f ~\in~ L ~\bullet~ \denote{f} ~\in~ M
+\left(\forall~v ~\bullet~ \eval{f_1}{v} = \eval{f_2}{v}\right) \implies \denote{f_1} = \denote{f_2}
 \end{align}
 \end{proposition}
 
-The mapping function from a set of lists to a formula is given in terms of the \iac{DNF}\index{DNF} of \ac{algebra} and a set of generators $S$:
-%%%%%
-\begin{align}
-\listformulaof{\listsin{~}} = &~ \neutral\nonumber\\
-%%%%%
-\listformulaof{\listsin{x}} = &~ \var{x} \land \bigwedge_{y ~\in~ \generators\left(S\right)-\left\{x\right\}} \lnot \var{y} \nonumber\\
-%%%%%
-\listformulaof{\cons{x}{dl}} = &~ \xbefore{\var{x}}{\listformulaof{dl}}\nonumber\\
-%%%%%
-\formulaof{\left\{~\right\}} = &~ \bot\nonumber\\
-%%%%%
-\formulaof{X} = &~ \bigvee_{dl ~\in~ X} \listformulaof{dl}
-\end{align}
+\Ac{algebra} is complete if the converse holds:
+if two formulas evaluate to the same value for every value valuation, provided their semantics is the same.
 
 \begin{proposition}[Completeness]
-Let $L$ be the set of all formulas in \ac{algebra}, and $M$ the set of all sets of \distinctlists, then:
-
+Let $f_1$ and $f_2$ be formulas in \ac{algebra}, then:
+%
 \begin{align}
-\forall~ X ~\in~ M ~\bullet~ \formulaof{X} ~\in~ L
+\denote{f_1} = \denote{f_2} \implies \left(\forall~v ~\bullet~ \eval{f_1}{v} = \eval{f_2}{v}\right)
 \end{align}
 \end{proposition}
+
+We are still investigating the evaluation function. 
+The tree structure required by such a function still needs to be defined.
+We found a ternary tree or a tree with special leaf nodes should solve it.
 
 \section{Qualitative and quantitative analyses}
 \label{sec:qualitative-quantitative-analyses}
