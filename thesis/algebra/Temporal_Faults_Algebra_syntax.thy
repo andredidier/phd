@@ -5,6 +5,34 @@ imports Temporal_Faults_Algebra_dlist
 begin
 subsection {* Syntax for the Algebra of Temporal Faults *}
 
+datatype 'a formula_exp =
+  tFalse | 
+  tVar 'a |
+  tOR "'a formula_exp" "'a formula_exp" | 
+  tAND "'a formula_exp" "'a formula_exp" |
+  tNOT "'a formula_exp" | 
+  tXB "'a formula_exp" "'a formula_exp"
+
+datatype 'a ifex = 
+  ifex_const "'a dlist set" |
+  ifex_if "'a ifex" "'a dlist set" "'a dlist set"
+
+primrec vals :: "'a formula_exp \<Rightarrow> 'a dlist set" where
+"vals tFalse = {}" |
+"vals (tVar a) = {Dlist [a]}" |
+"vals (tOR A B) = (vals A) \<union> (vals B)" |
+"vals (tAND A B) = (vals A) \<union> (vals B)" |
+"vals (tXB A B) = (vals A) \<union> (vals B)"
+
+primrec formula_exp_to_ifex :: "'a formula_exp \<Rightarrow> 'a ifex" where
+"formula_exp_to_ifex tFalse = ifex_const {}" |
+"formula_exp_to_ifex (tVar a) = ifex_const {Dlist [a]}" |
+"formula_exp_to_ifex (tXB A B) = 
+  ifex_if (formula_exp_to_ifex A) 
+    (ifex_if (formula_exp_to_ifex B) (preserve (vals A) (vals B)) {}) {}"
+
+
+(* PARTE ANTIGA**)
 inductive_set 
   formulas :: "'a set \<Rightarrow> 'a formula set"
   for G :: "'a set"
@@ -21,16 +49,6 @@ by (simp add: Abs_formula_inverse dlist_empty_in_formulas formulas.intros)
 
 lemma formula_formulas_UNIV: "f \<in> formulas UNIV"
 by blast
-
-datatype 'a formula_exp =
-  tFalse | 
-  tTrue |
-  tNeutral |
-  tVar 'a |
-  tOR "'a formula_exp" "'a formula_exp" | 
-  tAND "'a formula_exp" "'a formula_exp" |
-  tNOT "'a formula_exp" | 
-  tXB "'a formula_exp" "'a formula_exp"
 
 typedef 'a formula_syn = "UNIV::'a formula_exp set" by simp
 
