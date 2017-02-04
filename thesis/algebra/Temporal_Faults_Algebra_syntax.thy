@@ -32,6 +32,8 @@ datatype 'a formula_exp =
   tNOT "'a formula_exp" | 
   tXB "'a formula_exp" "'a formula_exp"
 
+typedef 'a formula_syn = "UNIV::'a formula_exp set" by simp
+
 inductive_set formulas_exp :: "'a set \<Rightarrow> 'a formula_exp set" 
   for G :: "'a set"
 where
@@ -43,6 +45,38 @@ where
   "X \<in> formulas_exp G \<Longrightarrow> Y \<in> formulas_exp G \<Longrightarrow> tAND X Y \<in> formulas_exp G" |
   "X \<in> formulas_exp G \<Longrightarrow> Y \<in> formulas_exp G \<Longrightarrow> tXB X Y \<in> formulas_exp G" |
   "X \<in> formulas_exp G \<Longrightarrow> tNOT X \<in> formulas_exp G"
+
+definition remainder_complements :: "'a set \<Rightarrow> 'a formula_exp \<Rightarrow> 'a formula_exp" where
+  "remainder_complements G base = 
+    (Finite_Set.fold (\<lambda> x f\<^sub>2 . tAND (tNOT (tVar x)) f\<^sub>2) base G)"
+
+fun tXB_of_list :: "'a list \<Rightarrow> 'a formula_exp" where
+  "tXB_of_list [] = tNeutral" |
+  "tXB_of_list [a] = tVar a" |
+  "tXB_of_list (a # as) = tXB (tVar a) (tXB_of_list as)"
+
+fun mk_minterm :: "'a list \<Rightarrow> 'a set \<Rightarrow> 'a formula_exp" where
+  "mk_minterm [] G = tNeutral" |
+  "mk_minterm as G = remainder_complements (G - set as) (tXB_of_list as)"
+
+lemma unary_mk_minterm[simp]: "mk_minterm [g] {g} = tVar g"
+by (simp add: "mk_minterm.cases" remainder_complements_def )
+
+inductive normal_formula_exp :: "'a set \<Rightarrow> 'a formula_exp \<Rightarrow> bool"
+  for G :: "'a set"
+where
+  "normal_formula_exp G tFalse" |
+  "normal_formula_exp G tTrue" |
+  [intro!]: "Dlist.set as \<subseteq> G \<Longrightarrow> 
+    normal_formula_exp G (mk_minterm (list_of_dlist as) G)" |
+  [intro!]: "normal_formula_exp G X \<Longrightarrow> normal_formula_exp G Y \<Longrightarrow>
+    normal_formula_exp G (tOR X Y)"
+
+lemma tNeutral_is_normal[simp]: "normal_formula_exp G tNeutral"
+by (metis empty_subsetI list.set(1) mk_minterm.simps(1) normal_formula_exp.intros(3) set.rep_eq slice_right_zero_eq_empty)
+
+lemma unary_tVar_is_normal: "normal_formula_exp {g} (tVar g)"
+by (metis List.set_insert empty_set insert_Nil insert_absorb2 list_of_dlist_Dlist list_of_dlist_insert normal_formula_exp.simps remdups.simps(1) set.rep_eq subset_insertI unary_mk_minterm)
 
 primrec 
     formula_exp_to_formula :: "'a formula_exp \<Rightarrow> 'a formula"
@@ -67,79 +101,43 @@ lemma neutral_formula_not_less_eq_bot_formula: "\<not> ((neutral::'a formula) \<
 unfolding neutral_formula_def
 by (metis Abs_formula_inverse Rep_formula_bot UNIV_I bot.extremum_unique insert_not_empty)
 
-(*
-TODO necessário para as provas que seguem.
-lemma formula_exp_to_formula_eq: 
-  "formula_exp_to_formula x \<le> formula_exp_to_formula y \<Longrightarrow> formula_exp_to_formula y \<le> formula_exp_to_formula x \<Longrightarrow> x = y"
-apply (induct x)
-apply (induct y)
-apply simp
-apply (simp add: top_formula_not_less_eq_bot_formula)
-apply (simp add: neutral_formula_def[symmetric] neutral_formula_not_less_eq_bot_formula)
-
-apply (auto simp add: neutral_formula_def[symmetric] )
-*)
-
-                                          
 abbreviation eval where "eval \<equiv> formula_exp_to_formula"
 
 abbreviation empty_list_formula_exp :: "'a set \<Rightarrow> 'a formula_exp" where
   "empty_list_formula_exp V \<equiv> tNOT (Finite_Set.fold (\<lambda> x f\<^sub>2 . tOR (tVar x) f\<^sub>2) tFalse V)"
 
-fun list_to_formula_exp :: "'a list \<Rightarrow> 'a formula_exp" where
- "list_to_formula_exp [] = empty_list_formula_exp UNIV" |
- "list_to_formula_exp [x] = tVar x" |
- "list_to_formula_exp (x # xs) = tXB (tVar x) (list_to_formula_exp xs)"
-
 abbreviation dlist_to_formula_exp  where
-  "dlist_to_formula_exp dl \<equiv> list_to_formula_exp (list_of_dlist dl)"
+  "dlist_to_formula_exp dl G \<equiv> mk_minterm (list_of_dlist dl) G"
 
-abbreviation dlist_set_to_formula_exp :: "'a dlist set \<Rightarrow> 'a formula_exp" where
-  "dlist_set_to_formula_exp Dls \<equiv> Finite_Set.fold (\<lambda> dl f\<^sub>2 . tOR (dlist_to_formula_exp dl) f\<^sub>2  ) tFalse Dls"
+fun dlist_set_to_formula_exp_rm_false :: 
+  "'a set \<Rightarrow> 'a dlist \<Rightarrow> 'a formula_exp \<Rightarrow> 'a formula_exp" where
+"dlist_set_to_formula_exp_rm_false G dl tFalse = dlist_to_formula_exp dl G" |
+"dlist_set_to_formula_exp_rm_false G dl f\<^sub>2 = tOR (dlist_to_formula_exp dl G) f\<^sub>2"
 
-corollary dlist_set_to_formula_exp_neutral: 
-  "dlist_set_to_formula_exp { Dlist [] } = tOR (empty_list_formula_exp UNIV) tFalse"
-oops(*sorry*) 
+abbreviation dlist_set_to_formula_exp where
+  "dlist_set_to_formula_exp Dls G \<equiv> 
+    Finite_Set.fold (dlist_set_to_formula_exp_rm_false G) tFalse Dls"
 
 abbreviation formula_to_formula_exp where
   "formula_to_formula_exp f \<equiv> dlist_set_to_formula_exp (Rep_formula f)"
-(*
-abbreviation reduce where
-  "reduce \<equiv> formula_to_formula_exp \<circ> eval"
-*)
-
-fun reduce :: "'a formula_exp \<Rightarrow> 'a formula_exp" where
-  "reduce (tOR (tXB (tVar x) (tVar y)) (tXB (tVar y) (tVar x))) = 
-    tAND (tVar x) (tVar y)" |
-  "reduce x = x"
-
-
-
-lemma eval_reduce: "eval (reduce f) = eval f"
-
-
-corollary reduce_reduce: "reduce (reduce f) = reduce f"
-
 
 lemma formula_to_formula_exp_bot: 
-  "eval (formula_to_formula_exp bot) = bot"
-by simp
-lemma formula_to_formula_exp_neutral: 
-  "eval (formula_to_formula_exp neutral) = neutral"
-
-
-
-
-theorem soundness: 
-  "reduce f\<^sub>1 = reduce f\<^sub>2 \<Longrightarrow> eval f\<^sub>1 = eval f\<^sub>2"
-apply (induct f\<^sub>1, auto)
-apply (induct f\<^sub>2, auto)
-
-
-theorem completeness:
-  "eval f\<^sub>1 = eval f\<^sub>2 \<Longrightarrow> reduce f\<^sub>1 = reduce f\<^sub>2"
+  "eval (formula_to_formula_exp bot G) = bot"
 by simp
 
+abbreviation reduce :: "'a formula_exp \<Rightarrow> 'a set \<Rightarrow> 'a formula_exp" where
+  "reduce \<equiv> formula_to_formula_exp \<circ> eval"
+
+lemma reduce_tFalse[simp]: "reduce tFalse G = tFalse"
+by simp
+
+lemma normal_tFalse[simp]: "normal_formula_exp G tFalse" 
+by (simp add: normal_formula_exp.intros(1))
+
+
+
+lemma "f \<in> formulas_exp G \<Longrightarrow> normal_formula_exp G (reduce f G)"
+apply (induct f, simp+)
 
 
 (*<*)
@@ -150,8 +148,6 @@ notation
   sup  (infixl "\<squnion>" 65)
 (*>*)
 
-(*
-TODO necessário para as provas que seguem
 instantiation formula_syn :: (type) boolean_algebra
 begin
 
@@ -177,7 +173,7 @@ definition
   "- x = Abs_formula_syn (tNOT (Rep_formula_syn x))"
 
 definition
-  "x - y = Abs_formula_syn (tDIFF (Rep_formula_syn x)  (Rep_formula_syn y))"
+  "x - y = Abs_formula_syn (tAND (Rep_formula_syn x)  (tNOT (Rep_formula_syn y)))"
 
 lemma Rep_formula_syn_inf:
   "Rep_formula_syn (x \<sqinter> y) = tAND (Rep_formula_syn x) (Rep_formula_syn y)"
@@ -203,14 +199,13 @@ unfolding uminus_formula_syn_def
 by (simp add: Abs_formula_syn_inverse Rep_formula_syn)
 
 lemma Rep_formula_syn_diff:
-  "Rep_formula_syn (x - y) = tDIFF (Rep_formula_syn x) (Rep_formula_syn y)"
+  "Rep_formula_syn (x - y) = tAND (Rep_formula_syn x) (tNOT (Rep_formula_syn y))"
 unfolding minus_formula_syn_def
 by (simp add: Abs_formula_syn_inverse)
 
 lemma Rep_formula_syn_eq:
   "x = y \<longleftrightarrow> (Rep_formula_syn x) = (Rep_formula_syn y)"
 by (metis Rep_formula_syn_inverse)
-
 
 lemmas eq_formula_syn_iff = Rep_formula_syn_inject [symmetric]
 
@@ -237,14 +232,17 @@ next
 fix x::"'a formula_syn" and y::"'a formula_syn"
 assume "x \<le> y" "y \<le> x"
 thus "x = y"
-using Rep_formula_syn_eq less_eq_formula_syn_def 
+unfolding less_eq_formula_syn_def eq_iff
+apply simp
+apply (simp add: iffE)
+
 
 
 
 
 qed (unfold Rep_formula_syn_boolean_algebra_simps, auto)
 end
-*)
+
 
 (*<*)
 no_notation
