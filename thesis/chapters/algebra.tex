@@ -362,7 +362,7 @@ zs \in \denote{S} \iff
 \sliceright{zs}{i} \in \denote{S} \lor \sliceleft{zs}{i} \in \denote{S}\label{def:tempo2}
 \end{equation}
 %
-For example, if a generator is in a list, then it must be at the beginning or at the end.
+For example, if a generator is in a list, then it must be in a prefix or in a suffix.
 If $\listsin{z_0,z_1,z_2,z_3,z_4} \in \denote{S}$, thus either $\listsin{z_0}\in\denote{S}$, or $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 If $\listsin{z_0} \notin \denote{S}$, thus $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 Then, either $\listsin{z_1} \in \denote{S}$ or $\listsin{z_2,z_3,z_4} \in \denote{S}$, and so forth.
@@ -405,7 +405,7 @@ j < i \implies \nonumber\\
 \right)\label{def:tempo3}
 \end{align}
 %
-For example, if $\listsin{z_1,z_2,z_3} \in \denote{S}$, then both $\listsin{z_0,z_1,z_2,z_3}$ and $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
+For example, if $\listsin{z_1,z_2,z_3} \in \denote{S}$, then both $\listsin{z_0,z_1,z_2,z_3} \in \denote{S}$ and $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 For a variable $\var{z_1}$:
 %
 %\begin{definition}[\Tempotext 3, belongs to the middle of a sublist]
@@ -527,7 +527,7 @@ The \ac{DNF} is clearer with the mapping function from denotational semantics to
 \end{sloppypar}
 
 We define events independence ($\independenteventsop$) as the property that one operand does not imply the other.
-For example, we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \lor \var{b}$ (it results in $\emptyset$, see \cref{thm:xbefore-not-idempotent}).
+For example, in some rules we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \lor \var{b}$ (it results in $\emptyset$, see \cref{thm:xbefore-not-idempotent}).
 %
 \begin{equation}
 \label{law:independent-events}

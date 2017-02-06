@@ -64,6 +64,9 @@ class temporal_faults_algebra_equivs = temporal_faults_algebra_assoc +
   assumes inf_tempo3: "\<lbrakk>tempo3 a; tempo3 b\<rbrakk> \<Longrightarrow> tempo3 (inf a b)"
   assumes sup_tempo4: "\<lbrakk>tempo4 a; tempo4 b\<rbrakk> \<Longrightarrow> tempo4 (sup a b)"
 
+abbreviation tempo :: "'a::temporal_faults_algebra_equivs  \<Rightarrow> bool" where
+"tempo a \<equiv> tempo1 a \<and> tempo2 a \<and> tempo3 a \<and> tempo4 a"
+
 subsection {* \Ac{XBefore} transitivity *}
 
 class temporal_faults_algebra_trans = temporal_faults_algebra_equivs +
