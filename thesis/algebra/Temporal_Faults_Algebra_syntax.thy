@@ -3,6 +3,7 @@ theory Temporal_Faults_Algebra_syntax
 imports Temporal_Faults_Algebra_dlist
 
 begin
+
 subsection {* Syntax for the Algebra of Temporal Faults *}
 
 datatype 'a formula_exp =
@@ -13,20 +14,79 @@ datatype 'a formula_exp =
   tNOT "'a formula_exp" | 
   tXB "'a formula_exp" "'a formula_exp"
 
+datatype 'a normal_formula_exp =
+  nFalse | 
+  nMinterm "'a dlist" "'a set" |
+  nOR "'a normal_formula_exp" "'a normal_formula_exp" 
+
+primrec normal_form :: "'a set \<Rightarrow> 'a formula_exp \<Rightarrow> 'a normal_formula_exp" where
+"normal_form G tFalse = nFalse" |
+"normal_form G (tVar a) = nMinterm [a] (G - {a})" |
+"normal_form G (tOR A B) = nOR (normal_form G A) (normal_form G B)" |
+"normal_form G (tXB A B) = 
+  nOR 
+    (normal_form G (tNOT A)) 
+    (normal_form G (tNOT B))" 
+
+
+primrec tVar_number :: "'a list \<Rightarrow> 'a \<Rightarrow> nat option" where
+"tVar_number [] _ = None" |
+"tVar_number (g # gs) a = (
+  if a = g then (Some 1)
+  else (case (tVar_number gs a) of None \<Rightarrow> None | Some n \<Rightarrow> Some (n + 1))
+)"
+
+
+
+primrec formula_exp_number :: 
+  "'a dlist \<Rightarrow> 'a formula_exp \<Rightarrow> nat option" where
+"formula_exp_number gs tFalse = Some 0" |
+"formula_exp_number gs (tVar a) = tVar_number (list_of_dlist gs) a" |
+"formula_exp_number"
+
+inductive normal_formula_exp :: "'a set \<Rightarrow> 'a formula_exp \<Rightarrow> bool"
+  for G :: "'a set"
+where
+  "normal_formula_exp G tFalse" |
+  "normal_formula_exp G tTrue" |
+  [intro!]: "Dlist.set as \<subseteq> G \<Longrightarrow> 
+    normal_formula_exp G (mk_minterm (list_of_dlist as) G)" |
+  [intro!]: "normal_formula_exp G X \<Longrightarrow> normal_formula_exp G Y \<Longrightarrow>
+    normal_formula_exp G (tOR X Y)"
+
+
+
+
+
+datatype 'a leaf_node =
+  leaf_false |
+  leaf_unord "'a set" |
+  leaf_preserve "'a dlist" |
+  leaf_comb "'a leaf_node" "'a leaf_node"
+
 datatype 'a ifex = 
   ifex_const "'a dlist set" |
   ifex_if "'a ifex" "'a dlist set" "'a dlist set"
 
-primrec vals :: "'a formula_exp \<Rightarrow> 'a dlist set" where
-"vals tFalse = {}" |
-"vals (tVar a) = {Dlist [a]}" |
-"vals (tOR A B) = (vals A) \<union> (vals B)" |
-"vals (tAND A B) = (vals A) \<union> (vals B)" |
-"vals (tXB A B) = (vals A) \<union> (vals B)"
+
+primrec mk_leaf :: "'a leaf_node \<Rightarrow> 'a dlist \<Rightarrow> bool" where
+"mk_leaf leaf_false dl \<longleftrightarrow> False" |
+"mk_leaf (leaf_unord S) dl \<longleftrightarrow> S = Dlist.set dl" |
+"mk_leaf (leaf_preserve pr) dl \<longleftrightarrow> 
+  (Dlist.filter (\<lambda>x. x \<in> Dlist.set pr) dl) = pr " |
+"mk_leaf (leaf_comb L R) dl \<longleftrightarrow> 
+  (mk_leaf L dl) \<and> (mk_leaf R dl)"
+
+definition mk_leaf_value :: "'a leaf_node \<Rightarrow> 'a dlist set" where 
+"mk_leaf_value X = Collect (mk_leaf X)"
+
+primrec leaf_values :: "'a formula_exp \<Rightarrow> 'a leaf_node" where
+"leaf_values tFalse = leaf_false" |
+"leaf_values (tVar a) = leaf_unord {S}"
 
 primrec formula_exp_to_ifex :: "'a formula_exp \<Rightarrow> 'a ifex" where
 "formula_exp_to_ifex tFalse = ifex_const {}" |
-"formula_exp_to_ifex (tVar a) = ifex_const {Dlist [a]}" |
+"formula_exp_to_ifex (tVar a) = mk_leaf_value (leaf_unord {a})" |
 "formula_exp_to_ifex (tXB A B) = 
   ifex_if (formula_exp_to_ifex A) 
     (ifex_if (formula_exp_to_ifex B) (preserve (vals A) (vals B)) {}) {}"
@@ -64,18 +124,6 @@ where
   "X \<in> formulas_exp G \<Longrightarrow> Y \<in> formulas_exp G \<Longrightarrow> tXB X Y \<in> formulas_exp G" |
   "X \<in> formulas_exp G \<Longrightarrow> tNOT X \<in> formulas_exp G"
 
-definition remainder_complements :: "'a set \<Rightarrow> 'a formula_exp \<Rightarrow> 'a formula_exp" where
-  "remainder_complements G base = 
-    (Finite_Set.fold (\<lambda> x f\<^sub>2 . tAND (tNOT (tVar x)) f\<^sub>2) base G)"
-
-fun tXB_of_list :: "'a list \<Rightarrow> 'a formula_exp" where
-  "tXB_of_list [] = tNeutral" |
-  "tXB_of_list [a] = tVar a" |
-  "tXB_of_list (a # as) = tXB (tVar a) (tXB_of_list as)"
-
-fun mk_minterm :: "'a list \<Rightarrow> 'a set \<Rightarrow> 'a formula_exp" where
-  "mk_minterm [] G = tNeutral" |
-  "mk_minterm as G = remainder_complements (G - set as) (tXB_of_list as)"
 
 lemma unary_mk_minterm[simp]: "mk_minterm [g] {g} = tVar g"
 by (simp add: "mk_minterm.cases" remainder_complements_def )

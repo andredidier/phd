@@ -118,6 +118,13 @@ The instantiation and this proof shows that \ac{algebra} is a Boolean algebra as
 *}
 end
 
+lemma bot_neq_top_formula [simp]: "(\<bottom> :: 'a formula) \<noteq> \<top>"
+unfolding Rep_formula_boolean_algebra_simps by auto
+
+lemma top_neq_bot_formula [simp]: "(\<top> :: 'a formula) \<noteq> \<bottom>"
+unfolding Rep_formula_boolean_algebra_simps by auto
+
+
 (*<*)
 no_notation
   bot ("\<bottom>") and
