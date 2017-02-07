@@ -523,7 +523,7 @@ The following formulas are \emph{not} in \ac{DNF}:
 
 \begin{sloppypar}
 But to transform the last two formulas into \ac{DNF}, one can use \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:xbefore-inf-1,thm:xbefore-inf-2}, for instance.
-The \ac{DNF} is clearer with the mapping function from denotational semantics to a formula $\formulaof{.}$ presented in \cref{sec:algebras-soundness-and-completeness}.
+The \ac{DNF} is clearer with the mapping function from denotational semantics to a formula $\formulaof{.}{}$ presented in \cref{sec:algebras-soundness-and-completeness}.
 \end{sloppypar}
 
 We define events independence ($\independenteventsop$) as the property that one operand does not imply the other.
@@ -749,17 +749,76 @@ With all proofs, Isabelle/HOL asserts that the declared type, the set of sets of
 Thus, soundness is a direct consequence of such an instantiation.
 
 With the abstract class, Isabelle/HOL is able to prove syntactical formulas.
-For example, the following formula can be proved using term rewriting:
+For example, the following formula can be proved using term rewriting only:
 %
 \begin{align*}
-& \tempo{S} \land \tempo{T} \land \independentevents{S}{T} \implies\nonumber\\
+& \xbefore{\var{a}}{\var{b}} \lor 
+	\xbefore{\var{b}}{\var{a}} \lor 
+	\lnot \left(\var{a} \land \var{b}\right)\nonumber\\
 %%%%%
-& \xbefore{S}{T} \lor \xbefore{T}{S} \lor \lnot \left(S \land T\right)\nonumber\\
-%%%%%
-= & \left(S \land T\right) \lor \lnot \left(S \land T \right) & \text{by \cref{thm:xbefore-sup-equiv-inf}}\nonumber\\
+= & \left(\var{a} \land \var{b}\right) \lor 
+	\lnot \left(\var{a} \land \var{b} \right) 
+	& \text{by \cref{thm:xbefore-sup-equiv-inf}}\nonumber\\
 %%%%%
 = & \top & \text{by Boolean law}
 \end{align*}
+
+Thus, the type class of \ac{algebra} is able to show that:
+\[
+\denote{\xbefore{\var{a}}{\var{b}} \lor 
+	\xbefore{\var{b}}{\var{a}} \lor 
+	\lnot \left(\var{a} \land \var{b}\right)} = \UNIV
+\]
+%
+and also:
+%
+\[
+\denote{\xbefore{\var{a}}{\var{b}} \lor \xbefore{\var{b}}{\var{a}}} =
+\denote{\var{a} \land \var{b}}
+\]
+%
+where $\UNIV$ is the set of all \distinctlists.
+
+The completeness, on the other hand, needs a mapping function from a set of \distinctlists to a formula (for a set of generators $G$):
+%
+\begin{align}
+\formulaof{S}{G} =~ & 
+	\bigvee_{ls ~\in~ S} \left(
+	\listformulaof{ls}{G}
+	\land \bigwedge_{g ~\in~ G ~-~ \listset ls } \lnot \var{g}
+	\right)
+	\nonumber\\
+%%%%%
+\listformulaof{\emptylist}{G} =~ &\top\nonumber\\
+%%%%%
+\listformulaof{\listsin{a} }{G} =~ &\var{a}\nonumber\\
+%%%%%
+\listformulaof{\cons{a}{ls}}{G} =~ & \xbefore{\var{a}}{\listformulaof{ls}{G}} \nonumber	
+\end{align}
+
+For example:
+%%%%
+\begin{align}
+\formulaof{\left\{ \listsin{a,b}, \listsin{a} \right\}}{\left\{a,b\right\}} = &
+\xbefore{\var{a}}{\var{b}} ~\lor  
+	\left( \var{a} \land \lnot \var{b}  \right)\nonumber\\
+%%%%%
+\formulaof{\left\{ \listsin{a,b}, \listsin{a}, \listsin{b,a} \right\}}{\left\{a,b\right\}} = &
+\var{a}\nonumber\\
+%%%%%
+\formulaof{\left\{ \listsin{a,b}, \listsin{a} \right\}}{\left\{a,b,c\right\}} = &
+\xbefore{\var{a}}{\var{b}} \land \lnot \var{c} ~\lor \nonumber\\
+	&\left( \var{a} \land \lnot \var{b} \land \lnot \var{c} \right)
+\nonumber
+\end{align}
+
+Thus, the completeness theorem is:
+\begin{equation}
+\formulaof{\UNIV	}{G} = \top 
+\end{equation}
+%
+where $\UNIV$ is the set of all \distinctlists with generators $G$.
+We have not yet proved the completeness theorem.
 
 
 

@@ -988,69 +988,6 @@ theorem temporal_faults_algebra_mapping_completeness:
     "\<forall> (S::'a dlist set). \<exists> f::'a formula. Rep_formula f = S"
 using Abs_formula_inverse by auto
 
-theorem soundness: 
-  "\<forall> f1 f2 . f1 = f2 \<longrightarrow> Rep_formula f1 = Rep_formula f2"
-by simp
-
-subsubsection{*Completeness*}
-
-abbreviation var_of :: "'a \<Rightarrow> 'a formula" where
-"var_of a \<equiv> (Abs_formula {dl. Dlist.member dl a })"
-
-lemma tempo_var_of: "tempo (var_of x)"
-unfolding tempo1_formula_def tempo2_formula_def tempo3_formula_def tempo4_formula_def
-by (simp add: Abs_formula_inverse dlist_tempo1_member dlist_tempo2_member dlist_tempo3_member dlist_tempo4_member)
-
-lemma independent_events_var_of: "a \<noteq> b \<Longrightarrow> independent_events (var_of a) (var_of b)"
-by (auto simp add: independent_events_formula_def Abs_formula_inverse dlist_indepentent_events_member)
-
-definition nand_of_generators :: "'a set \<Rightarrow> 'a formula" where
-"nand_of_generators G = 
-  Finite_Set.fold (\<lambda>g f. inf (- (var_of g)) f) top G"
-
-primrec formula_of_list_incomplete :: "'a list \<Rightarrow> 'a formula" where
-"formula_of_list_incomplete [] = neutral" |
-"formula_of_list_incomplete (x#xs) = 
-  xbefore (var_of x) (formula_of_list_incomplete xs)"
-
-definition formula_of_list :: "'a set \<Rightarrow> 'a list \<Rightarrow> 'a formula" where
-"formula_of_list G xs = 
-  inf 
-    (formula_of_list_incomplete xs) 
-    (nand_of_generators (G - set xs))"
-
-abbreviation formula_of_dlist where
-  "formula_of_dlist G dl \<equiv> formula_of_list G (list_of_dlist dl)"
-
-lemma "a \<noteq> b \<Longrightarrow> formula_of_list {a,b} [a] = inf (var_of a) (- var_of b)"
-proof-
-  assume 0: "a \<noteq> b"
-  hence 1: "independent_events (var_of a) (var_of b)" 
-    "tempo (var_of a)" "tempo (var_of b)"
-    by (simp add: independent_events_var_of tempo_var_of)+
-  have "formula_of_list {a,b} [a] = 
-    inf 
-      (formula_of_list_incomplete [a]) 
-      (nand_of_generators {b})"
-    using 0
-    by (metis Diff_insert_absorb empty_iff empty_set formula_of_list_def insert_iff list.simps(15)) 
-  hence "... =
-    inf 
-      (formula_of_list_incomplete [a]) 
-      (- var_of b)"
-    
-
-qed
-unfolding nand_of_generators_def formula_of_list_def 
-using tempo_var_of independent_events_var_of
-apply (auto simp add:  Finite_Set.fold_def xbefore_neutral_1)
-
-
-theorem completeness: "\<forall> S . \<exists> f . Abs_formula S = (f::'a formula)"
-by simp
-
-
-
 (*<*)
 end
 (*>*)

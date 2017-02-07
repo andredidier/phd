@@ -265,12 +265,14 @@ proof -
     using f13 f12 f10 by (metis (no_types) local.compl_inf local.compl_sup local.double_compl local.inf_compl_bot local.sup_assoc local.sup_inf_distrib1)
 qed
 
-end
-
 corollary xbefore_sup_equiv_inf_inf_nand: 
   "tempo a \<Longrightarrow> tempo b \<Longrightarrow> independent_events a b \<Longrightarrow> 
   sup (sup (xbefore a b) (xbefore b a)) (uminus (inf a b)) = top"
-by (metis sup_compl_top xbefore_sup_equiv_inf)
+by (metis (mono_tags, lifting) boolean_algebra_class.sup_compl_top temporal_faults_algebra_equivs_class.xbefore_sup_equiv_inf)
+
+
+
+end
 
 
 end
