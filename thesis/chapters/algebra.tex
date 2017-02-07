@@ -741,74 +741,28 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 \section{Soundness and completeness}
 \label{sec:algebras-soundness-and-completeness}
 
-A valuation of a formula is the instantiation of variable values using the syntax of the formula\todo{needs ref}.
-In Boolean expressions, a valuation is a mapping function that associates values $true$ or $false$ to each variable.
-The syntax of a formula is converted into \iac{BDD} to obtain the value of the formula.
-Such a value is obtained when the \ac{BDD} is traversed from the top variable.
-The leaf node contains the value of the formula for a given valuation.
-A function $\eval{f}{v}$ returns the value of the formula $f$ for the valuation $v$.
+We use type classes in Isabelle/HOL to describe the syntax and the axioms of \ac{algebra}.
+The instantiation of the class maps each syntactical element to a set of \distinctlists, including the operators of Boolean algebra and the \ac{XBefore} operator.
+Each axiom is proved with the set of \distinctlists.
+With all proofs, Isabelle/HOL asserts that the declared type, the set of sets of \distinctlists (all possible semantics) is indeed \iac{algebra}.
+(Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---composing all classes later.)
+Thus, soundness is a direct consequence of such an instantiation.
 
-For \ac{algebra}, a valuation is a set of \distinctlists.
-Every formula is converted into a tree similar to \iac{BDD}. 
-Each leaf node assumes values $\emptyset$ ($false$) or a set of \distinctlists.
-If the set of \distinctlists in the leaf nodes is a subset of the valuation set, then the value of the formula is $true$ (it is $false$, otherwise).
-
-For example, the value for the formula $\var{a} \lor \left(\xbefore{\var{b}}{\var{c}}\right))$ and valuation $\left\{ \listsin{a} \right\}$ is $true$.
-It is also $true$ for valuation $\left\{\listsin{b,c}\right\}$, but it is $false$ for valuation $\left\{\listsin{b}, \listsin{c} \right\}$
-
-The soundness and completeness in \ac{algebra} are obtained as in traditional logic: using the valuations of a formula (syntax), and from the set of all formulas' representation (denotational semantics).
-
-Part of the function that maps a formula (syntax) to its denotational semantics is the function $\denote{.}$, shown in the beginning of this \lcnamecref{chap:algebra}.
-The complete mapping of $\denote{.}$ is:
+With the abstract class, Isabelle/HOL is able to prove syntactical formulas.
+For example, the following formula can be proved using term rewriting:
 %
-\begin{align}
-\denote{\bot} = &~ \left\{\right\}\nonumber\\
+\begin{align*}
+& \tempo{S} \land \tempo{T} \land \independentevents{S}{T} \implies\nonumber\\
 %%%%%
-\denote{\top} = &~ \UNIV\nonumber\\
+& \xbefore{S}{T} \lor \xbefore{T}{S} \lor \lnot \left(S \land T\right)\nonumber\\
 %%%%%
-\denote{\neutral} = &~ \left\{\listsin{~} \right\}\nonumber\\
+= & \left(S \land T\right) \lor \lnot \left(S \land T \right) & \text{by \cref{thm:xbefore-sup-equiv-inf}}\nonumber\\
 %%%%%
-\denote{\var x} = &~ 
-	\left\{~ 
-		dl \bullet x \in \listset{dl}  
-	~\right\}\nonumber\\
-%%%%%
-\denote{X \lor Y} = &~ \denote{X} \union \denote{Y}\nonumber\\
-%%%%%
-\denote{X \land Y} = &~ \denote{X} \inter \denote{Y}\nonumber\\
-%%%%%
-\denote{\lnot X} = &~ - \denote{X}\nonumber\\
-%%%%%
-\denote{\xbefore{X}{Y}} = &~
-	\left\{~
-		dl ~\middle|~ \exists~ i ~\bullet~ \sliceright{dl}{i} \in \denote{X} \land \sliceleft{dl}{i} \in \denote{Y}
-	~\right\}
-\end{align}
+= & \top & \text{by Boolean law}
+\end{align*}
 
-\Ac{algebra} is sound if the semantics of two formulas is the same, provided they evaluate to the same value \emph{for every} valuation.
 
-\begin{proposition}[Soundness]
-Let $f_1$ and $f_2$ be formulas in \ac{algebra}, then:
-%
-\begin{align}
-\left(\forall~v ~\bullet~ \eval{f_1}{v} = \eval{f_2}{v}\right) \implies \denote{f_1} = \denote{f_2}
-\end{align}
-\end{proposition}
 
-\Ac{algebra} is complete if the converse holds:
-if two formulas evaluate to the same value for every value valuation, provided their semantics is the same.
-
-\begin{proposition}[Completeness]
-Let $f_1$ and $f_2$ be formulas in \ac{algebra}, then:
-%
-\begin{align}
-\denote{f_1} = \denote{f_2} \implies \left(\forall~v ~\bullet~ \eval{f_1}{v} = \eval{f_2}{v}\right)
-\end{align}
-\end{proposition}
-
-We are still investigating the evaluation function. 
-The tree structure required by such a function still needs to be defined.
-We found a ternary tree or a tree with special leaf nodes should solve it.
 
 \section{Qualitative and quantitative analyses}
 \label{sec:qualitative-quantitative-analyses}

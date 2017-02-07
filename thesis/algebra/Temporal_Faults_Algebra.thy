@@ -267,5 +267,11 @@ qed
 
 end
 
+corollary xbefore_sup_equiv_inf_inf_nand: 
+  "tempo a \<Longrightarrow> tempo b \<Longrightarrow> independent_events a b \<Longrightarrow> 
+  sup (sup (xbefore a b) (xbefore b a)) (uminus (inf a b)) = top"
+by (metis sup_compl_top xbefore_sup_equiv_inf)
+
+
 end
 (*>*)
