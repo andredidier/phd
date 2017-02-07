@@ -390,7 +390,7 @@ For example, the expression $\parsin{X \sand Y} \por Z$ is a temporal relation (
 To extract \acp{MCSeq} it needs to be converted to $\squaresin{X \sand Y} \land \squaresin{X \por Z} \land \squaresin{Y \por Z} $ (the square brackets is the doublets notation and the conversion is the definition of the \emph{Temporal Distributive Law}~\cite[p. 120]{Walker2009}).
 
 The normal form for \ac{TFT} is similar to that for \ac{SFT}: it is \iac{DNF} with temporal operators (\ac{PAND}, \ac{POR}, \ac{SAND}) in the minimal terms.
-The reduction of \ac{TFT} structure expressions is achieved using \ac{DT}\adnote{Cite dependency tree}.
+The reduction of \ac{TFT} structure expressions is achieved using \ac{DT}.
 In \iac{DT}, if all children of a tree node are true, then the node is also true.
 Conversely, if a node is true, then all its children are also true.
 An issue with \acp{DT} is that they grow exponentially.
@@ -670,7 +670,7 @@ The work reported in~\cite{STR2002} shows a formal approach to analyse \ac{SFT} 
 Instead of tackling basic events ordering (as in \ac{PAND}), it considers a causal relation over a gate, as for example, a relation of a basic event and a higher-level intermediary event.
 
 For \acp{TFT}, the works reported in~\cite{MPW2010,MWP2012} show an inverse solution.
-They map \acp{FSM}\adnote{Cite FSM} to \pandora logic, then verify system properties.
+They map \acp{FSM} to \pandora logic, then verify system properties.
 They show that such a mapping simplifies expression reduction, thus improving performance on the analysis.
 
 Although there is formal modelling approaches to \acp{DFT}, they do not implement a direct modelling of the \ac{DFT} itself.
@@ -1073,7 +1073,7 @@ The non-coherent \ac{FT} with the working part is shown in \cref{fig:outcome-4-n
 If the operator \emph{can} be informed, then cut sets $\setsin{D_1, D_2}$ and $\setsin{LU}$ could not have occurred (see \cref{fig:ft-generic-failure-gas-detection-system}).
 Thus, the correct qualitative analysis should consider only cut set $\setsin{R_1,R_2}$.
 Reducing the expressions of the non-coherent \ac{FT} (\cref{fig:outcome-4-non-coherent-ft}), we obtain the structure expression: $\lnot L \land \lnot LU \land R_1 \land R_2 \land \parsin{\lnot D_1 \lor \lnot D_2}$.
-{The approximation for this expression, removing the negated events, gives the cut set $\setsin{R_1,R_2}$, which gives a correct quantitative analysis.}\amnote{Isto poderia ser argumentado pro exemplo anterior? Seria legal ter o mesmo exemplo e pontos de vista distintos (não coerente e coerente).} \adnote{Eu apenas reportei o exemplo. Essa análise foi o autor do exemplo quem fez. Se der vou acrescentar para a outra, não deve ser muito complicado... preciso de mais tempo apenas para analisar com calma.}
+The approximation for this expression, removing the negated events, gives the cut set $\setsin{R_1,R_2}$, which gives a correct quantitative analysis.
 
 %The examples of the usefulness of NOT gates in \ac{FTA} are one of the following, but not limited to: (i) generally, when the probability of negated events are close to $1$, (ii) exclusive states systems as, for example, non-repairable phased mission systems.
 
@@ -1151,7 +1151,6 @@ The group of such combinations in a single expression is, in fact, the structure
 Control system modelling using \simulink block diagrams~\cite{MathWorks2010} is recommended in~\cite{Nise1992} and have been used by our industrial partner.
 %We follow this recommendation in this work.
 It is a complementary tool of \matlab~\cite{MathWorks2010c}.
-% ## TODO: melhorar essa frase
 In fact, it works as a graphical interface to \matlab.
 A \simulink model has blocks and connections between these blocks, named signals.
 Each block has inputs and outputs and an internal behaviour expressed by its mathematical formula, which defines a function of the inputs for each output.
@@ -1401,7 +1400,4 @@ Our strategy on the other hand generates the weakest failure expression; the bes
 %Go to dir isabelle-hol-basic
 %Run isabelle build -D .
 \input{isabelle-hol-basic/output/document/Basic}
-
-\adnote{Use BA1993 to minimise the gap between systems models and fault trees. Also: MCS+1999}
-\adnote{Write the problem: simple mathematical notation for all fault trees. Include direct DFT-to-ATF mapping.}
 

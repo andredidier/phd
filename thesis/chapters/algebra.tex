@@ -1,12 +1,6 @@
  \chapter{A free algebra to express structure expressions of ordered events}
 \label{chap:algebra}
 
-\todo{De Augusto: ``Este capítulo é desnecessariamente conciso, principalmente por se tratar da contribuição. Seria importante, na versão final, ilustrar cada conceito e propriedade com exemplos.   
-Tem que destacar resultados importantes, como o fato da mecanização com Isabelle. Deveria ter uma seção ou um capítulo dedicado à mecanização, não incluindo tudo, obviamente, mas ilustrando um pequeno exemplo.''}
-
-\todo{Explain the interaction of (i) fault-injection, (ii) theorem proving, and (iii) symbolic execution.}
-\todo{dizer que nossa abordagem usa a abordagem similar à de expressões de estrutura, mas que tem o objetivo de dar uma semântica denotacional baseada em conjuntos}
-
 Recall from \cref{sec:time-relations,sec:fault-trees} that fault events are statistically independent of one another.
 The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{FBA}\index{Boolean Algebra!Free}, where each generator in \acp{FBA}\index{Boolean Algebra!Free} corresponds to a fault event symbol in \aclp{FT}.
 In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are independent of one another and Boolean\index{Boolean Algebra} formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
@@ -290,7 +284,6 @@ Temporal properties give a more abstract and less restrictive shape on the \ac{X
 They are abbreviations that some operators satisfy altogether or individually.
 %These properties avoid the requirement that every operand of \ac{XBefore} should be a variable (\cref{def:var}).
 %The properties are: $\tempo[1]{}$ (\cref{def:tempo1}), $\tempo[2]{}$ (\cref{def:tempo2}), $\tempo[3]{}$ (\cref{def:tempo3}), and $\tempo[4]{}$ (\cref{def:tempo4}). 
-%\todo{Explain temporal properties with respect to Figure 1 about relation of events? At least make it clearer.}
 
 The first temporal property is about disjoint split.
 If the first part of a list is in a given set, then every remainder part is not.
@@ -702,12 +695,12 @@ The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer i
 %
 %\tempo[2]{S} \implies S \inter \parsin{\xbefore{S}{T}} =& \xbefore{S}{T} &
 %  \text{left-inter-absorb}
-%  \label{thm:xbefore-inf-absorb-1}\todo{Prove this in Isabelle}\\
+%  \label{thm:xbefore-inf-absorb-1}
 %
 %
 %\tempo[2]{S} \implies S \inter \parsin{\xbefore{T}{S}} =& \xbefore{T}{S} &
 %  \text{right-inter-absorb}
-%  \label{thm:xbefore-inf-absorb-2}\todo{Prove this in Isabelle}
+%  \label{thm:xbefore-inf-absorb-2}
 \end{align}
 %\end{subequations}
 %
@@ -885,7 +878,6 @@ The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs
 \end{align}
 %
 where $P_i$ is the cumulative probability function of fault $f_i$.
-\todo{ACM: deixar mais claro o que o cumulative probability function}
 
 For \ac{algebra}, our proposal for probability calculation is defined in terms of the probability of \ac{PAND} gates.
 The reason is that our semantics is defined in terms of a set of lists (or sequences) of fault occurrences.
