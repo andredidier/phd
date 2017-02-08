@@ -3,30 +3,248 @@ theory Temporal_Faults_Algebra_syntax
 imports Temporal_Faults_Algebra_dlist
 
 begin
+
 subsection {* Syntax for the Algebra of Temporal Faults *}
 
 datatype 'a formula_exp =
   tFalse | 
+  tTrue |
   tVar 'a |
   tOR "'a formula_exp" "'a formula_exp" | 
   tAND "'a formula_exp" "'a formula_exp" |
   tNOT "'a formula_exp" | 
   tXB "'a formula_exp" "'a formula_exp"
 
+abbreviation var_of :: "'a \<Rightarrow> 'a formula" where
+"var_of a \<equiv> (Abs_formula {dl. Dlist.member dl a })"
+
+lemma tempo_var_of: "tempo (var_of x)"
+unfolding tempo1_formula_def tempo2_formula_def tempo3_formula_def tempo4_formula_def
+by (simp add: Abs_formula_inverse dlist_tempo1_member dlist_tempo2_member dlist_tempo3_member dlist_tempo4_member)
+
+lemma independent_events_var_of: "a \<noteq> b \<Longrightarrow> independent_events (var_of a) (var_of b)"
+by (auto simp add: independent_events_formula_def Abs_formula_inverse dlist_indepentent_events_member)
+
+definition nand_of_generators :: "'a list \<Rightarrow> 'a formula" where
+"nand_of_generators gs = 
+  foldr (\<lambda>g f. inf (- (var_of g)) f) gs top"
+
+lemma nand_of_generators_empty[simp]: "nand_of_generators [] = top"
+by (simp add: nand_of_generators_def)
+
+lemma nand_of_generators_singleton[simp]: 
+  "nand_of_generators [a] = - (var_of a)"
+by (auto simp add: nand_of_generators_def)
+
+primrec formula_of_list_incomplete :: "'a list \<Rightarrow> 'a formula" where
+"formula_of_list_incomplete [] = neutral" |
+"formula_of_list_incomplete (x#xs) = 
+  xbefore (var_of x) (formula_of_list_incomplete xs)"
+
+lemma formula_of_list_incomplete_singleton[simp]: 
+  "formula_of_list_incomplete [a] = var_of a"
+by (simp add: tempo_var_of xbefore_neutral_2)
+
+definition formula_of_list :: "'a list \<Rightarrow> 'a list \<Rightarrow> 'a formula" where
+"formula_of_list gs xs = (
+  let xs' = (filter (\<lambda>g. g \<in> set gs) xs) in
+  case xs' of [] \<Rightarrow> nand_of_generators gs |
+    y#ys \<Rightarrow> inf 
+    (formula_of_list_incomplete xs') 
+    (nand_of_generators (filter (\<lambda>g. g \<notin> set xs) gs))
+)"
+
+lemma formula_of_list_of_no_generators[simp]: 
+  "formula_of_list [] xs = top"
+unfolding formula_of_list_def by simp
+
+lemma formula_of_list_of_inconsistent_generators: 
+  "set xs \<inter> set gs = \<emptyset> \<Longrightarrow> 
+  formula_of_list gs xs = nand_of_generators gs"
+unfolding formula_of_list_def
+by (simp add: inf_commute inter_set_filter) 
+
+lemma formula_of_singleton_list: "a \<in> set gs \<Longrightarrow> formula_of_list gs [a] = 
+  inf (var_of a) 
+  (nand_of_generators (filter (\<lambda>g. g \<notin> set [a]) gs))"
+unfolding formula_of_list_def
+by (metis filter.simps(1) filter.simps(2) formula_of_list_incomplete_singleton list.simps(5))
+
+lemma formula_of_complete_list: 
+  "xs \<noteq> [] \<Longrightarrow> set xs = set gs \<Longrightarrow> formula_of_list gs xs = 
+  formula_of_list_incomplete xs"
+unfolding formula_of_list_def
+apply (induct gs, simp)
+by (simp add: list.case_eq_if)
+
+definition formula_of_dlist :: "'a list \<Rightarrow> 'a dlist \<Rightarrow> 'a formula" where
+  "formula_of_dlist gs dl = formula_of_list gs (list_of_dlist dl)"
+
+definition formula_of_list_set :: "'a list \<Rightarrow> 'a list list \<Rightarrow> 'a formula" where
+"formula_of_list_set gs lls = 
+  (if (\<forall> ls \<in> set lls. set ls \<subseteq> set gs) then
+    foldr (\<lambda> dl f. sup (formula_of_list gs dl) f) lls bot
+    else bot
+  )"
+
+lemma formula_of_list_set_cons: "\<forall>xs\<in>set (ls#lls). set xs \<subseteq> set gs  \<Longrightarrow> 
+  formula_of_list_set gs (ls # lls) = 
+  sup (formula_of_list gs ls) (formula_of_list_set gs lls)"
+unfolding formula_of_list_set_def
+by auto
+
+corollary formula_of_list_set_singleton: 
+  "a \<noteq> b \<Longrightarrow> 
+  formula_of_list_set [a,b] [ [a] ] = inf (var_of a) (- var_of b)"
+apply (auto simp add: formula_of_list_set_def formula_of_list_def)
+by (metis formula_of_list_incomplete.simps(1) formula_of_list_incomplete.simps(2) formula_of_list_incomplete_singleton)
+
+corollary formula_of_list_set_pair: 
+  "a \<noteq> b \<Longrightarrow> 
+  formula_of_list_set [a,b] [ [a,b] ] = xbefore (var_of a) (var_of b)"
+apply (auto simp add: formula_of_list_set_def formula_of_list_def)
+by (metis formula_of_list_incomplete.simps(1) formula_of_list_incomplete.simps(2) formula_of_list_incomplete_singleton)
+
+corollary xbefore_var_of_of_neural_2[simp]: "(xbefore (var_of a) neutral) = var_of a"
+by (metis Rep_formula_inverse Rep_formula_xbefore_neutral_2 tempo_var_of)
+
+corollary formula_of_list_set_and: 
+  "a \<noteq> b \<Longrightarrow> 
+  formula_of_list_set [a,b] [ [a,b],[b,a] ] = inf (var_of a) (var_of b)"
+proof-
+  assume 0: "a \<noteq> b" 
+  hence "tempo (var_of a)" "tempo (var_of b)" 
+    "independent_events (var_of a) (var_of b)"
+    using tempo_var_of independent_events_var_of by force+
+  thus ?thesis using 0
+  apply (auto simp add: formula_of_list_set_def formula_of_list_def)
+  by (simp add: sup.commute xbefore_sup_equiv_inf)
+qed
+
+lemma formula_of_list_set_bot: 
+  "set gs = UNIV \<Longrightarrow> formula_of_list_set gs [] = Abs_formula {}"
+unfolding formula_of_list_set_def
+by (auto simp add: bot_formula_def)
+
+theorem completeness: "set gs = UNIV \<Longrightarrow>  
+  formula_of_list_set gs [list_of_dlist dl. dl \<leftarrow> lds] = 
+  Abs_formula (set lds)"
+using formula_of_list_set_cons
+apply (induct lds, simp add: formula_of_list_set_bot)
+
+
+primrec formula_of_formula_exp :: 
+  "'a formula_exp \<Rightarrow> 'a formula" where
+"formula_of_formula_exp tFalse = bot" |
+"formula_of_formula_exp tTrue = top" |
+"formula_of_formula_exp (tVar a) = Abs_formula {dl. Dlist.member dl a}" |
+"formula_of_formula_exp (tAND A B) = 
+  inf (formula_of_formula_exp A) (formula_of_formula_exp B)" |
+"formula_of_formula_exp (tOR A B) = 
+  sup (formula_of_formula_exp A) (formula_of_formula_exp B)" |
+"formula_of_formula_exp (tXB A B) = 
+  xbefore (formula_of_formula_exp A) (formula_of_formula_exp B)" |
+"formula_of_formula_exp (tNOT A) = - (formula_of_formula_exp A)"
+
+subsubsection{*Soundness*}
+
+subsubsection{*Completeness*}
+
+theorem completeness: 
+  "\<forall>xs. xs \<in> S \<longrightarrow> distinct xs \<Longrightarrow> finite S \<Longrightarrow> finite G \<Longrightarrow> G = UNIV \<Longrightarrow>
+    formula_of_list_set G S = Abs_formula {xs. list_of_dlist xs \<in> S }"
+apply (simp add: formula_of_list_set_def formula_of_dlist_def)
+apply (simp add: Finite_Set.fold_def formula_of_list_def nand_of_generators_def)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+datatype 'a normal_formula_exp =
+  nFalse | 
+  nMinterm "'a dlist" "'a set" |
+  nOR "'a normal_formula_exp" "'a normal_formula_exp" 
+
+primrec normal_form :: "'a set \<Rightarrow> 'a formula_exp \<Rightarrow> 'a normal_formula_exp" where
+"normal_form G tFalse = nFalse" |
+"normal_form G (tVar a) = nMinterm [a] (G - {a})" |
+"normal_form G (tOR A B) = nOR (normal_form G A) (normal_form G B)" |
+"normal_form G (tXB A B) = 
+  nOR 
+    (normal_form G (tNOT A)) 
+    (normal_form G (tNOT B))" 
+
+
+primrec tVar_number :: "'a list \<Rightarrow> 'a \<Rightarrow> nat option" where
+"tVar_number [] _ = None" |
+"tVar_number (g # gs) a = (
+  if a = g then (Some 1)
+  else (case (tVar_number gs a) of None \<Rightarrow> None | Some n \<Rightarrow> Some (n + 1))
+)"
+
+
+
+primrec formula_exp_number :: 
+  "'a dlist \<Rightarrow> 'a formula_exp \<Rightarrow> nat option" where
+"formula_exp_number gs tFalse = Some 0" |
+"formula_exp_number gs (tVar a) = tVar_number (list_of_dlist gs) a" |
+"formula_exp_number"
+
+inductive normal_formula_exp :: "'a set \<Rightarrow> 'a formula_exp \<Rightarrow> bool"
+  for G :: "'a set"
+where
+  "normal_formula_exp G tFalse" |
+  "normal_formula_exp G tTrue" |
+  [intro!]: "Dlist.set as \<subseteq> G \<Longrightarrow> 
+    normal_formula_exp G (mk_minterm (list_of_dlist as) G)" |
+  [intro!]: "normal_formula_exp G X \<Longrightarrow> normal_formula_exp G Y \<Longrightarrow>
+    normal_formula_exp G (tOR X Y)"
+
+
+
+
+
+datatype 'a leaf_node =
+  leaf_false |
+  leaf_unord "'a set" |
+  leaf_preserve "'a dlist" |
+  leaf_comb "'a leaf_node" "'a leaf_node"
+
 datatype 'a ifex = 
   ifex_const "'a dlist set" |
   ifex_if "'a ifex" "'a dlist set" "'a dlist set"
 
-primrec vals :: "'a formula_exp \<Rightarrow> 'a dlist set" where
-"vals tFalse = {}" |
-"vals (tVar a) = {Dlist [a]}" |
-"vals (tOR A B) = (vals A) \<union> (vals B)" |
-"vals (tAND A B) = (vals A) \<union> (vals B)" |
-"vals (tXB A B) = (vals A) \<union> (vals B)"
+
+primrec mk_leaf :: "'a leaf_node \<Rightarrow> 'a dlist \<Rightarrow> bool" where
+"mk_leaf leaf_false dl \<longleftrightarrow> False" |
+"mk_leaf (leaf_unord S) dl \<longleftrightarrow> S = Dlist.set dl" |
+"mk_leaf (leaf_preserve pr) dl \<longleftrightarrow> 
+  (Dlist.filter (\<lambda>x. x \<in> Dlist.set pr) dl) = pr " |
+"mk_leaf (leaf_comb L R) dl \<longleftrightarrow> 
+  (mk_leaf L dl) \<and> (mk_leaf R dl)"
+
+definition mk_leaf_value :: "'a leaf_node \<Rightarrow> 'a dlist set" where 
+"mk_leaf_value X = Collect (mk_leaf X)"
+
+primrec leaf_values :: "'a formula_exp \<Rightarrow> 'a leaf_node" where
+"leaf_values tFalse = leaf_false" |
+"leaf_values (tVar a) = leaf_unord {S}"
 
 primrec formula_exp_to_ifex :: "'a formula_exp \<Rightarrow> 'a ifex" where
 "formula_exp_to_ifex tFalse = ifex_const {}" |
-"formula_exp_to_ifex (tVar a) = ifex_const {Dlist [a]}" |
+"formula_exp_to_ifex (tVar a) = mk_leaf_value (leaf_unord {a})" |
 "formula_exp_to_ifex (tXB A B) = 
   ifex_if (formula_exp_to_ifex A) 
     (ifex_if (formula_exp_to_ifex B) (preserve (vals A) (vals B)) {}) {}"
@@ -64,18 +282,6 @@ where
   "X \<in> formulas_exp G \<Longrightarrow> Y \<in> formulas_exp G \<Longrightarrow> tXB X Y \<in> formulas_exp G" |
   "X \<in> formulas_exp G \<Longrightarrow> tNOT X \<in> formulas_exp G"
 
-definition remainder_complements :: "'a set \<Rightarrow> 'a formula_exp \<Rightarrow> 'a formula_exp" where
-  "remainder_complements G base = 
-    (Finite_Set.fold (\<lambda> x f\<^sub>2 . tAND (tNOT (tVar x)) f\<^sub>2) base G)"
-
-fun tXB_of_list :: "'a list \<Rightarrow> 'a formula_exp" where
-  "tXB_of_list [] = tNeutral" |
-  "tXB_of_list [a] = tVar a" |
-  "tXB_of_list (a # as) = tXB (tVar a) (tXB_of_list as)"
-
-fun mk_minterm :: "'a list \<Rightarrow> 'a set \<Rightarrow> 'a formula_exp" where
-  "mk_minterm [] G = tNeutral" |
-  "mk_minterm as G = remainder_complements (G - set as) (tXB_of_list as)"
 
 lemma unary_mk_minterm[simp]: "mk_minterm [g] {g} = tVar g"
 by (simp add: "mk_minterm.cases" remainder_complements_def )

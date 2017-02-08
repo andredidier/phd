@@ -64,6 +64,9 @@ class temporal_faults_algebra_equivs = temporal_faults_algebra_assoc +
   assumes inf_tempo3: "\<lbrakk>tempo3 a; tempo3 b\<rbrakk> \<Longrightarrow> tempo3 (inf a b)"
   assumes sup_tempo4: "\<lbrakk>tempo4 a; tempo4 b\<rbrakk> \<Longrightarrow> tempo4 (sup a b)"
 
+abbreviation tempo :: "'a::temporal_faults_algebra_equivs  \<Rightarrow> bool" where
+"tempo a \<equiv> tempo1 a \<and> tempo2 a \<and> tempo3 a \<and> tempo4 a"
+
 subsection {* \Ac{XBefore} transitivity *}
 
 class temporal_faults_algebra_trans = temporal_faults_algebra_equivs +
@@ -262,7 +265,15 @@ proof -
     using f13 f12 f10 by (metis (no_types) local.compl_inf local.compl_sup local.double_compl local.inf_compl_bot local.sup_assoc local.sup_inf_distrib1)
 qed
 
+corollary xbefore_sup_equiv_inf_inf_nand: 
+  "tempo a \<Longrightarrow> tempo b \<Longrightarrow> independent_events a b \<Longrightarrow> 
+  sup (sup (xbefore a b) (xbefore b a)) (uminus (inf a b)) = top"
+by (metis (mono_tags, lifting) boolean_algebra_class.sup_compl_top temporal_faults_algebra_equivs_class.xbefore_sup_equiv_inf)
+
+
+
 end
+
 
 end
 (*>*)

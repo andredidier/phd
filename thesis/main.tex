@@ -35,8 +35,8 @@
 \usepackage{textcomp}
 %Quantas vezes e em quais páginas a referência foi citada
 %\usepackage[english,hyperpageref]{backref}
-\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm,disable]{todonotes} % NOTAS
-\usepackage[final]{fixme}
+%\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm,disable]{todonotes} % NOTAS
+%\usepackage[final]{fixme}
 \usepackage{soul}
 
 \usepackage{indentfirst}
@@ -75,16 +75,16 @@
 %\makeatother
 
 %FIXME
-\fxsetup{layout={footnote}}
-%\fxuselayouts{pdfnote,margin}
-%\fxusetargetlayout{signature}
-\FXRegisterAuthor{ad}{alrd}{AD}
-\FXRegisterAuthor{am}{acm}{AM}
-\FXRegisterAuthor{as}{acas}{AS}
-%\fxuselayouts{pdfsignote,margin}
-%\newcommand{\todo}[1]{\adnote{#1}}
-%\newcommand{\note}[2][]{\adnote{#2}}
-%\newcommand{\listoftodos}[1]{\listoffixmes}
+%\fxsetup{layout={footnote}}
+%%\fxuselayouts{pdfnote,margin}
+%%\fxusetargetlayout{signature}
+%\FXRegisterAuthor{ad}{alrd}{AD}
+%\FXRegisterAuthor{am}{acm}{AM}
+%\FXRegisterAuthor{as}{acas}{AS}
+%%\fxuselayouts{pdfsignote,margin}
+%%\newcommand{\todo}[1]{\adnote{#1}}
+%%\newcommand{\note}[2][]{\adnote{#2}}
+%%\newcommand{\listoftodos}[1]{\listoffixmes}
 %%%%%%%%%%%%%%%%% NOTAS
 
 % alterando o aspecto da cor azul
@@ -421,8 +421,8 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\filterop{\ensuremath\mathrm{filter}}
 \newcommand{\filter}[2]{\ensuremath\filterop_{#1}\left(#2\right)}
 \newcommand{\denote}[1]{\ensuremath\left[\!\left[#1\right]\!\right]}
-\newcommand{\formulaof}[1]{\ensuremath\mathrm{formula}\left(~#1~\right)}
-\newcommand{\listformulaof}[1]{\ensuremath\mathrm{\text{l-formula}}\left(~#1~\right)}
+\newcommand{\formulaof}[2]{\ensuremath\mathrm{formula}_{#2}\left(~#1~\right)}
+\newcommand{\listformulaof}[2]{\ensuremath\mathrm{\text{l-formula}}_{#2}\left(~#1~\right)}
 \def\generators{\ensuremath\mathrm{Gen}}
 \def\permutationsop{\ensuremath\mathrm{permutations}}
 \newcommand{\permutations}[1]{\ensuremath\permutationsop\left(#1\right)}
@@ -455,6 +455,8 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \def\neutral{\ensuremath\mathrm{\mathbf{1}}}
 \newcommand{\logicInFormula}[1]{\ensuremath\mathtt{#1}}
 \newcommand{\cons}[2]{\ensuremath #1 ~\#~ #2}
+\newcommand{\syntactically}[2]{\ensuremath {#1}\vdash{#2}}
+\newcommand{\semantically}[2]{\ensuremath {#1}\models{#2}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \makeindex
@@ -606,7 +608,7 @@ Isabelle/HOL was used to mechanize the theorems proofs of the algebra of tempora
 
 \vspace{\onelineskip}
 \noindent
-\adnote{Adicionar MSC2010 06E25, 68M15, 68Q60, 93A30}
+%\adnote{Adicionar MSC2010 06E25, 68M15, 68Q60, 93A30}
 %\begin{keywords}
 \textbf{Keywords}: Simulink, CSP, FDR, Fault Tree Analysis, Temporal Fault Trees, Dynamic Fault Trees, Isabelle/HOL, Pandora, Fault Injection
 %\end{keywords},
@@ -682,10 +684,9 @@ Isabelle/HOL was used to mechanize the theorems proofs of the algebra of tempora
 
 \phantompart
 \printindex
-\adnote{Verify indexes again (search again for words already in the index)}
-\adnote{Add more indexes}
-\adnote{Run ``makeindex main'' on this directory}
+%TODO: ADD MORE INDEX
+%DO NOT FORGET TO RUN: makeindex main on this directory
 \cleardoublepage
 
-\listoftodos[TODOs]
+%\listoftodos[TODOs]
 \end{document}

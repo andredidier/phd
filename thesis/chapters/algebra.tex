@@ -1,12 +1,6 @@
  \chapter{A free algebra to express structure expressions of ordered events}
 \label{chap:algebra}
 
-\todo{De Augusto: ``Este capítulo é desnecessariamente conciso, principalmente por se tratar da contribuição. Seria importante, na versão final, ilustrar cada conceito e propriedade com exemplos.   
-Tem que destacar resultados importantes, como o fato da mecanização com Isabelle. Deveria ter uma seção ou um capítulo dedicado à mecanização, não incluindo tudo, obviamente, mas ilustrando um pequeno exemplo.''}
-
-\todo{Explain the interaction of (i) fault-injection, (ii) theorem proving, and (iii) symbolic execution.}
-\todo{dizer que nossa abordagem usa a abordagem similar à de expressões de estrutura, mas que tem o objetivo de dar uma semântica denotacional baseada em conjuntos}
-
 Recall from \cref{sec:time-relations,sec:fault-trees} that fault events are statistically independent of one another.
 The set-theoretical abstraction of structure expressions\index{structure expression} for \acp{SFT}~\cite[pp. VI-11]{VGR+1981} is very close to \iac{FBA}\index{Boolean Algebra!Free}, where each generator in \acp{FBA}\index{Boolean Algebra!Free} corresponds to a fault event symbol in \aclp{FT}.
 In \acp{FBA}\index{Boolean Algebra!Free}, as generators are ``free'', they are independent of one another and Boolean\index{Boolean Algebra} formulas are written as a set of sets of possibilities, which are similar to the structure expressions\index{structure expression} of \acp{SFT}.
@@ -290,7 +284,6 @@ Temporal properties give a more abstract and less restrictive shape on the \ac{X
 They are abbreviations that some operators satisfy altogether or individually.
 %These properties avoid the requirement that every operand of \ac{XBefore} should be a variable (\cref{def:var}).
 %The properties are: $\tempo[1]{}$ (\cref{def:tempo1}), $\tempo[2]{}$ (\cref{def:tempo2}), $\tempo[3]{}$ (\cref{def:tempo3}), and $\tempo[4]{}$ (\cref{def:tempo4}). 
-%\todo{Explain temporal properties with respect to Figure 1 about relation of events? At least make it clearer.}
 
 The first temporal property is about disjoint split.
 If the first part of a list is in a given set, then every remainder part is not.
@@ -362,7 +355,7 @@ zs \in \denote{S} \iff
 \sliceright{zs}{i} \in \denote{S} \lor \sliceleft{zs}{i} \in \denote{S}\label{def:tempo2}
 \end{equation}
 %
-For example, if a generator is in a list, then it must be at the beginning or at the end.
+For example, if a generator is in a list, then it must be in a prefix or in a suffix.
 If $\listsin{z_0,z_1,z_2,z_3,z_4} \in \denote{S}$, thus either $\listsin{z_0}\in\denote{S}$, or $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 If $\listsin{z_0} \notin \denote{S}$, thus $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 Then, either $\listsin{z_1} \in \denote{S}$ or $\listsin{z_2,z_3,z_4} \in \denote{S}$, and so forth.
@@ -405,7 +398,7 @@ j < i \implies \nonumber\\
 \right)\label{def:tempo3}
 \end{align}
 %
-For example, if $\listsin{z_1,z_2,z_3} \in \denote{S}$, then both $\listsin{z_0,z_1,z_2,z_3}$ and $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
+For example, if $\listsin{z_1,z_2,z_3} \in \denote{S}$, then both $\listsin{z_0,z_1,z_2,z_3} \in \denote{S}$ and $\listsin{z_1,z_2,z_3,z_4} \in \denote{S}$.
 For a variable $\var{z_1}$:
 %
 %\begin{definition}[\Tempotext 3, belongs to the middle of a sublist]
@@ -523,11 +516,11 @@ The following formulas are \emph{not} in \ac{DNF}:
 
 \begin{sloppypar}
 But to transform the last two formulas into \ac{DNF}, one can use \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:xbefore-inf-1,thm:xbefore-inf-2}, for instance.
-The \ac{DNF} is clearer with the mapping function from denotational semantics to a formula $\formulaof{.}$ presented in \cref{sec:algebras-soundness-and-completeness}.
+The \ac{DNF} is clearer with the mapping function from denotational semantics to a formula $\formulaof{.}{}$ presented in \cref{sec:algebras-soundness-and-completeness}.
 \end{sloppypar}
 
 We define events independence ($\independenteventsop$) as the property that one operand does not imply the other.
-For example, we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \lor \var{b}$ (it results in $\emptyset$, see \cref{thm:xbefore-not-idempotent}).
+For example, in some rules we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \lor \var{b}$ (it results in $\emptyset$, see \cref{thm:xbefore-not-idempotent}).
 %
 \begin{equation}
 \label{law:independent-events}
@@ -702,12 +695,12 @@ The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer i
 %
 %\tempo[2]{S} \implies S \inter \parsin{\xbefore{S}{T}} =& \xbefore{S}{T} &
 %  \text{left-inter-absorb}
-%  \label{thm:xbefore-inf-absorb-1}\todo{Prove this in Isabelle}\\
+%  \label{thm:xbefore-inf-absorb-1}
 %
 %
 %\tempo[2]{S} \implies S \inter \parsin{\xbefore{T}{S}} =& \xbefore{T}{S} &
 %  \text{right-inter-absorb}
-%  \label{thm:xbefore-inf-absorb-2}\todo{Prove this in Isabelle}
+%  \label{thm:xbefore-inf-absorb-2}
 \end{align}
 %\end{subequations}
 %
@@ -741,74 +734,59 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 \section{Soundness and completeness}
 \label{sec:algebras-soundness-and-completeness}
 
-A valuation of a formula is the instantiation of variable values using the syntax of the formula\todo{needs ref}.
-In Boolean expressions, a valuation is a mapping function that associates values $true$ or $false$ to each variable.
-The syntax of a formula is converted into \iac{BDD} to obtain the value of the formula.
-Such a value is obtained when the \ac{BDD} is traversed from the top variable.
-The leaf node contains the value of the formula for a given valuation.
-A function $\eval{f}{v}$ returns the value of the formula $f$ for the valuation $v$.
+We use type classes in Isabelle/HOL to describe the syntax and the axioms of \ac{algebra}.
+The instantiation of the class maps each syntactical element to a set of \distinctlists, including the operators of Boolean algebra and the \ac{XBefore} operator.
+Such an instantiation impose proof obligations for the type (the set of \distinctlists).
+With all proofs, Isabelle/HOL asserts that the declared type, the set of sets of \distinctlists (all possible semantics) is indeed \iac{algebra}.
+(Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---composing all classes later.)
+Thus, soundness is a direct consequence of such an instantiation.
 
-For \ac{algebra}, a valuation is a set of \distinctlists.
-Every formula is converted into a tree similar to \iac{BDD}. 
-Each leaf node assumes values $\emptyset$ ($false$) or a set of \distinctlists.
-If the set of \distinctlists in the leaf nodes is a subset of the valuation set, then the value of the formula is $true$ (it is $false$, otherwise).
-
-For example, the value for the formula $\var{a} \lor \left(\xbefore{\var{b}}{\var{c}}\right))$ and valuation $\left\{ \listsin{a} \right\}$ is $true$.
-It is also $true$ for valuation $\left\{\listsin{b,c}\right\}$, but it is $false$ for valuation $\left\{\listsin{b}, \listsin{c} \right\}$
-
-The soundness and completeness in \ac{algebra} are obtained as in traditional logic: using the valuations of a formula (syntax), and from the set of all formulas' representation (denotational semantics).
-
-Part of the function that maps a formula (syntax) to its denotational semantics is the function $\denote{.}$, shown in the beginning of this \lcnamecref{chap:algebra}.
-The complete mapping of $\denote{.}$ is:
+With the abstract class, Isabelle/HOL is able to prove syntactical formulas.
+For example, the following formula can be proved using term rewriting only:
 %
-\begin{align}
-\denote{\bot} = &~ \left\{\right\}\nonumber\\
+\begin{align*}
+& \xbefore{\var{a}}{\var{b}} \lor 
+	\xbefore{\var{b}}{\var{a}} \lor 
+	\lnot \left(\var{a} \land \var{b}\right)\nonumber\\
 %%%%%
-\denote{\top} = &~ \UNIV\nonumber\\
+= & \left(\var{a} \land \var{b}\right) \lor 
+	\lnot \left(\var{a} \land \var{b} \right) 
+	& \text{by \cref{thm:xbefore-sup-equiv-inf}}\nonumber\\
 %%%%%
-\denote{\neutral} = &~ \left\{\listsin{~} \right\}\nonumber\\
-%%%%%
-\denote{\var x} = &~ 
-	\left\{~ 
-		dl \bullet x \in \listset{dl}  
-	~\right\}\nonumber\\
-%%%%%
-\denote{X \lor Y} = &~ \denote{X} \union \denote{Y}\nonumber\\
-%%%%%
-\denote{X \land Y} = &~ \denote{X} \inter \denote{Y}\nonumber\\
-%%%%%
-\denote{\lnot X} = &~ - \denote{X}\nonumber\\
-%%%%%
-\denote{\xbefore{X}{Y}} = &~
-	\left\{~
-		dl ~\middle|~ \exists~ i ~\bullet~ \sliceright{dl}{i} \in \denote{X} \land \sliceleft{dl}{i} \in \denote{Y}
-	~\right\}
-\end{align}
+= & \top & \text{by Boolean law}
+\end{align*}
 
-\Ac{algebra} is sound if the semantics of two formulas is the same, provided they evaluate to the same value \emph{for every} valuation.
-
-\begin{proposition}[Soundness]
-Let $f_1$ and $f_2$ be formulas in \ac{algebra}, then:
+Thus, the type class of \ac{algebra} is able to show that:
+\[
+\denote{\xbefore{\var{a}}{\var{b}} \lor 
+	\xbefore{\var{b}}{\var{a}} \lor 
+	\lnot \left(\var{a} \land \var{b}\right)} = \UNIV
+\]
 %
-\begin{align}
-\left(\forall~v ~\bullet~ \eval{f_1}{v} = \eval{f_2}{v}\right) \implies \denote{f_1} = \denote{f_2}
-\end{align}
-\end{proposition}
-
-\Ac{algebra} is complete if the converse holds:
-if two formulas evaluate to the same value for every value valuation, provided their semantics is the same.
-
-\begin{proposition}[Completeness]
-Let $f_1$ and $f_2$ be formulas in \ac{algebra}, then:
+and also:
 %
-\begin{align}
-\denote{f_1} = \denote{f_2} \implies \left(\forall~v ~\bullet~ \eval{f_1}{v} = \eval{f_2}{v}\right)
-\end{align}
-\end{proposition}
+\[
+\denote{\xbefore{\var{a}}{\var{b}} \lor \xbefore{\var{b}}{\var{a}}} =
+\denote{\var{a} \land \var{b}}
+\]
+%
+where $\UNIV$ is the set of all \distinctlists.
 
-We are still investigating the evaluation function. 
-The tree structure required by such a function still needs to be defined.
-We found a ternary tree or a tree with special leaf nodes should solve it.
+For the soundness theorem states if a formula $f_1$ syntactically reduces to a formula $f_2$, then $f_1$ reduces semantically to $f_2$:
+%
+\begin{equation}
+\forall~ f_1, f_2 ~\bullet~ \syntactically{f_1}{f_2} \implies \semantically{f_1}{f_2}
+\end{equation}
+%
+
+Although Isabelle/HOL type class structure is able to syntactically reduce a formula, we need to create an explicit function for syntactical reduction to prove the soundness theorem.
+The semantic reduction, on the other hand, is guaranteed by the type class of \ac{algebra}, with sets (of \distinctlists) equivalence.
+
+
+The completeness theorem states if the semantics of a formula is equivalent to the semantics of $\top$, then it syntactically reduces to $\top$:
+\begin{equation}
+\forall~ f ~\bullet~ \semantically{f}{\top} \implies \syntactically{f}{top}
+\end{equation}
 
 \section{Qualitative and quantitative analyses}
 \label{sec:qualitative-quantitative-analyses}
@@ -872,7 +850,6 @@ The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs
 \end{align}
 %
 where $P_i$ is the cumulative probability function of fault $f_i$.
-\todo{ACM: deixar mais claro o que o cumulative probability function}
 
 For \ac{algebra}, our proposal for probability calculation is defined in terms of the probability of \ac{PAND} gates.
 The reason is that our semantics is defined in terms of a set of lists (or sequences) of fault occurrences.
