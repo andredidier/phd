@@ -125,9 +125,10 @@ Another future work is to relate \ac{algebra} with the algebras shown in~\cite{M
 It is important because we can benefit from their results.
 The main challenge is to define how to express simultaneity in \ac{algebra}, or, at least, how to map from \ac{algebra} to the other algebras.
 
-Contradiction and tautology are verified using a structural reduction. 
-For Boolean\index{Boolean algebra} algebras, \iac{BDD} is used.
-A ternary tree with special nodes seems to be a solution, but needs investigation.
+A syntactic reduction function is needed to prove soundness and completeness.
+Such a reduction function is also used to syntactically verify contradiction and tautology.
+We should create it explicitly or maybe we could reuse Isabelle/HOL's syntax.
+In any case, it needs further investigation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

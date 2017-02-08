@@ -736,7 +736,7 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 
 We use type classes in Isabelle/HOL to describe the syntax and the axioms of \ac{algebra}.
 The instantiation of the class maps each syntactical element to a set of \distinctlists, including the operators of Boolean algebra and the \ac{XBefore} operator.
-Each axiom is proved with the set of \distinctlists.
+Such an instantiation impose proof obligations for the type (the set of \distinctlists).
 With all proofs, Isabelle/HOL asserts that the declared type, the set of sets of \distinctlists (all possible semantics) is indeed \iac{algebra}.
 (Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---composing all classes later.)
 Thus, soundness is a direct consequence of such an instantiation.
@@ -772,49 +772,21 @@ and also:
 %
 where $\UNIV$ is the set of all \distinctlists.
 
-The completeness, on the other hand, needs a mapping function from a set of \distinctlists to a formula (for a set of generators $G$):
+For the soundness theorem states if a formula $f_1$ syntactically reduces to a formula $f_2$, then $f_1$ reduces semantically to $f_2$:
 %
-\begin{align}
-\formulaof{S}{G} =~ & 
-	\bigvee_{ls ~\in~ S} \left(
-	\listformulaof{ls}{G}
-	\land \bigwedge_{g ~\in~ G ~-~ \listset ls } \lnot \var{g}
-	\right)
-	\nonumber\\
-%%%%%
-\listformulaof{\emptylist}{G} =~ &\top\nonumber\\
-%%%%%
-\listformulaof{\listsin{a} }{G} =~ &\var{a}\nonumber\\
-%%%%%
-\listformulaof{\cons{a}{ls}}{G} =~ & \xbefore{\var{a}}{\listformulaof{ls}{G}} \nonumber	
-\end{align}
-
-For example:
-%%%%
-\begin{align}
-\formulaof{\left\{ \listsin{a,b}, \listsin{a} \right\}}{\left\{a,b\right\}} = &
-\xbefore{\var{a}}{\var{b}} ~\lor  
-	\left( \var{a} \land \lnot \var{b}  \right)\nonumber\\
-%%%%%
-\formulaof{\left\{ \listsin{a,b}, \listsin{a}, \listsin{b,a} \right\}}{\left\{a,b\right\}} = &
-\var{a}\nonumber\\
-%%%%%
-\formulaof{\left\{ \listsin{a,b}, \listsin{a} \right\}}{\left\{a,b,c\right\}} = &
-\xbefore{\var{a}}{\var{b}} \land \lnot \var{c} ~\lor \nonumber\\
-	&\left( \var{a} \land \lnot \var{b} \land \lnot \var{c} \right)
-\nonumber
-\end{align}
-
-Thus, the completeness theorem is:
 \begin{equation}
-\formulaof{\UNIV	}{G} = \top 
+\forall~ f_1, f_2 ~\bullet~ \syntactically{f_1}{f_2} \implies \semantically{f_1}{f_2}
 \end{equation}
 %
-where $\UNIV$ is the set of all \distinctlists with generators $G$.
-We have not yet proved the completeness theorem.
+
+Although Isabelle/HOL type class structure is able to syntactically reduce a formula, we need to create an explicit function for syntactical reduction to prove the soundness theorem.
+The semantic reduction, on the other hand, is guaranteed by the type class of \ac{algebra}, with sets (of \distinctlists) equivalence.
 
 
-
+The completeness theorem states if the semantics of a formula is equivalent to the semantics of $\top$, then it syntactically reduces to $\top$:
+\begin{equation}
+\forall~ f ~\bullet~ \semantically{f}{\top} \implies \syntactically{f}{top}
+\end{equation}
 
 \section{Qualitative and quantitative analyses}
 \label{sec:qualitative-quantitative-analyses}
