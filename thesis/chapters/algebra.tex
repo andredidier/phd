@@ -734,21 +734,21 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 \section{Soundness and completeness}
 \label{sec:algebras-soundness-and-completeness}
 
-We use type classes in Isabelle/HOL to describe the syntax (operators, also called \emph{parameters}) and the axioms (\emph{assumptions}) of \ac{algebra}.
+We use type classes in Isabelle/HOL to describe the language (operators, also called \emph{parameters}) and the axioms (\emph{assumptions}) of \ac{algebra}.
 %
-The instantiation of the type class maps each operator to a set of \distinctlists, including the operators of Boolean algebra and the \ac{XBefore} operator.
+Following our proposed denotational semantics, the instantiation of the type class maps each operator to a set of \distinctlists, including the operators of Boolean algebra and the \ac{XBefore} operator.
 %
 Such an instantiation requires proof obligations for the type (the set of \distinctlists), which we discharged.
 %
-With all proofs, Isabelle/HOL asserts that the declared type, the set of sets of \distinctlists (all possible semantics) is indeed \iac{algebra}\footnote{
+With all proofs, Isabelle/HOL asserts that the declared type (the set of sets of \distinctlists) is indeed \iac{algebra}\footnote{
 Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---composing all classes later.}.
 %
 For example, \cref{thm:xbefore-sup-equiv-inf} is defined in \ac{algebra} and is proved mapping each syntactical element to the denotational semantics (the set of \distinctlists).
 %
 Moreover, all \cref{thm:xbefore-inf-1,thm:xbefore-inf-2,thm:xbefore-sup-absorb-2,thm:xbefore-sup-absorb-1,thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2,thm:and_xbefore_equiv_or_xbefore_expanded,thm:xbefore_sup_compl_inf_absorb1} are theorems proved syntactically and inherited by the instantiation for set of sets of \distinctlists.
-Soundness in the concrete syntax of Isabelle/HOL is a direct consequence of such an instantiation.
+Soundness of the instantiation with respect to the type class assumptions is a direct consequence of such an instantiation.
 
-To illustrate, consider \cref{thm:xbefore-sup-equiv-inf}.
+To illustrate this built-in property, consider \cref{thm:xbefore-sup-equiv-inf}.
 The following formula can be proved directly in Isabelle/HOL using term rewriting only:
 %
 \begin{align*}
@@ -779,19 +779,20 @@ and also:
 %
 where $\UNIV$ is the set of all \distinctlists.
 
-To prove soundness in the abstract syntax of Isabelle/HOL, we declare a 
-datatype:
+All the above formulas are theorems on the semantics, but are proved using the assumptions declared on the type class hierarchy (Boolean and \ac{algebra}).
+
+To prove soundness explicitly (without relying on type classes), we declare a datatype:
 %
 \begin{verbatim}
 datatype 'a formula_syntax =
-	sFalse |
-	sVar 'a |
-	sNot 'a formula_syntax |
-	sAnd 'a formula_syntax 'a formula_syntax |
-	sXB 'a formula_syntax 'a formula_syntax
+    sFalse |
+    sVar 'a |
+    sNot 'a formula_syntax |
+    sAnd 'a formula_syntax 'a formula_syntax |
+    sXB 'a formula_syntax 'a formula_syntax
 \end{verbatim}
 
-The semantics of a formula in the abstract syntax is similar to what we show in this \lcnamecref{chap:algebra}:
+The semantics of a \verb|formula_syntax| is similar to what we show in this \lcnamecref{chap:algebra}:
 \begin{align}
 \semanticsof{sFalse} = & \bot \nonumber\\
 %%%%%
@@ -804,9 +805,9 @@ The semantics of a formula in the abstract syntax is similar to what we show in 
 \semanticsof{sXB~f_1~f_2} = & \xbefore{\semanticsof{f_1}}{\semanticsof{f_2}}\nonumber
 \end{align}
 
-Note that we mapped the semantics of a formula in the abstract syntax to the concrete syntax.
+Note that we mapped the semantics of a formula to the operators of Boolean algebra and \ac{algebra}.
 This is possible due to the locales and contexts in Isabelle/HOL.
-Type classes use both structures of locales and contexts, thus it allows to reuse the concrete syntax, as we show above.
+Type classes use both structures of locales and contexts, thus it allows to reuse the operators for sets of distinct lists, as we show above.
 
 %For the soundness theorem states if a formula $f_1$ syntactically reduces to a formula $f_2$, then $f_1$ reduces semantically to $f_2$:
 %%
@@ -825,8 +826,8 @@ Let $f$ be a formula in \ac{algebra} and $\Sigma$ be a set of simplification rul
 %
 \end{proposition}
 
-The syntactical application of rules can be defined in Isabelle/HOL as an inductive definition.
-Thus, if a formula is in ($\in$) such an inductive definition, then such a formula is provable.
+The syntactical application of the rules can be defined in Isabelle/HOL as an inductive definition.
+Thus, if a formula is in such an inductive definition, then such a formula is provable.
 We have not defined yet inductive definition for provable.
 On the semantics side (right hand side of \cref{prop:soundness}) we use the mapping function above, which have been proved for sets of \distinctlists.
 
