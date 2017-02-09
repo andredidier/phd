@@ -734,18 +734,22 @@ In what follows we show properties of \ac{XBefore} related to the \ac{NOT} opera
 \section{Soundness and completeness}
 \label{sec:algebras-soundness-and-completeness}
 
-We use type classes in Isabelle/HOL to describe the syntax and the axioms of \ac{algebra}.
-The instantiation of the type class maps each syntactical element to a set of \distinctlists, including the operators of Boolean algebra and the \ac{XBefore} operator.
-Such an instantiation imposes proof obligations for the type (the set of \distinctlists).
+We use type classes in Isabelle/HOL to describe the syntax (operators, also called \emph{parameters}) and the axioms (\emph{assumptions}) of \ac{algebra}.
+%
+The instantiation of the type class maps each operator to a set of \distinctlists, including the operators of Boolean algebra and the \ac{XBefore} operator.
+%
+Such an instantiation requires proof obligations for the type (the set of \distinctlists), which we discharged.
+%
 With all proofs, Isabelle/HOL asserts that the declared type, the set of sets of \distinctlists (all possible semantics) is indeed \iac{algebra}\footnote{
-Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---composing all classes later.}
+Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---composing all classes later.}.
+%
 For example, \cref{thm:xbefore-sup-equiv-inf} is defined in \ac{algebra} and is proved mapping each syntactical element to the denotational semantics (the set of \distinctlists).
-After mapping all axioms to the denotational semantics and proving them, the instance inherits the theorems of \ac{algebra}.
-Thus, all \cref{thm:xbefore-inf-1,thm:xbefore-inf-2,thm:xbefore-sup-absorb-2,thm:xbefore-sup-absorb-1,thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2,thm:and_xbefore_equiv_or_xbefore_expanded,thm:xbefore_sup_compl_inf_absorb1} are theorems proved syntactically and inhertied by the instantiation for set of sets of \distinctlists.
-Soundness is a direct consequence of such an instantiation.
+%
+Moreover, all \cref{thm:xbefore-inf-1,thm:xbefore-inf-2,thm:xbefore-sup-absorb-2,thm:xbefore-sup-absorb-1,thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2,thm:and_xbefore_equiv_or_xbefore_expanded,thm:xbefore_sup_compl_inf_absorb1} are theorems proved syntactically and inherited by the instantiation for set of sets of \distinctlists.
+Soundness in the concrete syntax of Isabelle/HOL is a direct consequence of such an instantiation.
 
 To illustrate, consider \cref{thm:xbefore-sup-equiv-inf}.
-The following formula can be proved using term rewriting only:
+The following formula can be proved directly in Isabelle/HOL using term rewriting only:
 %
 \begin{align*}
 & \xbefore{\var{a}}{\var{b}} \lor 
@@ -775,6 +779,35 @@ and also:
 %
 where $\UNIV$ is the set of all \distinctlists.
 
+To prove soundness in the abstract syntax of Isabelle/HOL, we declare a 
+datatype:
+%
+\begin{verbatim}
+datatype 'a formula_syntax =
+	sFalse |
+	sVar 'a |
+	sNot 'a formula_syntax |
+	sAnd 'a formula_syntax 'a formula_syntax |
+	sXB 'a formula_syntax 'a formula_syntax
+\end{verbatim}
+
+The semantics of a formula in the abstract syntax is similar to what we show in this \lcnamecref{chap:algebra}:
+\begin{align}
+\semanticsof{sFalse} = & \bot \nonumber\\
+%%%%%
+\semanticsof{sVar~a} = & \var{a} \nonumber\\
+%%%%%
+\semanticsof{sNot~f} = & - \semanticsof{f} \nonumber\\
+%%%%%
+\semanticsof{sAnd~f_1~f_2} = & \semanticsof{f_1} \land \semanticsof{f_2} \nonumber\\
+%%%%%
+\semanticsof{sXB~f_1~f_2} = & \xbefore{\semanticsof{f_1}}{\semanticsof{f_2}}\nonumber
+\end{align}
+
+Note that we mapped the semantics of a formula in the abstract syntax to the concrete syntax.
+This is possible due to the locales and contexts in Isabelle/HOL.
+Type classes use both structures of locales and contexts, thus it allows to reuse the concrete syntax, as we show above.
+
 %For the soundness theorem states if a formula $f_1$ syntactically reduces to a formula $f_2$, then $f_1$ reduces semantically to $f_2$:
 %%
 %\begin{equation}
@@ -782,39 +815,32 @@ where $\UNIV$ is the set of all \distinctlists.
 %\end{equation}
 %%
 
-\begin{Theo}[Soundness]
-Let $f_1$ and $f_2$ be formulas in \ac{algebra}, then:
+\begin{proposition}[Soundness]
+Let $f$ be a formula in \ac{algebra} and $\Sigma$ be a set of simplification rules of the syntax, then:
 %
 \begin{equation}
-\forall~ f_1, f_2 ~\bullet~ \syntactically{f_1}{f_2} \implies \semantically{f_1}{f_2}
+\forall~ f ~\bullet~ \syntactically{\Sigma}{f} \implies \semantically{\Sigma}{f}
+\label{prop:soundness}
 \end{equation}
 %
-\end{Theo}
-%
-\begin{proof}
-Direct consequence of the instantiation of the type class.
-\end{proof}
+\end{proposition}
 
-Although Isabelle/HOL type class structure is able to syntactically reduce a formula, we need to create an explicit function for syntactical reduction to prove the completeness theorem.
-The semantic reduction, on the other hand, is guaranteed by the type class of \ac{algebra}, with sets (of \distinctlists) equivalence.
+The syntactical application of rules can be defined in Isabelle/HOL as an inductive definition.
+Thus, if a formula is in ($\in$) such an inductive definition, then such a formula is provable.
+We have not defined yet inductive definition for provable.
+On the semantics side (right hand side of \cref{prop:soundness}) we use the mapping function above, which have been proved for sets of \distinctlists.
 
-\begin{Theo}[Completeness]
-Let $f$ be a formula in \ac{algebra}, thus:
+The semantic completeness is the converse of soundness:
+if a formula has the semantics of $\top$, then such a formula is provable (syntactically) for the set of rules $\Sigma$.
+
+\begin{proposition}[Completeness]
+Let $f$ be a formula in \ac{algebra} and $\Sigma$ be a set of simplification rules of the syntax, then:
 %
 \begin{equation}
-\forall~ f ~\bullet~ \semantically{f}{\top} \implies \syntactically{f}{\top}
+\forall~ f ~\bullet~ \semantically{\Sigma}{f} \implies \syntactically{\Sigma}{f}\label{prop:completeness}
 \end{equation}
 %
-\end{Theo}
-%
-\begin{proof}
-The proof depends on a syntactical reduction of a formula to prove the right side of the implication.
-We found no evidence that the type class proves completeness as it does for soundness.
-Thus, the right side of the implication needs and explicit function that applies the rules to find a reduction of $f$ to $\top$.
-So far, such a function is not implemented, but it should follow Boolean and \ac{algebra} laws.
-%%%TODO { [a,b]}_{a,b} = a -> b ||| { [a,b] }_{a,b,c} = not c and (a -> b)
-\end{proof}
-
+\end{proposition}
 
 \section{Qualitative and quantitative analyses}
 \label{sec:qualitative-quantitative-analyses}
