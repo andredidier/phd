@@ -14,6 +14,7 @@ imports
   "~~/src/HOL/Library/Sublist_Order" 
   "~~/src/HOL/Library/LaTeXsugar"
   "~~/src/HOL/Library/OptionalSugar"
+  "~~/src/HOL/Induct/PropLog"
 begin
 (*>*)
 
@@ -978,6 +979,7 @@ unfolding dlist_xbefore_append old_dlist_xbefore_def
 using dlist_tempo_1_no_gap_append
 by blast
 
+(*<*)
 subsection {* Soundness and completeness on the mapping rules*}
 
 theorem temporal_faults_algebra_mapping_soundness: 
@@ -987,6 +989,55 @@ by blast
 theorem temporal_faults_algebra_mapping_completeness: 
     "\<forall> (S::'a dlist set). \<exists> f::'a formula. Rep_formula f = S"
 using Abs_formula_inverse by auto
+(*>*)
+
+subsection {* Completeness *}
+
+datatype 'a formula_syntax =
+  sFalse | 
+  sVar 'a |
+  sNot "'a formula_syntax" |
+  sAnd "'a formula_syntax" "'a formula_syntax" |
+  sOr "'a formula_syntax" "'a formula_syntax" |
+  sXB "'a formula_syntax" "'a formula_syntax" 
+
+fun provable :: 
+  "'a formula_syntax pl set \<Rightarrow> 'a formula_syntax \<Rightarrow> bool" where
+"provable \<Sigma> sFalse = thms \<Sigma> false" |
+"provable \<Sigma> f = thms \<Sigma> (var f)"
+
+inductive_set formula_syntax_sigma :: 
+  "('a formula_syntax \<times> bool) set" ("f\<Sigma>") where
+false: "(sFalse, False) \<in> f\<Sigma>" |
+compl: "(A, True) \<in> f\<Sigma> \<Longrightarrow> (sNot A, False) \<in> f\<Sigma>" |
+and_commute: "(sAnd A B, True) \<in> f\<Sigma> \<Longrightarrow> (sAnd B A, True) \<in> f\<Sigma>" |
+or_commute: "(sOr A B, True) \<in> f\<Sigma> \<Longrightarrow> (sOr B A, True) \<in> f\<Sigma>" |
+and_first: "(sAnd A B, True) \<in> f\<Sigma> \<Longrightarrow> (A, True) \<in> f\<Sigma>"
+
+lemma and_second: "(sAnd A B, True) \<in> f\<Sigma> \<Longrightarrow> (B, True) \<in> f\<Sigma>"
+using formula_syntax_sigma.and_commute formula_syntax_sigma.and_first by blast
+
+
+primrec semantics_of :: "'a formula_syntax \<Rightarrow> 'a formula" where
+"semantics_of sFalse = bot" |
+"semantics_of (sVar a) = Abs_formula {dl. Dlist.member dl a}" |
+"semantics_of (sNot A) = - semantics_of A" |
+"semantics_of (sAnd A B) = inf (semantics_of A) (semantics_of B)" |
+"semantics_of (sOr A B) = sup (semantics_of A) (semantics_of B)" |
+"semantics_of (sXB A B) = xbefore (semantics_of A) (semantics_of B)"
+
+abbreviation true_formulas_syntax :: 
+  "('a formula_syntax \<times> bool) set \<Rightarrow> 'a formula_syntax pl set" where
+"true_formulas_syntax X = 
+  {   }"
+
+theorem "provable \<Sigma> f \<Longrightarrow> semantics_of f = top"
+apply (induct f, auto)
+
+sorry
+
+theorem "semantics_of f = top \<Longrightarrow> provable \<Sigma> f"
+sorry
 
 (*<*)
 end
