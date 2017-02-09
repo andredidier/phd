@@ -998,41 +998,80 @@ datatype 'a formula_syntax =
   sVar 'a |
   sNot "'a formula_syntax" |
   sAnd "'a formula_syntax" "'a formula_syntax" |
-  sOr "'a formula_syntax" "'a formula_syntax" |
   sXB "'a formula_syntax" "'a formula_syntax" 
 
-fun provable :: 
-  "'a formula_syntax pl set \<Rightarrow> 'a formula_syntax \<Rightarrow> bool" where
-"provable \<Sigma> sFalse = thms \<Sigma> false" |
-"provable \<Sigma> f = thms \<Sigma> (var f)"
+abbreviation sOr where "sOr A B \<equiv> sNot (sAnd (sNot A) (sNot B))"
 
-inductive_set formula_syntax_sigma :: 
-  "('a formula_syntax \<times> bool) set" ("f\<Sigma>") where
-false: "(sFalse, False) \<in> f\<Sigma>" |
-compl: "(A, True) \<in> f\<Sigma> \<Longrightarrow> (sNot A, False) \<in> f\<Sigma>" |
-and_commute: "(sAnd A B, True) \<in> f\<Sigma> \<Longrightarrow> (sAnd B A, True) \<in> f\<Sigma>" |
-or_commute: "(sOr A B, True) \<in> f\<Sigma> \<Longrightarrow> (sOr B A, True) \<in> f\<Sigma>" |
-and_first: "(sAnd A B, True) \<in> f\<Sigma> \<Longrightarrow> (A, True) \<in> f\<Sigma>"
+inductive rewrites_to :: 
+  "'a formula_syntax \<Rightarrow> 'a formula_syntax \<Rightarrow> bool" where
+trans: "rewrites_to f1 f2 \<Longrightarrow> rewrites_to f2 f3 \<Longrightarrow> rewrites_to f1 f3" |
+compl_compl[simp]: "rewrites_to (sNot (sNot f)) f" |
+and_commut: "rewrites_to (sAnd f1 f2) (sAnd f2 f1)" |
+or_commut: "rewrites_to (sOr f1 f2) (sOr f2 f1)" |
+or_taut[simp]: "rewrites_to (sOr f (sNot f)) (sNot sFalse)" |
+and_contr[simp]: "rewrites_to (sAnd f (sNot f)) sFalse"
 
-lemma and_second: "(sAnd A B, True) \<in> f\<Sigma> \<Longrightarrow> (B, True) \<in> f\<Sigma>"
-using formula_syntax_sigma.and_commute formula_syntax_sigma.and_first by blast
+lemma "rewrites_to (sOr (sNot (sAnd f1 f2)) (sAnd f1 f2)) (sNot sFalse)"
+using or_commut or_taut rewrites_to.trans by blast
+
+
+
+inductive provable :: "'a formula_syntax \<Rightarrow> bool \<Rightarrow> bool" where
+false: "provable sFalse False" |
+var: "provable (sVar a) False" |
+compl_right: "provable A False \<Longrightarrow> provable (sNot A) True" |
+compl_compl: "provable A True \<Longrightarrow> provable (sNot (sNot A)) True" |
+both_and: "provable A True \<and> provable B True \<Longrightarrow> 
+  provable (sAnd A B) True" |
+or_not: "provable (sOr A (sNot A)) True"
+
+
+lemma sFalse_not_provable[simp]: "provable sFalse True \<Longrightarrow> False"
+using provable.cases by blast
+
+lemma sVar_not_provable[simp]: "provable (sVar a) True \<Longrightarrow> False"
+using provable.cases by blast
+
+lemma true_provable[simp]: "provable (sNot sFalse) True"
+using compl_right false by auto
+
+lemma and_first_provable: "provable (sAnd A B) True \<Longrightarrow> provable A True"
+using provable.cases by auto
+
+lemma and_second_provable: "provable (sAnd A B) True \<Longrightarrow> provable B True"
+using provable.cases by auto
+
+lemma and_commute_provable: 
+  "provable (sAnd A B) True \<Longrightarrow> provable (sAnd B A) True"
+using and_first_provable and_second_provable both_and  by blast
+
+lemma provable_and_contradiction: 
+  "provable f True \<Longrightarrow> provable (sNot f) True \<Longrightarrow> False"
+
+apply (induct f)
+using sFalse_not_provable apply blast
+apply (meson sVar_not_provable)
+apply (smt formula_syntax.distinct(15) formula_syntax.distinct(3) formula_syntax.inject(2) provable.cases sVar_not_provable)
 
 
 primrec semantics_of :: "'a formula_syntax \<Rightarrow> 'a formula" where
 "semantics_of sFalse = bot" |
 "semantics_of (sVar a) = Abs_formula {dl. Dlist.member dl a}" |
-"semantics_of (sNot A) = - semantics_of A" |
-"semantics_of (sAnd A B) = inf (semantics_of A) (semantics_of B)" |
-"semantics_of (sOr A B) = sup (semantics_of A) (semantics_of B)" |
-"semantics_of (sXB A B) = xbefore (semantics_of A) (semantics_of B)"
+"semantics_of (sNot f) = - semantics_of f" |
+"semantics_of (sAnd f_1 f_2) = inf (semantics_of f_1) (semantics_of f_2)" |
+"semantics_of (sXB f_1 f_2) = 
+  xbefore (semantics_of f_1) (semantics_of f_2)"
 
-abbreviation true_formulas_syntax :: 
-  "('a formula_syntax \<times> bool) set \<Rightarrow> 'a formula_syntax pl set" where
-"true_formulas_syntax X = 
-  {   }"
+lemma minus_semantics_equiv: 
+  "- semantics_of f = top \<longleftrightarrow> semantics_of f = bot"
+using compl_eq_compl_iff by fastforce
 
-theorem "provable \<Sigma> f \<Longrightarrow> semantics_of f = top"
+theorem "provable f True \<Longrightarrow> semantics_of f = top"
 apply (induct f, auto)
+using sFalse_not_provable apply blast
+using provable.cases  apply blast
+using minus_semantics_equiv compl_left apply simp
+
 
 sorry
 
