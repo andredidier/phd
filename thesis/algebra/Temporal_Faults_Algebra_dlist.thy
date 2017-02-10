@@ -993,73 +993,127 @@ using Abs_formula_inverse by auto
 
 subsection {* Completeness *}
 
+subsubsection {* Syntax and Semantics *}
+
 datatype 'a formula_syntax =
   sFalse | 
+  sTrue |
   sVar 'a |
   sNot "'a formula_syntax" |
+  sOr "'a formula_syntax" "'a formula_syntax" |
   sAnd "'a formula_syntax" "'a formula_syntax" |
   sXB "'a formula_syntax" "'a formula_syntax" 
 
-abbreviation sOr where "sOr A B \<equiv> sNot (sAnd (sNot A) (sNot B))"
-abbreviation sTrue where "sTrue \<equiv> sNot sFalse"
-
-inductive provable :: "'a formula_syntax \<Rightarrow> bool" where
-"provable (sNot sFalse)" |
-"provable (sOr f (sNot f))" |
-"provable f \<Longrightarrow> provable (sNot (sNot f))" |
-"provable f1 \<Longrightarrow> provable f2 \<Longrightarrow> provable (sAnd f1 f2)"
-
-lemma "provable (sOr (sNot f) f)"
-proof-
-  obtain g where "g = sNot f" by simp
-  hence "provable (sOr g (sNot g))" by (simp add: provable.intros(2)) 
-  hence "provable (sOr (sNot f) (sNot (sNot f)))" using \<open>g = sNot f\<close> by blast
-  thus ?thesis
-qed
-
- 
-
-inductive rewrites_to :: 
-  "'a formula_syntax \<Rightarrow> 'a formula_syntax \<Rightarrow> bool" where
-"rewrites_to sFalse sFalse" |
-trans: "rewrites_to f1 f2 \<Longrightarrow> rewrites_to f2 f3 \<Longrightarrow> rewrites_to f1 f3" |
-compl_compl[simp]: "rewrites_to (sNot (sNot f)) f" |
-and_commut: "rewrites_to (sAnd f1 f2) (sAnd f2 f1)" |
-or_commut: "rewrites_to (sOr f1 f2) (sOr f2 f1)" |
-or_taut[simp]: "rewrites_to (sOr f (sNot f)) (sNot sFalse)" |
-and_contr[simp]: "rewrites_to (sAnd f (sNot f)) sFalse" |
-xb_and[simp]: "rewrites_to 
-  (sOr 
-    (sXB (sVar a) (sVar b)) 
-    (sXB (sVar b) (sVar a))) 
-  (sAnd (sVar a) (sVar b))"
-
-lemma "rewrites_to sFalse (sNot sFalse) \<Longrightarrow> False"
-
-
 primrec semantics_of :: "'a formula_syntax \<Rightarrow> 'a formula" where
 "semantics_of sFalse = bot" |
+"semantics_of sTrue = top" |
 "semantics_of (sVar a) = Abs_formula {dl. Dlist.member dl a}" |
 "semantics_of (sNot f) = - semantics_of f" |
-"semantics_of (sAnd f_1 f_2) = inf (semantics_of f_1) (semantics_of f_2)" |
-"semantics_of (sXB f_1 f_2) = 
-  xbefore (semantics_of f_1) (semantics_of f_2)"
+"semantics_of (sAnd f1 f2) = 
+  inf (semantics_of f1) (semantics_of f2)" |
+"semantics_of (sOr f1 f2) = 
+  sup (semantics_of f1) (semantics_of f2)" |
+"semantics_of (sXB f1 f2) = 
+  xbefore (semantics_of f1) (semantics_of f2)"
 
 lemma minus_semantics_equiv: 
   "- semantics_of f = top \<longleftrightarrow> semantics_of f = bot"
 using compl_eq_compl_iff by fastforce
 
-theorem "rewrites_to f (sNot sFalse) \<Longrightarrow> semantics_of f = top"
+subsubsection {* Soundness *}
+
+
+
+primrec tautology :: "'a formula_syntax \<Rightarrow> bool \<Rightarrow> bool" where
+"tautology sFalse _ = False" |
+"tautology sTrue _ = True" |
+"tautology (sVar a) _ = False" |
+"tautology (sNot f) b = tautology f (\<not> b)" |
+"tautology (sAnd f1 f2) b = (b \<longrightarrow>  tautology f1 b \<and> tautology f2 b)" |
+"tautology (sXB f1 f2) b = 
+  (b \<longrightarrow> tautology (sXB f2 f1) False \<and> tautology (sAnd f1 f2) True)"
+
+
+theorem soundness: "tautology f True \<Longrightarrow> semantics_of f = top"
+by (induct f)
+
+subsubsection {* Reduce *}
+
+subsubsection {* Completeness *}
+
+theorem completeness: 
+  "semantics_of f \<in> { semantics_of fx | fx. fx \<in> \<Sigma>  } \<Longrightarrow> f \<in> \<Sigma>"
+apply (induct f, auto)
+
+inductive is_taut :: "'a formula_syntax \<Rightarrow> bool \<Rightarrow> bool" where
+true: "is_taut sTrue True" |
+false: "is_taut sFalse False" |
+compl: "is_taut f True \<Longrightarrow> is_taut (sNot f) False" |
+compl_compl: "is_taut f True \<Longrightarrow> is_taut (sNot (sNot f)) True" |
+sOr_taut: "is_taut (sOr f (sNot f)) True" |
+not_sVar_taut: "is_taut (sVar a) False" |
+sAnd_commute: "is_taut (sAnd f1 f2) x \<Longrightarrow> is_taut (sAnd f2 f1) x" |
+sOr_commute: "is_taut (sOr f1 f2) x \<Longrightarrow> is_taut (sOr f2 f1) x" |
+sOr_intro: "is_taut f1 True \<Longrightarrow> is_taut (sOr f1 f2) True" |
+sAnd_absorb: "is_taut (sAnd f1 f2) True \<Longrightarrow> is_taut f1 True" |
+sAnd_intro: 
+  "is_taut f1 True \<Longrightarrow> is_taut f2 True \<Longrightarrow> is_taut (sAnd f1 f2) True"
+
+lemma "is_taut sFalse True \<Longrightarrow> False"
+
+lemma sAnd_implies_sOr: 
+  "is_taut (sAnd f1 f2) True \<Longrightarrow> is_taut (sOr f1 f2) True"
+using sAnd_absorb sOr_intro by auto
+
+inductive provable :: "'a formula_syntax \<Rightarrow> bool" where
+true: "provable sTrue" |
+not_false: "provable (sNot sFalse)" |
+compl_compl: "provable f \<Longrightarrow> provable (sNot (sNot f))" |
+or_taut: "provable (sOr f (sNot f))" |
+and_commute: "provable (sAnd f1 f2) \<Longrightarrow> provable (sAnd f2 f1)" |
+or_commute: "provable (sOr f1 f2) \<Longrightarrow> provable (sOr f2 f1)" |
+and_implies_or: "provable (sAnd f1 f2) \<Longrightarrow> provable (sOr f1 f2)" |
+and_from_prem: "provable f1 \<Longrightarrow> provable f2 \<Longrightarrow> provable (sAnd f1 f2)" |
+or2_intro: "provable f1 \<Longrightarrow> provable (sOr f1 f2)" |
+and1_intro: "provable f1 \<Longrightarrow> provable (sAnd f1 f2) \<Longrightarrow> provable f2"
+
+lemma sFalse_not_provable[intro]: "provable sFalse \<Longrightarrow> False"
+
+using provable.cases by blast
+
+lemma sVar_not_provable[intro]: "provable (sVar a) \<Longrightarrow> False"
+using provable.cases by auto
+
+lemma sNot_sTrue_not_provable[intro]: 
+  "provable (sNot sTrue) \<Longrightarrow> False"
+using provable.cases by auto
+
+lemma "provable (sAnd f (sNot f)) \<Longrightarrow> False"
 apply (induct f)
 
-using sFalse_not_provable apply blast
-using provable.cases  apply blast
-using minus_semantics_equiv compl_left apply simp
+lemma sNot_contradiction[intro]:
+  "provable f \<Longrightarrow> provable (sNot f) \<Longrightarrow> False"
+apply (induct f, auto)
 
+theorem soundness: "provable f \<Longrightarrow> semantics_of f = top"
+proof (induct f)
+  have "provable sFalse \<Longrightarrow> False" by blast
+  thus "provable sFalse \<Longrightarrow> semantics_of sFalse = top" by simp
+  next
+  show "semantics_of sTrue = top" by simp
+  next
+  fix a::"'a"
+  have "provable (sVar a) \<Longrightarrow> False" by blast
+  thus "provable (sVar a) \<Longrightarrow> semantics_of (sVar a) = top" by simp
+  next
+  fix f::"'a formula_syntax"
+  have "provable f \<Longrightarrow> provable (sNot f) \<Longrightarrow> False"
+  assume "provable f" "semantics_of f = top" "provable (sNot f)"
+qed
 
 sorry
 
-theorem "semantics_of f = top \<Longrightarrow> provable \<Sigma> f"
+theorem completeness: "semantics_of f = top \<Longrightarrow> provable f"
 sorry
 
 (*<*)
