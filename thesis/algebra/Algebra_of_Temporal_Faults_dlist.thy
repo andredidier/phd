@@ -6,15 +6,10 @@ In the following we present the denotation semantics for \ac{algebra} in terms o
 *}
 
 (*<*)
-theory Temporal_Faults_Algebra_dlist
+theory Algebra_of_Temporal_Faults_dlist
 imports 
-  Temporal_Faults_Algebra Sliceable_dlist Dlist_finiteness Enum
+  Algebra_of_Temporal_Faults Sliceable_dlist Dlist_finiteness Enum
   "~~/src/HOL/Library/Dlist"
-  "~~/src/HOL/Library/Permutation" 
-  "~~/src/HOL/Library/Sublist_Order" 
-  "~~/src/HOL/Library/LaTeXsugar"
-  "~~/src/HOL/Library/OptionalSugar"
-  "~~/src/HOL/Induct/PropLog"
 begin
 (*>*)
 
@@ -720,7 +715,7 @@ In the following we prove that a formula is a valid type instantiation for all \
 
 subsubsection {* Basic properties of \ac{algebra} *}
 
-instantiation formula :: (type) temporal_faults_algebra_basic
+instantiation formula :: (type) algebra_of_temporal_faults_basic
 begin
 
 definition
@@ -818,7 +813,7 @@ end
 
 subsubsection {* Associativity of \ac{algebra} *}
 
-instantiation formula :: (type) temporal_faults_algebra_assoc
+instantiation formula :: (type) algebra_of_temporal_faults_assoc
 begin
 
 instance proof
@@ -834,7 +829,7 @@ end
 
 subsubsection {* Equivalences in \ac{algebra} *}
 
-instantiation formula :: (type) temporal_faults_algebra_equivs
+instantiation formula :: (type) algebra_of_temporal_faults_equivs
 begin
 
 definition 
@@ -891,7 +886,7 @@ end
 
 subsubsection {* Transitivity in \ac{algebra} *}
 
-instantiation formula :: (type) temporal_faults_algebra_trans
+instantiation formula :: (type) algebra_of_temporal_faults_trans
 begin
 instance proof
   fix a::"'a formula" and b::"'a formula" and c::"'a formula"
@@ -913,7 +908,7 @@ end
 
 subsubsection {* Mixed operators in \ac{algebra} *}
 
-instantiation formula :: (type) temporal_faults_algebra_mixed_ops
+instantiation formula :: (type) algebra_of_temporal_faults_mixed_ops
 begin
 instance proof
   fix a::"'a formula" and b::"'a formula" and c::"'a formula"
@@ -982,139 +977,15 @@ by blast
 (*<*)
 subsection {* Soundness and completeness on the mapping rules*}
 
-theorem temporal_faults_algebra_mapping_soundness: 
+theorem algebra_of_temporal_faults_mapping_soundness: 
     "\<forall> (f\<^sub>1::'a formula) (f\<^sub>2::'a formula). \<exists> S. ((Rep_formula f\<^sub>1 = S \<and> Rep_formula f\<^sub>2 = S) \<longleftrightarrow> f\<^sub>1 = f\<^sub>2)"
 by blast
 
-theorem temporal_faults_algebra_mapping_completeness: 
+theorem algebra_of_temporal_faults_mapping_completeness: 
     "\<forall> (S::'a dlist set). \<exists> f::'a formula. Rep_formula f = S"
 using Abs_formula_inverse by auto
 (*>*)
 
-subsection {* Completeness *}
-
-subsubsection {* Syntax and Semantics *}
-
-datatype 'a formula_syntax =
-  sFalse | 
-  sTrue |
-  sVar 'a |
-  sNot "'a formula_syntax" |
-  sOr "'a formula_syntax" "'a formula_syntax" |
-  sAnd "'a formula_syntax" "'a formula_syntax" |
-  sXB "'a formula_syntax" "'a formula_syntax" 
-
-primrec semantics_of :: "'a formula_syntax \<Rightarrow> 'a formula" where
-"semantics_of sFalse = bot" |
-"semantics_of sTrue = top" |
-"semantics_of (sVar a) = Abs_formula {dl. Dlist.member dl a}" |
-"semantics_of (sNot f) = - semantics_of f" |
-"semantics_of (sAnd f1 f2) = 
-  inf (semantics_of f1) (semantics_of f2)" |
-"semantics_of (sOr f1 f2) = 
-  sup (semantics_of f1) (semantics_of f2)" |
-"semantics_of (sXB f1 f2) = 
-  xbefore (semantics_of f1) (semantics_of f2)"
-
-lemma minus_semantics_equiv: 
-  "- semantics_of f = top \<longleftrightarrow> semantics_of f = bot"
-using compl_eq_compl_iff by fastforce
-
-subsubsection {* Soundness *}
-
-
-
-primrec tautology :: "'a formula_syntax \<Rightarrow> bool \<Rightarrow> bool" where
-"tautology sFalse _ = False" |
-"tautology sTrue _ = True" |
-"tautology (sVar a) _ = False" |
-"tautology (sNot f) b = tautology f (\<not> b)" |
-"tautology (sAnd f1 f2) b = (b \<longrightarrow>  tautology f1 b \<and> tautology f2 b)" |
-"tautology (sXB f1 f2) b = 
-  (b \<longrightarrow> tautology (sXB f2 f1) False \<and> tautology (sAnd f1 f2) True)"
-
-
-theorem soundness: "tautology f True \<Longrightarrow> semantics_of f = top"
-by (induct f)
-
-subsubsection {* Reduce *}
-
-subsubsection {* Completeness *}
-
-theorem completeness: 
-  "semantics_of f \<in> { semantics_of fx | fx. fx \<in> \<Sigma>  } \<Longrightarrow> f \<in> \<Sigma>"
-apply (induct f, auto)
-
-inductive is_taut :: "'a formula_syntax \<Rightarrow> bool \<Rightarrow> bool" where
-true: "is_taut sTrue True" |
-false: "is_taut sFalse False" |
-compl: "is_taut f True \<Longrightarrow> is_taut (sNot f) False" |
-compl_compl: "is_taut f True \<Longrightarrow> is_taut (sNot (sNot f)) True" |
-sOr_taut: "is_taut (sOr f (sNot f)) True" |
-not_sVar_taut: "is_taut (sVar a) False" |
-sAnd_commute: "is_taut (sAnd f1 f2) x \<Longrightarrow> is_taut (sAnd f2 f1) x" |
-sOr_commute: "is_taut (sOr f1 f2) x \<Longrightarrow> is_taut (sOr f2 f1) x" |
-sOr_intro: "is_taut f1 True \<Longrightarrow> is_taut (sOr f1 f2) True" |
-sAnd_absorb: "is_taut (sAnd f1 f2) True \<Longrightarrow> is_taut f1 True" |
-sAnd_intro: 
-  "is_taut f1 True \<Longrightarrow> is_taut f2 True \<Longrightarrow> is_taut (sAnd f1 f2) True"
-
-lemma "is_taut sFalse True \<Longrightarrow> False"
-
-lemma sAnd_implies_sOr: 
-  "is_taut (sAnd f1 f2) True \<Longrightarrow> is_taut (sOr f1 f2) True"
-using sAnd_absorb sOr_intro by auto
-
-inductive provable :: "'a formula_syntax \<Rightarrow> bool" where
-true: "provable sTrue" |
-not_false: "provable (sNot sFalse)" |
-compl_compl: "provable f \<Longrightarrow> provable (sNot (sNot f))" |
-or_taut: "provable (sOr f (sNot f))" |
-and_commute: "provable (sAnd f1 f2) \<Longrightarrow> provable (sAnd f2 f1)" |
-or_commute: "provable (sOr f1 f2) \<Longrightarrow> provable (sOr f2 f1)" |
-and_implies_or: "provable (sAnd f1 f2) \<Longrightarrow> provable (sOr f1 f2)" |
-and_from_prem: "provable f1 \<Longrightarrow> provable f2 \<Longrightarrow> provable (sAnd f1 f2)" |
-or2_intro: "provable f1 \<Longrightarrow> provable (sOr f1 f2)" |
-and1_intro: "provable f1 \<Longrightarrow> provable (sAnd f1 f2) \<Longrightarrow> provable f2"
-
-lemma sFalse_not_provable[intro]: "provable sFalse \<Longrightarrow> False"
-
-using provable.cases by blast
-
-lemma sVar_not_provable[intro]: "provable (sVar a) \<Longrightarrow> False"
-using provable.cases by auto
-
-lemma sNot_sTrue_not_provable[intro]: 
-  "provable (sNot sTrue) \<Longrightarrow> False"
-using provable.cases by auto
-
-lemma "provable (sAnd f (sNot f)) \<Longrightarrow> False"
-apply (induct f)
-
-lemma sNot_contradiction[intro]:
-  "provable f \<Longrightarrow> provable (sNot f) \<Longrightarrow> False"
-apply (induct f, auto)
-
-theorem soundness: "provable f \<Longrightarrow> semantics_of f = top"
-proof (induct f)
-  have "provable sFalse \<Longrightarrow> False" by blast
-  thus "provable sFalse \<Longrightarrow> semantics_of sFalse = top" by simp
-  next
-  show "semantics_of sTrue = top" by simp
-  next
-  fix a::"'a"
-  have "provable (sVar a) \<Longrightarrow> False" by blast
-  thus "provable (sVar a) \<Longrightarrow> semantics_of (sVar a) = top" by simp
-  next
-  fix f::"'a formula_syntax"
-  have "provable f \<Longrightarrow> provable (sNot f) \<Longrightarrow> False"
-  assume "provable f" "semantics_of f = top" "provable (sNot f)"
-qed
-
-sorry
-
-theorem completeness: "semantics_of f = top \<Longrightarrow> provable f"
-sorry
 
 (*<*)
 end

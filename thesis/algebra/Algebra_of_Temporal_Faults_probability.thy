@@ -1,4 +1,4 @@
-theory Temporal_Faults_Algebra_probability
+theory Algebra_of_Temporal_Faults_probability
 imports Complex_Main
 begin
 

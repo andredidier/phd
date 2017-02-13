@@ -1,8 +1,197 @@
-theory Temporal_Faults_Algebra_syntax
+theory Algebra_of_Temporal_Faults_syntax
 
-imports Temporal_Faults_Algebra_dlist
+imports Algebra_of_Temporal_Faults_dlist
 
 begin
+subsection {* Explicit syntax *}
+
+datatype 'a formula_syntax =
+  sFalse | 
+  sTrue |
+  sVar 'a |
+  sNot "'a formula_syntax" |
+  sOr "'a formula_syntax" "'a formula_syntax" |
+  sAnd "'a formula_syntax" "'a formula_syntax" |
+  sXB "'a formula_syntax" "'a formula_syntax" 
+
+primrec semantics_of :: "'a formula_syntax \<Rightarrow> 'a formula" where
+"semantics_of sFalse = bot" |
+"semantics_of sTrue = top" |
+"semantics_of (sVar a) = Abs_formula {dl. Dlist.member dl a}" |
+"semantics_of (sNot f) = - semantics_of f" |
+"semantics_of (sAnd f1 f2) = 
+  inf (semantics_of f1) (semantics_of f2)" |
+"semantics_of (sOr f1 f2) = 
+  sup (semantics_of f1) (semantics_of f2)" |
+"semantics_of (sXB f1 f2) = 
+  xbefore (semantics_of f1) (semantics_of f2)"
+
+definition var:: "'a \<Rightarrow> 'a formula" where
+"var a = Abs_formula { ds. Dlist.member ds a }"
+
+lemma tempo_var[intro!]: 
+  "tempo (var a)"
+unfolding var_def tempo1_formula_def tempo2_formula_def tempo3_formula_def tempo4_formula_def
+by (simp add: Abs_formula_inverse dlist_tempo1_member dlist_tempo2_member dlist_tempo3_member dlist_tempo4_member)
+
+subsection {* Soundness *}
+
+inductive reduceable :: "'a formula_syntax \<Rightarrow> 'a formula_syntax \<Rightarrow> bool"
+where
+sNot_sFalse: "reduceable (sNot sFalse) sTrue" |
+sNot_sTrue: "reduceable (sNot sTrue) sFalse" |
+double_sNot: "reduceable (sNot (sNot f)) f" |
+reduce_sOr_sNot: 
+  "reduceable (sOr f (sNot f)) sTrue"
+
+fun reduce :: "'a formula_syntax \<Rightarrow> 'a formula_syntax \<Rightarrow> bool" where
+"reduce (sOr f1 f2) f = reduceable (sOr (reduce f1) (reduce f2))" |
+"reduce (sAnd f1 f2) = reduceable (sAnd (reduce f1) (reduce f2))" |
+"reduce (sXB f1 f2) = reduceable (sXB (reduce f1) (reduce f2))" |
+"reduce f = reduceable f" 
+
+lemma reduce_sOr_sNot2: "reduce (sOr (sNot f) f) sTrue"
+proof-
+  obtain f2 where 0: "f2 = sNot f" by simp
+  hence "reduce (sOr f2 (sNot f2)) sTrue" 
+    using reduce_sOr_sNot by simp
+  hence "reduce (sOr (sNot f) (sNot (sNot f))) sTrue"
+    using "0" by blast 
+  thus ?thesis using double_sNot 
+qed
+
+inductive tautology :: "'a formula_syntax \<Rightarrow> bool" where
+base: "tautology sTrue" |
+double_sNot: "tautology f \<Longrightarrow> tautology (sNot (sNot f))" |
+sOr_sNot: "tautology (sOr f (sNot f))"
+
+lemma sFalse_not_tautology[simp]: "tautology sFalse \<Longrightarrow> False"
+using tautology.cases by blast
+
+lemma sVar_not_tautology[simp]: "tautology (sVar a) \<Longrightarrow> False"
+using tautology.cases by blast
+
+lemma sNot_tautology: 
+  "tautology f \<Longrightarrow> tautology (sNot f) \<Longrightarrow> False"
+apply (induct f)
+using sFalse_not_tautology apply blast
+
+
+lemma 
+  "sup 
+    (xbefore (var a) (sup (var b) (var c))) 
+    (inf (- (xbefore (var a) (var b))) (- (xbefore (var a) (var c)))) = top"
+proof-
+  have "tempo (var a)" "tempo (var b)" "tempo (var c)"
+  by auto
+  hence "xbefore (var a) (sup (var b) (var c)) = 
+    sup (xbefore (var a) (var b)) (xbefore (var a) (var c))"
+    using xbefore_sup_2 by blast
+  thus ?thesis
+    by (metis compl_sup sup_compl_top) 
+qed
+
+
+subsection {* Completeness *}
+
+subsubsection {* Syntax and Semantics *}
+
+lemma minus_semantics_equiv: 
+  "- semantics_of f = top \<longleftrightarrow> semantics_of f = bot"
+using compl_eq_compl_iff by fastforce
+
+
+primrec tautology :: "'a formula_syntax \<Rightarrow> bool \<Rightarrow> bool" where
+"tautology sFalse _ = False" |
+"tautology sTrue _ = True" |
+"tautology (sVar a) _ = False" |
+"tautology (sNot f) b = tautology f (\<not> b)" |
+"tautology (sAnd f1 f2) b = (b \<longrightarrow>  tautology f1 b \<and> tautology f2 b)" |
+"tautology (sXB f1 f2) b = 
+  (b \<longrightarrow> tautology (sXB f2 f1) False \<and> tautology (sAnd f1 f2) True)"
+
+
+theorem soundness: "tautology f True \<Longrightarrow> semantics_of f = top"
+by (induct f)
+
+subsubsection {* Reduce *}
+
+subsubsection {* Completeness *}
+
+theorem completeness: 
+  "semantics_of f \<in> { semantics_of fx | fx. fx \<in> \<Sigma>  } \<Longrightarrow> f \<in> \<Sigma>"
+apply (induct f, auto)
+
+inductive is_taut :: "'a formula_syntax \<Rightarrow> bool \<Rightarrow> bool" where
+true: "is_taut sTrue True" |
+false: "is_taut sFalse False" |
+compl: "is_taut f True \<Longrightarrow> is_taut (sNot f) False" |
+compl_compl: "is_taut f True \<Longrightarrow> is_taut (sNot (sNot f)) True" |
+sOr_taut: "is_taut (sOr f (sNot f)) True" |
+not_sVar_taut: "is_taut (sVar a) False" |
+sAnd_commute: "is_taut (sAnd f1 f2) x \<Longrightarrow> is_taut (sAnd f2 f1) x" |
+sOr_commute: "is_taut (sOr f1 f2) x \<Longrightarrow> is_taut (sOr f2 f1) x" |
+sOr_intro: "is_taut f1 True \<Longrightarrow> is_taut (sOr f1 f2) True" |
+sAnd_absorb: "is_taut (sAnd f1 f2) True \<Longrightarrow> is_taut f1 True" |
+sAnd_intro: 
+  "is_taut f1 True \<Longrightarrow> is_taut f2 True \<Longrightarrow> is_taut (sAnd f1 f2) True"
+
+lemma "is_taut sFalse True \<Longrightarrow> False"
+
+lemma sAnd_implies_sOr: 
+  "is_taut (sAnd f1 f2) True \<Longrightarrow> is_taut (sOr f1 f2) True"
+using sAnd_absorb sOr_intro by auto
+
+inductive provable :: "'a formula_syntax \<Rightarrow> bool" where
+true: "provable sTrue" |
+not_false: "provable (sNot sFalse)" |
+compl_compl: "provable f \<Longrightarrow> provable (sNot (sNot f))" |
+or_taut: "provable (sOr f (sNot f))" |
+and_commute: "provable (sAnd f1 f2) \<Longrightarrow> provable (sAnd f2 f1)" |
+or_commute: "provable (sOr f1 f2) \<Longrightarrow> provable (sOr f2 f1)" |
+and_implies_or: "provable (sAnd f1 f2) \<Longrightarrow> provable (sOr f1 f2)" |
+and_from_prem: "provable f1 \<Longrightarrow> provable f2 \<Longrightarrow> provable (sAnd f1 f2)" |
+or2_intro: "provable f1 \<Longrightarrow> provable (sOr f1 f2)" |
+and1_intro: "provable f1 \<Longrightarrow> provable (sAnd f1 f2) \<Longrightarrow> provable f2"
+
+lemma sFalse_not_provable[intro]: "provable sFalse \<Longrightarrow> False"
+
+using provable.cases by blast
+
+lemma sVar_not_provable[intro]: "provable (sVar a) \<Longrightarrow> False"
+using provable.cases by auto
+
+lemma sNot_sTrue_not_provable[intro]: 
+  "provable (sNot sTrue) \<Longrightarrow> False"
+using provable.cases by auto
+
+lemma "provable (sAnd f (sNot f)) \<Longrightarrow> False"
+apply (induct f)
+
+lemma sNot_contradiction[intro]:
+  "provable f \<Longrightarrow> provable (sNot f) \<Longrightarrow> False"
+apply (induct f, auto)
+
+theorem soundness: "provable f \<Longrightarrow> semantics_of f = top"
+proof (induct f)
+  have "provable sFalse \<Longrightarrow> False" by blast
+  thus "provable sFalse \<Longrightarrow> semantics_of sFalse = top" by simp
+  next
+  show "semantics_of sTrue = top" by simp
+  next
+  fix a::"'a"
+  have "provable (sVar a) \<Longrightarrow> False" by blast
+  thus "provable (sVar a) \<Longrightarrow> semantics_of (sVar a) = top" by simp
+  next
+  fix f::"'a formula_syntax"
+  have "provable f \<Longrightarrow> provable (sNot f) \<Longrightarrow> False"
+  assume "provable f" "semantics_of f = top" "provable (sNot f)"
+qed
+
+sorry
+
+theorem completeness: "semantics_of f = top \<Longrightarrow> provable f"
+sorry
 
 subsection {* Syntax for the Algebra of Temporal Faults *}
 
