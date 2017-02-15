@@ -1,20 +1,12 @@
-theory Algebra_of_Temporal_Faults_syntax
-
-imports 
-  Algebra_of_Temporal_Faults_dlist
-  "~~/src/HOL/Library/FSet"
-  "../Abstract_Completeness/Abstract_Completeness"
-  "../Abstract_Soundness/Finite_Proof_Soundness"
-
+(*<*)
+theory Propositional_Logic
+imports Abstract_Completeness
 begin
-subsection {* Explicit syntax *}
+(*>*)
 
 section {* Toy instantiation: Propositional Logic *}
 
-datatype formula_syntax = 
-  Atom nat | 
-  Neg formula_syntax | 
-  Conj formula_syntax formula_syntax
+datatype fmla = Atom nat | Neg fmla | Conj fmla fmla
 
 primrec max_depth where
   "max_depth (Atom _) = 0"
@@ -74,26 +66,26 @@ corollary extendLevel:
   by (rule extendLevel_Nsteps) (auto simp: sset_atoms sset_depth1)
 
 
-definition "formulas_syntax = sinterleave atoms (smerge (smap snd (siterate extendLevel (atoms, depth1))))"
+definition "fmlas = sinterleave atoms (smerge (smap snd (siterate extendLevel (atoms, depth1))))"
 
-lemma formulas_syntax_UNIV: "sset formulas_syntax = (UNIV :: formula_syntax set)"
+lemma fmlas_UNIV: "sset fmlas = (UNIV :: fmla set)"
 proof (intro equalityI subsetI UNIV_I)
   fix \<phi>
-  show "\<phi> \<in> sset formulas_syntax"
+  show "\<phi> \<in> sset fmlas"
   proof (cases "max_depth \<phi>")
-    case 0 thus ?thesis unfolding formulas_syntax_def sset_sinterleave stream.set_map
+    case 0 thus ?thesis unfolding fmlas_def sset_sinterleave stream.set_map
       by (intro UnI1) (auto simp: max_depth_0)
   next
     case (Suc m) thus ?thesis using extendLevel[of m]
-    unfolding formulas_syntax_def sset_smerge sset_siterate sset_sinterleave stream.set_map
+    unfolding fmlas_def sset_smerge sset_siterate sset_sinterleave stream.set_map
       by (intro UnI2) (auto, metis (mono_tags) mem_Collect_eq)
   qed
 qed
 
-datatype rule = Idle | Ax nat | NegL formula_syntax | NegR formula_syntax | ConjL formula_syntax formula_syntax | ConjR formula_syntax formula_syntax
+datatype rule = Idle | Ax nat | NegL fmla | NegR fmla | ConjL fmla fmla | ConjR fmla fmla
 
-abbreviation "mkRules f \<equiv> smap f formulas_syntax"
-abbreviation "mkRulePairs f \<equiv> smap (case_prod f) (sproduct formulas_syntax formulas_syntax)"
+abbreviation "mkRules f \<equiv> smap f fmlas"
+abbreviation "mkRulePairs f \<equiv> smap (case_prod f) (sproduct fmlas fmlas)"
 
 definition rules where
   "rules = Idle ## 
@@ -102,9 +94,9 @@ definition rules where
 
 lemma rules_UNIV: "sset rules = (UNIV :: rule set)"
   unfolding rules_def by (auto simp: sset_sinterleave sset_sproduct stream.set_map
-    formulas_syntax_UNIV image_iff) (metis rule.exhaust)
+    fmlas_UNIV image_iff) (metis rule.exhaust)
 
-type_synonym state = "formula_syntax fset * formula_syntax fset"
+type_synonym state = "fmla fset * fmla fset"
 
 fun eff' :: "rule \<Rightarrow> state \<Rightarrow> state fset option" where
   "eff' Idle (\<Gamma>, \<Delta>) = Some {|(\<Gamma>, \<Delta>)|}"
@@ -144,13 +136,6 @@ proof (unfold_locales, unfold enabled_def per_def rules_UNIV, clarsimp)
   then show "\<exists>sl. eff' r (\<Gamma>', \<Delta>') = Some sl"
     by (cases r r' rule: rule.exhaust[case_product rule.exhaust]) (auto split: if_splits)
 qed
-
-fun formula_sat :: "nat dlist set \<Rightarrow> state \<Rightarrow> bool" where
-"formula_sat f (\<Gamma>, \<Delta>) = True"
-
-interpretation Soundness 
-  "\<lambda> r s ss. eff' r s = Some ss" rules "(UNIV::nat dlist set set)" formula_sat
-by (unfold_locales, clarsimp)
 
 definition "rho \<equiv> i.fenum rules"
 definition "propTree \<equiv> i.mkTree eff' rho"

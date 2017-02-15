@@ -218,16 +218,6 @@ proof-
       xbefore_inf_2 xbefore_assoc)
   thus ?thesis by (simp add: sup.assoc)
 qed
-
-corollary inf_xbefore_equiv_sups_xbefore_1:
-  "independent_events a b \<Longrightarrow> independent_events a c  \<Longrightarrow> 
-  \<lbrakk>tempo1 a; tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo2 a; tempo2 b; tempo2 c\<rbrakk> \<Longrightarrow> 
-  \<lbrakk>tempo3 a; tempo3 b; tempo3 c\<rbrakk> \<Longrightarrow> \<lbrakk>tempo4 a; tempo4 b; tempo4 c\<rbrakk> \<Longrightarrow>
-  inf a (xbefore b c) = 
-  sup (sup (xbefore (xbefore a b) c) (xbefore (xbefore b a) c)) 
-    (xbefore (xbefore b c) a)"
-by (simp add: inf_xbefore_equiv_sups_xbefore_expanded)
-
 text {* The following lemma proves \cref{thm:xbefore_sup_compl_inf_absorb1}. *}
 lemma xbefore_sup_compl_inf_absorb1: 
   "independent_events a b \<Longrightarrow> \<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> 
