@@ -218,6 +218,7 @@ proof-
       xbefore_inf_2 xbefore_assoc)
   thus ?thesis by (simp add: sup.assoc)
 qed
+
 text {* The following lemma proves \cref{thm:xbefore_sup_compl_inf_absorb1}. *}
 lemma xbefore_sup_compl_inf_absorb1: 
   "independent_events a b \<Longrightarrow> \<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> 
@@ -257,7 +258,7 @@ qed
 
 corollary xbefore_sup_equiv_inf_inf_nand: 
   "tempo a \<Longrightarrow> tempo b \<Longrightarrow> independent_events a b \<Longrightarrow> 
-  sup (sup (xbefore a b) (xbefore b a)) (uminus (inf a b)) = top"
+  sup (sup (xbefore a b) (xbefore b a)) (- (inf a b)) = top"
 by (metis (mono_tags, lifting) boolean_algebra_class.sup_compl_top algebra_of_temporal_faults_equivs_class.xbefore_sup_equiv_inf)
 
 

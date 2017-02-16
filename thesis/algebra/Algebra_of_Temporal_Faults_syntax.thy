@@ -12,12 +12,14 @@ subsection {* Explicit syntax *}
 section {* Toy instantiation: Propositional Logic *}
 
 datatype formula_syntax = 
-  Atom nat | 
-  Neg formula_syntax | 
-  Conj formula_syntax formula_syntax
+  Atom nat
+| Neg formula_syntax 
+| Conj formula_syntax formula_syntax 
+| XB nat nat
 
 primrec max_depth where
   "max_depth (Atom _) = 0"
+| "max_depth (XB _ _) = 1"
 | "max_depth (Neg \<phi>) = Suc (max_depth \<phi>)"
 | "max_depth (Conj \<phi> \<psi>) = Suc (max (max_depth \<phi>) (max_depth \<psi>))"
 
@@ -25,18 +27,27 @@ lemma max_depth_0: "max_depth \<phi> = 0 = (\<exists>n. \<phi> = Atom n)"
   by (cases \<phi>) auto
 
 lemma max_depth_Suc: "max_depth \<phi> = Suc n = ((\<exists>\<psi>. \<phi> = Neg \<psi> \<and> max_depth \<psi> = n) \<or>
-  (\<exists>\<psi>1 \<psi>2. \<phi> = Conj \<psi>1 \<psi>2 \<and> max (max_depth \<psi>1) (max_depth \<psi>2) = n))"
+  (\<exists>\<psi>1 \<psi>2. \<phi> = Conj \<psi>1 \<psi>2 \<and> max (max_depth \<psi>1) (max_depth \<psi>2) = n)
+\<or>
+  (\<exists>n1 n2. \<phi> = XB n1 n2 \<and> n = 0)
+)
+"
   by (cases \<phi>) auto
 
-abbreviation "atoms \<equiv> smap Atom nats"
+abbreviation "atoms \<equiv> sinterleave 
+  (smap Atom nats) 
+  (smap (case_prod XB) (sproduct nats nats))"
 abbreviation "depth1 \<equiv>
-  sinterleave (smap Neg atoms) (smap (case_prod Conj) (sproduct atoms atoms))"
+  sinterleave 
+    (smap Neg atoms) 
+    (smap (case_prod Conj) (sproduct atoms atoms))"
 
 abbreviation "sinterleaves \<equiv> fold sinterleave"
 
 fun extendLevel where "extendLevel (belowN, N) =
   (let Next = sinterleaves
-    (map (smap (case_prod Conj)) [sproduct belowN N, sproduct N belowN, sproduct N N])
+    (map (smap (case_prod Conj)) 
+      [sproduct belowN N, sproduct N belowN, sproduct N N])
     (smap Neg N)
   in (sinterleave belowN N, Next))"
 
@@ -49,7 +60,8 @@ lemma extendLevel_step:
     image_iff max_depth_Suc)
 
 lemma sset_atoms: "sset atoms = {\<phi>. max_depth \<phi> < 1}"
-  by (auto simp: stream.set_map max_depth_0)
+  apply (auto simp: stream.set_map max_depth_0)
+
 
 lemma sset_depth1: "sset depth1 = {\<phi>. max_depth \<phi> = 1}"
   by (auto simp: sset_sinterleave sset_sproduct stream.set_map
@@ -104,23 +116,31 @@ lemma rules_UNIV: "sset rules = (UNIV :: rule set)"
   unfolding rules_def by (auto simp: sset_sinterleave sset_sproduct stream.set_map
     formulas_syntax_UNIV image_iff) (metis rule.exhaust)
 
-type_synonym state = "formula_syntax fset * formula_syntax fset"
+type_synonym state = 
+  "formula_syntax fset * formula_syntax fset * (nat set * nat set) fset"
 
 fun eff' :: "rule \<Rightarrow> state \<Rightarrow> state fset option" where
-  "eff' Idle (\<Gamma>, \<Delta>) = Some {|(\<Gamma>, \<Delta>)|}"
-| "eff' (Ax n) (\<Gamma>, \<Delta>) =
+  "eff' Idle (\<Gamma>, \<Delta>, \<Xi>) = Some {|(\<Gamma>, \<Delta>, \<Xi>)|}"
+| "eff' (Ax n) (\<Gamma>, \<Delta>, \<Xi>) =
     (if Atom n |\<in>| \<Gamma> \<and> Atom n |\<in>| \<Delta> then Some {||} else None)"
-| "eff' (NegL \<phi>) (\<Gamma>, \<Delta>) =
-    (if Neg \<phi> |\<in>| \<Gamma> then Some {|(\<Gamma> |-| {| Neg \<phi> |}, finsert \<phi> \<Delta>)|} else None)"
-| "eff' (NegR \<phi>) (\<Gamma>, \<Delta>) =
-    (if Neg \<phi> |\<in>| \<Delta> then Some {|(finsert \<phi> \<Gamma>, \<Delta> |-| {| Neg \<phi> |})|} else None)"
-| "eff' (ConjL \<phi> \<psi>) (\<Gamma>, \<Delta>) =
+| "eff' (NegL \<phi>) (\<Gamma>, \<Delta>, \<Xi>) =
+    (if Neg \<phi> |\<in>| \<Gamma> 
+      then Some {|(\<Gamma> |-| {| Neg \<phi> |}, finsert \<phi> \<Delta>, \<Xi>)|} 
+      else None)"
+| "eff' (NegR \<phi>) (\<Gamma>, \<Delta>, \<Xi>) =
+    (if Neg \<phi> |\<in>| \<Delta> 
+      then Some {|(finsert \<phi> \<Gamma>, \<Delta> |-| {| Neg \<phi> |}, \<Xi>)|} 
+      else None)"
+| "eff' (ConjL \<phi> \<psi>) (\<Gamma>, \<Delta>, \<Xi>) =
     (if Conj \<phi> \<psi> |\<in>| \<Gamma>
-    then Some {|(finsert \<phi> (finsert \<psi> (\<Gamma> |-| {| Conj \<phi> \<psi> |})), \<Delta>)|}
-    else None)"
-| "eff' (ConjR \<phi> \<psi>) (\<Gamma>, \<Delta>) =
+      then Some {|(finsert \<phi> (finsert \<psi> (\<Gamma> |-| {| Conj \<phi> \<psi> |})), \<Delta>, \<Xi>)|}
+      else None)"
+| "eff' (ConjR \<phi> \<psi>) (\<Gamma>, \<Delta>, \<Xi>) =
     (if Conj \<phi> \<psi> |\<in>| \<Delta>
-    then Some {|(\<Gamma>, finsert \<phi> (\<Delta> |-| {| Conj \<phi> \<psi> |})), (\<Gamma>, finsert \<psi> (\<Delta> |-| {| Conj \<phi> \<psi> |}))|}
+    then Some {|
+      (\<Gamma>, finsert \<phi> (\<Delta> |-| {| Conj \<phi> \<psi> |}), \<Xi>), 
+      (\<Gamma>, finsert \<psi> (\<Delta> |-| {| Conj \<phi> \<psi> |}), \<Xi>)
+    |}
     else None)"
 
 
