@@ -385,9 +385,9 @@ unfolding dlist_tempo1_def
 by auto
 
 lemma dlist_xbefore_not_sym: 
-  " dlist_xbefore S T xs \<Longrightarrow> 
+  "dlist_tempo1 S \<Longrightarrow> dlist_tempo1 T \<Longrightarrow> dlist_xbefore S T xs \<Longrightarrow> 
   dlist_xbefore T S xs \<Longrightarrow> False"
-by (metis dlist_xbefore_def le_cases)
+by (metis dlist_xbefore_def le_cases dlist_tempo1_le_uniqueness)
 
 corollary dlist_xbefore_and: 
   "dlist_tempo1 S \<Longrightarrow> dlist_tempo1 T \<Longrightarrow> 
@@ -511,16 +511,16 @@ by (smt Collect_cong Collect_conj_eq Collect_disj_eq)
 subsubsection {* \acs*{XBefore} transitivity *}
 
 theorem dlist_xbefore_trans: "
-  \<lbrakk>dlist_tempo1 a; dlist_tempo1 b; dlist_tempo1 c\<rbrakk> \<Longrightarrow>
-  \<lbrakk>dlist_tempo2 a; dlist_tempo2 b; dlist_tempo2 c\<rbrakk> \<Longrightarrow>   
+  \<lbrakk>dlist_tempo1 a; dlist_tempo1 b\<rbrakk> \<Longrightarrow>
+  \<lbrakk>dlist_tempo2 a\<rbrakk> \<Longrightarrow>   
   dlist_xbefore a b zs \<and> dlist_xbefore b c zs \<Longrightarrow> 
   dlist_xbefore a c zs"
 using dlist_xbefore_not_sym 
 by (metis dlist_tempo2_def dlist_xbefore_def)
 
 corollary dlistset_xbefore_trans: "
-  \<lbrakk>dlist_tempo1 a; dlist_tempo1 b; dlist_tempo1 c\<rbrakk> \<Longrightarrow>
-  \<lbrakk>dlist_tempo2 a; dlist_tempo2 b; dlist_tempo2 c\<rbrakk> \<Longrightarrow>
+  \<lbrakk>dlist_tempo1 a; dlist_tempo1 b\<rbrakk> \<Longrightarrow>
+  \<lbrakk>dlist_tempo2 a\<rbrakk> \<Longrightarrow>
   (Collect (dlist_xbefore a b) \<inter> Collect (dlist_xbefore b c)) \<subseteq> 
     Collect (dlist_xbefore a c)"
 using dlist_xbefore_trans
@@ -886,7 +886,7 @@ instantiation formula :: (type) algebra_of_temporal_faults_trans
 begin
 instance proof
   fix a::"'a formula" and b::"'a formula" and c::"'a formula"
-  assume "tempo1 a" "tempo1 b" "tempo1 c" "tempo2 a" "tempo2 b" "tempo2 c"
+  assume "tempo1 a" "tempo1 b" "tempo2 a" 
   thus "inf (xbefore a b) (xbefore b c) \<le> xbefore a c"
   unfolding tempo1_formula_def tempo2_formula_def xbefore_formula_def 
     less_eq_formula_def inf_formula_def
