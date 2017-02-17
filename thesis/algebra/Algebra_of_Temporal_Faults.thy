@@ -44,8 +44,7 @@ class algebra_of_temporal_faults_basic = boolean_algebra  +
 subsection {* Definition of associativity of \ac{XBefore} *}
     
 class algebra_of_temporal_faults_assoc = algebra_of_temporal_faults_basic +
-  assumes xbefore_assoc: "\<lbrakk>tempo1 a; tempo1 b; tempo1 c\<rbrakk> \<Longrightarrow> 
-    xbefore (xbefore a b) c = xbefore a (xbefore b c)"
+  assumes xbefore_assoc: "xbefore (xbefore a b) c = xbefore a (xbefore b c)"
 
 subsection {* Equivalences in the \ac{algebra} and properties *}
     

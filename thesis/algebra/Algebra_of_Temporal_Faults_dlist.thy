@@ -357,8 +357,7 @@ using dlist_xbefore_neutral_2 by auto
 subsubsection {* \acs*{XBefore} associativity*}
 
 theorem dlist_xbefore_assoc1: 
-  "dlist_tempo1 S \<Longrightarrow> dlist_tempo1 T \<Longrightarrow> dlist_tempo1 U \<Longrightarrow> 
-  (dlist_xbefore (dlist_xbefore S T) U zs) \<longleftrightarrow> 
+  "(dlist_xbefore (dlist_xbefore S T) U zs) \<longleftrightarrow> 
     (dlist_xbefore S (dlist_xbefore T U) zs)"
 unfolding dlist_xbefore_def slice_slice_simps dlist_tempo_def
 apply auto
@@ -368,14 +367,12 @@ apply (metis diff_is_0_eq less_imp_le max_0L min_def not_le
 by (metis le_add1 min.absorb2)
 
 corollary dlist_xbefore_assoc:
-  "dlist_tempo1 S \<Longrightarrow> dlist_tempo1 T \<Longrightarrow> dlist_tempo1 U \<Longrightarrow> 
-  (dlist_xbefore (dlist_xbefore S T) U) = 
+  "(dlist_xbefore (dlist_xbefore S T) U) = 
     (dlist_xbefore S (dlist_xbefore T U))"
 using dlist_xbefore_assoc1 by blast
 
 corollary dlistset_xbefore_assoc:
-  "dlist_tempo1 S \<Longrightarrow> dlist_tempo1 T \<Longrightarrow> dlist_tempo1 U \<Longrightarrow>
-  Collect (dlist_xbefore (dlist_xbefore S T) U) = 
+  "Collect (dlist_xbefore (dlist_xbefore S T) U) = 
     Collect (dlist_xbefore S (dlist_xbefore T U))"
 by (simp add: dlist_xbefore_assoc)
 
@@ -388,9 +385,9 @@ unfolding dlist_tempo1_def
 by auto
 
 lemma dlist_xbefore_not_sym: 
-  "dlist_tempo1 S \<Longrightarrow> dlist_tempo1 T \<Longrightarrow> dlist_xbefore S T xs \<Longrightarrow> 
+  " dlist_xbefore S T xs \<Longrightarrow> 
   dlist_xbefore T S xs \<Longrightarrow> False"
-by (metis dlist_xbefore_def le_cases dlist_tempo1_le_uniqueness)
+by (metis dlist_xbefore_def le_cases)
 
 corollary dlist_xbefore_and: 
   "dlist_tempo1 S \<Longrightarrow> dlist_tempo1 T \<Longrightarrow> 
@@ -818,8 +815,7 @@ begin
 
 instance proof
   fix a::"'a formula" and b::"'a formula" and c::"'a formula"
-  assume "tempo1 a" "tempo1 b" "tempo1 c"
-  thus "xbefore (xbefore a b) c = xbefore a (xbefore b c)"
+  show "xbefore (xbefore a b) c = xbefore a (xbefore b c)"
   unfolding xbefore_formula_def tempo1_formula_def
   by (simp add: Abs_formula_inverse dlist_xbefore_assoc)
 qed
