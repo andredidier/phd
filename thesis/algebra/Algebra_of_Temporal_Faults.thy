@@ -34,8 +34,8 @@ class algebra_of_temporal_faults_basic = boolean_algebra  +
   fixes tempo1 :: "'a \<Rightarrow> bool"  
   assumes xbefore_bot_1: "xbefore bot a = bot"
   assumes xbefore_bot_2: "xbefore a bot = bot"
-  assumes xbefore_neutral_1: "tempo1 a \<Longrightarrow> xbefore neutral a = a"
-  assumes xbefore_neutral_2: "tempo1 a \<Longrightarrow> xbefore a neutral = a"
+  assumes xbefore_neutral_1: "xbefore neutral a = a"
+  assumes xbefore_neutral_2: "xbefore a neutral = a"
   assumes xbefore_not_idempotent: "tempo1 a \<Longrightarrow> xbefore a a = bot"
   assumes inf_tempo1: "\<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> tempo1 (inf a b)"
   assumes xbefore_not_sym: 

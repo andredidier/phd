@@ -337,21 +337,21 @@ by blast
 subsubsection {* \acs*{XBefore} neutral*}
 
 lemma dlist_xbefore_neutral_1: 
-  "dlist_tempo1 a \<Longrightarrow> dlist_xbefore (\<lambda>xs. xs = dlist_of_list []) a zs = a zs"
+  "dlist_xbefore (\<lambda>xs. xs = dlist_of_list []) a zs = a zs"
 by (metis (full_types) Dlist_list_of_dlist Rep_slice_append append.simps(1) 
   dlist_of_list dlist_xbefore_def take_0 take_slice_right)
 
 corollary dlistset_xbefore_neutral_1: 
-  "dlist_tempo1 a \<Longrightarrow> Collect (dlist_xbefore (\<lambda>xs. xs = Dlist []) a) = Collect a"
+  "Collect (dlist_xbefore (\<lambda>xs. xs = Dlist []) a) = Collect a"
 using dlist_xbefore_neutral_1 by auto
 
 lemma dlist_xbefore_neutral_2: 
-  "dlist_tempo1 a \<Longrightarrow> dlist_xbefore a (\<lambda>xs. xs = Dlist []) zs = a zs"
+  "dlist_xbefore a (\<lambda>xs. xs = Dlist []) zs = a zs"
 by (smt Dlist_list_of_dlist append_Nil2 distinct_append distinct_list_of_dlist dlist_of_list 
   dlist_xbefore_append list_of_dlist_empty)
 
 corollary dlistset_xbefore_neutral_2: 
-  "dlist_tempo1 a \<Longrightarrow> Collect (dlist_xbefore a (\<lambda>xs. xs = Dlist [])) = Collect a"
+  "Collect (dlist_xbefore a (\<lambda>xs. xs = Dlist [])) = Collect a"
 using dlist_xbefore_neutral_2 by auto
 
 subsubsection {* \acs*{XBefore} associativity*}
@@ -748,15 +748,17 @@ lemma Rep_formula_xbefore_bot_2: "Rep_formula (xbefore a bot) =
 unfolding xbefore_formula_def
 by (simp add: Abs_formula_inverse dlist_xbefore_bot_2)
 
-lemma Rep_formula_xbefore_neutral_1: "tempo1 a \<Longrightarrow> Rep_formula (xbefore neutral a) = Rep_formula a"
-unfolding xbefore_formula_def neutral_formula_def tempo1_formula_def 
+lemma Rep_formula_xbefore_neutral_1: "Rep_formula (xbefore neutral a) = Rep_formula a"
+unfolding xbefore_formula_def neutral_formula_def 
 apply (simp add: Abs_formula_inverse)
-using dlistset_xbefore_neutral_1 by auto
+using dlistset_xbefore_neutral_1
+by (metis Collect_mem_eq) 
 
-lemma Rep_formula_xbefore_neutral_2: "tempo1 a \<Longrightarrow> Rep_formula (xbefore a neutral) = Rep_formula a"
-unfolding xbefore_formula_def neutral_formula_def tempo1_formula_def
+lemma Rep_formula_xbefore_neutral_2: "Rep_formula (xbefore a neutral) = Rep_formula a"
+unfolding xbefore_formula_def neutral_formula_def 
 apply (simp add: Abs_formula_inverse)
-using dlistset_xbefore_neutral_2 by auto
+using dlistset_xbefore_neutral_2
+by (metis Collect_mem_eq) 
 
 lemma Rep_formula_xbefore_not_idempotent: 
   "tempo1 a \<Longrightarrow> Rep_formula (xbefore a a) = Rep_formula bot"
@@ -780,14 +782,12 @@ instance proof
   unfolding eq_formula_iff Rep_formula_xbefore_bot_2 by auto
   next
   fix a::"'a formula"
-  assume "tempo1 a"
-  thus "xbefore neutral a = a"
+  show "xbefore neutral a = a"
   unfolding eq_formula_iff
   using Rep_formula_xbefore_neutral_1 by auto
   next
   fix a::"'a formula"
-  assume "tempo1 a"
-  thus "xbefore a neutral = a"
+  show "xbefore a neutral = a"
   unfolding eq_formula_iff
   using Rep_formula_xbefore_neutral_2 by auto
   next
