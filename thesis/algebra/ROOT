@@ -1,11 +1,11 @@
 session "algebra" = "HOL" +
-  options [document = pdf, document_output = "output", quick_and_dirty = true, show_question_marks = false]
+  options [document = pdf, document_output = "output", quick_and_dirty = false, show_question_marks = false]
   theories [document = false]
   theories
     Sliceable
     Sliceable_dlist
-    Temporal_Faults_Algebra
-    Temporal_Faults_Algebra_dlist
+    Algebra_of_Temporal_Faults
+    Algebra_of_Temporal_Faults_dlist
   document_files
     "root.tex"
     "root.bib"
