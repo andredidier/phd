@@ -552,12 +552,12 @@ The negation of all events ($\left\{\left[\right]\right\}$, a formula with the e
   %\text{right-false-absorb}
   \label{thm:xbefore-of-false-2}\\
 %
-\tempo[1]{S} \implies \xbefore{\neutral}{S} =&~
+\xbefore{\neutral}{S} =&~
   S &
   %\text{left-neutral-absorb}
   \label{thm:xbefore_neutral_1}\\
 %
-\tempo[1]{S} \implies \xbefore{S}{\neutral} =&~
+\xbefore{S}{\neutral} =&~
   S &
   %\text{right-neutral-absorb}
   \label{thm:xbefore_neutral_2}\\
@@ -576,8 +576,7 @@ The negation of all events ($\left\{\left[\right]\right\}$, a formula with the e
   %\text{non-idempotent}
   \label{thm:xbefore-not-idempotent}\\
 %
-\tempo[1]{S}\land\tempo[1]{T}\land \tempo[1]{U}\implies&\nonumber\\
-  \xbefore{S}{(\xbefore{T}{U})} =&~
+\xbefore{S}{(\xbefore{T}{U})} =&~
   \xbefore{(\xbefore{S}{T})}{U} &
   %\text{associativity}
   \label{thm:xbefore-associativity}
