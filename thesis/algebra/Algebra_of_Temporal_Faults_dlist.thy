@@ -704,6 +704,50 @@ lemma dlistset_inf_xbefore_trans:
 using dlist_inf_xbefore_trans
 using Collect_cong Collect_conj_eq by blast
 
+lemma dlist_inf_xbefore_inf_1: 
+  "\<lbrakk>dlist_tempo1 a; dlist_tempo1 b\<rbrakk> \<Longrightarrow> 
+  \<lbrakk>dlist_tempo2 a; dlist_tempo2 b\<rbrakk> \<Longrightarrow>
+  ((dlist_xbefore a c zs) \<and> (dlist_xbefore b c zs)) \<longleftrightarrow>
+  (dlist_xbefore (\<lambda>xs. a xs \<and> b xs) c zs)"
+unfolding dlist_xbefore_def
+by (metis dlist_tempo1_le_uniqueness dlist_tempo2_right_absorb 
+  dlist_tempo_equiv_xor nat_le_linear)
+
+lemma dlistset_inf_xbefore_inf_1:
+  "\<lbrakk>dlist_tempo1 a; dlist_tempo1 b\<rbrakk> \<Longrightarrow> 
+  \<lbrakk>dlist_tempo2 a; dlist_tempo2 b\<rbrakk> \<Longrightarrow>
+  (Collect (dlist_xbefore a c) \<inter> Collect (dlist_xbefore b c)) =
+  Collect (dlist_xbefore ((\<lambda>xs. a xs \<and> b xs)) c)"
+proof-
+  assume 0: "dlist_tempo1 a" "dlist_tempo1 b" "dlist_tempo2 a" "dlist_tempo2 b"
+  hence "Collect (\<lambda>xs. (dlist_xbefore a c xs) \<and> (dlist_xbefore b c xs)) = 
+    Collect ((dlist_xbefore (\<lambda>xs. a xs \<and> b xs) c))"
+    using 0 dlist_inf_xbefore_inf_1 by blast 
+  thus ?thesis using 0 by blast
+qed
+
+lemma dlist_inf_xbefore_inf_2: 
+  "\<lbrakk>dlist_tempo1 b; dlist_tempo1 c\<rbrakk> \<Longrightarrow> 
+  \<lbrakk>dlist_tempo2 b; dlist_tempo2 c\<rbrakk> \<Longrightarrow>
+  ((dlist_xbefore a b zs) \<and> (dlist_xbefore a c zs)) \<longleftrightarrow>
+  (dlist_xbefore a (\<lambda>xs. b xs \<and> c xs) zs)"
+unfolding dlist_xbefore_def
+by (metis dlist_tempo1_le_uniqueness dlist_tempo2_left_absorb dlist_tempo_equiv_xor nat_le_linear)
+
+lemma dlistset_inf_xbefore_inf_2: 
+  "\<lbrakk>dlist_tempo1 b; dlist_tempo1 c\<rbrakk> \<Longrightarrow> 
+  \<lbrakk>dlist_tempo2 b; dlist_tempo2 c\<rbrakk> \<Longrightarrow>
+  Collect (dlist_xbefore a b) \<inter> Collect (dlist_xbefore a c) =
+  Collect (dlist_xbefore a (\<lambda>xs. b xs \<and> c xs))"
+proof-
+  assume 0: "dlist_tempo1 b" "dlist_tempo1 c" "dlist_tempo2 b" "dlist_tempo2 c"
+  hence "Collect (\<lambda>xs. (dlist_xbefore a b xs) \<and> (dlist_xbefore a c xs)) =
+    Collect (dlist_xbefore a (\<lambda>xs. b xs \<and> c xs))"
+    using 0 dlist_inf_xbefore_inf_2 by blast
+  thus ?thesis using 0 by blast
+qed
+
+
 subsection {* Formulas as \ac{algebra} *}
 
 text {*
@@ -917,6 +961,20 @@ instance proof
   unfolding xbefore_formula_def sup_formula_def
   by (simp add: mixed_dlistset_xbefore_or2 Abs_formula_inverse)
   next 
+  fix a::"'a formula" and b::"'a formula" and c::"'a formula"
+  assume "tempo1 a" "tempo1 b" "tempo2 a" "tempo2 b"
+  thus "xbefore (inf a b) c = inf (xbefore a c) (xbefore b c)"
+  unfolding xbefore_formula_def inf_formula_def tempo1_formula_def 
+    tempo2_formula_def
+  by (simp add: dlistset_inf_xbefore_inf_1 Abs_formula_inverse)
+  next
+  fix a::"'a formula" and b::"'a formula" and c::"'a formula"
+  assume "tempo1 b" "tempo1 c" "tempo2 b" "tempo2 c"
+  thus "xbefore a (inf b c) = inf (xbefore a b) (xbefore a c)"
+  unfolding xbefore_formula_def inf_formula_def tempo1_formula_def
+    tempo2_formula_def
+  by (simp add: dlistset_inf_xbefore_inf_2 Abs_formula_inverse)
+  next
   fix a::"'a formula" and b::"'a formula"
   assume "independent_events a b" "tempo1 a" "tempo1 b" "tempo2 a" "tempo2 b"
     "tempo3 a" "tempo3 b" "tempo4 a" "tempo4 b"

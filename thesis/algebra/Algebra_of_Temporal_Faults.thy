@@ -63,7 +63,7 @@ class algebra_of_temporal_faults_equivs = algebra_of_temporal_faults_assoc +
   assumes inf_tempo3: "\<lbrakk>tempo3 a; tempo3 b\<rbrakk> \<Longrightarrow> tempo3 (inf a b)"
   assumes sup_tempo4: "\<lbrakk>tempo4 a; tempo4 b\<rbrakk> \<Longrightarrow> tempo4 (sup a b)"
 
-abbreviation tempo :: "'a::algebra_of_temporal_faults_equivs  \<Rightarrow> bool" where
+definition tempo :: "'a::algebra_of_temporal_faults_equivs  \<Rightarrow> bool" where
 "tempo a \<equiv> tempo1 a \<and> tempo2 a \<and> tempo3 a \<and> tempo4 a"
 
 subsection {* \Ac{XBefore} transitivity *}
@@ -82,6 +82,12 @@ class algebra_of_temporal_faults_mixed_ops = algebra_of_temporal_faults_trans +
     "xbefore (sup a b) c = sup (xbefore a c) (xbefore b c)"
   assumes xbefore_sup_2: 
     "xbefore a (sup b c) = sup (xbefore a b) (xbefore a c)"
+  assumes inf_xbefore_inf_1: 
+    "\<lbrakk>tempo1 a; tempo1 b; tempo2 a; tempo2 b\<rbrakk> \<Longrightarrow>
+      xbefore (inf a b) c = inf (xbefore a c) (xbefore b c)"
+  assumes inf_xbefore_inf_2: 
+    "\<lbrakk>tempo1 b; tempo1 c; tempo2 b; tempo2 c\<rbrakk> \<Longrightarrow> 
+      xbefore a (inf b c) = inf (xbefore a b) (xbefore a c)"
   assumes not_xbefore: "
     independent_events a b \<Longrightarrow>
     \<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow>
@@ -93,6 +99,8 @@ class algebra_of_temporal_faults_mixed_ops = algebra_of_temporal_faults_trans +
     inf a (xbefore b c) = sup (xbefore (inf a b) c) (xbefore b (inf a c))"
   assumes not_1_xbefore_equiv: "\<lbrakk>tempo1 a; tempo2 b \<rbrakk> \<Longrightarrow> xbefore (- a) b = b"
   assumes not_2_xbefore_equiv: "\<lbrakk>tempo1 b; tempo2 a \<rbrakk> \<Longrightarrow> xbefore a (- b) = a"
+
+subsection {* The Algebra of Temporal Faults *}
 
 class algebra_of_temporal_faults = algebra_of_temporal_faults_mixed_ops
 
@@ -258,9 +266,8 @@ qed
 corollary xbefore_sup_equiv_inf_inf_nand: 
   "tempo a \<Longrightarrow> tempo b \<Longrightarrow> independent_events a b \<Longrightarrow> 
   sup (sup (xbefore a b) (xbefore b a)) (- (inf a b)) = top"
+unfolding tempo_def
 by (metis (mono_tags, lifting) boolean_algebra_class.sup_compl_top algebra_of_temporal_faults_equivs_class.xbefore_sup_equiv_inf)
-
-
 
 end
 
