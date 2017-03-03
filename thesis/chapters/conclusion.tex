@@ -67,9 +67,8 @@ Also, it is possible to verify non-determinism on the model, by:
 %
 %We believe that the direct analysis on failure logic expressed by our TFA can also accelerate temporal fault trees analysis as it is a subclass of dynamic fault trees.
 
-The distinct lists' representation in our algebra does not allow obtaining minimal cut sequences directly from the formula, similar to \acp{FBA}.
-The sets in \iac{FBA} formula are already the minimal cut sets.
-In our work, \ac{algebra} allows us to find minimal cut sequences (with \ac{XBefore}) from the formulas in \ac{DNF} algebraically: each sub-expression is a minimal cut sequence.
+The distinct lists' representation in our algebra allow obtaining \acp{MCSeq} directly from the denotational semantics.
+Obtaining the \acp{MCSeq} from the formulas without using the denotational semantics requires formula reduction and the conversion of the formula to the normal form.
 
 Boolean formulas reduction can be achieved by: 
 \begin{alineasinline}
