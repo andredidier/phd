@@ -57,7 +57,7 @@ These properties form the \emph{healthiness conditions}~\cite{HH1998} of an expr
 
 We show the general form of the \ac{activation} to model faults in \cref{sec:grammar}, the healthiness conditions to normalize expressions in \cref{sec:healthiness-conditions}, how to identify non-determinism in an expression in \cref{sec:non-determinism}, and the predicate notation to analyse systems and model fault propagation in \cref{sec:predicates-notation}.
 
-\section{The \acl*{activation} Grammar}
+\section[The Activation Logic Grammar]{The \acl*{activation} Grammar}
 \label{sec:grammar}
 
 Each term in \ac{activation} is a pair of a predicate and an operational mode.
@@ -143,7 +143,7 @@ All definitions in this \lcnamecref{sec:healthiness-conditions} requires an alge
   \item[tautology:] the expression always evaluates to \emph{true}.
 \end{description}
 
-\subsection[H \#1: No predicate is a contradiction]{$\healthiness[1]$: No predicate is a contradiction}
+\subsection[H1: No predicate is a contradiction]{$\healthiness[1]$: No predicate is a contradiction}
 \label{sec:h1}
 
 This property is very simple and it is used to eliminate any term that has a predicate that always evaluates to false.
@@ -163,7 +163,7 @@ Applying the first healthiness condition to our example results in:
 
 Thus, we conclude that $S$ \emph{is} $\healthy[1]$.
 
-\subsection[H \#2: All possibilities are covered]{$\healthiness[2]$: All possibilities are covered}
+\subsection[H2: All possibilities are covered]{$\healthiness[2]$: All possibilities are covered}
 \label{sec:h2}
 
 This property is used to make explicit that there are uncovered operational modes.
@@ -198,7 +198,7 @@ Applying the second healthiness condition to our example results in the followin
 
 Thus, we conclude that $S$ \emph{is not} $\healthy[2]$.
 
-\subsection[H \#3: There are no two terms with exactly the same operational mode.]{$\healthiness[3]$: There are no two terms with exactly the same operational mode}
+\subsection[H3: There are no two terms with exactly the same operational mode.]{$\healthiness[3]$: There are no two terms with exactly the same operational mode}
 \label{sec:h3}
 This property merges terms that contain the same operational mode.
 It avoids unnecessary formulas and may reduce the expression.
@@ -319,6 +319,15 @@ Let $exp$ be an expression in \ac{activation}, and $P$ a predicate in the inner 
 \label{eq:modes}
 \modes{exp}{P} = \left\{ \left(P_i \land P, O_i\right)\ \middle|\ (P_i, O_i) \in \healthinessfun{exp} \right\}
 \end{equation}
+%\begin{align*}
+%\modes{S}{P} = &~ 
+%	\left\{
+%		\left(A \land P, O_1 \right), 
+%		\left(B \land P, O_2 \right), 
+%		\left(A \land \lnot B \land P, O_3 \right), 
+%		\left(\left(A \lor B\right) \land P, O_2 \right)
+%	\right\}
+%\end{align*}
 
 \end{definition}
 

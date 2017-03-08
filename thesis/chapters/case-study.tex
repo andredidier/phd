@@ -176,7 +176,7 @@ Expanding \cref{eq:m-bool}, we have:
 %
 which differs from \cref{eq:m-algebra} only on terms: $F \land B_1$ (of $M_{bool}$) and $\xbefore{F}{B_1}\land \lnot B_2$ (of $M_A$).
 
-\section{From \ac*{activation} to structure expressions with Boolean operators}
+\section[From AL to structure expressions with Boolean operators]{From \ac*{activation} to structure expressions with Boolean operators}
 \label{sec:activation-to-structure-expressions-boolean-operators}
 
 The power source has only two possible operational modes: 
@@ -375,7 +375,7 @@ These two sentences---written in \ac{activation} using the predicate notation---
 \end{align}
 \end{subequations}
 
-\section{From \ac*{activation} to structure expressions with \ac*{XBefore}}
+\section[From AL to structure expressions with XBefore]{From \ac*{activation} to structure expressions with \ac*{XBefore}}
 \label{sec:activation-to-structure-expressions-algebra-operators}
 
 Now, let's consider the same system but with a subtle modification.
@@ -564,7 +564,7 @@ Applying $\healthiness[3]$ to remove redundant terms with identical operational 
 %        LP
 %      \right)
 %    \right\}\\
-= & \left\{
+& \left\{
     \left(\left(\lnot B_1 \land \lnot B_2\right) \lor 
       \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right) \lor \right.\right.\\
   & \left. \lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right), \\
@@ -625,7 +625,7 @@ Thus, $System_{XB}$ fails with $LP$ if:
 %
 Note that if the monitor fails before the failure of the first power source, it fails to detect the operational mode of the first power source and switches to the second power source, which is in a nominal state (see expression $\lnot B_2 \land \xbefore{F}{B_1}$ in \cref{eq:h-systemalgebra}).
 
-\section{Obtaining top-event probability with explicit \ac*{NOT} operators}
+\section[Obtaining top-event probability with explicit NOT operators]{Obtaining top-event probability with explicit \ac*{NOT} operators}
 \label{sec:top-event-probability-explicit-not}
 
 In this \lcnamecref{sec:top-event-probability-explicit-not} we show how to use \ac{algebra} to obtain the same probability formula of \cref{eq:leak-protection-system-probability}.

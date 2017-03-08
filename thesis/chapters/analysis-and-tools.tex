@@ -24,7 +24,7 @@ In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to
 
 Finally, in \cref{sec:isabelle} we present basic usage of Isabelle/HOL\index{Isabelle/HOL} and \ac{Isar}, which were essential to carry out the proofs presented in this thesis.
 
-\section{\Acl*{FTA} and structure expressions}
+\section[Fault Tree Analysis and structure expressions]{\Acl*{FTA} and structure expressions}
 \label{sec:fault-trees}
 
 \Ac{FTA} was introduced in the \FThandbook~\cite{VGR+1981} with \aclp{SFT}.
@@ -688,7 +688,7 @@ In the following we show specific stateless methods that are designed to reduce 
 In essence, the methods are very similar.
 Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{DT} (\cref{sec:dependency-trees}), \acp{MCSeq} of \acp{DFT} can be obtained using \ac{ZBDD} (\cref{sec:zbdd}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} (\cref{sec:sbdd}).
 
-\subsection{\Aclp*{BDD}\index{Binary Decision Diagrams}}
+\subsection[BDD]{\Aclp*{BDD}\index{Binary Decision Diagrams}}
 \label{sec:bdd}
 
 \Acp{BDD}\index{Binary Decision Diagrams} are directed acyclic graphs that represent a Boolean\index{Boolean Algebra} expression.
@@ -763,7 +763,7 @@ The work reported in~\cite{Rudell1993} shows initial findings on best variable o
 For \acp{SFT} the evaluation of \iac{BDD} is the calculation of the probability of the paths ending in \emph{true}.
 For example, the probability of the expression in \cref{fig:bdd-diagram-for-example-expression} is obtained from the formula: $\probability{A \lor \parsin{\lnot A \land \lnot B \land C}}$. Note that the formula in the probability calculation is different from the formula that originated the diagram.
 
-\subsection{\Acl*{DT}}
+\subsection[DT]{\Acl*{DT}}
 \label{sec:dependency-trees}
 
 \Acf{DT} is a hierarchical acyclic graph of expressions that shows all possible cut sequences for any given set of events.
@@ -796,7 +796,7 @@ The final expression is obtained by the active higher level node, which is $X \l
   \label{fig:dependency-tree-reduction}
 \end{figure}
 
-\subsection{\Aclp*{ZBDD}\index{Zero-suppressed Binary Decision Diagrams}}
+\subsection[ZBDD]{\Aclp*{ZBDD}\index{Zero-suppressed Binary Decision Diagrams}}
 \label{sec:zbdd}
 
 The work reported in~\cite{TD2004} proposes \aclp{ZBDD}, which is a variant of \ac{BDD}\index{Binary Decision Diagrams}, and uses set manipulations (union, intersection, difference, and product) to obtain \acp{MCSeq} of \acp{DFT}.
@@ -825,7 +825,7 @@ We use sets of sequences to define the \ac{algebra}, but keep the analysis with 
 In \ac{algebra} we do not create new events that represent an order-related operator.
 Our order-related operator has a set-based semantics that can be combined with other non-order-related (Boolean\index{Boolean Algebra}) operators.
 
-\subsection{\Aclp*{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}}
+\subsection[SBDD]{\Aclp*{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}}
 \label{sec:sbdd}
 
 \Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} is an extension of \ac{BDD}\index{Binary Decision Diagrams} to tackle ordering of events in \acp{DFT} for \ac{CSp} and \ac{WSp} gates.
@@ -987,7 +987,7 @@ For $y = \squaresin{y_1,y_2,\ldots,y_n}$, monotonicity of $\ftcoherencyop$ means
 Variable replacement ($\replace{a}{b}$) is as usual:
 $x\replace{x_i}{a} = \squaresin{x_1, \ldots, x_{i-1}, a, x_{i+1}, \ldots, x_n}$
 
-\subsection{Non-coherent \acl*{FT} misleads}
+\subsection[Non-coherent Fault Tree misleads]{Non-coherent \acl*{FT} misleads}
 \label{sec:non-coherent-misleads-example}
 
 In this \lcnamecref{sec:non-coherent-misleads-example} we illustrate---with the second example detailed in~\cite{Oliv2006}---how a non-coherent \ac{FT} misleads.
@@ -1038,7 +1038,8 @@ The structure expressions for the subtrees are:
 \begin{align*}
   G_1 & = L \lor LU \lor \parsin{D_1 \land D_2}\\
   G_2 & = R_1 \lor LU \lor \parsin{D_1 \land D_2}\\
-  G_3 & = R_2 \lor LU \lor \parsin{D_1 \land D_2}
+  G_3 & = R_2 \lor LU \lor \parsin{D_1 \land D_2}\\
+  TOP & = L \lor R_1 \lor R_2 \lor LU \lor \parsin{D_1 \land D_2}
 \end{align*}
 
 \begin{figure}[htb]
