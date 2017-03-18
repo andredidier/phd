@@ -12,7 +12,7 @@ From the need to tackle events ordering, related to the failure traces we can ob
 We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra, shown in \cref{sec:mapping-cspm-algebra}.
 The order-specific operations are expressed with a new operator ($\xbeforeop$) that we call \ac{XBefore}.
 
-The set of sets for \acp{FBA}\index{Boolean Algebra!Free} is our proposed denotational semantics for Boolean\index{Boolean Algebra} algebras.
+The set of sets for \acp{FBA}\index{Boolean Algebra!Free} is the basis of our proposed denotational semantics for Boolean\index{Boolean Algebra} algebras.
 We use the concept of generators to propose the \ac{algebra} with a denotational semantics of a set of lists without repetition (\distinctlists).
 The choice for lists is because this structure inherently associates a generator to an index, making implicit the representation of order.
 These lists are composed of non-repeated elements (\distinctlists) because the events in \aclp{FT} are non-repairable.
@@ -924,12 +924,19 @@ For example, the probability of $\denote{\xbefore{\var{f_1}}{\var{f_2}}}$ contai
 %
 %where $ys / A$ removes the elements of $A$ in $ys$.
 
-Using \cref{eq:general-pand-probability,eq:generators} we define the probability for a fault sequence as:
+Using \cref{eq:general-pand-probability,eq:generators} we define the probability for a list of faults.
+
+\begin{definition}[Probability of a list of faults in \ac{algebra}]
+\label{eq:denotational-probability}
+Let $xs$ be a list of faults. Then the probability of $xs$, $\denotationalprob{xs}$, is given by:
 %
 \begin{equation}
 \denotationalprob{xs} = 
-  \probability{xs} \times \prod_{f_j ~\in~ \generators - \listset{xs}} \left(1-P_j\left(t\right)\right)\label{eq:denotational-probability}
+\probability{xs} \times \prod_{f_j ~\in~ \generators - \listset{xs}} \left(1-P_j\left(t\right)\right)
 \end{equation}
+
+\end{definition}
+
 %
 %For example, to calculate $\denotationalprob{\left[f_1, f_2\right]}$ for set of generators $\left\{f_1,f_2,f_3\right\}$, we have:
 %\begin{align*}
@@ -944,7 +951,7 @@ Using \cref{eq:general-pand-probability,eq:generators} we define the probability
 %%%%
 For example, for generators $f_1$, $f_2$, and $f_3$, $\denotationalprob{\left[f_1,f_2\right]} = \probability{\left[f_1,f_2\right]}\times\left(1-P_3(t)\right)$, which is the probability of $f_1$ occurring before $f_2$ and $f_3$ not occurring.
 
-As the probability of each fault sequence is independent of each other, the probability of an \ac{algebra} formula is the sum of the denotational probabilities of its constituent lists.
+As the probability of each fault sequence is independent of each other, the probability of \iac{algebra} formula is the sum of the probabilities of its constituent lists of faults.
 
 \begin{definition}[Probability of a formula in \ac{algebra}]
 Let $S$ be a formula in \ac{algebra}.
@@ -1126,6 +1133,7 @@ Safety requirements are written in terms of the properties of \iac{FT}, for exam
   \item no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or 
   \item the probability of all critical failure should be less than $P_x$.
 \end{alineasinline}
+See more examples in~\cite[p. XI-5,XI-18]{VGR+1981}.
 To check these requirements we translate these requirements into a value and verify in the theorem prover.
 
 For the two analysis shown in this \lcnamecref{sec:qualitative-quantitative-analyses}, we define the two acceptance criteria:
