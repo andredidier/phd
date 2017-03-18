@@ -1,0 +1,207 @@
+\section{Structure expression analysis}
+\label{sec:structure-expression-analysis}
+
+In this \lcnamecref{sec:structure-expression-analysis} we explain the difference of stateful and stateless methods to analyse structure expressions and detail the stateless methods.
+A common approach to analyse \iac{FT} is to perform structure expression analysis based on algebraic laws.
+Boolean\index{Boolean Algebra} laws are well-known and are used for \acp{SFT}, temporal laws~\cite{Walker2009,WP2010} for \acp{TFT}, and the works reported in~\cite{Merle2010,MRL2011} show laws for \acp{DFT}.
+An issue with algebraic laws is that, in some cases, the expression needs to be expanded before it gets rewritten.
+So, automation with rewriting is not trivial.
+For example, the following \acg{TFT} structure expression needs to be expanded \cite{WP2010} before it gets reduced via rewriting:
+\begin{align*}
+  & \parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z} &\\
+  = & \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} \lor \parsin{\parsin{X \pand Y} \land Z} & \text{by \cref{law:tft-conjunctive-completion-law}}\\
+  = & \parsin{X \pand Y} \lor \parsin{X \sand Y} \lor \parsin{Y \pand X} & \text{by Boolean absorption of } X \pand Y\\
+  = & X \land Y & \text{by \cref{law:tft-conjunctive-completion-law}}
+\end{align*}
+
+A denotational semantics to Boolean\index{Boolean Algebra} expressions---and consequently to \ac{SFT}---is given by \acp{FBA} (\cref{sec:fba}).
+Using denotational semantics in favour of axiomatic laws is preferred as the axioms must be very simple or must be generally accepted, because a subtlety in an axiom (an unfounded axiom) may invalidate a whole theory.
+
+There are several works with stateful analysis methods for \acp{FT} (\ac{SFT}, \ac{TFT}, and \ac{DFT}).
+We show some of them in \cref{sec:ft-stateful-analysis-methods}.
+
+\subsection{Stateful methods and temporal logic analysis}
+\label{sec:ft-stateful-analysis-methods}
+
+The work reported in~\cite{STR2002} shows a formal approach to analyse \ac{SFT} using \ac{ITL}.
+Instead of tackling basic events ordering (as in \ac{PAND}), it considers a causal relation over a gate, as for example, a relation of a basic event and a higher-level intermediary event.
+
+For \acp{TFT}, the works reported in~\cite{MPW2010,MWP2012} show an inverse solution.
+They map \acp{FSM} to \pandora logic, then verify system properties.
+They show that such a mapping simplifies expression reduction, thus improving performance on the analysis.
+
+Although there is formal modelling approaches to \acp{DFT}, they do not implement a direct modelling of the \ac{DFT} itself.
+Instead, most of the works propose a formal modelling using a state-based approach.
+The work reported in~\cite{CSD2000} shows a formal model of \acap{DTMC} in \theac{Z} and each \ac{DFT} element (basic events and gates).
+The analysis uses a quantifier on states of the resulting \aca{DTMC} automaton.
+The work reported in~\cite{GD1997} shows a methodology to perform a modular analysis of \acp{DFT} based on \ac{BDD}\index{Binary Decision Diagrams} and \aca{DTMC}.
+As \ac{DFT} extends \ac{SFT}, it identifies subtrees that are purely \ac{SFT} and uses \ac{BDD}\index{Binary Decision Diagrams}, otherwise.
+It performs \aca{DTMC} analysis.
+Still on the state-based approaches, the work reported in~\cite{SLD2011} maps \acp{DFT} to \ac{HLPN} to analyse false alarms.
+
+%The work reported in~\cite{LR1998} uses a formal approach using \ac{FSM} to generate fault trees automatically from system models.
+
+In the following we show specific stateless methods that are designed to reduce structure expressions.
+In essence, the methods are very similar.
+Structure expressions for \acp{SFT} can be reduced using \acp{BDD} (\cref{sec:bdd}), \acp{TFT} can be reduced using \acp{DT} (\cref{sec:dependency-trees}), \acp{MCSeq} of \acp{DFT} can be obtained using \ac{ZBDD} (\cref{sec:zbdd}), and the works reported in~\cite{TXD2011,XTD2012} show the analysis of standby systems (\ac{CSp} gates) using \acp{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} (\cref{sec:sbdd}).
+
+\subsection[BDD]{\Aclp*{BDD}\index{Binary Decision Diagrams}}
+\label{sec:bdd}
+
+\Acp{BDD}\index{Binary Decision Diagrams} are directed acyclic graphs that represent a Boolean\index{Boolean Algebra} expression.
+They are still referred to as \ac{BDD}\index{Binary Decision Diagrams}, but the widespread version is the \ac{ROBDD}, which is an optimisation.
+There are two ways to generate \iac{BDD}\index{Binary Decision Diagrams} for an expression:
+\begin{alineasinline}
+  \item derive a diagram from the truth-table, or
+  \item expand the paths based on Shannon's method\index{Binary Decision Diagrams!Shannon's method} (described in the \FThandbook).
+\end{alineasinline}
+
+To demonstrate the expressiveness of \iac{BDD}, \cref{fig:bdd-diagram-for-a-truth-table} shows a diagram for a truth table with three variables (\cref{tbl:bdd-truth-table-with-three-variable}).
+In a node, when a path is chosen, the variable of the node assumes the edge value.
+For example, the top-level node variable of \cref{fig:bdd-diagram-for-a-truth-table} is $A$.
+Following the right-hand side of the node, all leaf nodes correspond to the lines of the truth table that $A$ has ``0'' values (the first four lines).
+The symbol nodes are replaced by the values assumed by a specific formula.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.5]{bdd-diagram-for-a-truth-table}
+  \caption{A diagram for a truth table}
+  \label{fig:bdd-diagram-for-a-truth-table}
+\end{figure}
+
+\begin{table}[t]
+  \caption{Truth table for a formula outputs with three variables (A, B, and C)}
+  \label{tbl:bdd-truth-table-with-three-variable}
+  \centering
+  {\footnotesize
+  \begin{tabular}{cccc}
+    \hline\noalign{\smallskip}
+    \textbf{A} & \textbf{B} & \textbf{C} & \textbf{Formula}\\
+    \hline\noalign{\smallskip}\hline\noalign{\smallskip}
+    0 & 0 & 0 & a \\
+    0 & 0 & 1 & b \\
+    0 & 1 & 0 & c \\
+    0 & 1 & 1 & d \\
+    1 & 0 & 0 & e \\
+    1 & 0 & 1 & f \\
+    1 & 1 & 0 & g \\
+    1 & 1 & 1 & h \\
+    \hline\noalign{\smallskip}
+  \end{tabular}
+  }
+\end{table}
+
+Following Shannon's method\index{Binary Decision Diagrams!Shannon's method}, we choose a variable and build the lower level \ac{BDD}\index{Binary Decision Diagrams} assuming the edge value for the chosen variable.
+In the remainder of the path, the variable's value is unchanged.
+For example, the expression $A \lor \parsin{\lnot B \land C}$ has value ``0'' in the lines $a$ and $c$, and value ``1'' in the other lines.
+By choosing the variable $A$ first, then $B$ and $C$, the resulting \ac{BDD}\index{Binary Decision Diagrams} with the binary values nodes (called sink nodes ``false'' and ``true'') for this formula is depicted in \cref{fig:bdd-diagram-for-example-expression}.
+Starting from the top-level node $A$, the formula expressed by the \ac{BDD}\index{Binary Decision Diagrams} is true if $A$ assumes value true.
+If $A$ is false, and $B$ is false, the expression is only true if $C$ is true.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.25]{bdd-diagram-for-example-expression}
+  \caption{\Iacs{BDD} for the expression $A \lor \parsin{\lnot B \land C}$}
+  \label{fig:bdd-diagram-for-example-expression}
+\end{figure}
+
+\Cref{fig:bdd-diagram-for-example-expression} is \iac{ROBDD}.
+To be considered \iac{ROBDD}, the \ac{BDD}\index{Binary Decision Diagrams} must meet the following constraints~\cite{BRB1990}:
+%
+\begin{alineas}
+  \item the variables are assigned a constant ordering;
+  \item every path to sink nodes visit the input variables in ascending order;
+  \item each node represents a distinct logic function.
+\end{alineas}
+%
+For a given expression, the size of \acp{BDD} and \acp{ROBDD} depends on the chosen variables ordering.
+The work reported in~\cite{Rudell1993} shows initial findings on best variable ordering, and the work reported in~\cite{KH2014} shows heuristics to improve the performance for optimal order search.
+
+For \acp{SFT} the evaluation of \iac{BDD} is the calculation of the probability of the paths ending in \emph{true}.
+For example, the probability of the expression in \cref{fig:bdd-diagram-for-example-expression} is obtained from the formula: $\probability{A \lor \parsin{\lnot A \land \lnot B \land C}}$. Note that the formula in the probability calculation is different from the formula that originated the diagram.
+
+\subsection[DT]{\Acl*{DT}}
+\label{sec:dependency-trees}
+
+\Acf{DT} is a hierarchical acyclic graph of expressions that shows all possible cut sequences for any given set of events.
+It is a graphical view of a \ac{TTT}.
+At the top of \iac{DT} are the variables, that is, the single events that occur in an expression.
+On the lower levels are the increasingly complex expressions.
+Each node represents \iac{MCSeq}.
+\Cref{fig:simple-dependency-tree} shows \iac{DT} with all nodes for variables $X$ and $Y$.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.5]{simple-dependency-tree}
+  \caption{\acs*{DT} for variables $X$ and $Y$}
+  \label{fig:simple-dependency-tree}
+\end{figure}
+
+The reduction of a structure expression is given by the activation (true values) of nodes.
+If a node is active (true), then all child nodes are also active; the converse is also true: if all node's children are active, then it is also active.
+The reduced expression is given by the \ac{DNF} created with the expressions of higher active level nodes.
+To reduce the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$, given on the beginning of this \lcnamecref{sec:dependency-trees}, we create the \ac{DT} depicted in \cref{fig:dependency-tree-reduction}.
+Nodes marked with ``1'' are those \acp{MCSeq} given directly by the formula.
+Nodes marked with ``2'' are child nodes of the ``1'''s nodes, and so forth.
+The node of the expression $\parsin{\parsin{X \pand Y} \land Z}$ is a grandchild of $X \land Y$ and thus it is not necessary.
+The final expression is obtained by the active higher level node, which is $X \land Y$.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.7]{dependency-tree-reduction}
+  \caption{\acs*{DT} for the formula $\parsin{X \land Y} \lor \parsin{\parsin{X \pand Y} \land Z}$}
+  \label{fig:dependency-tree-reduction}
+\end{figure}
+
+\subsection[ZBDD]{\Aclp*{ZBDD}\index{Zero-suppressed Binary Decision Diagrams}}
+\label{sec:zbdd}
+
+The work reported in~\cite{TD2004} proposes \aclp{ZBDD}, which is a variant of \ac{BDD}\index{Binary Decision Diagrams}, and uses set manipulations (union, intersection, difference, and product) to obtain \acp{MCSeq} of \acp{DFT}.
+
+To reduce \iac{BDD} to \iac{ZBDD}, the nodes that have the ``true'' (`1') path pointing to the ``false'' (`0') sink node are removed, and the parent node is connected directly to the ``false'' subgraph of the removed node.
+\Cref{fig:zbdd-example} shows an example of \ac{ZBDD} for the combination set $\setsin{a,b}$, as shown in~\cite{TD2004}.
+The idea of the reduction is to remove irrelevant variables and nodes.
+The irrelevant variables are set to ``false''.
+The method described in~\cite{TD2004} obtains the \acp{MCSeq} by navigating the paths to sink node ``true''.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphicsaspectratio[0.7]{bdd-zbdd-example}
+  \caption{\acs*{ZBDD} example of combination set $\setsin{a,b}$}
+  \label{fig:zbdd-example}
+\end{figure}
+
+Although the work reported in~\cite{TD2004} shows \theac{ZBDD}, the final solution does not use them directly. 
+The idea is to transform the \ac{DFT} into \iac{SFT}, in a very similar way as the one shown in~\cite{TXD2011}.
+The order-related operators in \iac{DFT} are replaced by a new event, which takes ordering into account.
+Finally, the \acp{MCSeq} are obtained using set manipulation with elements that are basic events alone or order-related operators.
+These order-related operators are event-to-event only, so they cannot be combined with other sets.
+
+The use of sets in~\cite{TD2004} is very related to our \ac{algebra}.
+We use sets of sequences to define the \ac{algebra}, but keep the analysis with set operators.
+In \ac{algebra} we do not create new events that represent an order-related operator.
+Our order-related operator has a set-based semantics that can be combined with other non-order-related (Boolean\index{Boolean Algebra}) operators.
+
+\subsection[SBDD]{\Aclp*{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential}}
+\label{sec:sbdd}
+
+\Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} is an extension of \ac{BDD}\index{Binary Decision Diagrams} to tackle ordering of events in \acp{DFT} for \ac{CSp} and \ac{WSp} gates.
+Ordering of events in \ac{CSp} gates~\cite{XTD2012} is slightly different from \ac{WSp}~\cite{TXD2011}.
+A backup system in \ac{CSp} gets activated slower than in \ac{WSp}, which implies that there are less failure possibilities in \ac{CSp}, but its the readiness is lower than in \ac{WSp}.
+\Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} adds a new kind of node that contains a binary operation of fault events, which allows to express the ordering of events.
+One kind of operation expresses the slowness of the relation of the fault events of \ac{CSp}, and another one expresses the readiness of the \ac{WSp}.
+The latter semantics is similar to the semantics of \ac{PAND} and \ac{IBefore} (combined with \ac{AND}) gates.
+
+\Ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} creation has two steps:
+\begin{alineasinline}
+  \item \ac{CSp} or \ac{WSp} \ac{DFT} conversion, and \label{item:sbdd-creation-spare}
+  \item \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} model generation.\label{item:sbdd-model-generation}
+\end{alineasinline}
+In \ref{item:sbdd-creation-spare}, it is a \ac{DFT}-to-\ac{DFT} conversion.
+\Ac{CSp} and \ac{WSp} gates are converted to a new, but equivalent \ac{DFT} without \ac{CSp} and \ac{WSp} gates, where the operations appear as basic events and are combined using other gates.
+In \ref{item:sbdd-model-generation}, the \ac{SBDD}\index{Sequential Binary Decision Diagrams}\index{Binary Decision Diagrams!Sequential} model is created.
+The model may contain nodes that are contradictory as, for example, nodes that assumes that an event $A$ is false and a binary operation with \ac{AND} semantics that contains $A$ is true.
+This step ends when all contradictions are removed.
+The evaluation is similar to \acg{BDD}: each path ending in true is a minimal term in the \ac{DNF} that may contain one of the binary operations and individual events.
+
+
