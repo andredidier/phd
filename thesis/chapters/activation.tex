@@ -1,7 +1,7 @@
 \chapter{Reasoning about fault activation}
 \label{chap:activation}
 
-The \acl{activation} proposed in this work emerges from the need to analyse the behaviour of a system when a subset of the faults have been triggered in some order, and to provide completeness analysis of system behaviour.
+The \ac{activation} proposed in this work emerges from the need to analyse the behaviour of a system when a subset of the faults have been triggered in some order, and to provide completeness analysis of system behaviour.
 %
 There are at least two strategies to use \ac{activation} to obtain structure expressions of \ac{SFT}, \ac{TFT}, or \ac{DFT}: 
 \begin{alineasinline}
@@ -106,7 +106,7 @@ In what follows we show a sketch of the denotational semantics of \ac{activation
 \end{align*}
 %
 In an expression, if the $i^{th}$ predicate evaluates to $true$ ($\top$), we say that the $i^{th}$ operational mode is \emph{activated}.
-To simplify the presentation of the expressions and to ease the understanding, we use the denotational semantics in the remainder of this article (the right-hand side of the sketch above).
+To simplify the presentation of the expressions and to ease the understanding, we use the denotational semantics in the remainder of this chapter (the right-hand side of the sketch above).
 Thus, instead of using $\logicInFormula{Exp} = \logicInFormula{\left(P_1,O_1\right)} | \logicInFormula{\left(P_2,O_2\right)}$ we will use $Exp = \left\{ \left(P_1,O_1\right), \left(P_2,O_2\right)  \right\}$
 
 In this \lcnamecref{sec:grammar}, to illustrate the properties and possible analyses, we use an example of a system with faults $A$ and $B$ and the following outputs:
