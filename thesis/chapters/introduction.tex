@@ -204,11 +204,11 @@ Writing and analysing expressions with order-related operators is more complex t
 We propose a logic, called \ac{activation}, which works together with an accompanied (attached) algebra to perform analysis of system structure and component interaction with a focus on fault modelling and fault propagation, tackling the complexity introduced by order-related operators.
 \ac{activation} receives an algebra and the set of operational modes of a system as parameters.
 The choice of algebra defines which structure expressions can be obtained: if Boolean algebra is passed as a parameter, the \ac{activation} can generate structure expressions with Boolean operators (\ac{SFT}); if the \ac{algebra} is passed as a parameter, the \ac{activation} can generate structure expressions with order-related operators (\ac{TFT} and \ac{DFT}).
-The \ac{activation} requires that the accompanied algebras provide a set of properties (tautology and contradiction) and semantic values.
+The \ac{activation} requires that the accompanied algebras satisfy a set of properties (tautology and contradiction) and semantic values.
 The use of the \ac{NOT} is essential: besides its use in expressions, we use the complement of structure expressions, normalizing them and making them \emph{healthy}.
 
 To obtain critical event expressions used in \acp{FT} and to denote faults propagation, the \ac{activation} provides a predicate notation and verification of non-determinism. 
-We show three different approaches to check the non-determinism and answer \cref{question:non-determinism}: 
+We show three different approaches to check non-determinism and answer \cref{question:non-determinism}: 
 \begin{alineasinline}
   \item verify its existence, 
   \item indicate which set of operational modes are active for a combination of faults, or 
@@ -223,7 +223,7 @@ In our proposed solution, depending on the easiness to identify the faults, the 
 %
 Both paths end with structure expressions and the \ac{FTA} is performed using \ac{algebra}.
 
-\Cref{fig:strategy-overview-csp} shows how to perform \ac{FTA} using faults injection.
+\Cref{fig:strategy-overview-csp} shows how to perform \ac{FTA} using fault injection.
 The ``Faults injection'' block is obtained from part of our work reported in~\cite{DM2012,Didier2012}.
 It starts with \simulink modelling, converts the model to \ac{CSPm} and then obtains fault event sequences (also called fault traces).
 The fault event sequences are then mapped to \theac{algebra}, which has a denotational semantics based on sets of lists.
@@ -249,7 +249,7 @@ Otherwise, the system is modified, and the process continues, modifying system's
 The \ac{activation} associates each operational mode with a fault expression.
 After modelling all faults, the top events are extracted in a predicate notation. 
 For example, ``is the behaviour of the system in the operational mode $X$?'', where $X$ can be an omission, commission, etc.
-Given the flexibility of the \ac{activation} notation, it can be used to reason about basic fault events and top-event failures, which are related to~\ref{question:mathematical-model}
+Given the flexibility of the \ac{activation} notation, it can be used to reason about basic fault events and top-event failures, which are related to~\ref{question:mathematical-model}.
 Each predicate in \ac{activation} generates an expression in \theac{algebra}, which is reduced to obtain a normal form to obtain \acp{MCSeq} and to calculate top-events probability.
 With the system modelled in \ac{activation}, the fault tolerance patterns can be applied directly on the model.
 %

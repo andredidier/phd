@@ -141,8 +141,8 @@
 \Crefname{table}{Table}{Tables}
 \Crefname{page}{Page}{Pages}
 \Crefname{section}{Section}{Sections}
-\Crefname{subsection}{Subsection}{Subsections}
-\Crefname{subsubsection}{Subsubsection}{Subsubsections}
+\Crefname{subsection}{Section}{Sections}
+\Crefname{subsubsection}{Section}{Sections}
 \input{capa}
 
 %% Change the following pdf author attribute name to your name.
@@ -440,7 +440,7 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 }
 \newcommand{\healthinessfun}[2][]{\ensuremath\healthiness[#1]\left(#2\right)}
 \newcommand{\healthy}[1][]{\ensuremath\healthiness[#1]\text{-healthy}}
-\def\undefinednominal{\ensuremath undefined}
+\def\undefinednominal{\ensuremath\mathit{undefined}}
 \newcommand{\contradiction}[1]{\ensuremath\mathrm{contradiction}\left(#1\right)}
 \newcommand{\tautology}[1]{\ensuremath\mathrm{tautology}\left(#1\right)}
 \newcommand{\eval}[2]{\ensuremath\mathrm{eval}~#1~#2}
@@ -458,11 +458,12 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 \newcommand{\cons}[2]{\ensuremath #1 ~\#~ #2}
 \newcommand{\syntactically}[2]{\ensuremath {#1}\vdash{#2}}
 \newcommand{\semantically}[2]{\ensuremath {#1}\models{#2}}
+\def\VAL{\ensuremath\mathit{VAL}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \makeindex
 
-\includeonly{chapters/activation}
+\includeonly{chapters/case-study}
 
 
 \begin{document}

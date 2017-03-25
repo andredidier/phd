@@ -24,7 +24,7 @@ We show some of them in \cref{sec:ft-stateful-analysis-methods}.
 \label{sec:ft-stateful-analysis-methods}
 
 The work reported in~\cite{STR2002} shows a formal approach to analyse \ac{SFT} using \ac{ITL}.
-Instead of tackling basic events ordering (as in \ac{PAND}), it considers a causal relation over a gate, as for example, a relation of a basic event and a higher-level intermediary event.
+Instead of tackling basic events ordering (as in \ac{PAND}), it considers a causal relation over a gate, as for example, a relation of a basic event and a higher-level intermediate event.
 
 For \acp{TFT}, the works reported in~\cite{MPW2010,MWP2012} show an inverse solution.
 They map \acp{FSM} to \pandora logic, then verify system properties.
@@ -93,7 +93,7 @@ The symbol nodes are replaced by the values assumed by a specific formula.
 
 Following Shannon's method\index{Binary Decision Diagrams!Shannon's method}, we choose a variable and build the lower level \ac{BDD}\index{Binary Decision Diagrams} assuming the edge value for the chosen variable.
 In the remainder of the path, the variable's value is unchanged.
-For example, the expression $A \lor \parsin{\lnot B \land C}$ has value ``0'' in the lines $a$ and $c$, and value ``1'' in the other lines.
+For example, the expression $A \lor \parsin{\lnot B \land C}$ has value ``0'' in the lines $a$, $c$ and $d$, and value ``1'' in the other lines.
 By choosing the variable $A$ first, then $B$ and $C$, the resulting \ac{BDD}\index{Binary Decision Diagrams} with the binary values nodes (called sink nodes ``false'' and ``true'') for this formula is depicted in \cref{fig:bdd-diagram-for-example-expression}.
 Starting from the top-level node $A$, the formula expressed by the \ac{BDD}\index{Binary Decision Diagrams} is true if $A$ assumes value true.
 If $A$ is false, and $B$ is false, the expression is only true if $C$ is true.

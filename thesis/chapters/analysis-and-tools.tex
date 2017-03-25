@@ -16,8 +16,8 @@ The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}:
   \item can be essential in practical use~\cite{Andrews2001}.
 \end{alineasinline}
 We discuss such cases in \cref{sec:not-operator}.
-
-In \cref{sec:probabilistic-analysis-non-coherent-tree} we show the probability calculation of \iac{FT} with an explicit \ac{NOT} operator.
+%
+In particular, in \cref{sec:probabilistic-analysis-non-coherent-tree} we show the probability calculation of \iac{FT} with an explicit \ac{NOT} operator.
 
 To reuse a nominal model to analyse faults we need fault injection.
 In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to inject faults and obtain failure expressions from a nominal model.
@@ -117,7 +117,7 @@ At least three dependability means\index{Dependability!means to attain} can be a
 \end{description}
 \end{sloppypar}
 
-In \cref{sec:static-fault-trees,sec:temporal-fault-trees,sec:dynamic-fault-trees} we briefly show \ac{FT} symbology and means to analyse \acp{FT}.
+In \cref{sec:static-fault-trees,sec:temporal-fault-trees,sec:dynamic-fault-trees} we briefly show the \ac{FT} symbology and the means to analyse \acp{FT}.
 We detail its structure expression extraction because they are a common means to perform both qualitative and quantitative analysis.
 
 \subsection{\Aclp*{SFT}}
@@ -128,7 +128,7 @@ We explain their symbology and semantics in this \lcnamecref{sec:static-fault-tr
 
 The \FThandbook shows traditional symbols for gates and events.
 Basic events are usually drawn as a rectangle (for the text) and a circle below it, as shown in \cref{fig:sft-example-ald-software}, or as a circle with the text of the basic event, as shown in \cref{fig:sft-example-traditional-gates}.
-Top-level and intermediary events are drawn as a rectangle (for the text) and a gate below it, as shown in \cref{fig:sft-example-traditional-gates,fig:sft-example-ald-software}.
+Top-level and intermediate events are drawn as a rectangle (for the text) and a gate below it, as shown in \cref{fig:sft-example-traditional-gates,fig:sft-example-ald-software}.
 When \iac{FT} becomes too large, transfer in and out symbols can be used.
 They are usually drawn as triangles with a letter or a number.
 \Cref{fig:sft-example-traditional-gates} depicts traditional gates as specified in the \FThandbook, and \cref{fig:sft-example-ald-software} shows \iac{FT} using \theftanalyser{}---a free commercial tool.
@@ -154,9 +154,9 @@ In this work, to keep a visual identity with other \acp{FT}, and to avoid symbol
     [.25\textwidth]{%
       \includegraphicsaspectratio[0.2]{ft-symbol-basic-event}
     }%
-  \subcaptionbox{Intermediary event\label{fig:sft-intermediary-event}}
+  \subcaptionbox{Intermediate event\label{fig:sft-intermediate-event}}
     [.25\textwidth]{%
-      \includegraphicsaspectratio[0.2]{ft-symbol-top-or-intermediary}
+      \includegraphicsaspectratio[0.2]{ft-symbol-top-or-intermediate}
     }
   \subcaptionbox{\ac{AND} gate\label{fig:sft-and-gate}}
     [.25\textwidth]{%
@@ -233,7 +233,7 @@ It is simpler to express than \ac{DFT}, but lacks the fault-tolerance-related ga
 
 \begin{sloppypar}
 Structure expressions\index{structure expression} are also present in \acp{TFT}~\cite{WP2009,Walker2009,WP2010}, through the \pandora methodology.
-These expressions use the \ac{SFT} operators \ac{OR} and \ac{AND}, and three new operators\footnote{In formulas, the following symbols are used to represent the operators, respectively: ``$<$'', ``$|$'', and ``$\&$''} related to events ordering: \acf{PAND}, \acf{POR}, and \acf{SAND}.
+These expressions use the \ac{SFT} operators \ac{OR} and \ac{AND}, and three new operators\footnote{In formulas, the following symbols are used to represent the operators \acs{PAND}, \acs{POR}, and \acs{SAND}, respectively: ``$<$'', ``$|$'', and ``$\&$''} related to events ordering: \acf{PAND}, \acf{POR}, and \acf{SAND}.
 The semantics of the \ac{PAND} in \acp{TFT} is similar to the semantics of the \ac{PAND} described in the \FThandbook.
 To avoid ambiguous expressions, the semantics in \acp{TFT} is stated in terms of natural numbers, using a \emph{sequence value} function.
 For every possible combination of events ordering, it assigns a sequence value to each fault event.
@@ -495,7 +495,7 @@ We categorize them as:
 %
 \begin{alineas}
   \item
-  Finding \acp{MCSeq} (qualitative analysis) is obtained by replacing \ac{DFT} gates with \ac{SFT} gates, using the text as their logical constraints.
+  \Acp{MCSeq} (qualitative analysis) are obtained by replacing \ac{DFT} gates with \ac{SFT} gates, using the text as their logical constraints.
   \Acp{MCS} in the \ac{SFT} are expanded using timing constraints from the texts into \ac{MCSeq}.
   In this case, the behaviour of spare events cannot be correctly taken into account;
   \item
@@ -532,7 +532,7 @@ In~\cite{Merle2010,MRL+2010,MRL2011} fault events occur in a specific time and a
 As the ``date-of-occurrence'' function is stated in continuous time, the probability of two events occurring at the same time is negligible.
 Thus, the relation in time of the occurrence of the events is, in fact, the useful information.
 \Ac{DFT} gates' algebraic model is summarized in \cref{tbl:merle-dft-algebraic-model}.
-Structure expressions\index{structure expression} are written with an algebra that has operators \ac{OR} and \ac{AND}, and three new operators to express events ordering:
+Structure expressions\index{structure expression} are written with an algebra that has operators \ac{OR} and \ac{AND}, and three new operators\footnote{In formulas, the symbols of \acs{NIBefore}, \acs{SIMLT}, \acs{IBefore} are, respectively: $\nibefore$, $\simultaneous$, and $\ibefore$} to express events ordering:
 \begin{alineasinline}
   \item \ac{NIBefore},
   \item \ac{SIMLT}, and
@@ -698,7 +698,7 @@ Let $s$ be a statement, then:
 %
 \begin{subequations}
 \begin{align}
-\var s = \setsin{X | s \in X} & \implies \var s \in B & \text{(variable)}\\
+\var s = \setsin{X ~|~ \exists~ X ~\bullet~ s \in X} & \implies \var s \in B & \text{(variable)}\\
 X \in B & \implies -X \in B                           & \text{(complement)}\\
 X \in B \land Y \in B & \implies X \inter Y \in B     & \text{(intersection)}
 \end{align}
@@ -902,7 +902,7 @@ The approximation for this expression, removing the negated events, gives the cu
 
 The work reported in~\cite{Andrews2001} shows an example of \iac{FT} with an explicit \ac{NOT} operator, the importance of such an operator, and how to calculate the probability of a critical failure.
 The system is a leak protection system that has valves and sensors, and is depicted in \cref{fig:leak-protection-system}.
-Valve $VAL$ closes a gas flow if a sensor detects a leak $L$.
+Valve $\VAL$ closes a gas flow if a sensor detects a leak $L$.
 If the valve is closed for a certain amount of time, the pressure on the system may increase, and then, a relief valve $PRV$ diverts the gas flow elsewhere.
 %The possible failure are all internal failures: 
 %
@@ -918,22 +918,22 @@ The undesired top-event is an ignition in room 1 ($TOP$).
 As shown in~\cite{Andrews2001}, the structure expression of $TOP$ is:
 %
 \begin{equation}
-TOP = L \land \left(\left(\lnot VAL \land PRV\right) \lor \left(VAL \land I_1\right)\right)\label{eq:leak-protection-system-structure-expression}
+TOP = L \land \left(\left(\lnot \VAL \land PRV\right) \lor \left(\VAL \land I_1\right)\right)\label{eq:leak-protection-system-structure-expression}
 \end{equation}
 %
 For a coherent analysis, they use the consensus law to add a ``missing'' term.
 In this case, the missing term is $L \land PRV \land I_1$.
 This gives the final expression:
 \begin{equation}
-TOP = L \land \left(\left(\lnot VAL \land PRV\right) \lor \left(VAL \land I_1\right) \lor \left(PRV \land I_1\right)\right)\label{eq:leak-protection-system-extended-structure-expression}
+TOP = L \land \left(\left(\lnot \VAL \land PRV\right) \lor \left(\VAL \land I_1\right) \lor \left(PRV \land I_1\right)\right)\label{eq:leak-protection-system-extended-structure-expression}
 \end{equation}
 Finally, the probability for \cref{eq:leak-protection-system-extended-structure-expression} is:
 \begin{equation}
-\probability{TOP} = P_L \times \left( P_{PRV} + P_{VAL} \times P_{I_1} - 
-P_{PRV}\times P_{VAL}  \right)\label{eq:leak-protection-system-probability}
+\probability{TOP} = P_L \times \left( P_{PRV} + P_{\VAL} \times P_{I_1} - 
+P_{PRV}\times P_{\VAL}  \right)\label{eq:leak-protection-system-probability}
 \end{equation}
 %
-where $P_x$ is the failure probability of $x$, $x \in \left\{L,PRV,VAL,I_1\right\}$.
+where $P_x$ is the failure probability of $x$, $x \in \left\{L,PRV,\VAL,I_1\right\}$.
 
 
 \section{Systems nominal model and fault injection to obtain structure expressions}

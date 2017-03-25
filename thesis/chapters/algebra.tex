@@ -102,7 +102,7 @@ To simplify the use of list slicing, its definition includes the lower and upper
 \slice{xs}{i}{j} = \slice{xs}{L}{U}
 \end{equation}
 %
-where $L = \max{0,i}$ and $U = \min{j,\length{xs}}$.
+where $L = \max{\left(0,i\right)}$ and $U = \min{\left(j,\length{xs}\right)}$.
 
 List slicing and concatenation are complementary: concatenating two consecutive slices results in the original list:
 \begin{equation}
@@ -126,7 +126,7 @@ A variable in \ac{algebra} is defined by one generator, and denotes its occurren
 \label{def:var}
 \denote{\var{x}} =
   \left\{~
-    zs ~\middle|~ x \in zs
+    zs ~\middle|~ \exists~ zs ~\bullet~ x \in zs
   ~\right\}
 \end{equation}
 %
@@ -214,6 +214,8 @@ For example, if the generators are $a$ and $b$, then $\UNIV$ is:
 \[
 \left\{~ \listsin{}, \listsin{a}, \listsin{b}, \listsin{a,b}, \listsin{b,a} ~\right\}
 \]
+%
+and $\generators(\UNIV) = \left\{a,b\right\}$.
 
 
 The following expressions are sufficient to define the \ac{algebra} in terms of an inductively defined set ($\algebraset$):
@@ -676,7 +678,7 @@ Expressions with Boolean\index{Boolean Algebra} operators are used as operands o
 \ac{XBefore} is distributive over \ac{OR}.
 On the other hand, the \ac{AND} is not.
 The \ac{AND} of an event with an \ac{XBefore} states that such an event can occur in any order within the events in the \ac{XBefore}.
-Lastly, the \ac{XBefore} is transitive with preconditions over the intermediary variable.
+Lastly, the \ac{XBefore} is transitive with preconditions over the intermediate variable.
 
 The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer if we expand \cref{thm:and_xbefore_equiv_or_xbefore} with \cref{thm:xbefore-inf-1} and  \cref{thm:xbefore-inf-2}:
 %
@@ -852,7 +854,7 @@ In this \lcnamecref{sec:qualitative-quantitative-analyses} we show how to formal
   \item the root probability, given the availability of basic fault occurrences probabilities.
 \end{alineasinline}
 %
-These attributes of \iac{FT} are the most representative ones, but other can be modelled similarly.
+These attributes of \iac{FT} are the most representative ones, but others can be modelled similarly.
 
 \subsection[Minimal cut sequence]{\Acl{MCSeq}}
 
@@ -865,7 +867,7 @@ Let $S$ be a formula in \ac{algebra}.
 Its \aclp{MCSeq} ($\mcseqop$ of $S$) are:
 %
 \begin{equation}
-\mcseq{S} = \left\{~ xs ~\middle|~ xs \in \denote{S} ~\bullet~ \length{xs} = min_S ~\right\}
+\mcseq{S} = \left\{~ xs ~\middle|~ xs \in \denote{S} \land \length{xs} = min_S ~\right\}
 \end{equation}
 %
 where
@@ -873,7 +875,7 @@ where
 min_S = \Min{\left\{~ \length{xs} ~\middle|~ xs \in \denote{S} ~\right\}}
 \]
 %
-and $\Minop$ returns the least sequence length in the given set.
+and $\Minop$ returns the size of the smallest sequence in the given set.
 \end{definition}
 
 For example, the \acp{MCSeq} of $\xbefore{\var{a}}{\left(\var{b} \lor \var{c}\right)}$ (for generators $a$, $b$, and $c$) are:
