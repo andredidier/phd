@@ -10,7 +10,7 @@ There are at least two strategies to use \ac{activation} to obtain structure exp
 \end{alineasinline}
 %
 In approaches as those reported in~\cite{WP2009,Merle2010}, behavioural completeness is left for the analyst.
-Using tautology and the indication of undefined nominal values, we ensure that no situation is left forgotten.
+By using tautology and the indication of undefined nominal values, we ensure that no situation is left behind.
 That is, modelling is behaviourally complete.
 
 The \acl{activation} associates: 
@@ -152,7 +152,7 @@ This property is very simple and it is used to eliminate any term that has a pre
 Let $exp$ be an expression in the \ac{activation}, then:
 %
 \begin{equation}
-\healthinessfun[1]{exp} = \left\{~\left(P,O\right) ~|~ \left(P,O\right) \in exp ~\bullet~ \lnot \contradiction{P} ~\right\}
+\healthinessfun[1]{exp} = \left\{~\left(P,O\right) ~|~ \left(P,O\right) \in exp \land \lnot \contradiction{P} ~\right\}
 \end{equation}
 %
 where the operator $\in$ indicates that a term is present in the expression.
@@ -209,7 +209,7 @@ Let $exp$ be an expression in the \ac{activation}. Then:
 \begin{equation}
 \label{eq:h3}
 \begin{split}
-\healthinessfun[3]{exp} = \left\{ \right.&\left(P_1, O_1\right) | \left(P_1, O_1\right) \in exp \land \\
+\healthinessfun[3]{exp} = \left\{ \right.&\left(P_1, O_1\right) | \left(P_1, O_1\right) \in exp ~\land \\
     &\forall \left(P_2,O_2\right) \in exp \bullet 
       \left(P_1, O_1\right) = \left(P_2, O_2\right) \lor O_1 \neq O_2
   \left.\right\} \cup \\
