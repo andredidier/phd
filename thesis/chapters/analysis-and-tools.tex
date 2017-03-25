@@ -16,8 +16,8 @@ The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}:
   \item can be essential in practical use~\cite{Andrews2001}.
 \end{alineasinline}
 We discuss such cases in \cref{sec:not-operator}.
-
-In \cref{sec:probabilistic-analysis-non-coherent-tree} we show the probability calculation of \iac{FT} with an explicit \ac{NOT} operator.
+%
+In particular, in \cref{sec:probabilistic-analysis-non-coherent-tree} we show the probability calculation of \iac{FT} with an explicit \ac{NOT} operator.
 
 To reuse a nominal model to analyse faults we need fault injection.
 In \cref{sec:faults-injection} we explain how we used \simulink and \ac{CSPm} to inject faults and obtain failure expressions from a nominal model.
@@ -117,7 +117,7 @@ At least three dependability means\index{Dependability!means to attain} can be a
 \end{description}
 \end{sloppypar}
 
-In \cref{sec:static-fault-trees,sec:temporal-fault-trees,sec:dynamic-fault-trees} we briefly show \ac{FT} symbology and means to analyse \acp{FT}.
+In \cref{sec:static-fault-trees,sec:temporal-fault-trees,sec:dynamic-fault-trees} we briefly show the \ac{FT} symbology and the means to analyse \acp{FT}.
 We detail its structure expression extraction because they are a common means to perform both qualitative and quantitative analysis.
 
 \subsection{\Aclp*{SFT}}
@@ -128,7 +128,7 @@ We explain their symbology and semantics in this \lcnamecref{sec:static-fault-tr
 
 The \FThandbook shows traditional symbols for gates and events.
 Basic events are usually drawn as a rectangle (for the text) and a circle below it, as shown in \cref{fig:sft-example-ald-software}, or as a circle with the text of the basic event, as shown in \cref{fig:sft-example-traditional-gates}.
-Top-level and intermediary events are drawn as a rectangle (for the text) and a gate below it, as shown in \cref{fig:sft-example-traditional-gates,fig:sft-example-ald-software}.
+Top-level and intermediate events are drawn as a rectangle (for the text) and a gate below it, as shown in \cref{fig:sft-example-traditional-gates,fig:sft-example-ald-software}.
 When \iac{FT} becomes too large, transfer in and out symbols can be used.
 They are usually drawn as triangles with a letter or a number.
 \Cref{fig:sft-example-traditional-gates} depicts traditional gates as specified in the \FThandbook, and \cref{fig:sft-example-ald-software} shows \iac{FT} using \theftanalyser{}---a free commercial tool.
