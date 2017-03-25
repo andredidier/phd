@@ -24,7 +24,7 @@ Now we show five contributions:
   \item representing each of the fault traces reported in~\cite{DM2012} as a term in our proposed \ac{algebra}, using the mapping function shown in \cref{sec:mapping-cspm-algebra},
   \item modelling faults of the monitor using \ac{activation}, using expressions in Boolean Algebra\index{Boolean Algebra}, 
   \item modelling faults of the monitor with \ac{activation}, but using \ac{algebra} as the inner algebra, and
-  \item obtaining failure probability from a formula with explicit \ac{NOT} operators without considering the consensus law nor the theory shown in~\cite{Andrews2001}.
+  \item obtaining failure probability from a formula with explicit \ac{NOT} operators neither considering the consensus law nor the theory shown in~\cite{Andrews2001}.
 \end{alineasinline}
 %
 Similarly to the association of fault events of \cref{tbl:acsAnnotations} in \cref{sec:faults-injection}, we associate the fault events as:
@@ -41,7 +41,7 @@ and for the leak detection system, we associate fault events as:
 prv & = \text{the pressure relief valve fails} & PRV = \var{prv}\\
 i_1 & = \text{there is an ignition source in room 1} &I_1 = \var{i_1}\\
 l & = \text{there is a gas leak in room 1} & L = \var{l}\\
-val & = \text{the isolation valve fails} & VAL = \var{val}
+val & = \text{the isolation valve fails} & \VAL = \var{val}
 \end{align*}
 
 \section{From traces to structure expressions with Boolean operators}
@@ -68,7 +68,7 @@ Similarly to the mapping function shown in \cref{sec:mapping-cspm-algebra}, we d
 \end{subequations}
 %
 The only difference of the mapping function, when considering Boolean operators only, is \cref{eq:mapping-bool-two-more-trace}.
-\Cref{eq:mapping-bool-set,eq:mapping-bool-singleton,eq:mapping-bool-empty} are similar to \cref{eq:mapping-algebra-set,eq:mapping-algebra-singleton,eq:mapping-algebra-empty}
+\Cref{eq:mapping-bool-set,eq:mapping-bool-singleton,eq:mapping-bool-empty} are similar to \cref{eq:mapping-algebra-set,eq:mapping-algebra-singleton,eq:mapping-algebra-empty}.
 
 For each trace shown in \cref{sec:faults-injection}, the mapping function generates the following expressions
 %
@@ -89,7 +89,7 @@ For each trace shown in \cref{sec:faults-injection}, the mapping function genera
 They represent the same faults shown in \cref{sec:faults-injection}.
 %Note that the negation in the formula is very simple to represent in \ac{algebra} (and \ac{FBA}\index{Boolean Algebra!Free}) because it is just the absence of the generator.
 %
-Applying the mapping function, \cref{eq:mapping-bool-set}, for the previously shown set of traces, we obtain the following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
+By applying the mapping function, \cref{eq:mapping-bool-set}, for the previously shown set of traces, we obtain the following expression in \ac{algebra} (and in \ac{FBA}\index{Boolean Algebra!Free}):
 %
 \begin{equation}
 M_{bool} = (B_1 \land B_2) \lor (F \land (B_1 \lor B_2))\label{eq:m-bool}
@@ -633,11 +633,11 @@ In this \lcnamecref{sec:top-event-probability-explicit-not} we show how to use \
 We use \cref{eq:formula-probability-of-inf} to split the calculations of the top-event structure expression shown in \cref{eq:leak-protection-system-structure-expression}:
 \begin{align}
 \formulaprob{L \land 
-  \left( \left(\lnot VAL \land PRV\right) \lor 
-  \left(VAL \land I_1\right) \right) } = \nonumber\\
+  \left( \left(\lnot \VAL \land PRV\right) \lor 
+  \left(\VAL \land I_1\right) \right) } = \nonumber\\
   \formulaprob{L} \times 
-  \formulaprob{\left(\lnot VAL \land PRV\right) \lor 
-    \left(VAL \land I_1\right)}\label{eq:leak-protection-system-split}
+  \formulaprob{\left(\lnot \VAL \land PRV\right) \lor 
+    \left(\VAL \land I_1\right)}\label{eq:leak-protection-system-split}
 \end{align}
 
 Then, we obtain the formula probability of the top-event probability of the structure expression shown in \cref{eq:leak-protection-system-structure-expression} in \ac{algebra}:
@@ -647,8 +647,8 @@ Then, we obtain the formula probability of the top-event probability of the stru
 \formulaprob{L} = &~ \denotationalprob{\listsin{l}} & \text{by \cref{eq:formula-probability-any-generators}}\nonumber\\
 = &~ P_l(t)\label{eq:leak-protection-system-top1}\\
 %%%%%
-\formulaprobop\{\left(\lnot VAL \land PRV\right) \lor &\nonumber\\
-    \left(VAL \land I_1\right)\} = &~
+\formulaprobop\{\left(\lnot \VAL \land PRV\right) \lor &\nonumber\\
+    \left(\VAL \land I_1\right)\} = &~
     \denotationalprob{\listsin{prv}} + 
     \denotationalprob{\listsin{i_1,prv}} +  \nonumber\\
     &~\denotationalprob{\listsin{prv,i_1}} + 
@@ -660,8 +660,8 @@ Then, we obtain the formula probability of the top-event probability of the stru
 %%%%%
 \intertext{Note that we use the expression without the consensus law, but the ``missing'' term $PRV \land I_1$ appears naturally on the denotational semantics used in our proposed probability calculation.}
 %%%%%
-\formulaprobop\{\left(\lnot VAL \land PRV\right) \lor &\nonumber\\
-    \left(VAL \land I_1\right)\} = &~
+\formulaprobop\{\left(\lnot \VAL \land PRV\right) \lor &\nonumber\\
+    \left(\VAL \land I_1\right)\} = &~
     P_{prv}(t) \times (1 - P_{i_1}(t)) \times (1 - P_{val}(t)) \nonumber\\
     &~ P_{i_1}(t) \times P_{prv}(t) \times (1 - P_{val}(t)) \nonumber\\
     &~ P_{val}(t) \times P_{i_1}(t) \times (1 - P_{prv}(t)) \nonumber\\
