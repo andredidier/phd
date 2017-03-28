@@ -887,27 +887,9 @@ Other lists in the denotational semantics of the formula are $\listsin{a,b,c}$ a
 
 \subsection{Root probability}
 
-The work reported in~\cite{Merle2010} shows how to calculate the probability of \iac{PAND} gate as:
-%
-\begin{align}
-P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
-& = \int_0^t P'_2(t_2) \int_0^{t_2} P'_1(t_1) dt_1 dt_2 \nonumber\\
-& = \int_0^t P'_2(t_2) P_1(t_2) dt_2\label{eq:pand-probability}
-\end{align}
-%
-where $P_1$ and $P_2$ are the probabilities of the occurrences of the first and the second faults (cumulative distribution function), respectively, and $T_1$ and $T_2$ are the times the first and the second faults occur.
-The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs is the probability of the sequence of faults $f_i$, $i \in \left\{~1, \ldots, n~\right\}$:
-%
-\begin{align}
-\probability{\left[f_1,f_2\ldots,f_{n-1},f_n\right]} = \nonumber\\ \int_0^t\fiti{n}\int_0^{t_n}\fiti{n-1}\ldots\int_0^{t_3}\fiti{2}
- \int_0^{t_2}\fiti{1} dt_1 dt_2\ldots dt_{n-1}  dt_n\label{eq:general-pand-probability}
-\end{align}
-%
-where $P_i$ is the cumulative distribution function of fault $f_i$.
-
-For \ac{algebra}, our proposal for probability calculation is defined in terms of the probability of \ac{PAND} gates.
+For \ac{algebra}, our proposal for probability calculation is defined in terms of the probability of \ac{PAND} gates, as shown in \cref{eq:general-pand-probability}.
 The reason is that our semantics is defined in terms of a set of lists (or sequences) of fault occurrences.
-The main difference from the \ac{PAND} calculation as reported in~\cite{FAR1976} is that repeated situations must be removed.
+The main difference from the \ac{PAND} calculation is that repeated situations must be removed.
 For example, the probability of $\denote{\xbefore{\var{f_1}}{\var{f_2}}}$ contains the situations in which $f_1$ occurs before $f_2$ \emph{and} $f_3$ does not occur, or $f_3$ occurs in some time: $\probability{\left[f_1,f_2,f_3\right]}$, $\probability{\left[f_1,f_3,f_2\right]}$, and $\probability{\left[f_3,f_1,f_2\right]}$.
 %
 %To isolate these cases, we use the following definitions:
@@ -1006,7 +988,7 @@ When the empty list appears in a denotational semantics it means that the top-ev
 %Thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
 %This is the only assumption in the calculations shown in this \lcnamecref{sec:qualitative-quantitative-analyses}.
 
-We use the traditional probability calculations~\cite{Merle2010} as reference to calculate the probabilities of formulas in \ac{algebra}.
+We use the traditional probability calculations (\cref{sec:probability-theory}) as reference to calculate the probabilities of formulas in \ac{algebra}.
 %\begin{subequations}
 %\begin{align}
 %\probability{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
@@ -1032,7 +1014,7 @@ For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left
 = & P_1(t) \times P_2(t)\label{eq:prob-xbefore-sup-equiv-inf}
 \end{align}
 
-In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$).
+In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$, \cref{eq:traditional-and-probability}).
 This is expected as these two formulas are equivalent, as shown in \cref{thm:xbefore-sup-equiv-inf}.
 
 Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$:
@@ -1051,7 +1033,7 @@ S = & \var{f_1} \land \var{f_2} \land \lnot \var{f_3}\nonumber\\
 = & P_1(t) \times P_2(t) \times \left(1 - P_3(t)\right) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf}}
 \end{align}
 
-Using \cref{eq:formula-probability}, and for generators $f_1$ and $f_2$, we demonstrate the equivalence to the probability of a traditional \ac{OR} operator, calculated using the denotational semantics:
+Using \cref{eq:formula-probability}, and for generators $f_1$ and $f_2$, we demonstrate the equivalence to the probability of a traditional \ac{OR} operator (\cref{eq:traditional-or-probability}), calculated using the denotational semantics:
 %
 \begin{align}
 S = & \vari{1} \lor \vari{2}\nonumber\\

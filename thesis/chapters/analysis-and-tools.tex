@@ -624,7 +624,7 @@ The trigger is divided in two components, CS and SS.
 The failure of any CS or SS, triggers a CPU unit failure.
 The primary CPU (P) has a warm\footnote{Warm spare gates only differ from \ac{CSp} on the activation time.} spare (B).
 The motor module fails if both M and MC fail.
-In order for the pumps unit to fail, all three pumps need to fail, and the left-hand side spare gate needs to fail before (or at the same time as) the right-hand side spare gate (\ac{PAND} gate\footnote{Although the original example uses \iac{PAND} gate, accordingly to the informal description, \iac{SEQ} gate would fit better.}).
+In order for the pumps unit to fail, all three pumps need to fail, and the left-hand side spare gate needs to fail before (or at the same time as) the right-hand side spare gate (\ac{PAND} gate\footnote{Although the original example uses \iac{PAND} gate, according to the informal description, \iac{SEQ} gate would fit better.}).
 The top-level event structure expression is:
 \begin{align}
 SYSTEM =& CS \lor SS \lor \parsin{M \land MC} \lor \\
@@ -658,7 +658,8 @@ For example, the following \acg{TFT} structure expression needs to be expanded \
 \end{align*}
 
 A denotational semantics to Boolean\index{Boolean Algebra} expressions---and consequently to \ac{SFT}---is given by \acp{FBA} (\cref{sec:fba}).
-Using denotational semantics in favour of axiomatic laws is preferred as the axioms must be very simple or must be generally accepted, because a subtlety in an axiom (an unfounded axiom) may invalidate a whole theory.
+Using denotational semantics, instead of axiomatic laws, avoids possible inconsistencies: in an axiomatic presentation, the axioms must be very simple or must be generally accepted, because a subtlety in an axiom (an unfounded axiom or conflicting axioms) may invalidate a whole theory.
+Ideally, one would like to have an axiomatic presentation derived from a denotational one, as advocated, for example, in \cite{HH1998}.
 
 There are several works with stateful analysis methods for \acp{FT} (\ac{SFT}, \ac{TFT}, and \ac{DFT}).
 We show some of them in \cref{sec:ft-stateful-analysis-methods}.
@@ -953,6 +954,70 @@ Let $i$ and $j$ be statements, such that $i,j \in E$, hence from \cref{def:induc
 %\begin{proof}
 %See~\cite[p. 4]{Huffm2010}
 %\end{proof}
+
+\section{Probability theory of fault events}
+\label{sec:probability-theory}
+
+The work reported in~\cite{VGR+1981} presents the mathematical description of events.
+It describes three kinds of events:
+\begin{alineasinline}
+	\item independent events,
+	\item mutually exclusive events, and
+	\item dependent events.
+\end{alineasinline}
+%
+Independent events are those as discussed in \cref{sec:time-relations}.
+Their occurrence and duration vary independently.
+The mutually exclusive events are the kind of events that do not happen at the same time at all.
+Dependent events are those in which the occurrence of one implies the occurrence of the other.
+
+In the context of \acp{FT}, the combined probability of the \ac{OR} gate, $\probability{Q_{\mathrm{OR}}}$, for fault events $A$ and $B$, is:
+\begin{equation}
+\label{eq:traditional-or-probability}
+\probability{Q_{\mathrm{OR}}} = \probability{A} + \probability{B} - \probability{A \inter B}
+\end{equation}
+%
+where $\probability{A \inter B}$ is the probability of $A$ given $B$ has occurred, $\probability{A|B}$, or the probability of $B$ given $A$ has occurred, $\probability{B|A}$ (if the events are random, these probability values are the same).
+
+Considering the relations of fault events:
+\begin{itemize}
+	\item If $A$ and $B$ are independent events, then $\probability{Q_{\mathrm{OR}}} = \probability{A} + \probability{B} - \probability{A} \times \probability{B}$;
+	\item If $A$ and $B$ are mutually exclusive events, then $\probability{Q_{\mathrm{OR}}} = \probability{A} + \probability{B}$; and
+	\item If $B$ is completely dependent on event $A$ (whenever $A$ occurs, $B$ also occurs), then $\probability{Q_{\mathrm{OR}}} = \probability{B}$.
+\end{itemize}
+
+The combined probability of the \ac{AND} gate, $\probability{Q_{\mathrm{AND}}}$, for fault events $A$ and $B$, is:
+%
+\begin{equation}
+\label{eq:traditional-and-probability}
+\probability{Q_\mathrm{AND}} = \probability{A} \times \probability{B|A} = \probability{B} \times \probability{A|B}
+\end{equation}
+
+Considering the relations of fault events:
+\begin{itemize}
+	\item If $A$ and $B$ are independent events, then $\probability{Q_\mathrm{AND}} = \probability{A} \times \probability{B}$; 
+	\item If $A$ and $B$ are mutually exclusive events, then $\probability{Q_\mathrm{AND}} = 0$; and
+	\item If $B$ is completely dependent on event $A$, then $\probability{Q_\mathrm{AND}} = \probability{A}$
+\end{itemize}
+
+The work reported in~\cite{Merle2010} shows how to calculate the probability of \iac{PAND} gate as:
+%
+\begin{align}
+P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
+& = \int_0^t P'_2(t_2) \int_0^{t_2} P'_1(t_1) dt_1 dt_2 \nonumber\\
+& = \int_0^t P'_2(t_2) P_1(t_2) dt_2\label{eq:pand-probability}
+\end{align}
+%
+where $P_1$ and $P_2$ are the probabilities of the occurrences of the first and the second faults (cumulative distribution function), respectively, and $T_1$ and $T_2$ are the times the first and the second faults occur.
+The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs is the probability of the sequence of faults $f_i$, $i \in \left\{~1, \ldots, n~\right\}$:
+%
+\begin{align}
+\probability{\left[f_1,f_2\ldots,f_{n-1},f_n\right]} = \nonumber\\ \int_0^t\fiti{n}\int_0^{t_n}\fiti{n-1}\ldots\int_0^{t_3}\fiti{2}
+\int_0^{t_2}\fiti{1} dt_1 dt_2\ldots dt_{n-1}  dt_n\label{eq:general-pand-probability}
+\end{align}
+%
+where $P_i$ is the cumulative distribution function of fault $f_i$.
+
 
 \section[Using the NOT operator in static fault trees]{Using the \ac{NOT} operator in \aclp*{SFT}}
 \label{sec:not-operator}

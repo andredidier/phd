@@ -120,6 +120,11 @@ All laws shown in \cref{sec:temporal-properties,sec:xbefore-laws} were proved an
 We plan to prove the other theorems related to probabilities, \ac{MCSeq} acceptance criteria verification, and soundness and completeness.
 Properties of the probability calculation of a formula needs to be proved as well.
 
+Although \acp{FT} support events susceptible to common cause, we considered only independent fault events in this work.
+This limitation is mainly due to the probabilistic analysis shown in \cref{sec:root-probability}.
+But, as shown in \cref{sec:probability-theory}, a different probability model could support dependent events as well.
+A further investigation is needed to verify if it really affects only the quantitative analysis.
+
 Another future work is to relate \ac{algebra} with the algebras shown in~\cite{Merle2010,Walker2009}.
 It is important because we can benefit from their results.
 The main challenge is to define how to express simultaneity in \ac{algebra}, or, at least, how to map from \ac{algebra} to the other algebras.
