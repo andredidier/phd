@@ -198,13 +198,13 @@ The analysis of acceptance criteria is a decision problem and we use first-order
 
 System and fault modelling is an essential step towards safety analysis.
 Architectural modelling is the first step of the strategy and can be executed either in a graphical tool, or as requirements in natural language.
-For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling in \ac{SysML} to verify fault tolerance of \acp{SoS}.
+For example, our work reported in~\cite{APR+2013,ADP+2013} uses fault modelling in the \ac{SysML} to verify fault tolerance of \acp{SoS}.
 
 Writing and analysing expressions with order-related operators is more complex than analysing expressions with Boolean\index{Boolean} operators only.
 We propose a logic, called \ac{activation}, which works together with an accompanied (attached) algebra to perform analysis of system structure and component interaction with a focus on fault modelling and fault propagation, tackling the complexity introduced by order-related operators.
 \ac{activation} receives an algebra and the set of operational modes of a system as parameters.
-The choice of algebra defines which structure expressions can be obtained: if Boolean algebra is passed as a parameter, the \ac{activation} can generate structure expressions with Boolean operators (\ac{SFT}); if the \ac{algebra} is passed as a parameter, the \ac{activation} can generate structure expressions with order-related operators (\ac{TFT} and \ac{DFT}).
-The \ac{activation} requires that the accompanied algebras provide a set of properties (tautology and contradiction) and semantic values.
+The choice of algebra defines which structure expressions can be obtained: if Boolean algebra is passed as a parameter, \ac{activation} can generate structure expressions with Boolean operators (\ac{SFT}); if \ac{algebra} is passed as a parameter, \ac{activation} can generate structure expressions with order-related operators (\ac{TFT} and \ac{DFT}).
+\Ac{activation} requires that the accompanied algebras provide a set of properties (tautology and contradiction) and semantic values.
 The use of the \ac{NOT} is essential: besides its use in expressions, we use the complement of structure expressions, normalizing them and making them \emph{healthy}.
 
 To obtain critical event expressions used in \acp{FT} and to denote faults propagation, the \ac{activation} provides a predicate notation and verification of non-determinism. 
@@ -229,14 +229,14 @@ It starts with \simulink modelling, converts the model to \ac{CSPm} and then obt
 The fault event sequences are then mapped to \theac{algebra}, which has a denotational semantics based on sets of lists.
 This strategy aims at answering the \cref{question:gap}.
 
-Safety requirements are stated in terms of critical failures such as, for example, ``the probability of a complete failure of an airplane engine should be less than $10^{-9}$'' (quantitative), or ``a complete failure of the propulsion system shouldn't be caused by a single failure'' (qualitative).
+Safety requirements are stated in terms of critical failures such as, for example, ``the probability of a complete failure of an airplane engine should be less than $10^{-9}$'' (quantitative), or ``a complete failure of the propulsion system should not be caused by a single failure'' (qualitative).
 %In this work we call \emph{acceptance criteria} the verification of a safety requirement on \iac{FT}, where \acg{FT} top event is the undesired failure.
 Positive requirements such as, for example, ``the communication system should be operational $99.99\%$ of the cruise phase'' are treated as a complement (the complete failure should have a probability in less than $0.01\%$ of the cruise phase).
 The acceptance criteria analysis aims at answering the \ref{question:analyses}.
 
 From the model in \ac{algebra} (\cref{fig:strategy-overview-csp}), the acceptance criteria are then verified.
 If the criteria are accepted, the process finishes.
-Otherwise, the system is modified, and the process continues, modifying system's architecture, using fault tolerance patterns, improving system's dependability.
+Otherwise, the system is modified, and the process continues, modifying the system architecture, using fault tolerance patterns, improving the system dependability.
 %
 \begin{figure}[htb]
   \centering
@@ -245,11 +245,11 @@ Otherwise, the system is modified, and the process continues, modifying system's
   \label{fig:strategy-overview-csp}
 \end{figure}
 
-\Cref{fig:strategy-overview-activation} shows a faults modelling strategy directly in the \ac{activation}.
+\Cref{fig:strategy-overview-activation} shows a fault modelling strategy directly in the \ac{activation}.
 The \ac{activation} associates each operational mode with a fault expression.
 After modelling all faults, the top events are extracted in a predicate notation. 
 For example, ``is the behaviour of the system in the operational mode $X$?'', where $X$ can be an omission, commission, etc.
-Given the flexibility of the \ac{activation} notation, it can be used to reason about basic fault events and top-event failures, which are related to~\ref{question:mathematical-model}
+Given the flexibility of the \ac{activation} notation, it can be used to reason about basic fault events and top-event failures, which are related to~\ref{question:mathematical-model}.
 Each predicate in \ac{activation} generates an expression in \theac{algebra}, which is reduced to obtain a normal form to obtain \acp{MCSeq} and to calculate top-events probability.
 With the system modelled in \ac{activation}, the fault tolerance patterns can be applied directly on the model.
 %
@@ -274,11 +274,11 @@ The complete proposed solution is summarized in \cref{fig:strategy-overview}, jo
 The main contributions of this work are:
 
 \begin{contrenum}[series=contributions]
-  \item Define a denotational and algebraic model to express fault events order with \theac{algebra} (\cref{chap:algebra});
+  \item Define a denotational model and an algebra to express fault events order with \theac{algebra} (\cref{chap:algebra});
   %%%%%
   \item Define a new operator to express order explicitly and proving that the resulting algebra---(\ac{algebra}) using this operator and Boolean\index{Boolean Algebra} operators---is a conservative extension of the Boolean algebra\index{Boolean Algebra} (also published in~\cite{DM2016})---see \cref{chap:algebra};
     %%%%%
-  \item From \simulink models, obtain fault event sequences and map them into \ac{algebra} (\cref{chap:algebra});
+  \item Map sequences of fault events into \ac{algebra} (\cref{chap:algebra});
     %%%%%
   \item Reason about fault modelling in \ac{activation} to obtain formal expressions of critical failures (top-event failures, \cref{chap:activation});
     %%%%%
