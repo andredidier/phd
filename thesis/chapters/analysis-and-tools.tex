@@ -1172,8 +1172,10 @@ The approximation for this expression, removing the negated events, gives the cu
 
 The work reported in~\cite{Andrews2001} shows an example of \iac{FT} with an explicit \ac{NOT} operator, the importance of such an operator, and how to calculate the probability of a critical failure.
 The system is a leak protection system that has valves and sensors, and is depicted in \cref{fig:leak-protection-system}.
-Valve $VAL$ closes a gas flow if a sensor detects a leak $L$.
+Valve $VAL$ closes a gas flow if a sensor detects a leak $L$ in room 1.
 If the valve is closed for a certain amount of time, the pressure on the system may increase, and then, a relief valve $PRV$ diverts the gas flow elsewhere.
+In room 1 there is a possible ignition source ($I1$), and
+nearby there is a permanent source of ignition ($I2$).
 %The possible failure are all internal failures: 
 %
 
