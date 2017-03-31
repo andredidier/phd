@@ -456,20 +456,16 @@ For a variable $\var{z_1}$:
   & \ldots\nonumber
 \end{align}
 
-In general, for any generator $z$, the following is valid:
-%
-\begin{equation}
-\label{law:var-tempo}
-\tempo[1]{\left(\var{z}\right)} \land
-\tempo[2]{\left(\var{z}\right)} \land
-\tempo[3]{\left(\var{z}\right)} \land
-\tempo[4]{\left(\var{z}\right)}
-\end{equation}
-
-We abbreviate \cref{law:var-tempo} as:
+We define $\tempo$ as:
 \begin{equation}
 \tempo{S} = \tempo[1]{S} \land \tempo[2]{S} \land \tempo[3]{S} \land \tempo[4]{S}
 \end{equation}
+
+In general, for any generator $z$, the following is valid:
+%
+\[
+\tempo{\left(\var{z}\right)}
+\]
 
 \begin{sloppypar}
 In our previous work~\cite{DM2015} we used set difference to specify the \ac{XBefore} operator.
@@ -621,7 +617,7 @@ For example, given generators $a$ and $b$ ($a \neq b$):
 \left(\xbefore{\var{a}}{\var{b}}\right) \lor \left(\xbefore{\var{b}}{\var{a}}\right) = \var{a} \land \var{b}
 \end{equation}
 %
-because $\var{a}$ and $\var{b}$ satisfy all temporal properties (\cref{law:var-tempo}) and are independent events.
+because $\var{a}$ and $\var{b}$ satisfy all temporal properties and are independent events.
 
 In our previous work~\cite{DM2015}, we stated that $S$ and $T$ had to be variables, for example, of the form $\var{s}$ and $\var{t}$.
 Now, each law requires that the operands satisfy some of the temporal properties, avoiding using variables explicitly.
