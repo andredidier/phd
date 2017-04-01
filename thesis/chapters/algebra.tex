@@ -493,33 +493,33 @@ Other expressions also meet one or more temporal properties:
 We now show some laws to be used in the algebraic reduction of \ac{algebra} formulas.
 The laws follow from the definition of \ac{XBefore}, from events independence, and from the temporal properties.
 
-We use a normal form similar to the \ac{DNF} of Boolean\index{Boolean Algebra} algebra.
-In \ac{DNF} each sub-expression is a minimal cut set\index{Minimal Cut!Sets} for \ac{SFT}.
-In our normal form, also called \ac{DNF}, we allow \acp{AND}, \acp{NOT}, and \acp{XBefore} to be in the sub-expressions.
-Each sub-expression is a set of minimal cut sequences\index{Minimal Cut!Sequences} for \ac{TFT} and \ac{DFT}.
-The following formulas are in \ac{DNF}:
-%
-\begin{align*}
-&\parsin{A \land \lnot B \land \lnot C} \lor \parsin{\xbefore{\parsin{\xbefore{A}{B}}}{C}}\\
-&\xbefore{A}{B}\\
-&\xbefore{\xbefore{A}{B}}{C}
-\end{align*}
-%
-The following formulas are \emph{not} in \ac{DNF}:
-%
-\begin{align*}
-&A \lor B\\
-&A \land B\\
-&-\parsin{A \lor B}\\
-&A \land \parsin{B \lor C}\\
-&\xbefore{A}{\parsin{B \lor C}}\\
-&\xbefore{A}{\parsin{B \land C}}
-\end{align*}
+%We use a normal form similar to the \ac{DNF} of Boolean\index{Boolean Algebra} algebra.
+%In \ac{DNF} each sub-expression is a minimal cut set\index{Minimal Cut!Sets} for \ac{SFT}.
+%In our normal form, also called \ac{DNF}, we allow \acp{AND}, \acp{NOT}, and \acp{XBefore} to be in the sub-expressions.
+%Each sub-expression is a set of minimal cut sequences\index{Minimal Cut!Sequences} for \ac{TFT} and \ac{DFT}.
+%The following formulas are in \ac{DNF}:
+%%
+%\begin{align*}
+%&\parsin{A \land \lnot B \land \lnot C} \lor \parsin{\xbefore{\parsin{\xbefore{A}{B}}}{C}}\\
+%&\xbefore{A}{B}\\
+%&\xbefore{\xbefore{A}{B}}{C}
+%\end{align*}
+%%
+%The following formulas are \emph{not} in \ac{DNF}:
+%%
+%\begin{align*}
+%&A \lor B\\
+%&A \land B\\
+%&-\parsin{A \lor B}\\
+%&A \land \parsin{B \lor C}\\
+%&\xbefore{A}{\parsin{B \lor C}}\\
+%&\xbefore{A}{\parsin{B \land C}}
+%\end{align*}
 
-\begin{sloppypar}
-But to transform the last two formulas into \ac{DNF}, one can use \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:xbefore-inf-1,thm:xbefore-inf-2}, for instance.
-The \ac{DNF} is clearer with the mapping function from denotational semantics to a formula $\formulaof{.}{}$ presented in \cref{sec:algebras-soundness-and-completeness}.
-\end{sloppypar}
+%\begin{sloppypar}
+%But to transform the last two formulas into \ac{DNF}, one can use \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:xbefore-inf-1,thm:xbefore-inf-2}, for instance.
+%The \ac{DNF} is clearer with the mapping function from denotational semantics to a formula $\formulaof{.}{}$ presented in \cref{sec:algebras-soundness-and-completeness}.
+%\end{sloppypar}
 
 We define events independence ($\independenteventsop$) as the property that one operand does not imply the other.
 For example, in some rules we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \lor \var{b}$ (it results in $\emptyset$, see \cref{thm:xbefore-not-idempotent}).
@@ -539,8 +539,8 @@ Essentially if the formulas contain independent events one must not imply on the
 \end{sloppypar}
 
 
-The absence of occurrences ($\emptyset$, the empty set of $\algebraset$) is a ``0'' for the \ac{XBefore} operator.
-The negation of all events ($\left\{\left[\right]\right\}$, a formula with the empty list) is a ``1'' for the \ac{XBefore} operator.
+The absence of occurrences ($\emptyset$, the empty set of $\algebraset$) is a ``0'' for the \ac{XBefore} operator (\cref{thm:xbefore-of-false-1,thm:xbefore-of-false-2}).
+The negation of all events ($\left\{\left[\right]\right\}$, a formula with the empty list) is a ``1'' for the \ac{XBefore} operator (\cref{thm:xbefore_neutral_1,thm:xbefore_neutral_2}).
 %
 \begin{subequations}
 \begin{align}
@@ -586,11 +586,11 @@ The negation of all events ($\left\{\left[\right]\right\}$, a formula with the e
 \end{align}
 \end{subequations}
 %
-The \ac{XBefore} is absorbed by one of the operands: if one of the operands may happen alone, thus the order with any other operand is irrelevant.
-However, an event cannot come before itself, thus \ac{XBefore} is not idempotent.
-The \ac{XBefore} is associative.
+The \ac{XBefore} is absorbed by one of the operands: if one of the operands causes a failure alone, thus the order with any other operand is irrelevant (\cref{thm:xbefore-sup-absorb-1,thm:xbefore-sup-absorb-2}).
+However, an event cannot come before itself, thus \ac{XBefore} is not idempotent (\cref{thm:xbefore-not-idempotent}).
+The \ac{XBefore} is associative (\cref{thm:xbefore-associativity}).
 
-To allow formula reduction we need the relation of \ac{XBefore} to the other Boolean\index{Boolean Algebra} operators.
+To allow formula reduction we need to relate \ac{XBefore} to the other Boolean\index{Boolean Algebra} operators.
 First we use the \ac{XBefore} as operands of \ac{OR} and \ac{AND}.
 %
 \begin{subequations}
@@ -620,7 +620,7 @@ For example, given generators $a$ and $b$ ($a \neq b$):
 because $\var{a}$ and $\var{b}$ satisfy all temporal properties and are independent events.
 
 In our previous work~\cite{DM2015}, we stated that $S$ and $T$ had to be variables, for example, of the form $\var{s}$ and $\var{t}$.
-Now, each law requires that the operands satisfy some of the temporal properties, avoiding using variables explicitly.
+Now, each law requires that the operands satisfy some of the temporal properties, avoiding requiring that they be necessarily variables.
 %So, as variables satisfy all temporal properties and by \cref{thm:xbefore-sup-equiv-inf}, our theorem ``Exclusive before \emph{supremum}'' is still valid.
 
 Expressions with Boolean\index{Boolean Algebra} operators are used as operands of the \ac{XBefore} in the following laws.
@@ -675,12 +675,13 @@ Expressions with Boolean\index{Boolean Algebra} operators are used as operands o
 \end{align}
 \end{subequations}
 %
-\ac{XBefore} is distributive over \ac{OR}.
-On the other hand, the \ac{AND} is not.
-The \ac{AND} of an event with an \ac{XBefore} states that such an event can occur in any order within the events in the \ac{XBefore}.
-Lastly, the \ac{XBefore} is transitive with preconditions over the intermediary variable.
+\ac{XBefore} is distributive over \ac{OR} (\cref{thm:xbefore-sup-1,thm:xbefore-sup-2}).
+On the other hand, it does not distribute through \ac{AND}. (\cref{thm:xbefore-inf-1,thm:xbefore-inf-2}).
+The \ac{AND} of formulas as the first argument of an \ac{XBefore} states that the events of such formulas can occur in any order within the events in the \ac{XBefore} (\cref{thm:and_xbefore_equiv_or_xbefore}).
+The \ac{XBefore} is transitive with preconditions over the intermediary variable (\cref{thm:inf_xbefore_trans}).
+Lastly, the \ac{AND} is absorbed with an \ac{XBefore} (\cref{thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2}).
 
-The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer if we expand \cref{thm:and_xbefore_equiv_or_xbefore} with \cref{thm:xbefore-inf-1} and  \cref{thm:xbefore-inf-2}:
+Applying \cref{thm:xbefore-inf-1,thm:xbefore-inf-2} in \cref{thm:and_xbefore_equiv_or_xbefore} results in:
 %
 %\begin{subequations}
 \begin{align}
@@ -689,8 +690,7 @@ The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer i
   S \land \parsin{\xbefore{T}{U}} = &
   \parsin{\xbefore{\xbefore{S}{T}}{U}} \lor \nonumber\\
   & \parsin{\xbefore{\xbefore{T}{S}}{U}} \lor \nonumber\\
-  & \parsin{\xbefore{\xbefore{T}{U}}{S}} &
-  \text{expanded-unordered}
+  & \parsin{\xbefore{\xbefore{T}{U}}{S}} 
   \label{thm:and_xbefore_equiv_or_xbefore_expanded}
 %\\
 %
@@ -703,9 +703,12 @@ The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer i
 %  \text{right-inter-absorb}
 %  \label{thm:xbefore-inf-absorb-2}
 \end{align}
+%
+which makes clear that the events of $S$ can occur in any order.
 %\end{subequations}
 %
 %From \cref{thm:xbefore-not-idempotent} and \cref{thm:and_xbefore_equiv_or_xbefore}, intersection and \ac{XBefore} also have an absorption law.
+
 
 In what follows we show properties of \ac{XBefore} related to the \ac{NOT} operators.
 %
@@ -741,13 +744,15 @@ Following our proposed denotational semantics, the instantiation of the type cla
 %
 Such an instantiation requires proof obligations for the type (the set of \distinctlists), which we discharged.
 %
-With all proofs, Isabelle/HOL asserts that the declared type (the set of sets of \distinctlists) is indeed \iac{algebra}\footnote{
+With all the proofs, Isabelle/HOL asserts that the declared type (the set of sets of \distinctlists) is indeed a valid instantiation of \ac{algebra}\footnote{
 Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---composing all classes later.}.
 %
-For example, \cref{thm:xbefore-sup-equiv-inf} is defined in \ac{algebra} and is proved mapping each syntactical element to the denotational semantics (the set of \distinctlists).
+For example, \cref{thm:xbefore-sup-equiv-inf} is defined in \ac{algebra} and is proved by mapping each syntactical element to the denotational semantics (a set of \distinctlists) and then establishing the equality at the denotational level.
 %
-Moreover, all \cref{thm:xbefore-inf-1,thm:xbefore-inf-2,thm:xbefore-sup-absorb-2,thm:xbefore-sup-absorb-1,thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2,thm:and_xbefore_equiv_or_xbefore_expanded,thm:xbefore_sup_compl_inf_absorb1} are theorems proved syntactically and inherited by the instantiation for set of sets of \distinctlists.
-Soundness of the instantiation with respect to the type class assumptions is a direct consequence of such an instantiation.
+Moreover, the \cref{thm:xbefore-inf-1,thm:xbefore-inf-2,thm:xbefore-sup-absorb-2,thm:xbefore-sup-absorb-1,thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2,thm:and_xbefore_equiv_or_xbefore_expanded,thm:xbefore_sup_compl_inf_absorb1} are theorems proved syntactically and inherited by the instantiation for set of sets of \distinctlists.
+Soundness of the type class assumptions (stated as axioms) with respect to the denotational model is a direct consequence of such an instantiation. 
+
+%%%TODO CONTINUAR DAQUI
 
 To illustrate this built-in property, consider \cref{thm:xbefore-sup-equiv-inf}.
 The following formula can be proved directly in Isabelle/HOL using term rewriting only:
