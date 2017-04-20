@@ -745,17 +745,22 @@ Following our proposed denotational semantics, the instantiation of the type cla
 Such an instantiation requires proof obligations for the type (the set of \distinctlists), which we discharged.
 %
 With all the proofs, Isabelle/HOL asserts that the declared type (the set of sets of \distinctlists) is indeed a valid instantiation of \ac{algebra}\footnote{
-Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---composing all classes later.}.
+Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---and then composing all the classes.}.
 %
 For example, \cref{thm:xbefore-sup-equiv-inf} is defined in \ac{algebra} and is proved by mapping each syntactical element to the denotational semantics (a set of \distinctlists) and then establishing the equality at the denotational level.
 %
 Moreover, the \cref{thm:xbefore-inf-1,thm:xbefore-inf-2,thm:xbefore-sup-absorb-2,thm:xbefore-sup-absorb-1,thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2,thm:and_xbefore_equiv_or_xbefore_expanded,thm:xbefore_sup_compl_inf_absorb1} are theorems proved syntactically and inherited by the instantiation for set of sets of \distinctlists.
 Soundness of the type class assumptions (stated as axioms) with respect to the denotational model is a direct consequence of such an instantiation. 
 
-%%%TODO CONTINUAR DAQUI
-
-To illustrate this built-in property, consider \cref{thm:xbefore-sup-equiv-inf}.
-The following formula can be proved directly in Isabelle/HOL using term rewriting only:
+To illustrate the connection between the type class of \ac{algebra} (syntactic presentation) with the denotational model (semantic presentation) we first consider that, from \cref{thm:xbefore-sup-equiv-inf} we have that:
+%
+\[
+\denote{\xbefore{\var{a}}{\var{b}} \lor \xbefore{\var{b}}{\var{a}}} =
+\denote{\var{a} \land \var{b}}
+\]
+%
+Therefore, as the syntactic equation has been proved at the denotational level, any use of this equation in syntactic transformations preserves semantics. 
+For example, the following equality can be syntactically proved:
 %
 \begin{align*}
 & \xbefore{\var{a}}{\var{b}} \lor 
@@ -769,51 +774,42 @@ The following formula can be proved directly in Isabelle/HOL using term rewritin
 = & \top & \text{by Boolean law}
 \end{align*}
 
-Thus, the type class of \ac{algebra} is able to show that:
+Thus, this directly implies the corresponding semantic equivalence:
 \[
 \denote{\xbefore{\var{a}}{\var{b}} \lor 
 	\xbefore{\var{b}}{\var{a}} \lor 
 	\lnot \left(\var{a} \land \var{b}\right)} = \UNIV
 \]
-%
-and also:
-%
-\[
-\denote{\xbefore{\var{a}}{\var{b}} \lor \xbefore{\var{b}}{\var{a}}} =
-\denote{\var{a} \land \var{b}}
-\]
-%
-where $\UNIV$ is the set of all \distinctlists.
 
-All the above formulas are theorems on the semantics, but are proved using the assumptions declared on the type class hierarchy (Boolean and \ac{algebra}).
+All the above formulas are theorems in the semantics, but are proved using the assumptions declared on the type class hierarchy (Boolean and \ac{algebra}).
 
-To prove soundness explicitly (without relying on type classes), we declare a datatype:
-%
-\begin{verbatim}
-datatype 'a formula_syntax =
-    sFalse |
-    sVar 'a |
-    sNot 'a formula_syntax |
-    sAnd 'a formula_syntax 'a formula_syntax |
-    sXB 'a formula_syntax 'a formula_syntax
-\end{verbatim}
+%To prove soundness explicitly (without relying on type classes), we declare a datatype:
+%%
+%\begin{verbatim}
+%datatype 'a formula_syntax =
+%    sFalse |
+%    sVar 'a |
+%    sNot 'a formula_syntax |
+%    sAnd 'a formula_syntax 'a formula_syntax |
+%    sXB 'a formula_syntax 'a formula_syntax
+%\end{verbatim}
 
-The semantics of a \verb|formula_syntax| is similar to what we show in this \lcnamecref{chap:algebra}:
-\begin{align}
-\semanticsof{sFalse} = & \bot \nonumber\\
-%%%%%
-\semanticsof{sVar~a} = & \var{a} \nonumber\\
-%%%%%
-\semanticsof{sNot~f} = & - \semanticsof{f} \nonumber\\
-%%%%%
-\semanticsof{sAnd~f_1~f_2} = & \semanticsof{f_1} \land \semanticsof{f_2} \nonumber\\
-%%%%%
-\semanticsof{sXB~f_1~f_2} = & \xbefore{\semanticsof{f_1}}{\semanticsof{f_2}}\nonumber
-\end{align}
+%The semantics of a \verb|formula_syntax| is similar to what we show in this \lcnamecref{chap:algebra}:
+%\begin{align}
+%\semanticsof{sFalse} = & \semanticsof{\bot} \nonumber\\
+%%%%%%
+%\semanticsof{sVar~a} = & \semanticsof{\var{a}} \nonumber\\
+%%%%%%
+%\semanticsof{sNot~f} = & - \semanticsof{f} \nonumber\\
+%%%%%%
+%\semanticsof{sAnd~f_1~f_2} = & \semanticsof{f_1} \land %\semanticsof{f_2} \nonumber\\
+%%%%%%
+%\semanticsof{sXB~f_1~f_2} = & %\xbefore{\semanticsof{f_1}}{\semanticsof{f_2}}\nonumber
+%\end{align}
 
-Note that we mapped the semantics of a formula to the operators of Boolean algebra and \ac{algebra}.
-This is possible due to the locales and contexts in Isabelle/HOL.
-Type classes use both structures of locales and contexts, thus it allows to reuse the operators for sets of distinct lists, as we show above.
+%Note that we mapped the semantics of a formula to the operators of Boolean algebra and \ac{algebra}.
+%This is possible due to the locales and contexts in Isabelle/HOL.
+%Type classes use both structures of locales and contexts, thus it allows to reuse the operators for sets of distinct lists, as we show above.
 
 %For the soundness theorem states if a formula $f_1$ syntactically reduces to a formula $f_2$, then $f_1$ reduces semantically to $f_2$:
 %%
@@ -832,22 +828,27 @@ Let $f$ be a formula in \ac{algebra} and $\Sigma$ be a set of simplification rul
 %
 \end{proposition}
 
+$\syntactically{\Sigma}{f}$ means that $f$ can be syntactically proved by the rules in $\Sigma$, whereas $\semantically{\Sigma}{f}$ means the same at the (denotational) semantics level.
+Although we have not formally carried out this proof inductively, it follows from the fact that we have proved that every basic rule is sound (as they where proved in the denotational semantics) and that all the remaining rules have been derived from provably sound rules. 
+
 The syntactical application of the rules can be defined in Isabelle/HOL as an inductive definition.
 Thus, if a formula is in such an inductive definition, then such a formula is provable.
-We have not defined yet inductive definition for provable.
-On the semantics side (right hand side of \cref{prop:soundness}) we use the mapping function above, which have been proved for sets of \distinctlists.
+On the semantics side (right hand side of \ref{prop:soundness}) we use the mapping function mentioned above.
 
-The semantic completeness is the converse of soundness:
-if a formula has the semantics of $\top$, then such a formula is provable (syntactically) for the set of rules $\Sigma$.
+Completeness is the converse of soundness:
+if a formula has the semantics of $\top$, then such a formula is provable (syntactically) from the set of rules $\Sigma$.
 
 \begin{proposition}[Completeness]
 Let $f$ be a formula in \ac{algebra} and $\Sigma$ be a set of simplification rules of the syntax, then:
 %
 \begin{equation}
-\forall~ f ~\bullet~ \semantically{\Sigma}{f} \implies \syntactically{\Sigma}{f}\label{prop:completeness}
+\forall~ f ~\bullet~ \semantically{\Sigma}{f} \implies \syntactically{\Sigma}{\normalform{f}}\label{prop:completeness}
 \end{equation}
 %
 \end{proposition}
+%
+\noindent where $\normalform{f}$ transforms the formula $f$ into a normal form using only a subset of the Boolean operators and the \ac{XBefore}.
+We need to show that every formula can be mapped into such a normal form using the set of rules of the \ac{algebra}.
 
 \section{Qualitative and quantitative analyses}
 \label{sec:qualitative-quantitative-analyses}
@@ -863,9 +864,9 @@ These attributes of \iac{FT} are the most representative ones, but other can be 
 
 \subsection[Minimal cut sequence]{\Acl{MCSeq}}
 
-Recall from the beginning of this \lcnamecref{chap:algebra} that the denotational semantics of \ac{algebra} is a set of \distinctlists.
-Thus, each list has no repeated elements and represent a possible combination of faults that causes the root failure.
-\Acp{MCSeq} are those \distinctlists with the least length, defined in what follows.
+Recall from the beginning of this \lcnamecref{chap:algebra} that the denotational semantics of a formula in \ac{algebra} is a set of \distinctlists.
+Thus, each list has no repeated elements and represents a possible combination of faults that cause the root failure.
+\Acp{MCSeq} are those \distinctlists with the least length, defined as follows.
 
 \begin{definition}[Minimal cut sequences]
 Let $S$ be a formula in \ac{algebra}.
@@ -1021,13 +1022,18 @@ For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left
 = & P_1(t) \times P_2(t)\label{eq:prob-xbefore-sup-equiv-inf}
 \end{align}
 
-In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$, \cref{eq:traditional-and-probability}).
+In \ref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$, \cref{eq:traditional-and-probability}).
 This is expected as these two formulas are equivalent, as shown in \cref{thm:xbefore-sup-equiv-inf}.
 
 Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$:
 %
 \begin{align}
 S = & \var{f_1} \land \var{f_2} \land \lnot \var{f_3}\nonumber\\
+\denote{S} = & 
+	\left\{
+		\left[f_1, f_2\right] ,
+		\left[f_2, f_1\right]
+	\right\} \nonumber\\
 %%%%%
 \probability{S} = &
 \denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} 
@@ -1112,10 +1118,10 @@ Thus, the probability calculation is not sensitive to a particular set of genera
 To enable the formal verification of structure expressions we use the concept of \emph{acceptance criteria}.
 Safety requirements are written in terms of the properties of \iac{FT}, for example: 
 \begin{alineasinline}
-  \item no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or 
-  \item the probability of all critical failure should be less than $P_x$.
+  \item no single failure should cause a critical failure (the length of the \acp{MCSeq} should be greater than $1$), or 
+  \item the probability of all critical failures should be less than $P_x$.
 \end{alineasinline}
-To check these requirements we translate these requirements into a value and verify in the theorem prover.
+To check these requirements we translate them into a value and verify in the theorem prover.
 
 For the two analysis shown in this \lcnamecref{sec:qualitative-quantitative-analyses}, we define the two acceptance criteria:
 %
@@ -1127,7 +1133,7 @@ For the two analysis shown in this \lcnamecref{sec:qualitative-quantitative-anal
 \end{align}
 \end{subequations}
 %
-Both equations have Boolean\index{Boolean} return value, which can be verified by a theorem prover.
+Both equations return a Boolean\index{Boolean} value, which can be verified by a theorem prover.
 
 Using the formal acceptance criteria, safety requirements as stated in the beginning of this section are:
 %
@@ -1142,8 +1148,8 @@ The verification of the acceptance criteria is illustrated with the probability 
 \label{sec:mapping-cspm-algebra}
 
 In our previous work~\cite{DM2012,Didier2012} we reported a strategy to inject faults in a \ac{CSPm} model generated from an architectural model of a system in \simulink.
-Using a model-checker we were able to obtain failure traces with the injected faults, which we produced failure expressions in Boolean algebra.
-Thus, the order-related information was lost, as there are no means to represent them in Boolean algebra\index{Boolean algebra}.
+Using a model-checker we were able to obtain failure traces with the injected faults, from which we produced failure expressions in Boolean algebra.
+Thus, the order-related information was lost, as there are no means to represent these failure traces in Boolean algebra\index{Boolean algebra}.
 For example, a trace that represents the occurrence of $f_1$ before $f_2$ was written as the expression $\var{f_1} \land \var{f_2}$, which is the same as $\var{f_2} \land \var{f_1}$.
 
 Using the same strategy, but now mapping the traces to \ac{algebra} we are able to analyse order-related failures.
