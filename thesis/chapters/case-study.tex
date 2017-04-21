@@ -68,7 +68,7 @@ Similarly to the mapping function shown in \cref{sec:mapping-cspm-algebra}, we d
 \end{subequations}
 %
 The only difference of the mapping function, when considering Boolean operators only, is \cref{eq:mapping-bool-two-more-trace}.
-\Cref{eq:mapping-bool-set,eq:mapping-bool-singleton,eq:mapping-bool-empty} are similar to \cref{eq:mapping-algebra-set,eq:mapping-algebra-singleton,eq:mapping-algebra-empty}.
+\Cref{eq:mapping-bool-set,eq:mapping-bool-singleton,eq:mapping-bool-empty} are identical to \cref{eq:mapping-algebra-set,eq:mapping-algebra-singleton,eq:mapping-algebra-empty}.
 
 For each trace shown in \cref{sec:faults-injection}, the mapping function generates the following expressions
 %
@@ -174,7 +174,7 @@ Expanding \cref{eq:m-bool}, we have:
 (B_1\land B_2) \lor (F \land B_2) \lor (F \land B_1)
 \]
 %
-which differs from \cref{eq:m-algebra} only on terms: $F \land B_1$ (of $M_{bool}$) and $\xbefore{F}{B_1}\land \lnot B_2$ (of $M_A$).
+which differs from \cref{eq:m-algebra} only on terms: $F \land B_1$ (of $M_{bool}$) and $\xbefore{B_1}{F}\land \lnot B_2$ (of $M_A$).
 
 \section[From AL to structure expressions with Boolean operators]{From \ac*{activation} to structure expressions with Boolean operators}
 \label{sec:activation-to-structure-expressions-boolean-operators}
@@ -204,7 +204,7 @@ $PowerSource_i$ is healthy:
 
 
 The monitor is a bit different because its behaviour depends not only on internal faults, but also on its inputs. 
-We will now use the predicate notation defined in \cref{sec:predicates-notation} to express fault propagation.
+We now use the predicate notation defined in \cref{sec:predicates-notation} to express fault propagation.
 As the monitor has two inputs and its behaviour is described in \cref{fg:blockDiagramMonitorInternals}, then it is a function of the expressions of both inputs:
 %
 \begin{equation}
@@ -378,7 +378,7 @@ These two sentences---written in \ac{activation} using the predicate notation---
 \section[From AL to structure expressions with XBefore]{From \ac*{activation} to structure expressions with \ac*{XBefore}}
 \label{sec:activation-to-structure-expressions-algebra-operators}
 
-Now, let's consider the same system but with a subtle modification.
+Now, let us consider the same system but with a subtle modification.
 As shown in~\cite{DM2016}, the order of the occurrence of faults may be relevant, and the qualitative and quantitative analyses results may be different than those results without considering the order of the occurrence of faults.
 Observing \cref{fg:blockDiagramMonitorInternals}, we see that if $F$ activates before a failure in the first input of the monitor, then it would display a nominal behaviour.
 This is because the internal failure $F$ anticipates switching to the second input.
@@ -439,24 +439,29 @@ System_{XB} = & Monitor_{XB} \left(PowerSource_1, PowerSource_2\right) \\
 %  & \left\{ \left(P_i \land \xbefore{B_1}{F}, O_i\right)| \left(P_i, O_i\right) \in in_1 \right\} \cup\\
 %  & \left\{ \left(P_i \land \xbefore{F}{B_1}, O_i\right)| \left(P_i, O_i\right) \in in_2 \right\} & \text{by \cref{eq:modes}}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  = & \left\{ 
-      \left(B_1 \land \lnot B_1 \land \lnot F, LP\right), \right.\\
-  &   \left(\lnot B_1 \land \lnot B_1 \land \lnot F, \Nominal{12V}\right), \\
-  &   \left(B_2 \land B_1 \land \lnot F, LP\right),\\
-  &   \left(\lnot B_2 \land B_1 \land \lnot F, \Nominal{12V}\right), \\
-  &   \left(B_2 \land \lnot B_1 \land F, LP\right), \\
-  &   \left(\lnot B_2 \land \lnot B_1 \land F, \Nominal{12V}\right),\\
-  &   \left(B_1 \land \xbefore{B_1}{F}, LP\right), \\
-  &   \left.\left(\lnot B_1 \land \xbefore{B_1}{F}, \Nominal{12V}\right)\right\}, \\
-  &   \left(B_2 \land \xbefore{F}{B_1}, LP\right), \\
-  &   \left.\left(\lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right)\right\}
-    %& \text{replacing vars}
-    \\
+  = & 
+	\left\{ 
+		\left(B_1 \land \lnot B_1 \land \lnot F, LP\right), 
+		\left(\lnot B_1 \land \lnot B_1 \land \lnot F, \Nominal{12V}\right),
+	\right.\\
+	& 
+	\left(B_2 \land B_1 \land \lnot F, LP\right),
+	\left(\lnot B_2 \land B_1 \land \lnot F, \Nominal{12V}\right), \\
+	& 
+	\left(B_2 \land \lnot B_1 \land F, LP\right), 
+	\left(\lnot B_2 \land \lnot B_1 \land F, \Nominal{12V}\right),\\
+    &
+    \left(B_1 \land \xbefore{B_1}{F}, LP\right),
+    \left.\left(\lnot B_1 \land \xbefore{B_1}{F}, \Nominal{12V}\right)\right\}, \\
+    & 
+    \left.
+	    \left(B_2 \land \xbefore{F}{B_1}, LP\right),
+	    \left(\lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right)
+    \right\}
 \end{align*}
 
 Simplifying and applying $\healthiness[1]$ to remove contradictions, we obtain:
-\[
-\begin{split}
+\begin{align*}
 \healthinessfun[1]{System_{XB}} = &\\
   & \left\{ 
       \left(\lnot B_1 \land \lnot F, \Nominal{12V}\right), 
@@ -467,8 +472,7 @@ Simplifying and applying $\healthiness[1]$ to remove contradictions, we obtain:
       \left(\xbefore{B_1}{F}, LP\right), \\
   &   \left.\left(B_2 \land \xbefore{F}{B_1}, LP\right), 
       \left(\lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right) \right\}
-\end{split}
-\]
+\end{align*}
 
 Applying $\healthiness[3]$ to remove redundant terms with identical operational modes and using the rules shown in \cref{sec:xbefore-laws}, we simplify to:
 \[
@@ -484,8 +488,6 @@ Applying $\healthiness[3]$ to remove redundant terms with identical operational 
         \end{split},
         \Nominal{12V}
       \right),
-    \right.\\
-  & \left.
       \left(
         \begin{split}
         \left(B_1 \land B_2 \land \lnot F\right) \lor \\
@@ -506,8 +508,6 @@ Applying $\healthiness[3]$ to remove redundant terms with identical operational 
         \end{split},
         \Nominal{12V}
       \right),
-    \right.\\
-  & \left.
       \left(
         \begin{split}
         \left(B_1 \land B_2 \land \lnot F\right) \lor \\
@@ -564,10 +564,10 @@ Applying $\healthiness[3]$ to remove redundant terms with identical operational 
 %        LP
 %      \right)
 %    \right\}\\
-& \left\{
+& = \left\{
     \left(\left(\lnot B_1 \land \lnot B_2\right) \lor 
-      \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right) \lor \right.\right.\\
-  & \left. \lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right), \\
+      \lnot F \land \left(\lnot B_1 \lor \lnot B_2\right) \lor \right. 
+      \lnot B_2 \land \xbefore{F}{B_1}, \Nominal{12V}\right), \\
   & \left.  
     \left(\left(B_1 \land B_2\right) \lor \left(B_2 \land F\right) \lor \left(\lnot B_2 \land \xbefore{B_1}{F}\right), 
       LP\right)

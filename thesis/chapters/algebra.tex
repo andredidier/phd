@@ -12,8 +12,7 @@ From the need to tackle events ordering, related to the failure traces we can ob
 We also provide a mapping from fault traces~\cite{DM2012} (from \ac{CSPm} models) to this algebra, shown in \cref{sec:mapping-cspm-algebra}.
 The order-specific operations are expressed with a new operator ($\xbeforeop$) that we call \ac{XBefore}.
 
-The set of sets for \acp{FBA}\index{Boolean Algebra!Free} is the basis of our proposed denotational semantics for Boolean\index{Boolean Algebra} algebras.
-We use the concept of generators to propose the \ac{algebra} with a denotational semantics of a set of lists without repetition (\distinctlists).
+We use the concept of generators of the set of sets of \acp{FBA}\index{Boolean Algebra!Free} to propose the \ac{algebra} with a denotational semantics of a set of lists without repetition (\distinctlists).
 The choice for lists is because this structure inherently associates a generator to an index, making implicit the representation of order.
 These lists are composed of non-repeated elements (\distinctlists) because the events in \aclp{FT} are non-repairable.
 Thus, they do not occur more than once.
@@ -21,8 +20,8 @@ Thus, they do not occur more than once.
 The elements of a list have an implicit order number, but such an order number is different from the Sequence Number function used in~\cite{WP2009,Walker2009}.
 Although different, the order number in lists is related to the concept that there should be no gaps of the indexes between consecutive events occurrence.
 The structure of the lists ensures this restriction.
-But it is different because order 0 (zero) in~\cite{WP2009,Walker2009} means non-occurrence.
-It may cause a discontinuity because 0 to 1 is different of 1 to 2.
+However, it is different because order 0 (zero) in~\cite{WP2009,Walker2009} means non-occurrence.
+It may cause a discontinuity because 0 to 1 is different from 1 to 2.
 In \acp{FBA}\index{Boolean Algebra!Free} the non-occurrence of an event is just the absence of the event.
 Thus we use the same representation of non-occurrence as absence of the event in \ac{algebra} to avoid this discontinuity.
 For example, the following lists are all permutations of fault events $a$ and $b$ (the generators are $a$ and $b$):
@@ -30,7 +29,7 @@ For example, the following lists are all permutations of fault events $a$ and $b
 	\item[$\emptylist $: ] no fault occurs
 	\item[$\listsin{a}$: ] fault $a$ occurs and $b$ does not
 	\item[$\listsin{b}$: ] fault $b$ occurs and $a$ does not
-	\item[$\listsin{a,b}$: ] fault $a$ occurs before $b$. Note that, $a$ has index $0$ and $b$ has index $1$.
+	\item[$\listsin{a,b}$: ] fault $a$ occurs before $b$, $a$ has index $0$ and $b$ has index $1$.
 	\item[$\listsin{b,a}$: ] fault $b$ occurs before $a$.
 \end{description}
 
@@ -58,13 +57,13 @@ For example, the following lists are all permutations of fault events $a$ and $b
 
 %We now show the \ac{algebra} as a set of all possible formulas.
 In the following we show the definitions and laws of our proposed \ac{algebra}.
-To avoid repetition, let $S$, $T$ and $U$ be sets of \distinctlists.
+To avoid repetition, let $S$, $T$ and $U$ formulas in \ac{algebra}.
 A list $xs$ is distinct if it has no repeated element.
-So, if $x$ is in $xs$, then it has a unique associated index $i$ and we denote it as $x = \nth{xs}{i}$, where $i \neq j$ and there is no $\nth{xs}{j}$ such that $x=\nth{xs}{j}$.
+So, if $x$ is in $xs$, then it has a unique associated index $i$ and we denote it as $x = \nth{xs}{i}$, and there is no $\nth{xs}{j}$ such that $x=\nth{xs}{j}$, with $i \neq j$.
 Furthermore, as we follow \iac{FBA}\index{Boolean Algebra!Free} characterisation, we also need to show that the generators are independent.
 
 The \ac{algebra} form a free algebra similar to \acp{FBA}\index{Boolean Algebra!Free}.
-\emph{Infimum} and \emph{Supremum} are denoted as set intersection ($\inter$) and union ($\union$) respectively.
+\emph{Infimum} and \emph{Supremum} are denoted as set intersection ($\inter$) and union ($\union$), respectively.
 The order within the algebra is defined as set inclusion ($\subseteq$).
 
 To distinguish the permutations that are not defined in \ac{FBA}\index{Boolean Algebra!Free}, we need a new operator.
@@ -80,12 +79,12 @@ We give the definition of \ac{XBefore} ($\xbeforeop$) in terms of list concatena
 %
 where the $\listset{}$ function returns the set of the elements of a list, $\append{}{}$ concatenates two lists, and $\denote{.}$ obtains the denotational semantics of the formula.
 
-In some cases it is more intuitive to use the \ac{XBefore} definition in terms of lists slicing because it uses indexes explicitly.
+In some cases it is more intuitive to use the \ac{XBefore} definition in terms of list slicing because it uses indexes explicitly.
 %\Cref{thm:xbefore} shows that the two definitions are equivalent.
 Lists slicing is the operation of taking or dropping elements, obtaining a sublist.
 In slicing, the starting index is inclusive, and the ending one is exclusive.
 Thus the first index is 0 and the last index is the list length.
-For example, the list $\slice{xs}{0}{\length{xs}}$ is equal to the $xs$ list, where $\length{xs}$ is the list length.
+For example, the list $\slice{xs}{0}{\length{xs}}$ is equal to the $xs$ list, where $\length{xs}$ is the length of $xs$.
 We use the following notation for list slicing:
 %
 \begin{subequations}
@@ -99,18 +98,19 @@ We use the following notation for list slicing:
 To simplify the use of list slicing, its definition includes the lower and upper bounds as $0$ and its length, respectively:
 %
 \begin{equation}
-\slice{xs}{i}{j} = \slice{xs}{L}{U}
+\slice{xs}{i}{j} = 
+	\slice{xs}
+		{\max{\left(0,i\right)}}
+		{\min{\left(j,\length{xs}\right)}}
 \end{equation}
-%
-where $L = \max{\left(0,i\right)}$ and $U = \min{\left(j,\length{xs}\right)}$.
 
-List slicing and concatenation are complementary: concatenating two consecutive slices results in the original list:
+List slicing and concatenation are complementary: concatenating two consecutive slices of $xs$ results in the original list:
 \begin{equation}
 \label{law:slice-append}
 \forall~ i ~\bullet~ \append{\sliceright{xs}{i}}{\sliceleft{xs}{i}} = xs
 \end{equation}
 
-There is an equivalent definition of \ac{XBefore} with concatenation using lists slicing:
+There is an equivalent definition of \ac{XBefore} with concatenation using list slicing:
 %
 \begin{equation}
 \label{def:xbefore-slice}
@@ -130,7 +130,7 @@ A variable in \ac{algebra} is defined by one generator, and denotes its occurren
   ~\right\}
 \end{equation}
 %
-where $\mathop{set}zs$ is the set of the elements of $zs$, and $x \in zs$ is defined as $x \in \mathop{set} zs$.
+where $x \in zs$ is defined as $x \in \listset{zs}$, and $\listset{zs}$ is the set of the elements of $zs$.
 
 For example, for generators $a$ and $b$, we obtain the following denotational semantics:
 %
@@ -142,7 +142,7 @@ For example, for generators $a$ and $b$, we obtain the following denotational se
 \end{align}
 \end{subequations}
 
-Given this definition, we show a small example on how the \ac{XBefore} operator works:
+Given this definition, we show a small example of how the \ac{XBefore} operator works:
 %
 \begin{align}
 \text{For } zs = \listsin{} \text{, } &
@@ -247,10 +247,15 @@ For example, for generators $a$ and $b$:
 %%%%%
 = & \left\{\listsin{}, \listsin{b}\right\}
 \end{align}
-To avoid repetition, we abbreviate \cref{eq:denotational-complement} suppressing $\UNIV$. 
+%
+For conciseness, we abbreviate \cref{eq:denotational-complement} suppressing $\UNIV$. 
 For example:
 \[
 \UNIV - A \equiv -A
+\]
+%
+Note that the set that contains the empty list alone is obtained by the conjunction of the negation of the variables of each generator (for generators $a$ and $b$): 
+\[\denote{\lnot \var{a} \land \lnot \var{b}} = \left\{\emptylist\right\}
 \]
 
 The following expressions are valid for generators $a$ and $b$ and are sufficient to show that the generators are independent:
@@ -263,15 +268,15 @@ The following expressions are valid for generators $a$ and $b$ and are sufficien
 %%%%%%%%%%%%%%
 &\denote{\var{a}} \not\subseteq - \denote{\var{b}}\\
 %%%%%%%%%%%%%%
-&\denote{\var{a}} \neq -\denote{\var{b}}\label{eqs:generators-independence-subseteq-neq-compl} \\
+%&\denote{\var{a}} \neq -\denote{\var{b}}\label{eqs:generators-independence-subseteq-neq-compl} \\
 %%%%%%%%%%%%%%
-&- \denote{\var{a}} \not\subseteq \denote{\var{b}}\\
+&- \denote{\var{a}} \not\subseteq \denote{\var{b}}\label{eqs:generators-independent-compl-subseteq-neq}
 %%%%%%%%%%%%%%
-&- \denote{\var{a}} \neq \denote{\var{b}}\label{eqs:generators-independence-subseteq-compl-neq}
+%&- \denote{\var{a}} \neq \denote{\var{b}}\label{eqs:generators-independence-subseteq-compl-neq}
 \end{align}
 \end{subequations}
 
-Expressions \cref{def:algebraset-var} to \cref{def:algebraset-sup} and \cref{eqs:generators-independence-eq-eq} to \cref{eqs:generators-independence-subseteq-compl-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \cref{def:xbefore-append} forms a Boolean\index{Boolean Algebra} algebra based on sets of lists.
+Expressions \cref{def:algebraset-var} to \cref{def:algebraset-sup} and \cref{eqs:generators-independence-eq-eq} to \cref{eqs:generators-independent-compl-subseteq-neq} implies that the \ac{algebra} without the \ac{XBefore} operator \cref{def:xbefore-append} forms a Boolean\index{Boolean Algebra} algebra based on sets of lists.
 And this is also equivalent to \iac{FBA}\index{Boolean Algebra!Free} with the same generators.
 
 In our previous work~\cite{DM2015} we stated a relation between \ac{XBefore} and \emph{supremum}, provided the operands are variables \cref{def:var}.
@@ -284,6 +289,7 @@ We name these properties as \emph{temporal properties}.
 
 Temporal properties give a more abstract and less restrictive shape on the \ac{XBefore} laws.
 They are abbreviations that some operators satisfy altogether or individually.
+However, the properties considered here are not general properties satisfied by all operators or by \ac{algebra}. 
 %These properties avoid the requirement that every operand of \ac{XBefore} should be a variable (\cref{def:var}).
 %The properties are: $\tempo[1]{}$ (\cref{def:tempo1}), $\tempo[2]{}$ (\cref{def:tempo2}), $\tempo[3]{}$ (\cref{def:tempo3}), and $\tempo[4]{}$ (\cref{def:tempo4}). 
 
@@ -304,8 +310,8 @@ If $\listsin{z_0,z_1} \in \denote{S}$, thus $\listsin{z_3,z_4} \notin \denote{S}
 Note that it is vague, but it is the first relation indication on the lists of $S$.
 In this property, as $zs$ has no repeated elements, then there is no element that is in both sublists.
 
-In what follows we show how variables satisfy $\tempo[]{}$ properties.
-To avoid repetition, the denotational semantics of $\var{z_1}$ is considered for generators $z_1,z_2,z_3$:
+We use the denotation of a variable below to show how variables satisfy $\tempo[]{}$ properties.
+As illustration, the denotational semantics of $\var{z_1}$ is considered for generators $z_1,z_2,z_3$:
 %
 \begin{align}
 \denote{\var{z_1}} = & 
@@ -323,7 +329,7 @@ To avoid repetition, the denotational semantics of $\var{z_1}$ is considered for
 \right\}
 \end{align}
 
-We demonstrate that the property $\tempo[1]{}$ is satisfied:
+We informally demonstrate that the property $\tempo[1]{}$ is satisfied by the above set:
 \begin{align}
 \listsin{z_1} \in \denote{S} \implies & 
 \listsin{z_2} \notin \denote{S} \land
@@ -349,7 +355,7 @@ We demonstrate that the property $\tempo[1]{}$ is satisfied:
 &\ldots\nonumber
 \end{align}
 
-The second temporal property is about belonging to one sublist in the beginning or in the end:
+The second temporal property states that if a list is split into two sublists, say $xs$ and $ys$, for every index of the list, then at least one of $xs$ or $ys$ must be in the set:
 %
 \begin{equation}
 \tempo[2]{S} = \forall~ i, zs ~\bullet~
@@ -394,9 +400,9 @@ If a generator belongs to a sublist between $j$ and $i$, then it belongs to the 
 %
 \begin{align}
 \tempo[3]{S} &= \forall~ i, j, zs ~\bullet~
-j < i \implies \nonumber\\
+i < j \implies \nonumber\\
 &\left(
-\slice{zs}{j}{i} \in \denote{S} \iff \sliceright{zs}{i} \in \denote{S} \land \sliceleft{zs}{j} \in \denote{S}
+\slice{zs}{i}{j} \in \denote{S} \iff \sliceright{zs}{j} \in \denote{S} \land \sliceleft{zs}{i} \in \denote{S}
 \right)\label{def:tempo3}
 \end{align}
 %
@@ -452,20 +458,16 @@ For a variable $\var{z_1}$:
   & \ldots\nonumber
 \end{align}
 
-In general, for any generator $z$, the following is valid:
-%
-\begin{equation}
-\label{law:var-tempo}
-\tempo[1]{\left(\var{z}\right)} \land
-\tempo[2]{\left(\var{z}\right)} \land
-\tempo[3]{\left(\var{z}\right)} \land
-\tempo[4]{\left(\var{z}\right)}
-\end{equation}
-
-We abbreviate \cref{law:var-tempo} as:
+We define $\tempo$ as:
 \begin{equation}
 \tempo{S} = \tempo[1]{S} \land \tempo[2]{S} \land \tempo[3]{S} \land \tempo[4]{S}
 \end{equation}
+
+In general, for any generator $z$, the following is valid:
+%
+\[
+\tempo{\left(\var{z}\right)}
+\]
 
 \begin{sloppypar}
 In our previous work~\cite{DM2015} we used set difference to specify the \ac{XBefore} operator.
@@ -493,33 +495,33 @@ Other expressions also meet one or more temporal properties:
 We now show some laws to be used in the algebraic reduction of \ac{algebra} formulas.
 The laws follow from the definition of \ac{XBefore}, from events independence, and from the temporal properties.
 
-We use a normal form similar to the \ac{DNF} of Boolean\index{Boolean Algebra} algebra.
-In \ac{DNF} each sub-expression is a minimal cut set\index{Minimal Cut!Sets} for \ac{SFT}.
-In our normal form, also called \ac{DNF}, we allow \acp{AND}, \acp{NOT}, and \acp{XBefore} to be in the sub-expressions.
-Each sub-expression is a set of minimal cut sequences\index{Minimal Cut!Sequences} for \ac{TFT} and \ac{DFT}.
-The following formulas are in \ac{DNF}:
-%
-\begin{align*}
-&\parsin{A \land \lnot B \land \lnot C} \lor \parsin{\xbefore{\parsin{\xbefore{A}{B}}}{C}}\\
-&\xbefore{A}{B}\\
-&\xbefore{\xbefore{A}{B}}{C}
-\end{align*}
-%
-The following formulas are \emph{not} in \ac{DNF}:
-%
-\begin{align*}
-&A \lor B\\
-&A \land B\\
-&-\parsin{A \lor B}\\
-&A \land \parsin{B \lor C}\\
-&\xbefore{A}{\parsin{B \lor C}}\\
-&\xbefore{A}{\parsin{B \land C}}
-\end{align*}
+%We use a normal form similar to the \ac{DNF} of Boolean\index{Boolean Algebra} algebra.
+%In \ac{DNF} each sub-expression is a minimal cut set\index{Minimal Cut!Sets} for \ac{SFT}.
+%In our normal form, also called \ac{DNF}, we allow \acp{AND}, \acp{NOT}, and \acp{XBefore} to be in the sub-expressions.
+%Each sub-expression is a set of minimal cut sequences\index{Minimal Cut!Sequences} for \ac{TFT} and \ac{DFT}.
+%The following formulas are in \ac{DNF}:
+%%
+%\begin{align*}
+%&\parsin{A \land \lnot B \land \lnot C} \lor \parsin{\xbefore{\parsin{\xbefore{A}{B}}}{C}}\\
+%&\xbefore{A}{B}\\
+%&\xbefore{\xbefore{A}{B}}{C}
+%\end{align*}
+%%
+%The following formulas are \emph{not} in \ac{DNF}:
+%%
+%\begin{align*}
+%&A \lor B\\
+%&A \land B\\
+%&-\parsin{A \lor B}\\
+%&A \land \parsin{B \lor C}\\
+%&\xbefore{A}{\parsin{B \lor C}}\\
+%&\xbefore{A}{\parsin{B \land C}}
+%\end{align*}
 
-\begin{sloppypar}
-But to transform the last two formulas into \ac{DNF}, one can use \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:xbefore-inf-1,thm:xbefore-inf-2}, for instance.
-The \ac{DNF} is clearer with the mapping function from denotational semantics to a formula $\formulaof{.}{}$ presented in \cref{sec:algebras-soundness-and-completeness}.
-\end{sloppypar}
+%\begin{sloppypar}
+%But to transform the last two formulas into \ac{DNF}, one can use \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:xbefore-inf-1,thm:xbefore-inf-2}, for instance.
+%The \ac{DNF} is clearer with the mapping function from denotational semantics to a formula $\formulaof{.}{}$ presented in \cref{sec:algebras-soundness-and-completeness}.
+%\end{sloppypar}
 
 We define events independence ($\independenteventsop$) as the property that one operand does not imply the other.
 For example, in some rules we need to avoid that the operands of \ac{XBefore} are $\var{a}$ and $\var{a} \lor \var{b}$ (it results in $\emptyset$, see \cref{thm:xbefore-not-idempotent}).
@@ -539,8 +541,8 @@ Essentially if the formulas contain independent events one must not imply on the
 \end{sloppypar}
 
 
-The absence of occurrences ($\emptyset$, the empty set of $\algebraset$) is a ``0'' for the \ac{XBefore} operator.
-The negation of all events ($\left\{\left[\right]\right\}$, a formula with the empty list) is a ``1'' for the \ac{XBefore} operator.
+The absence of occurrences ($\emptyset$, the empty set of $\algebraset$) is a ``0'' for the \ac{XBefore} operator (\cref{thm:xbefore-of-false-1,thm:xbefore-of-false-2}).
+The negation of all events ($\left\{\left[\right]\right\}$, a formula with the empty list) is a ``1'' for the \ac{XBefore} operator (\cref{thm:xbefore_neutral_1,thm:xbefore_neutral_2}).
 %
 \begin{subequations}
 \begin{align}
@@ -586,11 +588,11 @@ The negation of all events ($\left\{\left[\right]\right\}$, a formula with the e
 \end{align}
 \end{subequations}
 %
-The \ac{XBefore} is absorbed by one of the operands: if one of the operands may happen alone, thus the order with any other operand is irrelevant.
-However, an event cannot come before itself, thus \ac{XBefore} is not idempotent.
-The \ac{XBefore} is associative.
+The \ac{XBefore} is absorbed by one of the operands: if one of the operands causes a failure alone, thus the order with any other operand is irrelevant (\cref{thm:xbefore-sup-absorb-1,thm:xbefore-sup-absorb-2}).
+However, an event cannot come before itself, thus \ac{XBefore} is not idempotent (\cref{thm:xbefore-not-idempotent}).
+The \ac{XBefore} is associative (\cref{thm:xbefore-associativity}).
 
-To allow formula reduction we need the relation of \ac{XBefore} to the other Boolean\index{Boolean Algebra} operators.
+To allow formula reduction we need to relate \ac{XBefore} to the other Boolean\index{Boolean Algebra} operators.
 First we use the \ac{XBefore} as operands of \ac{OR} and \ac{AND}.
 %
 \begin{subequations}
@@ -617,10 +619,10 @@ For example, given generators $a$ and $b$ ($a \neq b$):
 \left(\xbefore{\var{a}}{\var{b}}\right) \lor \left(\xbefore{\var{b}}{\var{a}}\right) = \var{a} \land \var{b}
 \end{equation}
 %
-because $\var{a}$ and $\var{b}$ satisfy all temporal properties (\cref{law:var-tempo}) and are independent events.
+because $\var{a}$ and $\var{b}$ satisfy all temporal properties and are independent events.
 
 In our previous work~\cite{DM2015}, we stated that $S$ and $T$ had to be variables, for example, of the form $\var{s}$ and $\var{t}$.
-Now, each law requires that the operands satisfy some of the temporal properties, avoiding using variables explicitly.
+Now, each law requires that the operands satisfy some of the temporal properties, avoiding requiring that they be necessarily variables.
 %So, as variables satisfy all temporal properties and by \cref{thm:xbefore-sup-equiv-inf}, our theorem ``Exclusive before \emph{supremum}'' is still valid.
 
 Expressions with Boolean\index{Boolean Algebra} operators are used as operands of the \ac{XBefore} in the following laws.
@@ -675,12 +677,13 @@ Expressions with Boolean\index{Boolean Algebra} operators are used as operands o
 \end{align}
 \end{subequations}
 %
-\ac{XBefore} is distributive over \ac{OR}.
-On the other hand, the \ac{AND} is not.
-The \ac{AND} of an event with an \ac{XBefore} states that such an event can occur in any order within the events in the \ac{XBefore}.
-Lastly, the \ac{XBefore} is transitive with preconditions over the intermediate variable.
+\ac{XBefore} is distributive over \ac{OR} (\cref{thm:xbefore-sup-1,thm:xbefore-sup-2}).
+On the other hand, it does not distribute through \ac{AND}. (\cref{thm:xbefore-inf-1,thm:xbefore-inf-2}).
+The \ac{AND} of formulas as the first argument of an \ac{XBefore} states that the events of such formulas can occur in any order within the events in the \ac{XBefore} (\cref{thm:and_xbefore_equiv_or_xbefore}).
+The \ac{XBefore} is transitive with preconditions over the intermediate variable (\cref{thm:inf_xbefore_trans}).
+Lastly, the \ac{AND} is absorbed with an \ac{XBefore} (\cref{thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2}).
 
-The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer if we expand \cref{thm:and_xbefore_equiv_or_xbefore} with \cref{thm:xbefore-inf-1} and  \cref{thm:xbefore-inf-2}:
+Applying \cref{thm:xbefore-inf-1,thm:xbefore-inf-2} in \cref{thm:and_xbefore_equiv_or_xbefore} results in:
 %
 %\begin{subequations}
 \begin{align}
@@ -689,8 +692,7 @@ The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer i
   S \land \parsin{\xbefore{T}{U}} = &
   \parsin{\xbefore{\xbefore{S}{T}}{U}} \lor \nonumber\\
   & \parsin{\xbefore{\xbefore{T}{S}}{U}} \lor \nonumber\\
-  & \parsin{\xbefore{\xbefore{T}{U}}{S}} &
-  \text{expanded-unordered}
+  & \parsin{\xbefore{\xbefore{T}{U}}{S}} 
   \label{thm:and_xbefore_equiv_or_xbefore_expanded}
 %\\
 %
@@ -703,9 +705,12 @@ The law name, unordered, of \cref{thm:and_xbefore_equiv_or_xbefore} is clearer i
 %  \text{right-inter-absorb}
 %  \label{thm:xbefore-inf-absorb-2}
 \end{align}
+%
+which makes clear that the events of $S$ can occur in any order.
 %\end{subequations}
 %
 %From \cref{thm:xbefore-not-idempotent} and \cref{thm:and_xbefore_equiv_or_xbefore}, intersection and \ac{XBefore} also have an absorption law.
+
 
 In what follows we show properties of \ac{XBefore} related to the \ac{NOT} operators.
 %
@@ -741,16 +746,23 @@ Following our proposed denotational semantics, the instantiation of the type cla
 %
 Such an instantiation requires proof obligations for the type (the set of \distinctlists), which we discharged.
 %
-With all proofs, Isabelle/HOL asserts that the declared type (the set of sets of \distinctlists) is indeed \iac{algebra}\footnote{
-Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---composing all classes later.}.
+With all the proofs, Isabelle/HOL asserts that the declared type (the set of sets of \distinctlists) is indeed a valid instantiation of \ac{algebra}\footnote{
+Technically, we split the laws in smaller classes and prove them separately---starting with Boolean algebra---and then composing all the classes.}.
 %
-For example, \cref{thm:xbefore-sup-equiv-inf} is defined in \ac{algebra} and is proved mapping each syntactical element to the denotational semantics (the set of \distinctlists).
+For example, \cref{thm:xbefore-sup-equiv-inf} is defined in \ac{algebra} and is proved by mapping each syntactical element to the denotational semantics (a set of \distinctlists) and then establishing the equality at the denotational level.
 %
-Moreover, all \cref{thm:xbefore-inf-1,thm:xbefore-inf-2,thm:xbefore-sup-absorb-2,thm:xbefore-sup-absorb-1,thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2,thm:and_xbefore_equiv_or_xbefore_expanded,thm:xbefore_sup_compl_inf_absorb1} are theorems proved syntactically and inherited by the instantiation for set of sets of \distinctlists.
-Soundness of the instantiation with respect to the type class assumptions is a direct consequence of such an instantiation.
+Moreover, the \cref{thm:xbefore-inf-1,thm:xbefore-inf-2,thm:xbefore-sup-absorb-2,thm:xbefore-sup-absorb-1,thm:xbefore_inf_absorb_1,thm:xbefore_inf_absorb_2,thm:and_xbefore_equiv_or_xbefore_expanded,thm:xbefore_sup_compl_inf_absorb1} are theorems proved syntactically and inherited by the instantiation for set of sets of \distinctlists.
+Soundness of the type class assumptions (stated as axioms) with respect to the denotational model is a direct consequence of such an instantiation. 
 
-To illustrate this built-in property, consider \cref{thm:xbefore-sup-equiv-inf}.
-The following formula can be proved directly in Isabelle/HOL using term rewriting only:
+To illustrate the connection between the type class of \ac{algebra} (syntactic presentation) with the denotational model (semantic presentation) we first consider that, from \cref{thm:xbefore-sup-equiv-inf} we have that:
+%
+\[
+\denote{\xbefore{\var{a}}{\var{b}} \lor \xbefore{\var{b}}{\var{a}}} =
+\denote{\var{a} \land \var{b}}
+\]
+%
+Therefore, as the syntactic equation has been proved at the denotational level, any use of this equation in syntactic transformations preserves semantics. 
+For example, the following equality can be syntactically proved:
 %
 \begin{align*}
 & \xbefore{\var{a}}{\var{b}} \lor 
@@ -764,51 +776,42 @@ The following formula can be proved directly in Isabelle/HOL using term rewritin
 = & \top & \text{by Boolean law}
 \end{align*}
 
-Thus, the type class of \ac{algebra} is able to show that:
+Thus, this directly implies the corresponding semantic equivalence:
 \[
 \denote{\xbefore{\var{a}}{\var{b}} \lor 
 	\xbefore{\var{b}}{\var{a}} \lor 
 	\lnot \left(\var{a} \land \var{b}\right)} = \UNIV
 \]
-%
-and also:
-%
-\[
-\denote{\xbefore{\var{a}}{\var{b}} \lor \xbefore{\var{b}}{\var{a}}} =
-\denote{\var{a} \land \var{b}}
-\]
-%
-where $\UNIV$ is the set of all \distinctlists.
 
-All the above formulas are theorems on the semantics, but are proved using the assumptions declared on the type class hierarchy (Boolean and \ac{algebra}).
+All the above formulas are theorems in the semantics, but are proved using the assumptions declared on the type class hierarchy (Boolean and \ac{algebra}).
 
-To prove soundness explicitly (without relying on type classes), we declare a datatype:
-%
-\begin{verbatim}
-datatype 'a formula_syntax =
-    sFalse |
-    sVar 'a |
-    sNot 'a formula_syntax |
-    sAnd 'a formula_syntax 'a formula_syntax |
-    sXB 'a formula_syntax 'a formula_syntax
-\end{verbatim}
+%To prove soundness explicitly (without relying on type classes), we declare a datatype:
+%%
+%\begin{verbatim}
+%datatype 'a formula_syntax =
+%    sFalse |
+%    sVar 'a |
+%    sNot 'a formula_syntax |
+%    sAnd 'a formula_syntax 'a formula_syntax |
+%    sXB 'a formula_syntax 'a formula_syntax
+%\end{verbatim}
 
-The semantics of a \verb|formula_syntax| is similar to what we show in this \lcnamecref{chap:algebra}:
-\begin{align}
-\semanticsof{sFalse} = & \bot \nonumber\\
-%%%%%
-\semanticsof{sVar~a} = & \var{a} \nonumber\\
-%%%%%
-\semanticsof{sNot~f} = & - \semanticsof{f} \nonumber\\
-%%%%%
-\semanticsof{sAnd~f_1~f_2} = & \semanticsof{f_1} \land \semanticsof{f_2} \nonumber\\
-%%%%%
-\semanticsof{sXB~f_1~f_2} = & \xbefore{\semanticsof{f_1}}{\semanticsof{f_2}}\nonumber
-\end{align}
+%The semantics of a \verb|formula_syntax| is similar to what we show in this \lcnamecref{chap:algebra}:
+%\begin{align}
+%\semanticsof{sFalse} = & \semanticsof{\bot} \nonumber\\
+%%%%%%
+%\semanticsof{sVar~a} = & \semanticsof{\var{a}} \nonumber\\
+%%%%%%
+%\semanticsof{sNot~f} = & - \semanticsof{f} \nonumber\\
+%%%%%%
+%\semanticsof{sAnd~f_1~f_2} = & \semanticsof{f_1} \land %\semanticsof{f_2} \nonumber\\
+%%%%%%
+%\semanticsof{sXB~f_1~f_2} = & %\xbefore{\semanticsof{f_1}}{\semanticsof{f_2}}\nonumber
+%\end{align}
 
-Note that we mapped the semantics of a formula to the operators of Boolean algebra and \ac{algebra}.
-This is possible due to the locales and contexts in Isabelle/HOL.
-Type classes use both structures of locales and contexts, thus it allows to reuse the operators for sets of distinct lists, as we show above.
+%Note that we mapped the semantics of a formula to the operators of Boolean algebra and \ac{algebra}.
+%This is possible due to the locales and contexts in Isabelle/HOL.
+%Type classes use both structures of locales and contexts, thus it allows to reuse the operators for sets of distinct lists, as we show above.
 
 %For the soundness theorem states if a formula $f_1$ syntactically reduces to a formula $f_2$, then $f_1$ reduces semantically to $f_2$:
 %%
@@ -827,22 +830,27 @@ Let $f$ be a formula in \ac{algebra} and $\Sigma$ be a set of simplification rul
 %
 \end{proposition}
 
+$\syntactically{\Sigma}{f}$ means that $f$ can be syntactically proved by the rules in $\Sigma$, whereas $\semantically{\Sigma}{f}$ means the same at the (denotational) semantics level.
+Although we have not formally carried out this proof inductively, it follows from the fact that we have proved that every basic rule is sound (as they where proved in the denotational semantics) and that all the remaining rules have been derived from provably sound rules. 
+
 The syntactical application of the rules can be defined in Isabelle/HOL as an inductive definition.
 Thus, if a formula is in such an inductive definition, then such a formula is provable.
-We have not defined yet inductive definition for provable.
-On the semantics side (right hand side of \cref{prop:soundness}) we use the mapping function above, which have been proved for sets of \distinctlists.
+On the semantics side (right hand side of \ref{prop:soundness}) we use the mapping function mentioned above.
 
-The semantic completeness is the converse of soundness:
-if a formula has the semantics of $\top$, then such a formula is provable (syntactically) for the set of rules $\Sigma$.
+Completeness is the converse of soundness:
+if a formula has the semantics of $\top$, then such a formula is provable (syntactically) from the set of rules $\Sigma$.
 
 \begin{proposition}[Completeness]
 Let $f$ be a formula in \ac{algebra} and $\Sigma$ be a set of simplification rules of the syntax, then:
 %
 \begin{equation}
-\forall~ f ~\bullet~ \semantically{\Sigma}{f} \implies \syntactically{\Sigma}{f}\label{prop:completeness}
+\forall~ f ~\bullet~ \semantically{\Sigma}{f} \implies \syntactically{\Sigma}{\normalform{f}}\label{prop:completeness}
 \end{equation}
 %
 \end{proposition}
+%
+\noindent where $\normalform{f}$ transforms the formula $f$ into a normal form using only a subset of the Boolean operators and the \ac{XBefore}.
+We need to show that every formula can be mapped into such a normal form using the set of rules of the \ac{algebra}.
 
 \section{Qualitative and quantitative analyses}
 \label{sec:qualitative-quantitative-analyses}
@@ -858,9 +866,9 @@ These attributes of \iac{FT} are the most representative ones, but others can be
 
 \subsection[Minimal cut sequence]{\Acl{MCSeq}}
 
-Recall from the beginning of this \lcnamecref{chap:algebra} that the denotational semantics of \ac{algebra} is a set of \distinctlists.
-Thus, each list has no repeated elements and represent a possible combination of faults that causes the root failure.
-\Acp{MCSeq} are those \distinctlists with the least length, defined in what follows.
+Recall from the beginning of this \lcnamecref{chap:algebra} that the denotational semantics of a formula in \ac{algebra} is a set of \distinctlists.
+Thus, each list has no repeated elements and represents a possible combination of faults that cause the root failure.
+\Acp{MCSeq} are those \distinctlists with the least length, defined as follows.
 
 \begin{definition}[Minimal cut sequences]
 Let $S$ be a formula in \ac{algebra}.
@@ -888,28 +896,11 @@ For example, the \acp{MCSeq} of $\xbefore{\var{a}}{\left(\var{b} \lor \var{c}\ri
 Other lists in the denotational semantics of the formula are $\listsin{a,b,c}$ and $\listsin{a,c,b}$, but these are not minimal.
 
 \subsection{Root probability}
+\label{sec:root-probability}
 
-The work reported in~\cite{Merle2010} shows how to calculate the probability of \iac{PAND} gate as:
-%
-\begin{align}
-P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
-& = \int_0^t P'_2(t_2) \int_0^{t_2} P'_1(t_1) dt_1 dt_2 \nonumber\\
-& = \int_0^t P'_2(t_2) P_1(t_2) dt_2\label{eq:pand-probability}
-\end{align}
-%
-where $P_1$ and $P_2$ are the probabilities of the occurrences of the first and the second faults (cumulative distribution function), respectively, and $T_1$ and $T_2$ are the times the first and the second faults occur.
-The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs is the probability of the sequence of faults $f_i$, $i \in \left\{~1, \ldots, n~\right\}$:
-%
-\begin{align}
-\probability{\left[f_1,f_2\ldots,f_{n-1},f_n\right]} = \nonumber\\ \int_0^t\fiti{n}\int_0^{t_n}\fiti{n-1}\ldots\int_0^{t_3}\fiti{2}
- \int_0^{t_2}\fiti{1} dt_1 dt_2\ldots dt_{n-1}  dt_n\label{eq:general-pand-probability}
-\end{align}
-%
-where $P_i$ is the cumulative distribution function of fault $f_i$.
-
-For \ac{algebra}, our proposal for probability calculation is defined in terms of the probability of \ac{PAND} gates.
+For \ac{algebra}, our proposal for probability calculation is defined in terms of the probability of \ac{PAND} gates, as shown in \cref{eq:general-pand-probability}.
 The reason is that our semantics is defined in terms of a set of lists (or sequences) of fault occurrences.
-The main difference from the \ac{PAND} calculation as reported in~\cite{FAR1976} is that repeated situations must be removed.
+The main difference from the \ac{PAND} calculation is that repeated situations must be removed.
 For example, the probability of $\denote{\xbefore{\var{f_1}}{\var{f_2}}}$ contains the situations in which $f_1$ occurs before $f_2$ \emph{and} $f_3$ does not occur, or $f_3$ occurs in some time: $\probability{\left[f_1,f_2,f_3\right]}$, $\probability{\left[f_1,f_3,f_2\right]}$, and $\probability{\left[f_3,f_1,f_2\right]}$.
 %
 %To isolate these cases, we use the following definitions:
@@ -1015,7 +1006,7 @@ When the empty list appears in a denotational semantics it means that the top-ev
 %Thus its probability value depends on the value of the probabilities of all constituents be operational, which is \emph{usually} near $1$ (see~\cite{Andrews2001}).
 %This is the only assumption in the calculations shown in this \lcnamecref{sec:qualitative-quantitative-analyses}.
 
-We use the traditional probability calculations~\cite{Merle2010} as reference to calculate the probabilities of formulas in \ac{algebra}.
+We use the traditional probability calculations (\cref{sec:probability-theory}) as reference to calculate the probabilities of formulas in \ac{algebra}.
 %\begin{subequations}
 %\begin{align}
 %\probability{\vari{1} \land \vari{2}} = & \Fit{1} \times \Fit{2}\label{eq:and-probability}\\
@@ -1041,13 +1032,18 @@ For example, the formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left
 = & P_1(t) \times P_2(t)\label{eq:prob-xbefore-sup-equiv-inf}
 \end{align}
 
-In \cref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$).
+In \ref{eq:prob-xbefore-sup-equiv-inf} we demonstrated that the probability of a formula $\left(\xbefore{\var{f_1}}{\var{f_2}}\right) \lor \left(\xbefore{\var{f_2}}{\var{f_1}}\right)$ is equal to the probability of the traditional \ac{AND} probability ($\var{f_1} \land \var{f_2}$, \cref{eq:traditional-and-probability}).
 This is expected as these two formulas are equivalent, as shown in \cref{thm:xbefore-sup-equiv-inf}.
 
 Another example including complement is the formula $\var{f_1} \land \var{f_2} \land \lnot \var{f_3}$:
 %
 \begin{align}
 S = & \var{f_1} \land \var{f_2} \land \lnot \var{f_3}\nonumber\\
+\denote{S} = & 
+	\left\{
+		\left[f_1, f_2\right] ,
+		\left[f_2, f_1\right]
+	\right\} \nonumber\\
 %%%%%
 \probability{S} = &
 \denotationalprob{\left[f_1,f_2\right]} + \denotationalprob{\left[f_2,f_1\right]} 
@@ -1060,7 +1056,7 @@ S = & \var{f_1} \land \var{f_2} \land \lnot \var{f_3}\nonumber\\
 = & P_1(t) \times P_2(t) \times \left(1 - P_3(t)\right) & \text{by \cref{eq:prob-xbefore-sup-equiv-inf}}
 \end{align}
 
-Using \cref{eq:formula-probability}, and for generators $f_1$ and $f_2$, we demonstrate the equivalence to the probability of a traditional \ac{OR} operator, calculated using the denotational semantics:
+Using \cref{eq:formula-probability}, and for generators $f_1$ and $f_2$, we demonstrate the equivalence to the probability of a traditional \ac{OR} operator (\cref{eq:traditional-or-probability}), calculated using the denotational semantics:
 %
 \begin{align}
 S = & \vari{1} \lor \vari{2}\nonumber\\
@@ -1132,11 +1128,11 @@ Thus, the probability calculation is not sensitive to a particular set of genera
 To enable the formal verification of structure expressions we use the concept of \emph{acceptance criteria}.
 Safety requirements are written in terms of the properties of \iac{FT}, for example: 
 \begin{alineasinline}
-  \item no single failure should cause a critical failure (the length the \acp{MCSeq} should be greater than $1$), or 
-  \item the probability of all critical failure should be less than $P_x$.
+  \item no single failure should cause a critical failure (the length of the \acp{MCSeq} should be greater than $1$), or 
+  \item the probability of all critical failures should be less than $P_x$.
 \end{alineasinline}
 See more examples in~\cite[p. XI-5,XI-18]{VGR+1981}.
-To check these requirements we translate these requirements into a value and verify in the theorem prover.
+To check these requirements we translate them into a value and verify in the theorem prover.
 
 For the two analysis shown in this \lcnamecref{sec:qualitative-quantitative-analyses}, we define the two acceptance criteria:
 %
@@ -1148,7 +1144,7 @@ For the two analysis shown in this \lcnamecref{sec:qualitative-quantitative-anal
 \end{align}
 \end{subequations}
 %
-Both equations have Boolean\index{Boolean} return value, which can be verified by a theorem prover.
+Both equations return a Boolean\index{Boolean} value, which can be verified by a theorem prover.
 
 Using the formal acceptance criteria, safety requirements as stated in the beginning of this section are:
 %
@@ -1163,8 +1159,8 @@ The verification of the acceptance criteria is illustrated with the probability 
 \label{sec:mapping-cspm-algebra}
 
 In our previous work~\cite{DM2012,Didier2012} we reported a strategy to inject faults in a \ac{CSPm} model generated from an architectural model of a system in \simulink.
-Using a model-checker we were able to obtain failure traces with the injected faults, which we produced failure expressions in Boolean algebra.
-Thus, the order-related information was lost, as there are no means to represent them in Boolean algebra\index{Boolean algebra}.
+Using a model-checker we were able to obtain failure traces with the injected faults, from which we produced failure expressions in Boolean algebra.
+Thus, the order-related information was lost, as there are no means to represent these failure traces in Boolean algebra\index{Boolean algebra}.
 For example, a trace that represents the occurrence of $f_1$ before $f_2$ was written as the expression $\var{f_1} \land \var{f_2}$, which is the same as $\var{f_2} \land \var{f_1}$.
 
 Using the same strategy, but now mapping the traces to \ac{algebra} we are able to analyse order-related failures.

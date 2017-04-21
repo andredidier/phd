@@ -25,10 +25,10 @@ The failure logic is essential for system safety assessment because it is used a
 %
 Furthermore, we still connect the strategy presented in~\cite{MJG+2010} with the works reported in~\cite{JMS+2011} (functional analysis) and in~\cite{GMS+2010,PMS+2001} (safety assessment) because our new algebra is at least a Boolean algebra.
 
-We also proposed a parametrized logic, the \ac{activation}, that enables the analysis of systems depending on the expressiveness of a given algebra and a given set of operational modes.
+We also proposed a parametrized logic, \ac{activation}, that enables the analysis of systems depending on the expressiveness of a given algebra and a given set of operational modes.
 If \ac{algebra} is used as a parameter, then the order of occurrence of faults can be considered.
 Other algebras, like ternary algebras \cite{Jones2016} can be used, since they have tautology and contradiction properties.
-Although the \ac{activation} is not as detailed as \ac{AADL}, the predicate notation in conjunction with the \ac{algebra} provides a richer assertion framework.
+Although \ac{activation} does not tackle system details \ac{AADL} does, the predicate notation in conjunction with the \ac{algebra} provides a richer assertion framework.
 Also, it is possible to verify non-determinism on the model, by: 
 \begin{alineasinline}
   \item verifying its existence with the $\nondetcmd$ function, 
@@ -53,7 +53,7 @@ Also, it is possible to verify non-determinism on the model, by:
 
 \begin{sloppypar}
 	The work reported in~\cite{Walker2009,WP2009,WP2010} tackles simultaneity with ``nearly simultaneous'' events~\cite{EWG2013}.
-	But we consider instantaneous events, like the work reported in~\cite{MRL2014}, because we assume that simultaneity is probabilistically impossible.
+	However, we consider instantaneous events, like the work reported in~\cite{MRL2014}, because we assume that simultaneity is probabilistically impossible.
 \end{sloppypar}
 %Another future To show the relation of the exclusive before operator to the operators shown in~\cite{MRL2014} and~\cite{WP2009}.
 
@@ -86,7 +86,7 @@ A ternary tree with special nodes seems to be a solution, but we have not verifi
 
 The works reported in~\cite{Merle2010,MRL+2010,MRL2011,Walker2009,WP2009} removed the \ac{NOT} operator.
 Thus, the algebras defined there (to analyse \ac{TFT} and \ac{DFT}) resembles a Boolean algebra, but are not complete. 
-The \ac{algebra} allows such trees to have \ac{NOT} operators and the analysis could be performed similarly to \ac{SFT}.
+\Ac{algebra} allows such trees to have \ac{NOT} operators and the analysis could be performed similarly to \ac{SFT}.
 Compared to \acp{TFT}, \ac{algebra} does not allow simultaneous events.
 Compared to \acp{DFT}, \ac{algebra} is equivalent to the algebra shown in the works reported in~\cite{MRL2011b,Merle2010}, although their algebra has an operator to represent simultaneity, because simultaneity is probabilistically impossible.
 The inclusion of an operator to represent simultaneity and the proofs of relation of \ac{algebra} to the algebras of \ac{TFT} and \ac{DFT} are left as future work.
@@ -113,16 +113,30 @@ This property should only be used as an alert to the analyst if it not met initi
 
 \section{Future work}
 
-The use of Isabelle/HOL gave us a peace of mind to assure our results.
+The use of \isabellehol gave us a mechanised means to assure our results.
 Using it, however, requires so much time to get used to the notation, and understand proof mechanisation.
 %Some proofs of laws and theorems were left out of this work.
 All laws shown in \cref{sec:temporal-properties,sec:xbefore-laws} were proved and are presented in \cref{app:formal-proofs-isabelle-hol}.
-We plan to prove the other theorems related to probabilities, \ac{MCSeq} acceptance criteria verification, and soundness and completeness.
+We plan to prove the other theorems related to probabilities, \ac{MCSeq} acceptance criteria verification, and completeness.
 Properties of the probability calculation of a formula needs to be proved as well.
+
+Although \acp{FT} support events susceptible to common cause, we considered only independent fault events in this work.
+This limitation is mainly due to the probabilistic analysis shown in \cref{sec:root-probability}.
+But, as shown in \cref{sec:probability-theory}, a different probability model could support dependent events as well.
+A further investigation is needed to verify if it really affects only the quantitative analysis.
+
+The case studies shown in this work are representative to illustrate the theories, but a set of more elaborated case studies is essential to evaluate other system properties (like liveness), as well as to evaluate tools limitations related to performance and scalability.
 
 Another future work is to relate \ac{algebra} with the algebras shown in~\cite{Merle2010,Walker2009}.
 It is important because we can benefit from their results.
 The main challenge is to define how to express simultaneity in \ac{algebra}, or, at least, how to map from \ac{algebra} to the other algebras.
+
+Considering tools and ease of usage of the theory, a future work is the implementation of a tool to use the algebra (including the probability calculations) without concerning about the denotational semantics.
+We plan to implement such a tool as a plugin in other tools, like \simulink.
+
+%Adicionar um parágrafo aqui sobre como seria como seria uma ferramenta para um engenheiro utilizar sem necessitar o conhecimeno da semântica denotacional. Uma ideia seria propor uma ferramenta construída puramente em cima da álgebra, com o uso de uma infra de reescrita que faça as reduções necessárias, a partir da qual a probabilidade seja calculada. A vantagem de uma álgebra, de pois de provada sound, é exatamente poder ser usada como uma interface sem precisar usar mais a semântica. 
+
+%Estudos de caso mais elaborados
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

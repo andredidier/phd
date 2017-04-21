@@ -10,7 +10,7 @@ There are at least two strategies to use \ac{activation} to obtain structure exp
 \end{alineasinline}
 %
 In approaches as those reported in~\cite{WP2009,Merle2010}, behavioural completeness is left for the analyst.
-By using tautology and the indication of undefined nominal values, we ensure that no situation is left behind.
+Using tautology and the indication of undefined nominal values, we ensure that no situation is missed.
 That is, modelling is behaviourally complete.
 
 The \acl{activation} associates: 
@@ -19,7 +19,7 @@ The \acl{activation} associates:
   \item the expression of fault events that \emph{activates} the operational mode or error event.
 \end{alineasinline}
 The expressions of fault events can be written in any algebra that provides tautology and contradiction properties.
-Boolean algebra and the \ac{algebra} provide both.
+Boolean algebra and \ac{algebra} provide both.
 Thus, \ac{activation} is parametrized by: 
 \begin{alineasinline}
   \item an algebra that provides at least tautology and contradiction, and 
@@ -43,7 +43,7 @@ Thus, \ac{activation} is parametrized by:
 %Is there any erroneous behaviour case missing?
 
 \begin{sloppypar}
-We summarise the properties of the \ac{activation} as follows:
+We summarise the properties of \ac{activation} as follows:
 %
 \begin{enumerate}
   \item No expression predicate is a contradiction: there are no \emph{false} predicates in activation expressions;
@@ -52,10 +52,10 @@ We summarise the properties of the \ac{activation} as follows:
   \item There are no two terms with exactly the same operational mode: all expression terms are related to a unique operational mode.
 \end{enumerate}
 %
-These properties form the \emph{healthiness conditions}~\cite{HH1998} of an expression in the \ac{activation}.
+These properties form the \emph{healthiness conditions}~\cite{HH1998} of an expression in \ac{activation}.
 \end{sloppypar}
 
-We show the general form of the \ac{activation} to model faults in \cref{sec:grammar}, the healthiness conditions to normalize expressions in \cref{sec:healthiness-conditions}, how to identify non-determinism in an expression in \cref{sec:non-determinism}, and the predicate notation to analyse systems and model fault propagation in \cref{sec:predicates-notation}.
+We show the general form of \ac{activation} to model faults in \cref{sec:grammar}, the healthiness conditions to normalize expressions in \cref{sec:healthiness-conditions}, how to identify non-determinism in an expression in \cref{sec:non-determinism}, and the predicate notation to analyse systems and model fault propagation in \cref{sec:predicates-notation}.
 
 \section[The Activation Logic Grammar]{The \acl*{activation} Grammar}
 \label{sec:grammar}
@@ -106,8 +106,8 @@ In what follows we show a sketch of the denotational semantics of \ac{activation
 \end{align*}
 %
 In an expression, if the $i^{th}$ predicate evaluates to $true$ ($\top$), we say that the $i^{th}$ operational mode is \emph{activated}.
-To simplify the presentation of the expressions and to ease the understanding, we use the denotational semantics in the remainder of this chapter (the right-hand side of the sketch above).
-Thus, instead of using $\logicInFormula{Exp} = \logicInFormula{\left(P_1,O_1\right)} | \logicInFormula{\left(P_2,O_2\right)}$ we will use $Exp = \left\{ \left(P_1,O_1\right), \left(P_2,O_2\right)  \right\}$
+To simplify the presentation of the expressions and to ease understanding, we use the denotational semantics in the remainder of this chapter (the right-hand side of the sketch above).
+Thus, instead of using $\logicInFormula{Exp} = \logicInFormula{\left(P_1,O_1\right)} | \logicInFormula{\left(P_2,O_2\right)}$ we use $Exp = \left\{ \left(P_1,O_1\right), \left(P_2,O_2\right)  \right\}$
 
 In this \lcnamecref{sec:grammar}, to illustrate the properties and possible analyses, we use an example of a system with faults $A$ and $B$ and the following outputs:
 \begin{description}
@@ -122,9 +122,9 @@ The expression for this example in \ac{activation} is:
 S = \left\{\left(A, O_1\right), \left(B, O_2\right), \left(A \land \lnot B, O_3\right), \left(A \lor B, O_4\right)\right\}\label{eq:activation-example}
 \end{equation}
 %
-We use \cref{eq:activation-example} on the following sections in this chapter to illustrate \ac{activation}.
+We use \cref{eq:activation-example} in the following sections of this chapter to illustrate \ac{activation}.
 
-In this example we see that one of the healthiness conditions is not satisfied: when for instance, $A$ and $B$ are both inactive ($\lnot \left(A \land B\right)$), there is no explicit output defined.
+In this example we see that one of the healthiness conditions is not satisfied: when, for instance, $A$ and $B$ are both inactive ($\lnot \left(A \land B\right)$), there is no explicit output defined.
 %
 In \cref{sec:activation-to-structure-expressions-algebra-operators} we show a more detailed case study to illustrate the reasoning about temporal faults.
 In the next \lcnamecref{sec:healthiness-conditions}, we show how to normalise the expression, so that the three healthiness conditions are satisfied.
@@ -134,10 +134,10 @@ In the next \lcnamecref{sec:healthiness-conditions}, we show how to normalise th
 
 The healthiness conditions are fix points of a language.
 The property is defined as a function of an expression and returns another expression.
-For example, if a healthiness condition $\healthiness$ is satisfied for an expression $Exp$, we have $\healthinessfun{Exp} = Exp$.
+For example, if a healthiness condition $\healthiness$ is satisfied by an expression $Exp$, we have $\healthinessfun{Exp} = Exp$.
 
-In what follows we show the three healthiness conditions for the \ac{activation}.
-All definitions in this \lcnamecref{sec:healthiness-conditions} requires an algebra that satisfies the following properties:
+In what follows we show the three healthiness conditions for \ac{activation}.
+For convenience, we use the following abbreviations:
 \begin{description}
   \item[contradiction:] the expression always evaluates to \emph{false};
   \item[tautology:] the expression always evaluates to \emph{true}.
@@ -149,7 +149,7 @@ All definitions in this \lcnamecref{sec:healthiness-conditions} requires an alge
 This property is very simple and it is used to eliminate any term that has a predicate that always evaluates to false.
 
 \begin{definition}
-Let $exp$ be an expression in the \ac{activation}, then:
+Let $exp$ be an expression in \ac{activation}, then:
 %
 \begin{equation}
 \healthinessfun[1]{exp} = \left\{~\left(P,O\right) ~|~ \left(P,O\right) \in exp \land \lnot \contradiction{P} ~\right\}
@@ -204,7 +204,7 @@ This property merges terms that contain the same operational mode.
 It avoids unnecessary formulas and may reduce the expression.
 
 \begin{definition}
-Let $exp$ be an expression in the \ac{activation}. Then:
+Let $exp$ be an expression in \ac{activation}. Then:
 %
 \begin{equation}
 \label{eq:h3}
@@ -234,7 +234,7 @@ Thus, we conclude that $S'$ \emph{is not} $\healthy[3]$.
 
 To obtain a healthy expression, we apply all three healthiness conditions.
 The order of application of each healthiness condition does not change the resulting expression.
-The healthiness function is written as composition of functions as follows:
+The healthiness function is written as the composition of functions as follows:
 \begin{equation}
 \label{eq:h}
 \healthiness = \healthiness[1] \circ \healthiness[2] \circ \healthiness[3]\end{equation}
