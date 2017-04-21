@@ -7,8 +7,8 @@ Basic events become variables and gates become operators (a gate may become one 
 In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their respective structure expressions\index{structure expression}.
 
 \Acp{FBA} and \acp{BDD}\index{Binary Decision Diagrams} are the basis to analyse structure expressions.
-Also, we were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{chap:algebra}).
-We explain \acp{BDD}\index{Binary Decision Diagrams} and derived techniques in \cref{sec:structure-expression-analysis}, and \acp{FBA} in \cref{sec:fba}.
+We were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{chap:algebra}).
+We explain \acp{FBA} in \cref{sec:fba}.
 
 The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}:
 \begin{alineasinline}
@@ -219,7 +219,7 @@ Probabilistic analysis is then performed on these events to obtain the overall p
 The \FThandbook shows an algorithm based on Shannon's method\index{Binary Decision Diagrams!Shannon's method} to reduce structure expressions\index{structure expression} to obtain minimal cut sets\index{Minimal Cut!Sets}.
 %BDDs are essentially the diagrams of Shannon's method.
 The Boolean\index{Boolean Algebra} expression of the tree shown in \cref{fig:ex-fault-tree1} is $TOP = A \wedge B$.
-A technique called \ac{BDD}\index{Binary Decision Diagrams}---which derives from Shannon's method\index{Binary Decision Diagrams!Shannon's method}---is explained in \cref{sec:bdd}.
+%A technique called \ac{BDD}\index{Binary Decision Diagrams}---which derives from Shannon's method\index{Binary Decision Diagrams!Shannon's method}---is explained in \cref{sec:bdd}.
 
 \subsection{\Aclp*{TFT}}
 \label{sec:temporal-fault-trees}
@@ -397,7 +397,7 @@ An issue with \acp{DT} is that they grow exponentially.
 According to the work reported in~\cite{WP2010}, it is already infeasible to deal with seven fault events in \acp{TFT}.
 Although there is a solution, it is based on a mixed application of \acp{DT}, modularisation of independent subtrees, and algebraic laws~\cite{WP2009}.
 Such a solution is not able to solve \acp{FT} with \ac{NOT} gates, and requires some manual work to modularise independent trees.
-We show \acp{DT} in~\cref{sec:dependency-trees}.
+%We show \acp{DT} in~\cref{sec:dependency-trees}.
 Some of these algebraic laws are:
 %
 \begin{subequations}
