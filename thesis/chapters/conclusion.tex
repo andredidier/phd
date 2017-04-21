@@ -113,7 +113,7 @@ This property should only be used as an alert to the analyst if it not met initi
 
 \section{Future work}
 
-The use of Isabelle/HOL gave us a mechanised means to assure our results.
+The use of \isabellehol gave us a mechanised means to assure our results.
 Using it, however, requires so much time to get used to the notation, and understand proof mechanisation.
 %Some proofs of laws and theorems were left out of this work.
 All laws shown in \cref{sec:temporal-properties,sec:xbefore-laws} were proved and are presented in \cref{app:formal-proofs-isabelle-hol}.
@@ -125,11 +125,14 @@ This limitation is mainly due to the probabilistic analysis shown in \cref{sec:r
 But, as shown in \cref{sec:probability-theory}, a different probability model could support dependent events as well.
 A further investigation is needed to verify if it really affects only the quantitative analysis.
 
+The case studies shown in this work are representative to illustrate the theories, but a set of more elaborated case studies is essential to evaluate other system properties (like liveness), as well as to evaluate tools limitations related to performance and scalability.
+
 Another future work is to relate \ac{algebra} with the algebras shown in~\cite{Merle2010,Walker2009}.
 It is important because we can benefit from their results.
 The main challenge is to define how to express simultaneity in \ac{algebra}, or, at least, how to map from \ac{algebra} to the other algebras.
 
-Considering tools and ease of usage of the theories, a future work is also to provide %TODO CONTINUAR DAQUI
+Considering tools and ease of usage of the theory, a future work is the implementation of a tool to use the algebra (including the probability calculations) without concerning about the denotational semantics.
+We plan to implement such a tool as a plugin in other tools, like \simulink.
 
 %Adicionar um parágrafo aqui sobre como seria como seria uma ferramenta para um engenheiro utilizar sem necessitar o conhecimeno da semântica denotacional. Uma ideia seria propor uma ferramenta construída puramente em cima da álgebra, com o uso de uma infra de reescrita que faça as reduções necessárias, a partir da qual a probabilidade seja calculada. A vantagem de uma álgebra, de pois de provada sound, é exatamente poder ser usada como uma interface sem precisar usar mais a semântica. 
 
