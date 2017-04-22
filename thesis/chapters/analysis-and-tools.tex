@@ -10,6 +10,9 @@ In \cref{sec:fault-trees} we explain \acp{SFT}, \acp{TFT}, \acp{DFT}, and their 
 We were inspired by \ac{FBA} concepts to create our \acl{algebra} (\cref{chap:algebra}).
 We explain \acp{FBA} in \cref{sec:fba}.
 
+The quantitative analysis of \acp{FT} requires a probability theory of fault events.
+It is introduced in~\cref{sec:probability-theory}.
+
 The use of the Boolean\index{Boolean Algebra} operator \emph{NOT}:
 \begin{alineasinline}
   \item can be misleading, generating non-coherent \aclp{FT}~\cite{Oliv2006}, or
@@ -803,7 +806,7 @@ P\left(t\right) & = \probabilityt{T_1 \le T_2 }\nonumber\\
 & = \int_0^t P'_2(t_2) P_1(t_2) dt_2\label{eq:pand-probability}
 \end{align}
 %
-where $P_1$ and $P_2$ are the probabilities of the occurrences of the first and the second faults (cumulative distribution function), respectively, and $T_1$ and $T_2$ are the times the first and the second faults occur.
+where $P_1$ and $P_2$ are the probabilities of the occurrences (cumulative distribution function) of the first and the second faults, respectively, and $T_1$ and $T_2$ are the times the first and the second faults occur.
 The general case (reported in~\cite{FAR1976}) of \iac{PAND} gate with $n$ inputs is the probability of the sequence of faults $f_i$, $i \in \left\{~1, \ldots, n~\right\}$:
 %
 \begin{align}

@@ -2,7 +2,7 @@ section {* Denotational semantics for \ac{algebra} *}
 
 text {*
 \label{sec:theory-algebra-dlist}
-In the following we present the denotation semantics for \ac{algebra} in terms of sets of distinct lists.
+In the following we present the denotational semantics for \ac{algebra} in terms of sets of distinct lists.
 *}
 
 (*<*)
