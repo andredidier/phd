@@ -1012,6 +1012,7 @@ qed
 text {* The above proof shows laws with mixed Boolean and \ac{XBefore} operators, as shown in \cref{thm:xbefore-sup-1,thm:xbefore-sup-2,thm:not_xbefore,thm:and_xbefore_equiv_or_xbefore,thm:not_1_xbefore_equiv,thm:not_2_xbefore_equiv}. *} 
 end
 
+(*<*)
 subsection {* Equivalence of the new definition of \acs*{XBefore} with the old one *}
 
 definition old_dlist_xbefore
@@ -1027,6 +1028,7 @@ theorem old_dlist_xbefore_equals_new_xbefore:
 unfolding dlist_xbefore_append old_dlist_xbefore_def 
 using dlist_tempo_1_no_gap_append
 by blast
+(*>*)
 
 (*<*)
 subsection {* Soundness and completeness on the mapping rules*}
