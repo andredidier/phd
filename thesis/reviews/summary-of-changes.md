@@ -1,6 +1,6 @@
 # Resumo da modificações
 
-Estão listado apenas os comentários 
+Estão listado apenas os comentários que não são relacionados à gramática. Os demais comentários sobre gramática foram acatados.
 
 |Reviewer | Where in the thesis |Reviewer's comments  | My comments  |
 |---------|---------------------|---------------------|-------------|
@@ -16,11 +16,11 @@ Estão listado apenas os comentários
 | gnr | Seção 3.4.3, p. 67  [selecionado _Eq. 3.9_] | não seria para a 3.10? E não estaria faltando um termo? Pprv X Pi1 no lugar de Pprv? | Esta é uma fórmula trazida da referência citada. Ela está correta. Basta desenvolver os termos com as respectivas probabilidades. |
 | gnr | Seção 4.4.2, p. 89  [selecionado _The work reported in [3] shows how to..._] | Background work| Foi inserida uma seção 3.3 sobre probabilidades com parte do texto desta seção. Outras informações foram acrescentadas à nova seção. |
 | gnr | Seção 4.4.3, p. 93  [selecionado _Safety requirements are written..._] | where is such specification/requirements specified? | Foram acrescentadas referências sobre exemplos de tais requisitos. |
-| gnr | Seção X, p. | | |
-| gnr | Seção X, p. | | |
-| gnr | Seção X, p. | | |
+| gnr | Seção 5.2, p. 97 [selecionado título da seção] | System performs as expected -> reliability. It could also be expressed as Liveness? Why not this one? | São outras propriedades que poderiam ser analisadas, mas que ficaram de fora do escopo. Acrescentamos na conclusão comentário sobre trabalhos futuros com estas propriedades. |
+| gnr | Seção 5.3, p. 100 [selecionado o título da seção] | How does it connect to fault itself? | Isso está explicado na introdução. |
+| gnr | Seção 5.4, p. 101 [selecionado _Non-determinism is the possibility..._] | what would be the case that the failure either happens or not inconsistently? | Só são considerados _snapshots_ do estado do sistema. Em um único modelo é possível expressar mais de um estado do sistema, mesmo assim são snapshots. A inconsistência da ocorrência pode ser modelada como uma falha. Não modificamos o texto, pois não achamos que valeria a pena entrar neste detalhe na seção. |
 
-(foundation of the model)
+
 
 Authors:
 * gnr: Genaina
