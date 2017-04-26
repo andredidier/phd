@@ -18,9 +18,14 @@ Estão listado apenas os comentários que não são relacionados à gramática. 
 | gnr | Seção 2.1.2, p. 38  [selecionado _on the environment_] | notice that it should refer to the environment. | Sem alterações. |
 | gnr | Seção 2.1.2, p. 40  [selecionado _safety_] | is it really safety or reliability? where is the environment taken into account? | As árvores de falha estão relacionadas a _safety_, pois dizem respeito a uma falha catastrófica. Portanto a análise realizada usando AL e ATF dizem respeito a safety. |
 | gnr | Seção 3.1, p. 47  [selecionado {a,b,c} ] | why c? | Texto corrigido com explicação sobre c. |
+| jmi | Seção 3.1, p. 47 | [selecionado {a,b,c}] | A Figura 9 não tem c | Texto corrigido com explicação sobre c. |
 | gnr | Seção 3.1, p. 49 | Diversas seleções. | Ajustes nos acrônimos. |
+| jmi | Seção 3.1, p. 54 | Introduzir melhor a notação dos triângulos | Acrescentamos explicação sobre os símbolos. |
 | gnr | Seção 3.2.2, p. 56  [selecionado _BDD_] | onde foram usados? Por que fazem parte de seu background? | Toda a seção sobre análise de expressões de estrutura foi removida. Foram realizados ajustes pontuais em outras páginas onde esta seção era referenciada. |
+| jmi | Seção 3.2, p. 57 | A linha d também não produz 0? | A seção inteira foi removida. |
+| jmi | Seção 3.3, p. 62 | Estranho porque X é uma variável ligada [selecionado _{ X | s \in X }_] | Notação ajustada. |
 | gnr | Seção 3.4.3, p. 67  [selecionado _Eq. 3.9_] | não seria para a 3.10? E não estaria faltando um termo? Pprv X Pi1 no lugar de Pprv? | Esta é uma fórmula trazida da referência citada. Ela está correta. Basta desenvolver os termos com as respectivas probabilidades. |
+| jmi | Seção X, p. 79 | Introduzir UNIV aqui. [sobre a notação da semântica denotacional de _var_] | Notação ajustada. |
 | gnr | Seção 4.4.2, p. 89  [selecionado _The work reported in [3] shows how to..._] | Background work| Foi inserida uma seção 3.3 sobre probabilidades com parte do texto desta seção. Outras informações foram acrescentadas à nova seção. |
 | gnr | Seção 4.4.3, p. 93  [selecionado _Safety requirements are written..._] | where is such specification/requirements specified? | Foram acrescentadas referências sobre exemplos de tais requisitos. |
 | gnr | Seção 5.2, p. 97 [selecionado título da seção] | System performs as expected -> reliability. It could also be expressed as Liveness? Why not this one? | São outras propriedades que poderiam ser analisadas, mas que ficaram de fora do escopo. Acrescentamos na conclusão comentário sobre trabalhos futuros com estas propriedades. |
