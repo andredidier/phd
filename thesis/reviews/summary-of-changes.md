@@ -1,6 +1,6 @@
 # Resumo da modificações
 
-Estão listado apenas os comentários que não são relacionados à gramática. Os demais comentários sobre gramática foram acatados.
+Estão listados apenas os comentários que não são relacionados à gramática. Os demais comentários sobre gramática foram acatados.
 
 |Reviewer | Where in the thesis |Reviewer's comments  | My comments  |
 |---------|---------------------|---------------------|-------------|
