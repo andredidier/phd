@@ -24,7 +24,6 @@ Estão listado apenas os comentários que não são relacionados à gramática. 
 | jmi | Seção 3.1, p. 54 | Introduzir melhor a notação dos triângulos | Acrescentamos explicação sobre os símbolos. |
 | gnr | Seção 3.2.2, p. 56  [selecionado _BDD_] | onde foram usados? Por que fazem parte de seu background? | Toda a seção sobre análise de expressões de estrutura foi removida. Foram realizados ajustes pontuais em outras páginas onde esta seção era referenciada. |
 | jmi | Seção 3.2, p. 57 | A linha d também não produz 0? | A seção inteira foi removida. |
-| jmi | Seção 3.3, p. 62 | Estranho porque X é uma variável ligada [selecionado _{ X | s \in X }_] | Notação ajustada. |
 | acas | Seção 3.4.3, p. 66 [selecionado título da seção] | Esta consideração sobre probabilidade ficou um tanto sucinta. Qual a motivação para abordar análise probabilística com relação a sua contribuição? Está relacionado ao uso que você faz do operador NOT no estudo de caso? A seção 4.4, que exemplifica o cálculo probabilístico, introduz alguns conceitos básicos. Não deveriam estar aqui? | Sim. Foi acrescentada a Seção 3.3 sobre probabilidades. |
 | gnr | Seção 3.4.3, p. 67  [selecionado _Eq. 3.9_] | não seria para a 3.10? E não estaria faltando um termo? Pprv X Pi1 no lugar de Pprv? | Esta é uma fórmula trazida da referência citada. Ela está correta. Basta desenvolver os termos com as respectivas probabilidades. |
 | acas | Cap. 4, p. 79 [selecionado definições de L e U] | Isso está estranho. Para esta def fazer sentido, L teria que ser parametrizado por i. | Definição ajustada. |
@@ -42,7 +41,7 @@ Estão listado apenas os comentários que não são relacionados à gramática. 
 | gnr | Seção 5.2, p. 97 [selecionado título da seção] | System performs as expected -> reliability. It could also be expressed as Liveness? Why not this one? | São outras propriedades que poderiam ser analisadas, mas que ficaram de fora do escopo. Acrescentamos na conclusão comentário sobre trabalhos futuros com estas propriedades. |
 | acas | Seção 5.2.1, p. 98 | Por que H_2 torna uma expressão healthy caso ela não seja enquanto que H_1 não torna a expressão healthy caso ela não seja? | H_1 torna a expressão healthy. O "filtro" de _not contradiction_ faz isso com o _set comprehension_ |
 | acas | Seção 5.2.1, p. 98 [selecionado _contradiction(\tau)_] | Por que não defne \tau sem a negação e aqui usa o tautoloy em vez de contradiction? Fica mais natural e evita negação dupla.  | Ok, alterado também no _otherwise_ para not \tau. |
-| acas | Seção 5.2.1, p. 98 [selecionado _the missing terms_] | \tau inclui todos os termos e não apenas os que estão faltando. | Usando a definição anterior (**not** \bigvee ...), tau é exatamente o termo que falta para tornar a expressão H_2-healthy. Na nova notação de tau (\bigvee ...), o termo que falta é **not** \tau. No caso de S, o termo que não está presente em S é o caso de _not A and not B_, que é o resultado dado por \tau. |
+| acas | Seção 5.2.1, p. 98 [selecionado _the missing terms_] | \tau inclui todos os termos e não apenas os que estão faltando. | Usando a definição anterior (**not** \bigvee ...), tau é exatamente o termo que falta para tornar a expressão H_2-healthy. Na nova notação de tau (\bigvee ...), o termo que falta é **not** \tau. No caso de S, o termo que não está presente em S é o caso de _not A and not B_, que é o resultado dado por \tau na notação antiga. |
 | gnr | Seção 5.3, p. 100 [selecionado o título da seção] | How does it connect to fault itself? | Isso está explicado na introdução. |
 | gnr | Seção 5.4, p. 101 [selecionado _Non-determinism is the possibility..._] | what would be the case that the failure either happens or not inconsistently? | Só são considerados _snapshots_ do estado do sistema. Em um único modelo é possível expressar mais de um estado do sistema, mesmo assim são snapshots. A inconsistência da ocorrência pode ser modelada como uma falha. Não modificamos o texto, pois não achamos que valeria a pena entrar neste detalhe na seção. |
 | acas | Chap 6, p. 103 | Acho que deveria mencionar explicitamente a Embraer. Temos feito isso em artigos e em outras teses/dissertações.  | Alterado no documento inteiro. Usei _Embraer_/_parceiro industrial_ como uma macro do LaTeX. |
@@ -50,12 +49,13 @@ Estão listado apenas os comentários que não são relacionados à gramática. 
 | acas | Chap 7, p. 115 [selecionado _as detailed_] | vago. o que você quer dizer aqui? | Texto ajustado |
 | acas | Seção 7.1, p. 116 | Adicionar um parágrafo aqui sobre como seria como seria uma ferramenta para um engenheiro utilizar sem necessitar o conhecimeno da semântica denotacional. Uma ideia seria propor uma ferramenta construída puramente em cima da álgebra, com o uso de uma infra de reescrita que faça as reduções necessárias, a partir da qual a probabilidade seja calculada. A vantagem de uma álgebra, de pois de provada sound, é exatamente poder ser usada como uma interface sem precisar usar mais a semântica. | Adicionado. |
 | acas | Seção 7.1, p. 116 | Estudos de caso mais elaborados?? | Adicionado parágrafo sobre estudos de caso. |
+| eald | Seção 7.1 | Considerar falhas dependentes | Acrescentamos parágrafo sobre falhas que têm causa comum. |
 | acas | Referências, p. 123 [selecionado nosso artigo sobre _Lattice Based Representation_] | Algo incompleto aqui. | Parece-me que este é um estilo de citação. O texto completo é: "In: _Information Reuse and Integration (IRI), 2015 IEEE International Conference on_.". Se colocar na ordem correta, seria _2015 IEEE International Conference on Information Reuse and Integration (IRI)_. Há outras referências a artigos de conferências usando este padrão, no entanto todas as referências deste tipo foram baixadas das editoras. |
 
 
 Authors:
-* gnr: Genaina
-* prmm: Paulo 
-* jmi: Juliano 
-* acas: Augusto
-* eald: Enrique
+ * **gnr**: Genaina
+ * **prmm**: Paulo 
+ * **jmi**: Juliano 
+ * **acas**: Augusto
+ * **eald**: Enrique
