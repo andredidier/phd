@@ -174,7 +174,7 @@ So we assume that such an uncovered operational mode is nominal, but has an unde
 \begin{definition}
 Let $exp$ be an expression in the \ac{activation}, and $\tau$ is:
 \[
-\tau = \lnot \left (\bigvee_{\left(P,O\right)\in exp} P\right)
+\tau = \bigvee_{\left(P,O\right)\in exp} P
 \]
 %
 then:
@@ -182,8 +182,8 @@ then:
 \begin{equation}
 \healthinessfun[2]{exp} = 
   \begin{cases}
-    exp, & \text{if } \contradiction{\tau}\\
-    exp \cup \left\{\left(\tau,\Nominal{\undefinednominal}\right)\right\}, & \text{otherwise}
+    exp, & \text{if } \tautology{\tau}\\
+    exp \cup \left\{\left(\lnot \tau,\Nominal{\undefinednominal}\right)\right\}, & \text{otherwise}
   \end{cases}
 \end{equation}
 
