@@ -38,6 +38,7 @@
 %\usepackage[colorinlistoftodos,prependcaption,textsize=footnotesize,textwidth=4cm,disable]{todonotes} % NOTAS
 %\usepackage[final]{fixme}
 \usepackage{soul}
+\usepackage{pdfpages}
 
 \usepackage{indentfirst}
 \usepackage{microtype}      % para melhorias de justificação
@@ -478,7 +479,8 @@ A Ph.D. Thesis presented to the Center for Informatics of Federal University of 
 
 \input{ficha-catalografica}
 
-\input{folha-aprovacao}
+%\input{folha-aprovacao}
+\includepdf[pages={1}]{ficha-aprovacao.pdf}
 
 
 %\frontmatter
