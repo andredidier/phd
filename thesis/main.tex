@@ -1,4 +1,5 @@
-\documentclass[12pt,openright,twoside,a4paper,oldfontcommands,english,brazil,final]{abntex2}
+\documentclass[12pt,oneside,a4paper,oldfontcommands,english,brazil,final,sumario=abnt-6027-2012]{abntex2}
+%\documentclass[12pt,openright,oneside,a4paper,english,brazil,final]{abntex2}
 
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
@@ -88,6 +89,8 @@
 %%\newcommand{\listoftodos}[1]{\listoffixmes}
 %%%%%%%%%%%%%%%%% NOTAS
 
+\addto{\captionsenglish}{\renewcommand{\bibname}{References}}
+
 % alterando o aspecto da cor azul
 \definecolor{blue}{RGB}{41,5,195}
 
@@ -117,9 +120,9 @@
   \renewcommand{\errataname}{Errata sheet}
   \renewcommand{\agradecimentosname}{Acknowledgments}
   \renewcommand{\resumoname}{Abstract}
-  \renewcommand{\anexoname}{ANNEX}
+  \renewcommand{\anexoname}{Annex}
   \renewcommand{\anexosname}{Annex}
-  \renewcommand{\apendicename}{APPENDIX}
+  \renewcommand{\apendicename}{Appendix}
   \renewcommand{\apendicesname}{Appendix}
   \renewcommand{\orientadorname}{Supervisor:}
   \renewcommand{\coorientadorname}{Co-supervisor:}
@@ -519,8 +522,8 @@ I have no words to express how much I thank them, specially Alexandre.
 %, who have guided me since my undergrad course.
 %I hope this is the beginning of a healthy partnership for the improvement of science.
 
-CNPq\footnote{Sandwich Doctorate in Newcastle upon Tyne, grant 246956/2012-7.} and FACEPE\footnote{Doctorate scholarship, grant IBPG-0408-1.03/11.} were keen to guarantee my existential needs.
-The former with the trip to Newcastle upon Tyne, and the latter during the time I stayed in Recife, before and after the trip.
+CNPq and FACEPE were keen to guarantee my existential needs.
+The former with the trip to Newcastle upon Tyne with the Sandwich Doctorate scholarship in Newcastle upon Tyne, grant 246956/2012-7, and the latter during the time I stayed in Recife, before and after the trip, with Doctorate scholarship, grant IBPG-0408-1.03/11.
 
 I thank to Sascha Romanovsky for accepting me as his advisee while I was a Research Assistant of the COMPASS project.
 His comments, instructions, and knowledge were of great importance for this work.
@@ -566,31 +569,6 @@ In special, my two girls and my wife.
 %% error - erro
 %% failure - defeito
 
-\begin{resumo}[Resumo]
-\begin{otherlanguage*}{brazil}
-A modelagem de falhas é essencial na antecipação de defeitos em sistemas críticos.
-Tradicionalmente, Árvores de Falhas Estáticas são empregadas para este fim, mas Árvores de Falhas Temporais e Dinâmicas têm ganhado evidência devido ao seu maior poder para modelar e detectar propagações complexas de falhas que levam a um defeito.
-
-Em um trabalho anterior, mostramos uma estratégia baseada na álgebra de processos CSP e modelos Simulink para obter rastros (sequências) de falhas que levam a um defeito.
-A partir dos rastros de falhas nós descartamos a informação de ordenamento para obter expressões de estrutura  para Ávores de Falhas Estáticas.
-Ao contrário de descartar tal informação de ordenamento, poderíamos usá-la para obter expressões de estrutura para Árvores de Falhas Temporais ou Dinâmicas.
-
-No presente trabalho apresentamos: (i) uma álgebra temporal de falhas (com noção de propagação de falhas) para analisar defeitos em sistemas e provamos que ela é de fato uma álgebra Booleana, e (ii) uma lógica de ativação parametrizada para expressar comportamentos nominais e de falha, incluindo a modelagem de falhas a partir de uma álgebra e um conjunto de modos de operação.
-A álgebra permite herdar as propriedades de álgebras Booleanas, leis e técnicas de redução existentes, as quais são muito benéficas para a modelagem e análise de falhas.
-Com expressões na álgebra temporal de falhas nós permitimos a verificação de propriedades de segurança (\emph{safety}) baseadas em Árvores de Falhas Estáticas, Temporais ou Dinâmicas.
-A lógica criada neste trabalho pode ser usada com outras álgebras além das apresentadas.
-Sendo usada em conjunto com a álgebra temporal de falhas, tem a intenção de ajudar os analistas a considerar todas as possíveis situações em expressões complexas com operadores relacionados ao ordenamento das falhas, evitando esquecer combinações de falhas sutis (porém relevantes).
-Além disso, nossa álgebra temporal de falhas trata operadores NOT, que têm sido deixados de fora em outros trabalhos.
-Nós ilustramos nosso trabalho com alguns estudos de caso simples, mas reais, fornecidos pelo nosso parceiro industrial, a EMBRAER.
-
-Isabelle/HOL foi utilizado para a mecanização das provas dos teoremas da álgebra temporal de falhas.
-
-\vspace{\onelineskip}
-\noindent
-\textbf{Palavras-chave}: Simulink, CSP, FDR, Fault Tree Analysis, Temporal Fault Trees, Dynamic Fault Trees, Isabelle/HOL, Pandora, Fault Injection
-\end{otherlanguage*}
-\end{resumo}
-
 
 %\begin{keywords}
 %Simulink, CSP, FDR, Fault Tree Analysis, Temporal Fault Trees, Dynamic Fault Trees, Pandora, Fault Injection
@@ -599,11 +577,9 @@ Isabelle/HOL foi utilizado para a mecanização das provas dos teoremas da álge
 \begin{resumo}
 Fault modelling is essential to anticipate failures in critical systems.
 Traditionally, Static Fault Trees are employed to this end, but Temporal and Dynamic Fault Trees have gained evidence due to their enriched power to model and detect intricate propagation of faults that lead to a failure.
-
 In a previous work, we showed a strategy based on the process algebra CSP and Simulink models to obtain fault traces that lead to a failure.
 From the fault traces we discarded the ordering information to obtain structure expressions for Static Fault Trees.
 Instead of discarding such an ordering information, it could be used to obtain structure expressions of Temporal or Dynamic Fault Trees.
-
 In this work we present: (i) an algebra of temporal faults (with a notion of fault propagation) to analyse systems' failures, and prove that it is indeed a Boolean algebra, and (ii) a parametrized activation logic to express nominal and erroneous behaviours, including fault modelling, provided an algebra and a set of operational modes.
 The algebra allows us to inherit Boolean algebra's properties, laws and existing reduction techniques, which are very beneficial for fault modelling and analysis.
 With expressions in the algebra of temporal faults we allow the verification of safety properties based on Static, Temporal or Dynamic Fault Trees.
@@ -618,8 +594,31 @@ Isabelle/HOL was used to mechanize the theorems proofs of the algebra of tempora
 \noindent
 %\adnote{Adicionar MSC2010 06E25, 68M15, 68Q60, 93A30}
 %\begin{keywords}
-\textbf{Keywords}: Simulink, CSP, FDR, Fault Tree Analysis, Temporal Fault Trees, Dynamic Fault Trees, Isabelle/HOL, Pandora, Fault Injection
+\textbf{Keywords}: Fault Tree Analysis. Temporal Fault Trees. Dynamic Fault Trees. Isabelle/HOL. 
 %\end{keywords},
+\end{resumo}
+
+\begin{resumo}[Resumo]
+\begin{otherlanguage*}{brazil}
+A modelagem de falhas é essencial na antecipação de defeitos em sistemas críticos.
+Tradicionalmente, Árvores de Falhas Estáticas são empregadas para este fim, mas Árvores de Falhas Temporais e Dinâmicas têm ganhado evidência devido ao seu maior poder para modelar e detectar propagações complexas de falhas que levam a um defeito.
+Em um trabalho anterior, mostramos uma estratégia baseada na álgebra de processos CSP e modelos Simulink para obter rastros (sequências) de falhas que levam a um defeito.
+A partir dos rastros de falhas nós descartamos a informação de ordenamento para obter expressões de estrutura  para Ávores de Falhas Estáticas.
+Ao contrário de descartar tal informação de ordenamento, poderíamos usá-la para obter expressões de estrutura para Árvores de Falhas Temporais ou Dinâmicas.
+No presente trabalho apresentamos: (i) uma álgebra temporal de falhas (com noção de propagação de falhas) para analisar defeitos em sistemas e provamos que ela é de fato uma álgebra Booleana, e (ii) uma lógica de ativação parametrizada para expressar comportamentos nominais e de falha, incluindo a modelagem de falhas a partir de uma álgebra e um conjunto de modos de operação.
+A álgebra permite herdar as propriedades de álgebras Booleanas, leis e técnicas de redução existentes, as quais são muito benéficas para a modelagem e análise de falhas.
+Com expressões na álgebra temporal de falhas nós permitimos a verificação de propriedades de segurança (\emph{safety}) baseadas em Árvores de Falhas Estáticas, Temporais ou Dinâmicas.
+A lógica criada neste trabalho pode ser usada com outras álgebras além das apresentadas.
+Sendo usada em conjunto com a álgebra temporal de falhas, tem a intenção de ajudar os analistas a considerar todas as possíveis situações em expressões complexas com operadores relacionados ao ordenamento das falhas, evitando esquecer combinações de falhas sutis (porém relevantes).
+Além disso, nossa álgebra temporal de falhas trata operadores NOT, que têm sido deixados de fora em outros trabalhos.
+Nós ilustramos nosso trabalho com alguns estudos de caso simples, mas reais, fornecidos pelo nosso parceiro industrial, a EMBRAER.
+
+Isabelle/HOL foi utilizado para a mecanização das provas dos teoremas da álgebra temporal de falhas.
+
+\vspace{\onelineskip}
+\noindent
+\textbf{Palavras-chave}: Fault Tree Analysis. Temporal Fault Trees. Dynamic Fault Trees. Isabelle/HOL. 
+\end{otherlanguage*}
 \end{resumo}
 
 % List of figures
