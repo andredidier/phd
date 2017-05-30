@@ -1,4 +1,4 @@
-section {* \Acl*{algebra}  *}
+(*section {* \Acl*{algebra}  *}*)
 text {* \label{sec:theory-algebra} *}
 
 (*<*)
@@ -26,7 +26,7 @@ notation
   independent_events (infixl "\<triangleleft>\<triangleright>" 9)
 *)
 
-subsection {* Basic \ac{algebra} operators and $\tempo[1]{}$ *}
+(*subsection {* Basic \ac{algebra} operators and $\tempo[1]{}$ *}*)
 
 class algebra_of_temporal_faults_basic = boolean_algebra  +
   fixes neutral :: "'a" 
@@ -41,12 +41,12 @@ class algebra_of_temporal_faults_basic = boolean_algebra  +
   assumes xbefore_not_sym: 
     "\<lbrakk>tempo1 a; tempo1 b\<rbrakk> \<Longrightarrow> (xbefore a b) \<le> -(xbefore b a)"
 
-subsection {* Definition of associativity of \ac{XBefore} *}
+(*subsection {* Definition of associativity of \ac{XBefore} *}*)
     
 class algebra_of_temporal_faults_assoc = algebra_of_temporal_faults_basic +
   assumes xbefore_assoc: "xbefore (xbefore a b) c = xbefore a (xbefore b c)"
 
-subsection {* Equivalences in the \ac{algebra} and properties *}
+(*subsection {* Equivalences in the \ac{algebra} and properties *}*)
     
 class algebra_of_temporal_faults_equivs = algebra_of_temporal_faults_assoc +
   fixes independent_events :: "'a \<Rightarrow> 'a \<Rightarrow> bool" 
@@ -66,7 +66,7 @@ class algebra_of_temporal_faults_equivs = algebra_of_temporal_faults_assoc +
 definition tempo :: "'a::algebra_of_temporal_faults_equivs  \<Rightarrow> bool" where
 "tempo a \<equiv> tempo1 a \<and> tempo2 a \<and> tempo3 a \<and> tempo4 a"
 
-subsection {* \Ac{XBefore} transitivity *}
+(*subsection {* \Ac{XBefore} transitivity *}*)
 
 class algebra_of_temporal_faults_trans = algebra_of_temporal_faults_equivs +
   assumes xbefore_trans: 
@@ -75,7 +75,7 @@ class algebra_of_temporal_faults_trans = algebra_of_temporal_faults_equivs +
   assumes inf_xbefore_trans: "\<lbrakk> tempo1 b; tempo3 b \<rbrakk> \<Longrightarrow>
     inf (xbefore a b) (xbefore b c) = xbefore (xbefore a b) c"
 
-subsection {* Mixed operators in \ac{algebra} *}
+(*subsection {* Mixed operators in \ac{algebra} *}*)
 
 class algebra_of_temporal_faults_mixed_ops = algebra_of_temporal_faults_trans +
   assumes xbefore_sup_1: 
@@ -100,11 +100,11 @@ class algebra_of_temporal_faults_mixed_ops = algebra_of_temporal_faults_trans +
   assumes not_1_xbefore_equiv: "\<lbrakk>tempo1 a; tempo2 b \<rbrakk> \<Longrightarrow> xbefore (- a) b = b"
   assumes not_2_xbefore_equiv: "\<lbrakk>tempo1 b; tempo2 a \<rbrakk> \<Longrightarrow> xbefore a (- b) = a"
 
-subsection {* The Algebra of Temporal Faults *}
+(*subsection {* The Algebra of Temporal Faults *}*)
 
 class algebra_of_temporal_faults = algebra_of_temporal_faults_mixed_ops
 
-subsection {* Theorems in the context of \ac{algebra} *}
+(*subsection {* Theorems in the context of \ac{algebra} *}*)
 
 text {* 
 The following theorems are valid for \ac{algebra}.

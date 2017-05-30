@@ -7,9 +7,9 @@ imports
   "../Abstract_Soundness/Finite_Proof_Soundness"
 
 begin
-subsection {* Explicit syntax *}
+(*subsection {* Explicit syntax *}*)
 
-section {* Toy instantiation: Propositional Logic *}
+(*section {* Toy instantiation: Propositional Logic *}*)
 
 datatype formula_syntax = 
   Atom nat

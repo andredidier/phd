@@ -1,4 +1,4 @@
-section {* Sliceable  *}
+(*section {* Sliceable  *}*)
 text {*\label{sec:theory-sliceable} *}
 
 (*<*)
@@ -51,7 +51,7 @@ where "x\<dagger>i.. = x\<dagger>i..(# x)"
 
 notation ("latex") slice_left  ("(2_\<^bsub>[_..]\<^esub>)" [80,80] 80)
 
-subsection {* Disjoint elements and sliceable *}
+(*subsection {* Disjoint elements and sliceable *}*)
 
 lemma (in sliceable) slice_right_disjoint[simp]: "disjoint xs \<Longrightarrow> 
   disjoint (slice_right xs i)"
@@ -64,13 +64,13 @@ lemma (in sliceable) slice_left_disjoint[simp]: "disjoint xs \<Longrightarrow>
 unfolding slice_left_def
 by simp
 
-subsection {* n-th element in a sliceable *}
+(*subsection {* n-th element in a sliceable *}*)
 
 abbreviation sliceable_nth :: "'a::sliceable \<Rightarrow> nat \<Rightarrow> 'a"
 where
 "sliceable_nth l i \<equiv> l\<dagger>i..(Suc i)"
 
-subsection {* Theorems for sliceable *}
+(*subsection {* Theorems for sliceable *}*)
 
 theorem (in sliceable) empty_seq_inter_eq [simp]: 
   "disjoint x \<Longrightarrow> empty_inter (x\<dagger>..i) (x\<dagger>i..)"

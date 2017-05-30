@@ -2,10 +2,6 @@
 \begin{isabellebody}%
 \setisabellecontext{Sliceable}%
 %
-\isamarkupsection{Sliceable%
-}
-\isamarkuptrue%
-%
 \begin{isamarkuptext}%
 \label{sec:theory-sliceable}%
 \end{isamarkuptext}\isamarkuptrue%
@@ -65,10 +61,10 @@ Teste \isa{x\isactrlbsub {\isacharbrackleft}i{\isachardot}{\isachardot}j{\isacha
 \isakeyword{where}\ {\isachardoublequoteopen}x{\isasymdagger}i{\isachardot}{\isachardot}\ {\isacharequal}\ x{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}{\isacharhash}\ x{\isacharparenright}{\isachardoublequoteclose}\isanewline
 \isanewline
 \isacommand{notation}\isamarkupfalse%
-\ {\isacharparenleft}{\isachardoublequoteopen}latex{\isachardoublequoteclose}{\isacharparenright}\ slice{\isacharunderscore}left\ \ {\isacharparenleft}{\isachardoublequoteopen}{\isacharparenleft}{\isadigit{2}}{\isacharunderscore}\isactrlbsub {\isacharbrackleft}{\isacharunderscore}{\isachardot}{\isachardot}{\isacharbrackright}\isactrlesub {\isacharparenright}{\isachardoublequoteclose}\ {\isacharbrackleft}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharbrackright}\ {\isadigit{8}}{\isadigit{0}}{\isacharparenright}%
-\isamarkupsubsection{Disjoint elements and sliceable%
-}
-\isamarkuptrue%
+\ {\isacharparenleft}{\isachardoublequoteopen}latex{\isachardoublequoteclose}{\isacharparenright}\ slice{\isacharunderscore}left\ \ {\isacharparenleft}{\isachardoublequoteopen}{\isacharparenleft}{\isadigit{2}}{\isacharunderscore}\isactrlbsub {\isacharbrackleft}{\isacharunderscore}{\isachardot}{\isachardot}{\isacharbrackright}\isactrlesub {\isacharparenright}{\isachardoublequoteclose}\ {\isacharbrackleft}{\isadigit{8}}{\isadigit{0}}{\isacharcomma}{\isadigit{8}}{\isadigit{0}}{\isacharbrackright}\ {\isadigit{8}}{\isadigit{0}}{\isacharparenright}\isanewline
+\isanewline
+\isanewline
+\isanewline
 \isacommand{lemma}\isamarkupfalse%
 \ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ slice{\isacharunderscore}right{\isacharunderscore}disjoint{\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ {\isachardoublequoteopen}disjoint\ xs\ {\isasymLongrightarrow}\ \isanewline
 \ \ disjoint\ {\isacharparenleft}slice{\isacharunderscore}right\ xs\ i{\isacharparenright}{\isachardoublequoteclose}\isanewline
@@ -109,19 +105,19 @@ The notation for \isa{x\isactrlbsub {\isacharbrackleft}{\isachardot}{\isachardot
 {\isafoldproof}%
 %
 \isadelimproof
+\isanewline
 %
 \endisadelimproof
-%
-\isamarkupsubsection{n-th element in a sliceable%
-}
-\isamarkuptrue%
+\isanewline
+\isanewline
+\isanewline
 \isacommand{abbreviation}\isamarkupfalse%
 \ sliceable{\isacharunderscore}nth\ {\isacharcolon}{\isacharcolon}\ {\isachardoublequoteopen}{\isacharprime}a{\isacharcolon}{\isacharcolon}sliceable\ {\isasymRightarrow}\ nat\ {\isasymRightarrow}\ {\isacharprime}a{\isachardoublequoteclose}\isanewline
 \isakeyword{where}\isanewline
-{\isachardoublequoteopen}sliceable{\isacharunderscore}nth\ l\ i\ {\isasymequiv}\ l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}Suc\ i{\isacharparenright}{\isachardoublequoteclose}%
-\isamarkupsubsection{Theorems for sliceable%
-}
-\isamarkuptrue%
+{\isachardoublequoteopen}sliceable{\isacharunderscore}nth\ l\ i\ {\isasymequiv}\ l{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenleft}Suc\ i{\isacharparenright}{\isachardoublequoteclose}\isanewline
+\isanewline
+\isanewline
+\isanewline
 \isacommand{theorem}\isamarkupfalse%
 \ {\isacharparenleft}\isakeyword{in}\ sliceable{\isacharparenright}\ empty{\isacharunderscore}seq{\isacharunderscore}inter{\isacharunderscore}eq\ {\isacharbrackleft}simp{\isacharbrackright}{\isacharcolon}\ \isanewline
 \ \ {\isachardoublequoteopen}disjoint\ x\ {\isasymLongrightarrow}\ empty{\isacharunderscore}inter\ {\isacharparenleft}x{\isasymdagger}{\isachardot}{\isachardot}i{\isacharparenright}\ {\isacharparenleft}x{\isasymdagger}i{\isachardot}{\isachardot}{\isacharparenright}{\isachardoublequoteclose}\isanewline

@@ -1,4 +1,4 @@
-section {* Sliceable distinct lists *}
+(*section {* Sliceable distinct lists *}*)
 text {* \label{sec:theory-sliceable-dlist}*}
 
 (*<*)
@@ -142,7 +142,7 @@ qed
 
 end
 
-subsection {* Properties of sliceable distinct lists *}
+(*subsection {* Properties of sliceable distinct lists *}*)
 
 text {* In the following we present lemmas, corollaries and theorems about sliceable distinct lists.*}
 

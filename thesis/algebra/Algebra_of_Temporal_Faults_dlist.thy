@@ -1,4 +1,4 @@
-section {* Denotational semantics for \ac{algebra} *}
+(*section {* Denotational semantics for \ac{algebra} *}*)
 
 text {*
 \label{sec:theory-algebra-dlist}
@@ -13,7 +13,7 @@ imports
 begin
 (*>*)
 
-subsection {* Formula: distinct lists *}
+(*subsection {* Formula: distinct lists *}*)
 
 text{* 
 The definition of a formula in the \ac{algebra} is a set of sets of distinct lists (dlist).
@@ -21,7 +21,7 @@ The definition of a formula in the \ac{algebra} is a set of sets of distinct lis
 
 typedef 'a formula = "UNIV::'a dlist set set" by simp
 
-subsubsection {* Formula as Boolean algebra*}
+(*subsubsection {* Formula as Boolean algebra*}*)
 (*<*)
 notation
   bot ("\<bottom>") and
@@ -129,7 +129,7 @@ no_notation
   sup  (infixl "\<squnion>" 65)
 (*>*)
 
-subsubsection {* Tempo properties *}
+(*subsubsection {* Tempo properties *}*)
 
 text {* In this section we define the tempo properties. *}
 
@@ -189,7 +189,7 @@ using dlist_tempo_1_no_gap
 by (metis Dlist_list_of_dlist append_eq_conv_conj slice_left_drop 
   take_slice_right)
 
-subsubsection {* Tempo properties for list member *}
+(*subsubsection {* Tempo properties for list member *}*)
 
 text {*
 We use the naming convention of variable, but in fact, a variable is equivalent to a list membership: 
@@ -238,7 +238,7 @@ by (simp add: dlist_tempo1_member dlist_tempo2_member dlist_tempo3_member
   dlist_tempo5_member dlist_tempo4_member dlist_tempo6_member 
   dlist_tempo7_member)
 
-subsubsection {* Tempo properties for other operators *}
+(*subsubsection {* Tempo properties for other operators *}*)
 
 lemma dlist_tempo1_inf: "\<lbrakk>dlist_tempo1 a; dlist_tempo1 b\<rbrakk> \<Longrightarrow> 
   dlist_tempo1 (\<lambda>zs. a zs \<and> b zs)"
@@ -260,7 +260,7 @@ lemma dlist_tempo4_sup: "\<lbrakk>dlist_tempo4 a; dlist_tempo4 b\<rbrakk> \<Long
 unfolding dlist_tempo4_def
 by blast
 
-subsection {* \acs*{XBefore} of distinct lists *}
+(*subsection {* \acs*{XBefore} of distinct lists *}*)
 
 definition dlist_xbefore :: "('a dlist \<Rightarrow> bool) \<Rightarrow> ('a dlist \<Rightarrow> bool) \<Rightarrow> 
   'a dlist \<Rightarrow> bool"
@@ -271,7 +271,7 @@ notation (latex output)
   dlist_xbefore ("_\<rightarrow>_ (_)" [80,80,80] 80) 
 (*>*)
 
-subsubsection {* \acs*{XBefore} and temporal properties *}
+(*subsubsection {* \acs*{XBefore} and temporal properties *}*)
 
 lemma dlist_tempo1_xbefore: "\<lbrakk>dlist_tempo1 a; dlist_tempo1 b\<rbrakk> \<Longrightarrow> 
   dlist_tempo1 (dlist_xbefore a b)"
@@ -279,7 +279,7 @@ unfolding dlist_tempo1_def dlist_xbefore_def slice_slice_simps
 by (smt le_add1 min.absorb2 min.cobounded1 slice_right_slice_left_absorb 
   slice_right_slice_right_absorb)
 
-subsubsection {* \acs*{XBefore} and appending *}
+(*subsubsection {* \acs*{XBefore} and appending *}*)
 
 lemma Rep_slice_append: 
   "list_of_dlist zs = (list_of_dlist (zs\<dagger>..i)) @ (list_of_dlist (zs\<dagger>i..))"
@@ -297,7 +297,7 @@ by (metis Rep_slice_append append_Nil2 append_eq_conv_conj
   size_dlist_def slice_append slice_dlist_def slice_left_def slice_right_def 
   take_slice_right)
 
-subsubsection {* \acs*{XBefore}, bot, top and idempotency *}
+(*subsubsection {* \acs*{XBefore}, bot, top and idempotency *}*)
 
 lemma dlist_xbefore_bot_1: "dlist_xbefore (\<lambda>xs. False) b zs = False"
 unfolding dlist_xbefore_def
@@ -334,7 +334,7 @@ lemma dlist_xbefore_implies_idem:
 unfolding dlist_tempo1_def dlist_xbefore_def
 by blast
 
-subsubsection {* \acs*{XBefore} neutral*}
+(*subsubsection {* \acs*{XBefore} neutral*}*)
 
 lemma dlist_xbefore_neutral_1: 
   "dlist_xbefore (\<lambda>xs. xs = dlist_of_list []) a zs = a zs"
@@ -354,7 +354,7 @@ corollary dlistset_xbefore_neutral_2:
   "Collect (dlist_xbefore a (\<lambda>xs. xs = Dlist [])) = Collect a"
 using dlist_xbefore_neutral_2 by auto
 
-subsubsection {* \acs*{XBefore} associativity*}
+(*subsubsection {* \acs*{XBefore} associativity*}*)
 
 theorem dlist_xbefore_assoc1: 
   "(dlist_xbefore (dlist_xbefore S T) U zs) \<longleftrightarrow> 
@@ -376,7 +376,7 @@ corollary dlistset_xbefore_assoc:
     Collect (dlist_xbefore S (dlist_xbefore T U))"
 by (simp add: dlist_xbefore_assoc)
 
-subsubsection {* \acs*{XBefore} equivalences *}
+(*subsubsection {* \acs*{XBefore} equivalences *}*)
 
 lemma dlist_tempo1_le_uniqueness: 
   "dlist_tempo1 S \<Longrightarrow> S (l\<dagger>..i) \<Longrightarrow> i \<le> j \<Longrightarrow> \<not> S (l\<dagger>j..)" and
@@ -508,7 +508,7 @@ corollary dlistset_xbefore_or:
 using dlist_xbefore_or
 by (smt Collect_cong Collect_conj_eq Collect_disj_eq)
 
-subsubsection {* \acs*{XBefore} transitivity *}
+(*subsubsection {* \acs*{XBefore} transitivity *}*)
 
 theorem dlist_xbefore_trans: "
   \<lbrakk>dlist_tempo1 a; dlist_tempo1 b\<rbrakk> \<Longrightarrow>
@@ -526,7 +526,7 @@ corollary dlistset_xbefore_trans: "
 using dlist_xbefore_trans
 by auto
 
-subsubsection {* Boolean operators mixed with \acs*{XBefore} *}
+(*subsubsection {* Boolean operators mixed with \acs*{XBefore} *}*)
 
 theorem mixed_dlist_xbefore_or1: "  
   dlist_xbefore (\<lambda>xs. a xs \<or> b xs) c zs =
@@ -748,13 +748,13 @@ proof-
 qed
 
 
-subsection {* Formulas as \ac{algebra} *}
+(*subsection {* Formulas as \ac{algebra} *}*)
 
 text {*
 In the following we prove that a formula is a valid type instantiation for all \ac{algebra} classes.
 *}
 
-subsubsection {* Basic properties of \ac{algebra} *}
+(*subsubsection {* Basic properties of \ac{algebra} *}*)
 
 instantiation formula :: (type) algebra_of_temporal_faults_basic
 begin
@@ -852,7 +852,7 @@ qed
 text {* The above proof shows basic laws about \ac{algebra}, as shown in \cref{thm:xbefore-of-false-1,thm:xbefore-of-false-2,thm:xbefore_neutral_1,thm:xbefore_neutral_2,thm:xbefore-not-idempotent,law:tempo1-inter}. *}
 end
 
-subsubsection {* Associativity of \ac{algebra} *}
+(*subsubsection {* Associativity of \ac{algebra} *}*)
 
 instantiation formula :: (type) algebra_of_temporal_faults_assoc
 begin
@@ -867,7 +867,7 @@ text {* The above proof shows associativity law about \ac{algebra}, as shown in 
 
 end
 
-subsubsection {* Equivalences in \ac{algebra} *}
+(*subsubsection {* Equivalences in \ac{algebra} *}*)
 
 instantiation formula :: (type) algebra_of_temporal_faults_equivs
 begin
@@ -924,7 +924,7 @@ qed
 text {* The above proof shows equivalences in \ac{algebra}, as shown in \cref{thm:xbefore-inf-equiv-bot,thm:xbefore-sup-equiv-inf,law:tempo2-union,law:tempo3-inter,law:tempo4-union}. *}
 end
 
-subsubsection {* Transitivity in \ac{algebra} *}
+(*subsubsection {* Transitivity in \ac{algebra} *}*)
 
 instantiation formula :: (type) algebra_of_temporal_faults_trans
 begin
@@ -946,7 +946,7 @@ qed
 text {* The above proof shows transitivity in \ac{algebra}, as shown in \cref{thm:inf_xbefore_trans}. *} 
 end
 
-subsubsection {* Mixed operators in \ac{algebra} *}
+(*subsubsection {* Mixed operators in \ac{algebra} *}*)
 
 instantiation formula :: (type) algebra_of_temporal_faults_mixed_ops
 begin
@@ -1013,7 +1013,7 @@ text {* The above proof shows laws with mixed Boolean and \ac{XBefore} operators
 end
 
 (*<*)
-subsection {* Equivalence of the new definition of \acs*{XBefore} with the old one *}
+(*subsection {* Equivalence of the new definition of \acs*{XBefore} with the old one *}*)
 
 definition old_dlist_xbefore
 where
@@ -1031,7 +1031,7 @@ by blast
 (*>*)
 
 (*<*)
-subsection {* Soundness and completeness on the mapping rules*}
+(*subsection {* Soundness and completeness on the mapping rules*}*)
 
 theorem algebra_of_temporal_faults_mapping_soundness: 
     "\<forall> (f\<^sub>1::'a formula) (f\<^sub>2::'a formula). \<exists> S. ((Rep_formula f\<^sub>1 = S \<and> Rep_formula f\<^sub>2 = S) \<longleftrightarrow> f\<^sub>1 = f\<^sub>2)"
