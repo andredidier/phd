@@ -1,0 +1,43 @@
+\makeatletter
+\renewcommand{\folhaderostocontent}{
+  \begin{center}
+
+    %\vspace*{1cm}
+    {\ABNTEXchapterfont\large\imprimirautor}
+	
+    \vspace*{\fill}\vspace*{\fill}
+    \begin{center}
+      \ABNTEXchapterfont\bfseries\Large\imprimirtitulo
+    \end{center}
+    \vspace*{\fill}
+	
+    \abntex@ifnotempty{\imprimirpreambulo}{%
+      \hspace{.41\textwidth}
+      \begin{minipage}{.57\textwidth}
+      	\SingleSpacing
+         \imprimirpreambulo
+       \end{minipage}%
+       \vspace*{\fill}
+    }%
+
+    %{\abntex@ifnotempty{\imprimirinstituicao}{\imprimirinstituicao\vspace*{\fill}}}
+
+	\hspace{.41\textwidth}
+	\begin{minipage}{.57\textwidth}
+		{\imprimirorientadorRotulo~\bfseries\imprimirorientador\par}
+		\abntex@ifnotempty{\imprimircoorientador}{%
+			{\imprimircoorientadorRotulo~\bfseries\imprimircoorientador}%
+		}%
+	\end{minipage}
+
+
+    \vspace*{\fill}
+
+    {\large\imprimirlocal}
+    \par
+    {\large\imprimirdata}
+    \vspace*{1cm}
+
+  \end{center}
+}
+\makeatother
